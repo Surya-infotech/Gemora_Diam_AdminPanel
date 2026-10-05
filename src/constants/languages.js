@@ -1,15 +1,5 @@
 const LANGUAGE_OPTIONS = [
-    { name: 'Arabic', code: 'SA' },
     { name: 'English', code: 'GB' },
-    { name: 'Spanish', code: 'ES' },
-    { name: 'French', code: 'FR' },
-    { name: 'Greek', code: 'GR' },
-    { name: 'German', code: 'DE' },
-    { name: 'Dutch', code: 'NL' },
-    { name: 'Italian', code: 'IT' },
-    { name: 'Russian', code: 'RU' },
-    { name: 'Portuguese', code: 'PT' },
-    { name: 'Polish', code: 'PL' },
 ];
 
 export const isRtlLanguage = (lang) => {

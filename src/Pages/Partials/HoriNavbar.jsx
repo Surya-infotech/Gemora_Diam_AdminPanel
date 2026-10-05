@@ -46,7 +46,7 @@ const HoriNavbar = () => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
     const [isQuickMenuVisible, setQuickMenuVisible] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState(() => localStorage.getItem('selectedLanguage') || 'English');
+    const [selectedLanguage, setSelectedLanguage] = useState('English');
     const { translations, isRtl } = useLanguage();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;

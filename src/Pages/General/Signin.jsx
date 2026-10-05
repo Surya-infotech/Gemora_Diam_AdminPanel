@@ -38,7 +38,7 @@ const OwnerLogin = () => {
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [isLanguageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState(() => localStorage.getItem('selectedLanguage') || 'English');
+    const [selectedLanguage, setSelectedLanguage] = useState('English');
     const [isLoading, setIsLoading] = useState(false);
     const [formError, setFormError] = useState('');
     const FALLBACK_LOGO = `${import.meta.env.BASE_URL}logo.png`;
