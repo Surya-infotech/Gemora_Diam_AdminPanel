@@ -1,122 +1,81 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { CssBaseline, ThemeProvider, LinearProgress } from "@mui/material";
+import { muiTheme } from "./theme/muiTheme.js";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import './App.scss';
+import AdminLogin from "./Pages/General/Signin.jsx";
+import Logout from "./Pages/General/Logout.jsx";
+import Dashboard from "./Pages/Home/Dashboard.jsx";
+import { LanguageProvider } from './Context/LanguageContext.jsx';
+import PageNotFound from "./Pages/Partials/PageNotFound.jsx";
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppContent = () => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let activeRequests = 0;
+    const originalFetch = window.fetch;
+
+    window.fetch = async (...args) => {
+      activeRequests++;
+      setLoading(true);
+      try {
+        return await originalFetch(...args);
+      } finally {
+        activeRequests--;
+        if (activeRequests === 0) {
+          setLoading(false);
+        }
+      }
+    };
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  }, []);
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      {loading && (
+        <LinearProgress
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "4px",
+            zIndex: 9999,
+            backgroundColor: "color-mix(in srgb, var(--primary-color) 20%, transparent)",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "var(--primary-color)",
+            },
+          }}
+        />
+      )}
+      <Routes>
+        <Route path="/" element={<AdminLogin />} />
+        <Route path="/Signin" element={<AdminLogin />} />
+        <Route path="/Logout" element={<Logout />} />
+        <Route path="/Home/Dashboard" element={<Dashboard />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
     </>
-  )
-}
+  );
+};
 
-export default App
+const App = () => {
+  return (
+    <ThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      <LanguageProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </LanguageProvider>
+    </ThemeProvider>
+  );
+};
+
+export default App;
