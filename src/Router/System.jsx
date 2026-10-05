@@ -9,6 +9,7 @@ import Tax from "../Pages/System/Tax";
 import AddTax from "../Components/System/Tax/AddTax";
 import EditTax from "../Components/System/Tax/EditTax";
 import ContactUs from "../Pages/System/ContactUs";
+import Subscribers from "../Pages/System/Subscribers";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SystemRouter = () => (
@@ -23,6 +24,7 @@ const SystemRouter = () => (
         <Route path="/AddTax" element={<AddTax />} />
         <Route path="/EditTax/:id" element={<EditTax />} />
         <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/Subscribers" element={<Subscribers />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );
