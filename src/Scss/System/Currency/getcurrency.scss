@@ -1,0 +1,25 @@
+@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
+
+.tablediv {
+    @include table_mixin.main_table;
+
+    .currencytable {
+        @include table_mixin.table;
+
+        thead th {
+            @include table_mixin.table_thead;
+        }
+
+        td {
+            @include table_mixin.table_td;
+        }
+
+        .edit-icon {
+            @include table_mixin.edit_icon;
+        }
+
+        .delete-icon {
+            @include table_mixin.delete_icon;
+        }
+    }
+}
