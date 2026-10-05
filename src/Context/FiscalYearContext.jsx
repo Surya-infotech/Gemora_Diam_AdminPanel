@@ -1,10 +1,11 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../Middleware/Auth';
+import HandleUnauthorized from '../utils/HandleUnauthorized';
 
 const FiscalYearContext = createContext();
 
 export const FiscalYearProvider = ({ children }) => {
-    const { token } = useAuth();
+    const { token, logoutUser } = useAuth();
     const [fiscalYears, setFiscalYears] = useState([]);
     const [selectedFiscalYear, setSelectedFiscalYearState] = useState(() => localStorage.getItem('selectedFiscalYear') || '');
     const [loading, setLoading] = useState(false);
@@ -34,8 +35,10 @@ export const FiscalYearProvider = ({ children }) => {
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
             
-            if (response.ok) {
-                const data = await response.json();
+            const data = await response.json();
+            if (HandleUnauthorized(data, logoutUser)) return;
+
+            if (response.ok && Array.isArray(data)) {
                 setFiscalYears(data);
 
                 // Initialize or validate selectedFiscalYear

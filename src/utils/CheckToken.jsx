@@ -1,8 +1,7 @@
 const CheckToken = (token, logoutUser, navigate) => {
-
     if (!token) {
-        logoutUser();
-        navigate("/Signin");
+        if (typeof logoutUser === 'function') logoutUser();
+        if (typeof navigate === 'function') navigate("/Signin");
         return false;
     }
     return true;

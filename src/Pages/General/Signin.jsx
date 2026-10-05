@@ -82,6 +82,11 @@ const OwnerLogin = () => {
             setAlertMessage(location.state.message);
             navigate(location.pathname, { replace: true });
         }
+        if (location.state && location.state.warning) {
+            setWarningMessage(location.state.warning);
+            setShowWarning(true);
+            navigate(location.pathname, { replace: true });
+        }
     }, [location, navigate, searchParams, setSearchParams]);
 
     const checkToken = async () => {

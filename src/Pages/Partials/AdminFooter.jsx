@@ -29,14 +29,12 @@ const AdminFooter = () => {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
-                if (response.ok) {
-                    const data = await response.json();
-                      if (HandleUnauthorized(data, logoutUser, navigate)) return;
-                    if (data) {
-                        if (data.copyright) setCopyright(data.copyright);
-                        if (data.maintainedby) setMaintainedBy(data.maintainedby);
-                        if (data.version) setVersion(data.version);
-                    }
+                const data = await response.json();
+                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (response.ok && data) {
+                    if (data.copyright) setCopyright(data.copyright);
+                    if (data.maintainedby) setMaintainedBy(data.maintainedby);
+                    if (data.version) setVersion(data.version);
                 }
             } catch {
                 setWarningMessage(translations.servererror);

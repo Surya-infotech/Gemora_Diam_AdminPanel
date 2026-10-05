@@ -11,7 +11,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { useEffect, useMemo, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Middleware/Auth';
+import CheckToken from '../../utils/CheckToken';
+import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import ReactWorldFlags from 'react-world-flags';
 
 const Flag = (props) => {
@@ -34,6 +37,8 @@ import Dropdown from '../../Components/Dropdown/Dropdown';
 import { useFiscalYear } from '../../Context/FiscalYearContext';
 
 const HoriNavbar = () => {
+    const navigate = useNavigate();
+    const { logoutUser } = useAuth();
     const { fiscalYears, selectedFiscalYear, setSelectedFiscalYear } = useFiscalYear();
     const location = useLocation();
     const currentPath = location.pathname;
@@ -156,17 +161,25 @@ const HoriNavbar = () => {
     useEffect(() => {
         const fetchAdminProfileImage = async () => {
             if (!token) return;
+            if (!CheckToken(token, logoutUser, navigate)) return;
             try {
                 let response = await fetch(`${adminPanelBackendPath}/admin/GetAdminDetails`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.admin && data.admin.profileimage) {
-                        setAdminProfileImage(data.admin.profileimage);
-                    }
+                if (response.status === 404) {
+                    response = await fetch(`${adminPanelBackendPath}/General/admin/GetAdminDetails`, {
+                        method: "GET",
+                        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                    });
+                }
+
+                const data = await response.json();
+                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
+                if (response.ok && data.admin && data.admin.profileimage) {
+                    setAdminProfileImage(data.admin.profileimage);
                 }
             } catch (error) {
                 console.log("Error fetching admin profile image:", error);
@@ -174,7 +187,7 @@ const HoriNavbar = () => {
         };
 
         fetchAdminProfileImage();
-    }, [adminPanelBackendPath, token]);
+    }, [adminPanelBackendPath, token, logoutUser, navigate]);
 
     return (<>
         <nav className={`hori-navbar ${isRtl ? 'rtl-horinav' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>

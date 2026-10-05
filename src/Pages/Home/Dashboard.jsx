@@ -1,7 +1,7 @@
 import { Groups, Paid, Payments, ReceiptLong, Savings, Subscriptions, TrendingDown, TrendingUp } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Area, AreaChart, Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useLanguage } from '../../Context/LanguageContext';
 import { useAuth } from "../../Middleware/Auth";
@@ -53,6 +53,7 @@ const sampleFallbackData = {
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { logoutUser } = useAuth();
     const { translations, isRtl } = useLanguage();
     const { selectedFiscalYear } = useFiscalYear();
@@ -74,6 +75,21 @@ const Dashboard = () => {
             localStorage.removeItem('loginSuccessMessage');
         }
     }, [translations]);
+
+    useEffect(() => {
+        if (location.state && location.state.message) {
+            setAlertMessage(location.state.message);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate]);
+
+    useEffect(() => {
+        if (location.state && location.state.warning) {
+            setWarningMessage(location.state.warning);
+            setShowWarning(true);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate]);
 
     const formatCurrency = (amount, details) => {
         if (!details || Object.keys(details).length === 0) return `$${amount}`;
@@ -100,9 +116,10 @@ const Dashboard = () => {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
+                const data = await response.json();
+                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
                 if (response.ok) {
-                    const data = await response.json();
-                    if (HandleUnauthorized(data, logoutUser, navigate)) return;
                     setDashboardData(prevData => ({
                         ...prevData,
                         ...data
@@ -110,14 +127,21 @@ const Dashboard = () => {
                     if (data.currencyDetails || data.currency) {
                         setCurrencyDetails(data.currencyDetails || data.currency);
                     }
+                } else {
+                    const errorMessages = {
+                        "Server error": translations.servererror
+                    };
+                    setWarningMessage(errorMessages[data.message] || data.message || translations.servererror);
+                    setShowWarning(true);
                 }
-            } catch {
-                // Keep sample data if backend endpoint is not yet defined
+            } catch (err) {
+                console.error("Dashboard fetch notice:", err);
+                // Keep sample fallback data
             }
         };
 
         fetchDashboardData();
-    }, [selectedFiscalYear, token, logoutUser, navigate, adminPanelBackendPath]);
+    }, [selectedFiscalYear, token, logoutUser, navigate, adminPanelBackendPath, translations]);
 
     const parseKpiNumber = (value) => {
         if (value === null || value === undefined || value === "") return null;
@@ -250,9 +274,14 @@ const Dashboard = () => {
         return null;
     };
 
+    const handleWarningClose = () => {
+        setShowWarning(false);
+        setWarningMessage("");
+    };
+
     return (<>
         {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
-        {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
+        {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
         <div className={`dashboard-container ${isRtl ? 'rtl-dashboard' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="kpi-summary-cards">
                 {cardData.map((card, index) => (

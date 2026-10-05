@@ -1,6 +1,6 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from '../../Middleware/Auth';
 import AlertMessage from '../Custom/AlertMessage';
 import LoadingSpinner from '../Custom/LoadingSpinner';
@@ -15,6 +15,7 @@ import HandleUnauthorized from '../../utils/HandleUnauthorized';
 const LoginActivity = () => {
     const { logoutUser } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const { translations, isRtl } = useLanguage();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const [loading, setLoading] = useState(true);
@@ -35,6 +36,30 @@ const LoginActivity = () => {
     useEffect(() => {
         document.title = `${pageTitle} - Gemora Diam`;
     }, [pageTitle]);
+
+    useEffect(() => {
+        if (location.state && location.state.message) {
+            setSuccessMessage(location.state.message);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate]);
+
+    useEffect(() => {
+        if (location.state && location.state.warning) {
+            setWarningMessage(location.state.warning);
+            setShowWarning(true);
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location, navigate]);
+
+    const handleWarningClose = () => {
+        setShowWarning(false);
+        setWarningMessage("");
+    };
+
+    const handleCloseAlert = () => {
+        setSuccessMessage("");
+    };
 
     useEffect(() => {
         const fetchLoginActivity = async () => {
@@ -128,8 +153,8 @@ const LoginActivity = () => {
 
     return (
         <>
-            {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
-            {successMessage && <AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />}
+            {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
+            {successMessage && <AlertMessage message={successMessage} onClose={handleCloseAlert} />}
             <div className={`LoginActivity-container ${isRtl ? 'rtl-loginactivity' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="login-activity-container">
                     <h6 className="login-activity-headingname">{pageTitle}</h6>
