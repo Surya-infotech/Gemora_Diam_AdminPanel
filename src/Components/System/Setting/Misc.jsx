@@ -8,7 +8,6 @@ import WarningModal from '../../../Pages/Custom/WarningModal';
 import AlertMessage from '../../../Pages/Custom/AlertMessage';
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
-import LANGUAGE_OPTIONS from '../../../constants/languages';
 import DateFormat from "../../General/DateFormat";
 import TimeFormat from "../../General/TimeFormat";
 import TimeZone from "../../General/TimeZone";
@@ -30,14 +29,6 @@ const Misc = () => {
     const [dateFormat, setDateFormat] = useState('');
     const [currency, setCurrency] = useState('');
     const [currencies, setCurrencies] = useState([]);
-    const [selectedLanguage, setSelectedLanguage] = useState('');
-    const [yearlyDiscount, setYearlyDiscount] = useState('');
-    const [yearlyDiscountType, setYearlyDiscountType] = useState('percentage');
-
-    const languageOptions = LANGUAGE_OPTIONS.map(lang => ({
-        name: lang.name,
-        value: lang.name
-    })).sort((a, b) => a.name.localeCompare(b.name));
 
     useEffect(() => {
         if (translations.miscsetting) document.title = translations.miscsetting;
@@ -53,7 +44,7 @@ const Misc = () => {
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
                 if (response.ok && Array.isArray(data)) {
                     const currencyOptions = data.map((curr) => ({
@@ -84,16 +75,13 @@ const Misc = () => {
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
                 if (response.ok && data) {
                     setTimeZone(data.timeZone || '');
                     setTimeFormat(data.timeFormat || '');
                     setDateFormat(data.dateFormat || '');
                     setCurrency(data.currencyid || '');
-                    setSelectedLanguage(data.defaultlanguage || '');
-                    setYearlyDiscount(data.yearlydiscount || '');
-                    setYearlyDiscountType(data.yearlydiscounttype || 'percentage');
                 }
             } catch {
                 setWarningMessage(translations.servererror);
@@ -106,10 +94,6 @@ const Misc = () => {
         fetchMiscSettings();
     }, [token, navigate, logoutUser, adminPanelBackendPath, translations]);
 
-    const handleLanguageChange = (lang) => {
-        setSelectedLanguage(lang);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!CheckToken(token, logoutUser, navigate)) return;
@@ -119,10 +103,7 @@ const Misc = () => {
                 timeZone,
                 timeFormat,
                 dateFormat,
-                currencyid: currency,
-                defaultlanguage: selectedLanguage,
-                yearlydiscount: yearlyDiscount,
-                yearlydiscounttype: yearlyDiscountType
+                currencyid: currency
             };
 
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateMiscSetting`, {
@@ -132,7 +113,7 @@ const Misc = () => {
             });
 
             const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+            if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
             if (response.ok) {
                 setSuccessMessage(translations.updatemiscsettingssuccessfull);
@@ -141,7 +122,7 @@ const Misc = () => {
                     "Server error": translations.servererror,
                     "All fields are required": translations.allfieldrequired
                 };
-                setWarningMessage(errorMessages[data.message] || translations.servererror);
+                setWarningMessage(errorMessages[data.message] || data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
@@ -183,100 +164,6 @@ const Misc = () => {
                                 valueKey="value"
                                 placeholder={translations.selectcurrency}
                             />
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <Dropdown
-                                selectedValue={selectedLanguage}
-                                onValueChange={(value) => handleLanguageChange(value)}
-                                label={translations.defualtlanguage}
-                                options={languageOptions}
-                                labelKey="name"
-                                valueKey="value"
-                                placeholder={translations.selectdefualtlanguage}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>{translations.yearlydiscounttype || translations.discounttype}</label>
-                            <div className="radio-group">
-                                <label className="radio-label">
-                                    <input
-                                        type="radio"
-                                        name="yearlyDiscountType"
-                                        value="percentage"
-                                        checked={yearlyDiscountType === "percentage"}
-                                        onChange={(e) => {
-                                            setYearlyDiscountType(e.target.value);
-                                            if (Number(yearlyDiscount) > 100) setYearlyDiscount('100');
-                                        }}
-                                    />
-                                    <span>{translations.percentage}</span>
-                                </label>
-                                <label className="radio-label">
-                                    <input
-                                        type="radio"
-                                        name="yearlyDiscountType"
-                                        value="month"
-                                        checked={yearlyDiscountType === "month"}
-                                        onChange={(e) => {
-                                            setYearlyDiscountType(e.target.value);
-                                            if (Number(yearlyDiscount) > 12) setYearlyDiscount('12');
-                                        }}
-                                    />
-                                    <span>{translations.month}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="yearlyDiscount">
-                                {translations.yearlydiscount} {yearlyDiscountType === 'percentage' ? '(%)' : `(${translations.months})`}
-                            </label>
-                            <input
-                                type="number"
-                                id="yearlyDiscount"
-                                placeholder={
-                                    yearlyDiscountType === 'percentage'
-                                        ? translations.enteryearlydiscountpercentage
-                                        : translations.enteryearlydiscountmonths
-                                }
-                                autoComplete="off"
-                                min="0"
-                                max={yearlyDiscountType === 'percentage' ? '100' : '12'}
-                                step={yearlyDiscountType === 'percentage' ? '0.01' : '1'}
-                                value={yearlyDiscount}
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    if (val === '') {
-                                        setYearlyDiscount('');
-                                        return;
-                                    }
-                                    const num = Number(val);
-                                    if (num < 0) return;
-                                    if (yearlyDiscountType === 'percentage' && num > 100) return;
-                                    if (yearlyDiscountType === 'month' && num > 12) return;
-                                    setYearlyDiscount(val);
-                                }}
-                            />
-                        </div>
-                        <div className="form-group discount-preview-group">
-                            <label>{translations.preview}</label>
-                            <div className="discount-preview-box">
-                                <span className="preview-label-text">Yearly Badge:</span>
-                                {yearlyDiscount && Number(yearlyDiscount) > 0 ? (
-                                    <span className="yearly-discount-badge">
-                                        {yearlyDiscountType === 'month'
-                                            ? `${yearlyDiscount} ${Number(yearlyDiscount) === 1 ? translations.monthfree : translations.monthsfree}`
-                                            : `${yearlyDiscount}% ${translations.off}`}
-                                    </span>
-                                ) : (
-                                    <span className="preview-empty-text">
-                                        {translations.nodiscountbadge}
-                                    </span>
-                                )}
-                            </div>
                         </div>
                     </div>
                     <div className="button-group">

@@ -13,51 +13,6 @@
         input:not([type="radio"]) {
             @include form_mixin.form_input;
         }
-
-        .radio-group {
-            @include form_mixin.radio_group;
-            gap: 35px;
-            min-height: 48px;
-        }
-    }
-
-    .discount-preview-group {
-        .discount-preview-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            height: 48px;
-            padding: 0 16px;
-            background-color: var(--form-input-color, #f8f9fa);
-            border: 1px dashed var(--border-color, #d1d5db);
-            border-radius: var(--radius-sm, 8px);
-
-            .preview-label-text {
-                font-size: 0.85rem;
-                color: var(--text-color, #6b7280);
-                font-weight: 500;
-            }
-
-            .yearly-discount-badge {
-                display: inline-flex;
-                align-items: center;
-                padding: 4px 10px;
-                border-radius: 999px;
-                font-size: 0.75rem;
-                font-weight: 700;
-                line-height: 1;
-                color: #fff;
-                background: #dc2626;
-                white-space: nowrap;
-                box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
-            }
-
-            .preview-empty-text {
-                font-size: 0.85rem;
-                font-style: italic;
-                color: var(--text-muted, #9ca3af);
-            }
-        }
     }
 
     .button-group {
