@@ -89,7 +89,7 @@ const LoginActivity = () => {
                 }
 
                 const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
                 if (response.ok) {
                     const list = data.activities || data.activity || data.loginActivities || data.data || [];
@@ -220,7 +220,7 @@ const LoginActivity = () => {
                                 </table>
                             )}
                         </div>
-                        {!loading && visibleActivities.length > 0 && (
+                        {!loading && (
                             <Pagination
                                 currentPage={currentPage}
                                 totalPages={totalPages}
