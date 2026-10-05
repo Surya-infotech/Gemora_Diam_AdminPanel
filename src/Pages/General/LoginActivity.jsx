@@ -1,6 +1,7 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment-timezone";
 import { useAuth } from '../../Middleware/Auth';
 import AlertMessage from '../Custom/AlertMessage';
 import LoadingSpinner from '../Custom/LoadingSpinner';
@@ -30,6 +31,7 @@ const LoginActivity = () => {
     const [sortDirection, setSortDirection] = useState("asc");
     const [activities, setActivities] = useState([]);
     const [searchValue, setSearchValue] = useState("");
+    const [miscSettings, setMiscSettings] = useState(null);
 
     useEffect(() => {
         document.title = `${translations.LoginActivity} - Gemora Diam`;
@@ -94,6 +96,9 @@ const LoginActivity = () => {
                 if (response.ok) {
                     const list = data.activities || data.activity || data.loginActivities || data.data || [];
                     setActivities(Array.isArray(list) ? list : []);
+                    if (data.miscSettings) {
+                        setMiscSettings(data.miscSettings);
+                    }
                 } else {
                     setActivities([]);
                     setWarningMessage(data.message || translations.servererror || "Failed to load login activities");
@@ -117,6 +122,11 @@ const LoginActivity = () => {
         setSortColumn(column);
         setSortDirection(direction);
         setActivities([...activities].sort((a, b) => {
+            if (column === "login") {
+                const timeA = new Date(a.login || a.createdAt || 0).getTime();
+                const timeB = new Date(b.login || b.createdAt || 0).getTime();
+                return (timeA > timeB ? 1 : -1) * (direction === "asc" ? 1 : -1);
+            }
             const valA = a[column] || '';
             const valB = b[column] || '';
             return (valA > valB ? 1 : -1) * (direction === "asc" ? 1 : -1);
@@ -129,8 +139,15 @@ const LoginActivity = () => {
 
     const formatLoginTime = (activity) => {
         if (activity.loginFormatted) return activity.loginFormatted;
-        if (!activity.login && !activity.createdAt && !activity.logintime) return "—";
         const dateVal = activity.login || activity.createdAt || activity.logintime;
+        if (!dateVal) return "—";
+        if (miscSettings?.dateFormat && miscSettings?.timeFormat && miscSettings?.timeZone) {
+            try {
+                return moment.tz(dateVal, miscSettings.timeZone).format(`${miscSettings.dateFormat} ${miscSettings.timeFormat}`);
+            } catch {
+                return String(dateVal);
+            }
+        }
         try {
             return new Date(dateVal).toLocaleString();
         } catch {
