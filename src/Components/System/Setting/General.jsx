@@ -254,7 +254,7 @@ const General = () => {
 
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateGeneralSetting`, {
                 method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify(settingsData),
             });
 

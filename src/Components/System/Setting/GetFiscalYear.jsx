@@ -37,7 +37,7 @@ const GetFiscalYear = () => {
             setLoading(true);
             const response = await fetch(`${adminPanelBackendPath}/System/GetFiscalYear`, {
                 method: "GET",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
             const data = await response.json();
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -62,7 +62,7 @@ const GetFiscalYear = () => {
         try {
             const response = await fetch(`${adminPanelBackendPath}/System/CheckCurrentFiscalYear`, {
                 method: "GET",
-                headers: { "Content-Type": "application/json", "x-user": "admin" },
+                headers: { "Content-Type": "application/json" },
             });
             const data = await response.json();
 
@@ -129,7 +129,7 @@ const GetFiscalYear = () => {
         try {
             const response = await fetch(`${adminPanelBackendPath}/System/DeleteFiscalYear/${fiscalYearId}`, {
                 method: "DELETE",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
             const data = await response.json();
             if (HandleUnauthorized(data, logoutUser, navigate)) return;

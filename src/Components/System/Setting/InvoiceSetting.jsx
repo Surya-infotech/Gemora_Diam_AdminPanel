@@ -36,7 +36,7 @@ const InvoiceSetting = () => {
                 setLoading(true);
                 const response = await fetch(`${adminPanelBackendPath}/System/GetInvoiceSetting`, {
                     method: 'GET',
-                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'x-user': 'admin' },
+                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -72,7 +72,7 @@ const InvoiceSetting = () => {
         try {
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateInvoiceSetting`, {
                 method: 'PUT',
-                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'x-user': 'admin' },
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     notes: notes.trim(),
                     invoiceprefix: trimmedPrefix,

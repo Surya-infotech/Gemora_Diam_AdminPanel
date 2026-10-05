@@ -46,7 +46,7 @@ const EditFiscalYear = () => {
             try {
                 const response = await fetch(`${adminPanelBackendPath}/System/EditFiscalYear/${id}`, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, "x-user": "admin" },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -92,7 +92,7 @@ const EditFiscalYear = () => {
         try {
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateFiscalYear/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, "x-user": "admin" },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ fromDate: formattedFromDate, toDate: formattedToDate, }),
             });
             const data = await response.json();

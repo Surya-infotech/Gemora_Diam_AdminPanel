@@ -54,7 +54,7 @@ const AddFiscalYear = () => {
         try {
             const response = await fetch(`${adminPanelBackendPath}/System/AddFiscalYear`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, "x-user": "admin" },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ fromDate: formattedFromDate, toDate: formattedToDate }),
             });
             const data = await response.json();

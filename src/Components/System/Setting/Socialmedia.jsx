@@ -46,7 +46,7 @@ const Socialmedia = () => {
                 setLoading(true);
                 const response = await fetch(`${adminPanelBackendPath}/System/GetSocialMedia`, {
                     method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -118,7 +118,7 @@ const Socialmedia = () => {
 
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateSocialMedia`, {
                 method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify(settingsData),
             });
 

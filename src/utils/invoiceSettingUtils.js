@@ -31,7 +31,7 @@ export async function fetchInvoiceSettings(adminPanelBackendPath) {
 
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
-    const headers = { 'Content-Type': 'application/json', 'x-user': 'admin' };
+    const headers = { 'Content-Type': 'application/json' };
     if (token) headers.Authorization = `Bearer ${token}`;
 
     try {

@@ -50,7 +50,7 @@ const Misc = () => {
             try {
                 const response = await fetch(`${adminPanelBackendPath}/System/GetCurrencies_statustrue`, {
                     method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -81,7 +81,7 @@ const Misc = () => {
                 setLoading(true);
                 const response = await fetch(`${adminPanelBackendPath}/System/GetMiscSetting`, {
                     method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -127,7 +127,7 @@ const Misc = () => {
 
             const response = await fetch(`${adminPanelBackendPath}/System/UpdateMiscSetting`, {
                 method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify(settingsData),
             });
 
