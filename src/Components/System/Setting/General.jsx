@@ -66,7 +66,7 @@ const General = () => {
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
                 if (response.ok && data) {
                     setSoftwareName(data.softwarename || "");
@@ -259,7 +259,7 @@ const General = () => {
             });
 
             const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+            if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
             if (response.ok) {
                 setSuccessMessage(translations.updategeneralsettingssuccessfull);
@@ -268,7 +268,7 @@ const General = () => {
                     "Server error": translations.servererror,
                     "All fields are required": translations.allfieldrequired
                 };
-                setWarningMessage(errorMessages[data.message] || translations.servererror);
+                setWarningMessage(errorMessages[data.message] || data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
