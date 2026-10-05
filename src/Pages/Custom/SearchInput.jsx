@@ -1,3 +1,5 @@
+import "../../Scss/Pages/Custom/searchinput.scss";
+
 const SearchInput = ({ value, onChange, placeholder, className = "" }) => (
     <div className={`search-input-container ${className}`.trim()}>
         <input

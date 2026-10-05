@@ -31,11 +31,9 @@ const LoginActivity = () => {
     const [activities, setActivities] = useState([]);
     const [searchValue, setSearchValue] = useState("");
 
-    const pageTitle = translations.LoginActivity || "Login Activity";
-
     useEffect(() => {
-        document.title = `${pageTitle} - Gemora Diam`;
-    }, [pageTitle]);
+        document.title = `${translations.LoginActivity} - Gemora Diam`;
+    }, [translations.LoginActivity]);
 
     useEffect(() => {
         if (location.state && location.state.message) {
@@ -63,7 +61,10 @@ const LoginActivity = () => {
 
     useEffect(() => {
         const fetchLoginActivity = async () => {
-            if (!CheckToken(token, logoutUser, navigate)) return;
+            if (!CheckToken(token, logoutUser, navigate)) {
+                setLoading(false);
+                return;
+            }
             try {
                 setLoading(true);
                 let endpoint = `${adminPanelBackendPath}/admin/GetLoginActivity`;
@@ -94,11 +95,13 @@ const LoginActivity = () => {
                     const list = data.activities || data.activity || data.loginActivities || data.data || [];
                     setActivities(Array.isArray(list) ? list : []);
                 } else {
+                    setActivities([]);
                     setWarningMessage(data.message || translations.servererror || "Failed to load login activities");
                     setShowWarning(true);
                 }
             } catch (err) {
                 console.error("Error fetching login activity:", err);
+                setActivities([]);
                 setWarningMessage(translations.servererror || "Failed to connect to server");
                 setShowWarning(true);
             } finally {
@@ -157,7 +160,7 @@ const LoginActivity = () => {
             {successMessage && <AlertMessage message={successMessage} onClose={handleCloseAlert} />}
             <div className={`LoginActivity-container ${isRtl ? 'rtl-loginactivity' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="login-activity-container">
-                    <h6 className="login-activity-headingname">{pageTitle}</h6>
+                    <h6 className="login-activity-headingname">{translations.LoginActivity}</h6>
                     <div className="login-activity-form-container">
                         <div className="login-activity-header">
                             <SearchInput
