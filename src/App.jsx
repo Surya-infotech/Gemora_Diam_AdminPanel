@@ -15,6 +15,9 @@ import AdminFooter from "./Pages/Partials/AdminFooter.jsx";
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import { FiscalYearProvider } from './Context/FiscalYearContext.jsx';
 import PageNotFound from "./Pages/Partials/PageNotFound.jsx";
+import Setting from "./Pages/System/Setting.jsx";
+import AddFiscalYear from "./Components/System/Setting/AddFiscalYear.jsx";
+import EditFiscalYear from "./Components/System/Setting/EditFiscalYear.jsx";
 
 const AppContent = () => {
   const location = useLocation();
@@ -73,6 +76,9 @@ const AppContent = () => {
         <Route path="/Logout" element={<Logout />} />
         <Route path="/Home/Dashboard" element={<Dashboard />} />
         <Route path="/Home/LoginActivity" element={<LoginActivity />} />
+        <Route path="/System/Setting" element={<Setting />} />
+        <Route path="/System/Setting/AddFiscalYear" element={<AddFiscalYear />} />
+        <Route path="/System/Setting/EditFiscalYear/:id" element={<EditFiscalYear />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {!isLoginPage && <AdminFooter />}

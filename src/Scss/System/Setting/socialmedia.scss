@@ -1,0 +1,76 @@
+@use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
+@use "../../Customize/Mixin/page_mixin.scss" as page_mixin;
+
+.Socialmedia-container {
+    .form-group {
+        label {
+            @include form_mixin.form_label;
+        }
+
+        input {
+            @include form_mixin.form_input;
+        }
+
+        &.social-media-group {
+            .social-media-row {
+                display: flex;
+                align-items: flex-end;
+                gap: 15px;
+                margin-bottom: 15px;
+
+                .social-media-platform {
+                    flex: 1;
+                    min-width: 200px;
+                }
+
+                .social-media-url {
+                    flex: 2;
+                    min-width: 300px;
+
+                    label {
+                        @include form_mixin.form_label;
+                    }
+
+                    input {
+                        @include form_mixin.form_input;
+                    }
+                }
+
+                .social-media-delete-btn {
+                    padding: 8px 12px;
+                    background-color: #dc3545;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: background-color 0.3s ease;
+                    height: fit-content;
+                    margin-bottom: 15px;
+
+                    &:hover {
+                        background-color: #c82333;
+                    }
+                }
+            }
+
+            .social-media-add-btn {
+                margin-top: 10px;
+                @include page_mixin.add_new_btn;
+            }
+        }
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 20px;
+
+        .submit-btn {
+            @include form_mixin.save_btn;
+        }
+    }
+}

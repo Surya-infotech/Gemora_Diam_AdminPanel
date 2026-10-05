@@ -1,0 +1,31 @@
+@use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
+
+.InvoiceSetting-container {
+    .form-group {
+        margin-bottom: 18px;
+
+        label {
+            @include form_mixin.form_label;
+        }
+
+        .form-control {
+            width: 100%;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 20px;
+
+        .submit-btn {
+            @include form_mixin.save_btn;
+        }
+    }
+}
