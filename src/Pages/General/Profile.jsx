@@ -311,6 +311,11 @@ const Profile = () => {
 
             if (response.ok) {
                 setAlertMessage(data.message || "Profile updated successfully");
+                if (data.admin?.profileimage) {
+                    setImagePreview(data.admin.profileimage);
+                    setProfileData((prev) => ({ ...prev, image: data.admin.profileimage }));
+                }
+                window.dispatchEvent(new Event("adminProfileUpdated"));
             } else {
                 setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
@@ -374,7 +379,15 @@ const Profile = () => {
                                         <div className='imgpreview'>
                                             {imagePreview && (
                                                 <div className="image-preview-container">
-                                                    <img src={imagePreview} alt="Profile Preview" className="image-preview" />
+                                                    <img
+                                                        src={imagePreview}
+                                                        alt="Profile Preview"
+                                                        className="image-preview"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = profilePlaceholder;
+                                                        }}
+                                                    />
                                                 </div>
                                             )}
                                             <button type="button" className="btn btn-primary upload-btn" onClick={handleUploadClick}>

@@ -187,6 +187,9 @@ const HoriNavbar = () => {
         };
 
         fetchAdminProfileImage();
+
+        window.addEventListener("adminProfileUpdated", fetchAdminProfileImage);
+        return () => window.removeEventListener("adminProfileUpdated", fetchAdminProfileImage);
     }, [adminPanelBackendPath, token, logoutUser, navigate]);
 
     return (<>
@@ -258,6 +261,10 @@ const HoriNavbar = () => {
                         src={adminProfileImage}
                         alt="Profile"
                         className="profile-photo"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = profilePlaceholder;
+                        }}
                     />
                 </div>
             </div>
