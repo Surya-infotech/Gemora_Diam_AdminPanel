@@ -285,16 +285,6 @@ const HoriNavbar = () => {
                     <ul className="nav-links admintab admintab--hori-dropdown">
                         <li>
                             <NavLink
-                                to={homeNavlink}
-                                className={({ isActive }) => (isActive ? 'active' : '')}
-                                onClick={handleDropdownSelect}
-                            >
-                                <HomeIcon style={{ color: 'var(--primary-color)', marginRight: '10px' }} />
-                                {translations.Home}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
                                 to="/Home/Profile"
                                 className={({ isActive }) => (isActive ? 'active' : '')}
                                 onClick={handleDropdownSelect}
