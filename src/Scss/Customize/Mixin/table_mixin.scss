@@ -1,0 +1,325 @@
+@use "../var.scss" as var;
+
+@mixin main_table {
+    max-height: 715px !important;
+    overflow-y: auto;
+    border-radius: var(--radius-md);
+    width: auto !important;
+    overflow-x: auto;
+    max-width: 100% !important;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    background-color: #ffffff;
+
+    &::-webkit-scrollbar {
+        height: 8px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var.$hover_color !important;
+        border-radius: 10px !important;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 10px !important;
+    }
+
+    [dir="rtl"] &,
+    body.rtl-mode & {
+        direction: rtl;
+    }
+}
+
+@mixin table {
+    border-radius: var(--radius-md);
+    font-family: var.$font-family !important;
+    text-align: center;
+    vertical-align: middle;
+    table-layout: auto;
+    width: auto;
+    min-width: 100% !important;
+    background-color: #ffffff;
+
+    [dir="rtl"] &,
+    body.rtl-mode & {
+        direction: rtl;
+    }
+
+    th {
+        width: auto;
+        min-width: fit-content;
+    }
+
+    td {
+        width: auto;
+        min-width: fit-content;
+    }
+
+    tr {
+        background-color: var(--table-tr-color) !important;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--secondary-color) 38%, transparent) !important;
+        }
+    }
+}
+
+@mixin table_thead {
+    white-space: nowrap;
+    position: sticky;
+    padding: 10px !important;
+    font-weight: var.$table_heading_font_weight !important;
+    top: 0;
+    background-color: var(--primary-color) !important;
+    z-index: 1;
+    color: white !important;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+
+    &:has(svg) {
+        cursor: pointer !important;
+        user-select: none;
+    }
+
+    svg {
+        cursor: pointer !important;
+    }
+
+    [dir="rtl"] &,
+    body.rtl-mode & {
+        svg {
+            margin-left: 0 !important;
+            margin-right: 5px !important;
+        }
+    }
+}
+
+@mixin table_td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: var.$font-family !important;
+    font-weight: var.$table_td_font_weight !important;
+    padding: 14px !important;
+    color: var.$table_td_font_color !important;
+    border-bottom: 0.1px solid var(--border-color);
+    width: auto;
+    min-width: fit-content;
+    max-width: none;
+}
+
+@mixin table_tr {
+    height: 55px !important;
+    color: black;
+
+    .container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .container img {
+        width: 45px;
+        height: 45px;
+        margin-left: 15px !important;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+@mixin table_tdclick {
+    cursor: pointer !important;
+    color: var.$table_td_tdclick !important;
+}
+
+@mixin edit_icon {
+    color: var.$table_edit_icon_color !important;
+    padding: 3px;
+
+    &:hover {
+        background-color: var.$table_edit_icon_bgcolor !important;
+        color: var.$table_edit_icon_hovercolor !important;
+    }
+}
+
+@mixin delete_icon {
+    color: var.$table_delete_icon_color !important;
+    padding: 3px;
+
+    &:hover {
+        background-color: var.$table_delete_icon_color !important;
+        color: var.$table_delte_icon_hovercolor !important;
+    }
+}
+
+@mixin timeslots_icon {
+    color: var.$table_edit_icon_color !important;
+    padding: 3px;
+
+    &:hover {
+        background-color: var.$table_edit_icon_bgcolor !important;
+        color: var.$table_edit_icon_hovercolor !important;
+    }
+}
+
+@mixin kpi_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .kpi-card,
+    .report-kpi-card,
+    .speed-kpi-card,
+    .staff-kpi-card {
+        background: var(--card-bg, #ffffff);
+        border: 1px solid var(--border-color, #e2e8f0);
+        border-radius: 12px;
+        padding: 18px 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .kpi-info,
+        .kpi-content,
+        .kpi-text {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .kpi-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary, #64748b);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary, #0f172a);
+            line-height: 1.2;
+        }
+
+        .kpi-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: color-mix(in srgb, var(--text-primary, #0f172a) 8%, transparent);
+            color: var(--text-primary, #0f172a);
+
+            svg {
+                font-size: 22px;
+            }
+
+            &.primary,
+            &.revenue,
+            &.highlight {
+                background: color-mix(in srgb, var(--primary-color, #10b981) 12%, transparent);
+                color: var(--primary-color, #10b981);
+            }
+
+            &.positive,
+            &.income,
+            &.success,
+            &.ontime {
+                background: color-mix(in srgb, #059669 12%, transparent);
+                color: #059669;
+            }
+
+            &.negative,
+            &.danger,
+            &.expenses,
+            &.delayed {
+                background: color-mix(in srgb, #dc2626 12%, transparent);
+                color: #dc2626;
+            }
+
+            &.warning {
+                background: color-mix(in srgb, #d97706 12%, transparent);
+                color: #d97706;
+            }
+
+            &.info {
+                background: color-mix(in srgb, #2563eb 12%, transparent);
+                color: #2563eb;
+            }
+        }
+
+        &.primary .kpi-icon-box,
+        &.revenue .kpi-icon-box,
+        &.highlight .kpi-icon-box {
+            background: color-mix(in srgb, var(--primary-color, #10b981) 12%, transparent);
+            color: var(--primary-color, #10b981);
+        }
+
+        &.positive .kpi-icon-box,
+        &.income .kpi-icon-box,
+        &.success .kpi-icon-box,
+        &.ontime .kpi-icon-box {
+            background: color-mix(in srgb, #059669 12%, transparent);
+            color: #059669;
+        }
+
+        &.negative .kpi-icon-box,
+        &.danger .kpi-icon-box,
+        &.expenses .kpi-icon-box,
+        &.delayed .kpi-icon-box {
+            background: color-mix(in srgb, #dc2626 12%, transparent);
+            color: #dc2626;
+        }
+
+        &.warning .kpi-icon-box {
+            background: color-mix(in srgb, #d97706 12%, transparent);
+            color: #d97706;
+        }
+
+        &.info .kpi-icon-box {
+            background: color-mix(in srgb, #2563eb 12%, transparent);
+            color: #2563eb;
+        }
+
+        &.primary .kpi-value,
+        &.revenue .kpi-value,
+        &.highlight .kpi-value {
+            color: var(--primary-color, #ff6b35);
+        }
+
+        &.positive .kpi-value,
+        &.income .kpi-value,
+        &.success .kpi-value,
+        &.ontime .kpi-value {
+            color: #059669;
+        }
+
+        &.negative .kpi-value,
+        &.danger .kpi-value,
+        &.expenses .kpi-value,
+        &.delayed .kpi-value {
+            color: #dc2626;
+        }
+
+        &.warning .kpi-value {
+            color: #d97706;
+        }
+
+        &.info .kpi-value {
+            color: #2563eb;
+        }
+    }
+}

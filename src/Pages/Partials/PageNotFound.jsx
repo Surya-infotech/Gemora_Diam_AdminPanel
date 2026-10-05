@@ -33,7 +33,7 @@ const PageNotFound = () => {
                     Sorry, the page you&apos;re looking for doesn&apos;t exist or has been moved.
                 </p>
                 <button
-                    onClick={() => navigate("/Signin")}
+                    onClick={() => navigate("/Home/Dashboard")}
                     style={{
                         padding: "10px 24px",
                         backgroundColor: "var(--primary-color, #028802)",
@@ -44,7 +44,7 @@ const PageNotFound = () => {
                         cursor: "pointer"
                     }}
                 >
-                    Back to Sign In
+                    Back to Dashboard
                 </button>
             </div>
         </div>
