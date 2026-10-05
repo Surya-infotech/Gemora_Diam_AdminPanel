@@ -57,7 +57,6 @@ const HoriNavbar = () => {
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
     const [adminProfileImage, setAdminProfileImage] = useState(profilePlaceholder);
-    const homeNavlink = import.meta.env.VITE_HOME_URL || '/Home/Dashboard';
 
     const getFullscreenElement = () =>
         document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
