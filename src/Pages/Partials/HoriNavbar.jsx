@@ -258,7 +258,7 @@ const HoriNavbar = () => {
                 <div className="profile-section" onClick={toggleDropdown}>
                     <img
                         src={adminProfileImage}
-                        alt="Profile"
+                        alt={translations.Profile}
                         className="profile-photo"
                         onError={(e) => {
                             e.target.onerror = null;

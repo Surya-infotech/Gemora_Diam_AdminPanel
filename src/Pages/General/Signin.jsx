@@ -173,14 +173,14 @@ const OwnerLogin = () => {
             }
             else {
                 const errorMessages = {
-                    "Invalid Email": translations.Invalidemail || "Invalid Email",
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Invalid Password": translations.invalidpassword || "Invalid Password",
+                    "Invalid Email": translations.Invalidemail,
+                    "All fields are required": translations.allfieldrequired,
+                    "Invalid Password": translations.invalidpassword,
                 };
-                setFormError(errorMessages[data.message] || data.message || translations.servererror || "Invalid credentials");
+                setFormError(errorMessages[data.message] || data.message || translations.servererror);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Something went wrong. Please check connection.");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsLoading(false);
@@ -226,7 +226,7 @@ const OwnerLogin = () => {
                         <img
                             src={logoUrl}
                             className="logo"
-                            alt="Logo"
+                            alt={translations.logo}
                             onError={() => setLogoUrl(FALLBACK_LOGO)}
                         />
                         <h2>{softwareName}</h2>

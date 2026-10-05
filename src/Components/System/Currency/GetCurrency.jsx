@@ -53,11 +53,11 @@ const GetCurrency = ({ searchValue = "" }) => {
                 if (response.ok && Array.isArray(data)) {
                     setCurrencies(data);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Failed to load currencies");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
-                setWarningMessage(translations.servererror || "Server error");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setLoading(false);
@@ -130,13 +130,13 @@ const GetCurrency = ({ searchValue = "" }) => {
 
             if (response.ok) {
                 setCurrencies(currencies.map(c => (c._id === currency._id ? { ...c, status: updatedStatus } : c)));
-                setSuccessMessage(updatedStatus ? (translations.currencystatusactive || "Currency Status updated to Active") : (translations.currencystatusinactive || "Currency Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.currencystatusactive) : (translations.currencystatusinactive));
             } else {
-                setWarningMessage(data.message || translations.servererror || "Failed to update currency status");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         }
     };
@@ -164,23 +164,23 @@ const GetCurrency = ({ searchValue = "" }) => {
             if (response.ok) {
                 setCurrencies(currencies.filter(c => c._id !== currencyIdToDelete && c.currencyid !== currencyIdToDelete));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletecurrencysuccessfull || "Currency Deleted Successfully");
+                setSuccessMessage(translations.deletecurrencysuccessfull);
             } else {
-                setWarningMessage(result.message || translations.servererror || "Failed to delete currency");
+                setWarningMessage(result.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         }
     };
 
     const getCurrencyPositionText = (position) => {
         const positionMap = {
-            "left": translations.Left || "Left",
-            "right": translations.Right || "Right",
-            "left-space": translations["Left with space"] || "Left with space",
-            "right-space": translations["Right with space"] || "Right with space"
+            "left": translations.Left,
+            "right": translations.Right,
+            "left-space": translations["Left with space"],
+            "right-space": translations["Right with space"]
         };
         return positionMap[position] || position;
     };
@@ -199,21 +199,21 @@ const GetCurrency = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortCurrencies("countryname")}>
-                                    {translations.CountryName || "Country Name"} {renderSortIcon("countryname")}
+                                    {translations.CountryName} {renderSortIcon("countryname")}
                                 </th>
                                 <th onClick={() => sortCurrencies("currency")}>
-                                    {translations.currencyname || "Currency Name"} {renderSortIcon("currency")}
+                                    {translations.currencyname} {renderSortIcon("currency")}
                                 </th>
                                 <th onClick={() => sortCurrencies("currencysymbol")}>
-                                    {translations.currencysymbol || "Currency Symbol"} {renderSortIcon("currencysymbol")}
+                                    {translations.currencysymbol} {renderSortIcon("currencysymbol")}
                                 </th>
                                 <th onClick={() => sortCurrencies("currencyposition")}>
-                                    {translations.CurrencyPosition || "Currency Position"} {renderSortIcon("currencyposition")}
+                                    {translations.CurrencyPosition} {renderSortIcon("currencyposition")}
                                 </th>
                                 <th onClick={() => sortCurrencies("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th>{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -239,7 +239,7 @@ const GetCurrency = ({ searchValue = "" }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="6" style={{ textAlign: "center", padding: "24px 0" }}>
-                                        {translations.nodatafound || "No data found"}
+                                        {translations.nodatafound}
                                     </td>
                                 </tr>
                             )}
@@ -267,8 +267,8 @@ const GetCurrency = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => deleteCurrency(selectedCurrency?._id || selectedCurrency?.currencyid)}
                     name={selectedCurrency?.currency}
-                    message={translations.currency || "Currency"}
-                    headingname={translations.deletecurrency || "Delete Currency"}
+                    message={translations.currency}
+                    headingname={translations.deletecurrency}
                 />
             )}
             {successMessage && (

@@ -13,7 +13,7 @@ const DeleteButton = React.forwardRef(({ onClick, disabled = false, size = "smal
                     size={size}
                     onClick={onClick}
                     disabled={disabled}
-                    aria-label="delete"
+                    aria-label={translations.delete}
                     className="delete-icon"
                 >
                     <DeleteIcon fontSize="small" />

@@ -56,10 +56,10 @@ const Pagination = ({
             </div>
 
             <div className="records-info">
-                {translations.showing || 'Showing'} {startRecord} {translations.to || 'to'} {endRecord} {translations.of || 'of'} {totalRecords} {translations.entries || 'entries'}
+                {translations.showing} {startRecord} {translations.to} {endRecord} {translations.of} {totalRecords} {translations.entries}
             </div>
 
-            <nav aria-label="Page navigation example">
+            <nav aria-label={translations.pagenavigation}>
                 <ul className="pagination justify-content-end">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                         <button
@@ -67,7 +67,7 @@ const Pagination = ({
                             onClick={() => onPageChange(currentPage - 1)}
                             disabled={currentPage === 1}
                         >
-                            {translations.previous || 'Previous'}
+                            {translations.previous}
                         </button>
                     </li>
                     {pageNumbers.map((number) => (
@@ -89,7 +89,7 @@ const Pagination = ({
                             onClick={() => onPageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
                         >
-                            {translations.next || 'Next'}
+                            {translations.next}
                         </button>
                     </li>
                 </ul>

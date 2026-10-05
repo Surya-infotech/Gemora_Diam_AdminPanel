@@ -32,10 +32,10 @@ const AddCurrency = () => {
     }, [translations]);
 
     const currencyPositions = [
-        { id: "left", name: translations.Left || "Left" },
-        { id: "right", name: translations.Right || "Right" },
-        { id: "left-space", name: translations["Left with space"] || "Left with space" },
-        { id: "right-space", name: translations["Right with space"] || "Right with space" }
+        { id: "left", name: translations.Left },
+        { id: "right", name: translations.Right },
+        { id: "left-space", name: translations["Left with space"] },
+        { id: "right-space", name: translations["Right with space"] }
     ];
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const AddCurrency = () => {
 
             if (response.ok) {
                 navigate(`/System/Currency`, {
-                    state: { message: translations.addcurrencysuccessfull || "Currency added successfully" }
+                    state: { message: translations.addcurrencysuccessfull }
                 });
             } else {
                 const errorMessages = {
@@ -88,11 +88,11 @@ const AddCurrency = () => {
                     "All fields are required": translations.allfieldrequired,
                     "Server error": translations.servererror
                 };
-                setWarningMessage(errorMessages[data.message] || data.message || translations.servererror || "Failed to add currency");
+                setWarningMessage(errorMessages[data.message] || data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         }
     };
@@ -104,27 +104,27 @@ const AddCurrency = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
             <div className={`AddCurrency-container ${isRtl ? 'rtl-addcurrency' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcurrency-container">
-                    <h6 className="Addcurrency-headingname">{translations.addcurrency || "Add Currency"}</h6>
+                    <h6 className="Addcurrency-headingname">{translations.addcurrency}</h6>
                     <div className="Addcurrency-form-container">
                         <form onSubmit={handleSubmit}>
                             <div className="form-row">
                                 <div className="form-group">
                                     <Dropdown
-                                        label={translations.CountryName || "Country Name"}
+                                        label={translations.CountryName}
                                         options={countries}
                                         labelKey="name"
                                         valueKey="isoCode"
                                         selectedValue={selectedCountry}
                                         onValueChange={(value) => setSelectedCountry(value)}
-                                        placeholder={translations.selectcountryname || "Select Country"}
+                                        placeholder={translations.selectcountryname}
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="currencyName">{translations.currencyname || "Currency Name"}</label>
+                                    <label htmlFor="currencyName">{translations.currencyname}</label>
                                     <input
                                         type="text"
                                         id="currencyName"
-                                        placeholder={translations.entercurrencyname || "Enter Currency Name"}
+                                        placeholder={translations.entercurrencyname}
                                         required
                                         autoComplete="off"
                                         value={currencyName}
@@ -138,11 +138,11 @@ const AddCurrency = () => {
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="currencySymbol">{translations.currencysymbol || "Currency Symbol"}</label>
+                                    <label htmlFor="currencySymbol">{translations.currencysymbol}</label>
                                     <input
                                         type="text"
                                         id="currencySymbol"
-                                        placeholder={translations.entercurrencysymbol || "Enter Currency Symbol"}
+                                        placeholder={translations.entercurrencysymbol}
                                         required
                                         autoComplete="off"
                                         value={currencySymbol}
@@ -155,23 +155,23 @@ const AddCurrency = () => {
                                 </div>
                                 <div className="form-group">
                                     <Dropdown
-                                        label={translations.CurrencyPosition || "Currency Position"}
+                                        label={translations.CurrencyPosition}
                                         options={currencyPositions}
                                         labelKey="name"
                                         valueKey="id"
                                         selectedValue={currencyPosition}
                                         onValueChange={(value) => setCurrencyPosition(value)}
-                                        placeholder={translations.selectcurrencyposition || "Select Currency Position"}
+                                        placeholder={translations.selectcurrencyposition}
                                     />
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="decimalValue">{translations.decimalplaces || "Decimal Places"}</label>
+                                    <label htmlFor="decimalValue">{translations.decimalplaces}</label>
                                     <input
                                         type="number"
                                         id="decimalValue"
-                                        placeholder={translations.enterdecimalplaces || "Enter Decimal Places"}
+                                        placeholder={translations.enterdecimalplaces}
                                         min="0"
                                         max="10"
                                         required
@@ -184,11 +184,11 @@ const AddCurrency = () => {
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="thousandSeparator">{translations.ThousandSeparator || "Thousand Separator"}</label>
+                                    <label htmlFor="thousandSeparator">{translations.ThousandSeparator}</label>
                                     <input
                                         type="text"
                                         id="thousandSeparator"
-                                        placeholder={translations.enterthousandseparator || "Enter Thousand Separator"}
+                                        placeholder={translations.enterthousandseparator}
                                         required
                                         maxLength="1"
                                         autoComplete="off"
@@ -203,11 +203,11 @@ const AddCurrency = () => {
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="decimalSeparator">{translations.DecimalSeparator || "Decimal Separator"}</label>
+                                    <label htmlFor="decimalSeparator">{translations.DecimalSeparator}</label>
                                     <input
                                         type="text"
                                         id="decimalSeparator"
-                                        placeholder={translations.enterdecimalseparator || "Enter Decimal Separator"}
+                                        placeholder={translations.enterdecimalseparator}
                                         required
                                         maxLength="1"
                                         autoComplete="off"
@@ -222,10 +222,10 @@ const AddCurrency = () => {
                             </div>
                             <div className="button-group">
                                 <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel}>
-                                    {translations.cancel || "Cancel"}
+                                    {translations.cancel}
                                 </button>
                                 <button type="submit" className="btn btn-success submit-btn">
-                                    {translations.save || "Save"}
+                                    {translations.save}
                                 </button>
                             </div>
                         </form>

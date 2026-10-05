@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../Context/LanguageContext";
 
 const PageNotFound = () => {
     const navigate = useNavigate();
+    const { translations } = useLanguage();
 
     return (
         <div style={{
@@ -27,10 +29,10 @@ const PageNotFound = () => {
                     404
                 </h1>
                 <h2 style={{ fontSize: "20px", fontWeight: "600", margin: "16px 0 8px" }}>
-                    Page Not Found
+                    {translations.pagenotfound}
                 </h2>
                 <p style={{ color: "#94a3b8", fontSize: "14px", marginBottom: "24px" }}>
-                    Sorry, the page you&apos;re looking for doesn&apos;t exist or has been moved.
+                    {translations.pagenotfoundmessage}
                 </p>
                 <button
                     onClick={() => navigate("/Home/Dashboard")}
@@ -44,7 +46,7 @@ const PageNotFound = () => {
                         cursor: "pointer"
                     }}
                 >
-                    Back to Dashboard
+                    {translations.backtodashboard}
                 </button>
             </div>
         </div>

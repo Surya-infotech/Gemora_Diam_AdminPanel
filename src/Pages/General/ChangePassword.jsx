@@ -100,15 +100,15 @@ const ChangePassword = () => {
 
             if (response.ok) {
                 setOldPasswordVerified(true);
-                setOldPasswordStatus(translations.oldpasswordmatched || "Old password matched.");
+                setOldPasswordStatus(translations.oldpasswordmatched);
             } else {
                 setOldPasswordVerified(false);
-                setOldPasswordStatus(translations.oldpasswordincorrect || "Old password is incorrect.");
+                setOldPasswordStatus(translations.oldpasswordincorrect);
             }
         } catch {
             setOldPasswordVerified(false);
             setOldPasswordStatus("");
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsVerifyingOldPassword(false);
@@ -119,19 +119,19 @@ const ChangePassword = () => {
         e.preventDefault();
 
         if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!oldPasswordVerified) {
-            setWarningMessage(translations.pleaseverifyoldpasswordfirst || "Please verify old password first.");
+            setWarningMessage(translations.pleaseverifyoldpasswordfirst);
             setShowWarning(true);
             return;
         }
 
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            setWarningMessage(translations.newpasswordandconfirmpasswordnotmatch || "New password and confirm password do not match.");
+            setWarningMessage(translations.newpasswordandconfirmpasswordnotmatch);
             setShowWarning(true);
             return;
         }
@@ -166,7 +166,7 @@ const ChangePassword = () => {
             if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
 
             if (response.ok) {
-                setAlertMessage(translations.passwordupdatedsuccessfully || "Password updated successfully.");
+                setAlertMessage(translations.passwordupdatedsuccessfully);
                 setPasswordData({
                     oldPassword: "",
                     newPassword: "",
@@ -175,11 +175,11 @@ const ChangePassword = () => {
                 setOldPasswordVerified(false);
                 setOldPasswordStatus("");
             } else {
-                setWarningMessage(data.message || translations.servererror || "Failed to update password");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsSaving(false);
@@ -192,25 +192,25 @@ const ChangePassword = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`ChangePassword-container ${isRtl ? "rtl-changepassword" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
                 <div className="change-password-container">
-                    <h6 className="change-password-headingname">{translations.ChangePassword || "Change Password"}</h6>
+                    <h6 className="change-password-headingname">{translations.ChangePassword}</h6>
                     <div className="change-password-form-container">
                         <form onSubmit={handleSubmit}>
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="oldPassword">{translations.oldpassword || "Old Password"}</label>
+                                    <label htmlFor="oldPassword">{translations.oldpassword}</label>
                                     <input
                                         id="oldPassword"
                                         type="password"
                                         name="oldPassword"
                                         autoComplete="off"
-                                        placeholder={translations.oldpasswordplaceholder || "Enter old password"}
+                                        placeholder={translations.oldpasswordplaceholder}
                                         value={passwordData.oldPassword}
                                         onChange={handleChange}
                                         onBlur={handleVerifyOldPassword}
                                     />
                                     {isVerifyingOldPassword && (
                                         <span className="password-status checking">
-                                            {translations.verifyingoldpassword || "Verifying old password..."}
+                                            {translations.verifyingoldpassword}
                                         </span>
                                     )}
                                     {!isVerifyingOldPassword && oldPasswordStatus && (
@@ -220,13 +220,13 @@ const ChangePassword = () => {
                                     )}
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="newPassword">{translations.newpassword || "New Password"}</label>
+                                    <label htmlFor="newPassword">{translations.newpassword}</label>
                                     <input
                                         id="newPassword"
                                         type="password"
                                         name="newPassword"
                                         autoComplete="off"
-                                        placeholder={translations.newpasswordplaceholder || "Enter new password"}
+                                        placeholder={translations.newpasswordplaceholder}
                                         value={passwordData.newPassword}
                                         onChange={handleChange}
                                     />
@@ -234,13 +234,13 @@ const ChangePassword = () => {
                             </div>
                             <div className="form-row">
                                 <div className="form-group">
-                                    <label htmlFor="confirmPassword">{translations.confirmpassword || "Confirm Password"}</label>
+                                    <label htmlFor="confirmPassword">{translations.confirmpassword}</label>
                                     <input
                                         id="confirmPassword"
                                         type="password"
                                         name="confirmPassword"
                                         autoComplete="off"
-                                        placeholder={translations.confirmpasswordplaceholder || "Enter confirm password"}
+                                        placeholder={translations.confirmpasswordplaceholder}
                                         value={passwordData.confirmPassword}
                                         onChange={handleChange}
                                     />
@@ -248,7 +248,7 @@ const ChangePassword = () => {
                             </div>
                             <div className="button-group">
                                 <button type="submit" className="btn btn-success submit-btn" disabled={isSaving}>
-                                    {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save")}
+                                    {isSaving ? (translations.saving) : (translations.save)}
                                 </button>
                             </div>
                         </form>

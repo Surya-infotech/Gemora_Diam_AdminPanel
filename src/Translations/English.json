@@ -253,5 +253,15 @@
     "Pages": "Pages",
     "date": "Date",
     "Pending": "Pending",
-    "country": "Country"
+    "country": "Country",
+    "adminprofilenotavailable": "Admin profile data not available. Using general settings.",
+    "pleasefillatleastonefield": "Please fill at least one field to update.",
+    "profileupdatedsuccessfully": "Profile updated successfully",
+    "profilepreview": "Profile Preview",
+    "pagenotfound": "Page Not Found",
+    "pagenotfoundmessage": "Sorry, the page you're looking for doesn't exist or has been moved.",
+    "backtodashboard": "Back to Dashboard",
+    "close": "Close",
+    "logo": "Logo",
+    "pagenavigation": "Page navigation"
 }

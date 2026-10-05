@@ -126,7 +126,7 @@ const AdminNavbar = () => {
         <nav className={`navbar ${isCollapsed ? 'collapsed' : ''} ${isRtl ? 'rtl-navbar' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="logo">
                 <Link to="/Home/Dashboard" className='logoimage'>
-                    <img src={logoUrl} className="logo-img" alt="Logo" />
+                    <img src={logoUrl} className="logo-img" alt={translations.logo} />
                 </Link>
                 <div className={`arrowdiv ${isCollapsed ? 'collapsed' : ''}`}>
                     {isRtl ? (
@@ -241,7 +241,7 @@ const AdminNavbar = () => {
                         </li>
                         <li>
                             <NavLink to="/System/Currency" className={navLinkClass('/System/Currency')}>
-                                <NavTooltip title={translations.Pages}>
+                                <NavTooltip title={translations.currency}>
                                     <AttachMoneyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.currency}

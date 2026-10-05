@@ -99,11 +99,11 @@ const GetTax = ({ searchValue = "" }) => {
     const getTaxComputationTranslation = (taxcomputation) => {
         switch (taxcomputation) {
             case "inclusive":
-                return translations.inclusive || "Inclusive";
+                return translations.inclusive;
             case "exclusive":
-                return translations.exclusive || "Exclusive";
+                return translations.exclusive;
             default:
-                return translations.exclusive || "Exclusive";
+                return translations.exclusive;
         }
     };
 

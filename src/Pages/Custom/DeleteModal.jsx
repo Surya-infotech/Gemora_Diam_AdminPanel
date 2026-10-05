@@ -23,7 +23,7 @@ const DeleteModal = ({
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">{headingname || translations.delete}</h5>
-                        <button type="button" className="btn-close closebtn" onClick={onClose} disabled={isLoading} aria-label="Close"></button>
+                        <button type="button" className="btn-close closebtn" onClick={onClose} disabled={isLoading} aria-label={translations.close}></button>
                     </div>
                     <div className="modal-body">
                         {isLoading ? (
@@ -33,7 +33,7 @@ const DeleteModal = ({
                         ) : customMessage ? (
                             typeof customMessage === 'string' ? <p>{customMessage}</p> : customMessage
                         ) : (
-                            <p>{translations.deletemsg || translations.areyousureyouwanttodeletethe} <strong>{name}</strong> {message}?</p>
+                            <p>{translations.deletemsg} <strong>{name}</strong> {message}?</p>
                         )}
                     </div>
                     <div className="modal-footer">

@@ -123,7 +123,7 @@ const Profile = () => {
                             address: fallbackData.address || '',
                         }));
                     }
-                    setWarningMessage("Admin profile data not available. Using general settings.");
+                    setWarningMessage(translations.adminprofilenotavailable);
                     setShowWarning(true);
                 }
             } catch {
@@ -244,7 +244,7 @@ const Profile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!profileData.firstname && !profileData.lastname && !profileData.email && !profileData.phone && !profileData.address) {
-            setWarningMessage("Please fill at least one field to update.");
+            setWarningMessage(translations.pleasefillatleastonefield);
             setShowWarning(true);
             return;
         }
@@ -310,7 +310,7 @@ const Profile = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setAlertMessage(data.message || "Profile updated successfully");
+                setAlertMessage(data.message || translations.profileupdatedsuccessfully);
                 if (data.admin?.profileimage) {
                     setImagePreview(data.admin.profileimage);
                     setProfileData((prev) => ({ ...prev, image: data.admin.profileimage }));
@@ -381,7 +381,7 @@ const Profile = () => {
                                                 <div className="image-preview-container">
                                                     <img
                                                         src={imagePreview}
-                                                        alt="Profile Preview"
+                                                        alt={translations.profilepreview}
                                                         className="image-preview"
                                                         onError={(e) => {
                                                             e.target.onerror = null;

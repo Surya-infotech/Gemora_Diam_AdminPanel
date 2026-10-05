@@ -212,7 +212,7 @@ const GetContactUs = ({ searchValue }) => {
                                         type="button"
                                         className="btn-close"
                                         onClick={handleCloseViewModal}
-                                        aria-label="Close"
+                                        aria-label={translations.Close}
                                     />
                                 </div>
                                 <div className="modal-body contactus-view-modal-body">

@@ -210,7 +210,7 @@ const GetFiscalYear = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={showActionColumn ? 5 : 4}>{translations.nofiscalyearsfound || translations.nodatafound}</td>
+                                <td colSpan={showActionColumn ? 5 : 4}>{translations.nofiscalyearsfound}</td>
                             </tr>
                         )}
                     </tbody>

@@ -57,7 +57,7 @@ const AdminFooter = () => {
                 {maintainedBy?.trim() && (
                     <div className="footer-center">
                         <span>
-                            {translations.maintainedby || translations.MaintainedBy} <strong>{maintainedBy}</strong>
+                            {translations.maintainedby} <strong>{maintainedBy}</strong>
                         </span>
                     </div>
                 )}

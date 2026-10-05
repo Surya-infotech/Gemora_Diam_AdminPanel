@@ -101,13 +101,13 @@ const LoginActivity = () => {
                     }
                 } else {
                     setActivities([]);
-                    setWarningMessage(data.message || translations.servererror || "Failed to load login activities");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch (err) {
                 console.error("Error fetching login activity:", err);
                 setActivities([]);
-                setWarningMessage(translations.servererror || "Failed to connect to server");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setLoading(false);
@@ -181,7 +181,7 @@ const LoginActivity = () => {
                     <div className="login-activity-form-container">
                         <div className="login-activity-header">
                             <SearchInput
-                                placeholder={translations.searchPlaceholder || "Search..."}
+                                placeholder={translations.searchPlaceholder}
                                 value={searchValue}
                                 onChange={(e) => {
                                     setSearchValue(e.target.value);
@@ -197,19 +197,19 @@ const LoginActivity = () => {
                                     <thead>
                                         <tr>
                                             <th onClick={() => sortActivities("device")}>
-                                                {translations.device || "Device"} {renderSortIcon("device")}
+                                                {translations.device} {renderSortIcon("device")}
                                             </th>
                                             <th onClick={() => sortActivities("ipaddress")}>
-                                                {translations.ipaddress || "IP Address"} {renderSortIcon("ipaddress")}
+                                                {translations.ipaddress} {renderSortIcon("ipaddress")}
                                             </th>
                                             <th onClick={() => sortActivities("location")}>
-                                                {translations.location || "Location"} {renderSortIcon("location")}
+                                                {translations.location} {renderSortIcon("location")}
                                             </th>
                                             <th onClick={() => sortActivities("browserdetails")}>
-                                                {translations.browserdetails || "Browser Details"} {renderSortIcon("browserdetails")}
+                                                {translations.browserdetails} {renderSortIcon("browserdetails")}
                                             </th>
                                             <th onClick={() => sortActivities("login")}>
-                                                {translations.logintime || "Login Time"} {renderSortIcon("login")}
+                                                {translations.logintime} {renderSortIcon("login")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -229,7 +229,7 @@ const LoginActivity = () => {
                                         ) : (
                                             <tr>
                                                 <td colSpan="5" style={{ textAlign: 'center', padding: '24px 0' }}>
-                                                    {translations.nologinactivities || "No login activities recorded yet."}
+                                                    {translations.nologinactivities}
                                                 </td>
                                             </tr>
                                         )}

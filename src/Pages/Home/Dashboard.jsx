@@ -177,7 +177,7 @@ const Dashboard = () => {
 
     const cardData = [
         {
-            name: translations.owners || "Owners",
+            name: translations.owners,
             count: dashboardData.totalOwnerCount || 0,
             difference: kpiDifferences.ownerCountDifference,
             icon: <Groups className="card-icon" />,
@@ -186,7 +186,7 @@ const Dashboard = () => {
             variant: "highlight",
         },
         {
-            name: translations.activesubscriptions || "Active Subscriptions",
+            name: translations.activesubscriptions,
             count: dashboardData.activeSubscriptionCount || 0,
             icon: <Subscriptions className="card-icon" />,
             onClick: handleSubscriptionCardClick,
@@ -194,7 +194,7 @@ const Dashboard = () => {
             variant: "positive",
         },
         {
-            name: translations.totalsubscriptions || "Total Subscriptions",
+            name: translations.totalsubscriptions,
             count: dashboardData.totalSubscriptionCount || 0,
             difference: kpiDifferences.totalSubscriptionCountDifference,
             icon: <ReceiptLong className="card-icon" />,
@@ -203,7 +203,7 @@ const Dashboard = () => {
             variant: "primary",
         },
         {
-            name: translations.totaltax || "Total Tax",
+            name: translations.totaltax,
             count: formatCurrency(dashboardData.totalTaxSum || 0, currencyDetails),
             difference: kpiDifferences.taxDifference,
             icon: <Payments className="card-icon" />,
@@ -212,7 +212,7 @@ const Dashboard = () => {
             variant: "warning",
         },
         {
-            name: translations.totalearning || "Total Earnings",
+            name: translations.totalearning,
             count: formatCurrency(dashboardData.totalSubtotalSum || 0, currencyDetails),
             difference: kpiDifferences.subtotalDifference,
             icon: <Paid className="card-icon" />,
@@ -221,7 +221,7 @@ const Dashboard = () => {
             variant: "income",
         },
         {
-            name: translations.totalrevenue || "Total Revenue",
+            name: translations.totalrevenue,
             count: formatCurrency(dashboardData.totalPriceSum || 0, currencyDetails),
             difference: kpiDifferences.revenueDifference,
             icon: <Savings className="card-icon" />,
@@ -232,18 +232,18 @@ const Dashboard = () => {
     ];
 
     const monthNames = [
-        translations.Jan || "Jan",
-        translations.Feb || "Feb",
-        translations.Mar || "Mar",
-        translations.Apr || "Apr",
-        translations.May || "May",
-        translations.Jun || "Jun",
-        translations.Jul || "Jul",
-        translations.Aug || "Aug",
-        translations.Sep || "Sep",
-        translations.Oct || "Oct",
-        translations.Nov || "Nov",
-        translations.Dec || "Dec"
+        translations.Jan,
+        translations.Feb,
+        translations.Mar,
+        translations.Apr,
+        translations.May,
+        translations.Jun,
+        translations.Jul,
+        translations.Aug,
+        translations.Sep,
+        translations.Oct,
+        translations.Nov,
+        translations.Dec
     ];
 
     const initialChartData = monthNames.map((month) => ({ month, Revenue: 0, Orders: 0 }));
@@ -265,7 +265,7 @@ const Dashboard = () => {
                     <p className="label">{`${label}`}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="tooltip-data">
-                            {`${entry.dataKey === "Revenue" ? translations.revenue || translations.totalrevenue || "Revenue" : translations.subscriptions || "Subscriptions"}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
+                            {`${entry.dataKey === "Revenue" ? translations.revenue : translations.subscriptions}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
                         </p>
                     ))}
                 </div>
@@ -310,21 +310,21 @@ const Dashboard = () => {
 
             <div className="dashboard-row row-1">
                 <div className="chart-container monthly-revenue-chart">
-                    <Typography variant="h6" className="chart-title">{translations.monthlyrevenue || "Monthly Revenue"}</Typography>
+                    <Typography variant="h6" className="chart-title">{translations.monthlyrevenue}</Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                             <XAxis dataKey="month" className="chart-axis" interval={0} axisLine={false} tickLine={false} />
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={75} tickFormatter={(value) => formatCurrency(value, currencyDetails)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.revenue || translations.totalrevenue || "Revenue"} />
+                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.revenue} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
 
                 <div className="recently-added-container">
                     <Typography variant="h6" className="section-title">
-                        {translations.recentowners || "Recent Owners / Clients"}
+                        {translations.recentowners}
                     </Typography>
                     {dashboardData.recentlyAddedOwners && dashboardData.recentlyAddedOwners.length > 0 ? (
                         <div className="owners-list">
@@ -353,7 +353,7 @@ const Dashboard = () => {
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentowners || "No recent owners found"}
+                                {translations.notfoundrecentowners}
                             </Typography>
                         </div>
                     )}
@@ -363,7 +363,7 @@ const Dashboard = () => {
             <div className="dashboard-row row-2">
                 <div className="recently-added-container">
                     <Typography variant="h6" className="section-title">
-                        {translations.recentbusinesses || "Recent Businesses"}
+                        {translations.recentbusinesses}
                     </Typography>
                     {dashboardData.recentlyAddedBusinesses && dashboardData.recentlyAddedBusinesses.length > 0 ? (
                         <div className="businesses-list">
@@ -392,21 +392,21 @@ const Dashboard = () => {
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentbusinesses || "No recent businesses found"}
+                                {translations.notfoundrecentbusinesses}
                             </Typography>
                         </div>
                     )}
                 </div>
 
                 <div className="chart-container monthly-order-chart">
-                    <Typography variant="h6" className="chart-title">{translations.monthlysubscriptions || "Monthly Subscriptions"}</Typography>
+                    <Typography variant="h6" className="chart-title">{translations.monthlysubscriptions}</Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <BarChart data={chartData} barSize={22} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                             <XAxis dataKey="month" className="chart-axis" axisLine={false} tickLine={false} />
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={65} allowDecimals={false} tickFormatter={(value) => Math.round(value)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.subscriptions || "Subscriptions"} radius={[10, 10, 10, 10]} isAnimationActive={false} />
+                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.subscriptions} radius={[10, 10, 10, 10]} isAnimationActive={false} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

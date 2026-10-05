@@ -13,7 +13,7 @@ const EditButton = React.forwardRef(({ onClick, disabled = false, size = "small"
                     size={size}
                     onClick={onClick}
                     disabled={disabled}
-                    aria-label="edit"
+                    aria-label={translations.edit}
                     className="edit-icon"
                 >
                     <EditIcon fontSize="small" />
