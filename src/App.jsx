@@ -6,18 +6,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import './App.scss';
 import AdminLogin from "./Pages/General/Signin.jsx";
-import Logout from "./Pages/General/Logout.jsx";
-import Dashboard from "./Pages/Home/Dashboard.jsx";
-import LoginActivity from "./Pages/General/LoginActivity.jsx";
+import AdminFooter from "./Pages/Partials/AdminFooter.jsx";
 import AdminNavbar from "./Pages/Partials/AdminNavbar.jsx";
 import HoriNavbar from "./Pages/Partials/HoriNavbar.jsx";
-import AdminFooter from "./Pages/Partials/AdminFooter.jsx";
+import SystemRouter from "./Router/System.jsx";
+import MainRouter from "./Router/Main.jsx";
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import { FiscalYearProvider } from './Context/FiscalYearContext.jsx';
+import Logout from "./Pages/General/Logout.jsx";
 import PageNotFound from "./Pages/Partials/PageNotFound.jsx";
-import Setting from "./Pages/System/Setting.jsx";
-import AddFiscalYear from "./Components/System/Setting/AddFiscalYear.jsx";
-import EditFiscalYear from "./Components/System/Setting/EditFiscalYear.jsx";
 
 const AppContent = () => {
   const location = useLocation();
@@ -72,13 +69,10 @@ const AppContent = () => {
       {!isLoginPage && <HoriNavbar />}
       <Routes>
         <Route path="/" element={<AdminLogin />} />
-        <Route path="/Signin" element={<AdminLogin />} />
         <Route path="/Logout" element={<Logout />} />
-        <Route path="/Home/Dashboard" element={<Dashboard />} />
-        <Route path="/Home/LoginActivity" element={<LoginActivity />} />
-        <Route path="/System/Setting" element={<Setting />} />
-        <Route path="/System/Setting/AddFiscalYear" element={<AddFiscalYear />} />
-        <Route path="/System/Setting/EditFiscalYear/:id" element={<EditFiscalYear />} />
+        <Route path="/Signin" element={<AdminLogin />} />
+        <Route path={`/Home/*`} element={<MainRouter />} />
+        <Route path={`/System/*`} element={<SystemRouter />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {!isLoginPage && <AdminFooter />}
