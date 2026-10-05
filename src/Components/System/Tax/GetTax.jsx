@@ -107,6 +107,16 @@ const GetTax = ({ searchValue = "" }) => {
         }
     };
 
+    const getTaxCurrency = (tax) => {
+        return {
+            currencysymbol: tax.currencysymbol || currency?.currencysymbol || "$",
+            currencyposition: tax.currencyposition || currency?.currencyposition || "left",
+            thousandseparator: tax.thousandseparator !== undefined && tax.thousandseparator !== null ? tax.thousandseparator : (currency?.thousandseparator ?? ""),
+            decimalseparator: tax.decimalseparator !== undefined && tax.decimalseparator !== null ? tax.decimalseparator : (currency?.decimalseparator ?? "."),
+            decimal: tax.decimal !== undefined && tax.decimal !== null ? tax.decimal : (currency?.decimal ?? 2)
+        };
+    };
+
     const filteredTaxes = taxes.filter((tax) => {
         const search = (searchValue || "").toLowerCase().trim();
         if (!search) return true;
@@ -212,7 +222,7 @@ const GetTax = ({ searchValue = "" }) => {
                                         <td>{tax.taxname}</td>
                                         <td>{tax.country}</td>
                                         <td>{getTaxComputationTranslation(tax.taxcomputation)}</td>
-                                        <td>{formatTaxPrice(tax.price, tax.taxtype, currency)}</td>
+                                        <td>{formatTaxPrice(tax.price, tax.taxtype, getTaxCurrency(tax))}</td>
                                         <td>
                                             <CustomSwitch checked={tax.status} onChange={() => handleStatusChange(tax)} />
                                         </td>
