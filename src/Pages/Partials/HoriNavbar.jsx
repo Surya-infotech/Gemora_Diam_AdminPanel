@@ -161,12 +161,6 @@ const HoriNavbar = () => {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
-                if (response.status === 404) {
-                    response = await fetch(`${adminPanelBackendPath}/General/admin/GetAdminDetails`, {
-                        method: "GET",
-                        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                    });
-                }
 
                 if (response.ok) {
                     const data = await response.json();

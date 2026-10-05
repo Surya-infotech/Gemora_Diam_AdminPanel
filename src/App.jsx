@@ -8,6 +8,7 @@ import './App.scss';
 import AdminLogin from "./Pages/General/Signin.jsx";
 import Logout from "./Pages/General/Logout.jsx";
 import Dashboard from "./Pages/Home/Dashboard.jsx";
+import LoginActivity from "./Pages/General/LoginActivity.jsx";
 import AdminNavbar from "./Pages/Partials/AdminNavbar.jsx";
 import HoriNavbar from "./Pages/Partials/HoriNavbar.jsx";
 import AdminFooter from "./Pages/Partials/AdminFooter.jsx";
@@ -71,6 +72,7 @@ const AppContent = () => {
         <Route path="/Signin" element={<AdminLogin />} />
         <Route path="/Logout" element={<Logout />} />
         <Route path="/Home/Dashboard" element={<Dashboard />} />
+        <Route path="/Home/LoginActivity" element={<LoginActivity />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {!isLoginPage && <AdminFooter />}

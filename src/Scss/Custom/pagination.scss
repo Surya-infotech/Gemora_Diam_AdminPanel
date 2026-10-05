@@ -1,0 +1,117 @@
+@use "../Customize/var.scss" as var;
+
+.paginationdiv {
+    margin-top: 20px !important;
+    margin-bottom: -30px !important;
+
+    .page-size-dropdown {
+        border-radius: 5px !important;
+        width: 80px !important;
+
+        select {
+            background-color: var(--page-color) !important;
+            border: var.$form_input_border_color !important;
+            border-radius: 4px !important;
+            padding: 5px !important;
+            color: var(--text-color) !important;
+            font-size: 14px !important;
+
+            &:focus {
+                border-color: var(--primary-color) !important;
+                box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 35%, transparent) !important;
+            }
+
+            option {
+                color: var(--text-color) !important;
+            }
+
+            option:hover {
+                background-color: #f1f3f5 !important;
+            }
+        }
+    }
+
+    .pagination{
+        button{
+            background-color: var(--page-color) !important;
+            color: var(--text-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .page-link:hover {
+            background-color: var(--secondary-color) !important;
+            color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        .page-link:focus {
+            box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary-color) 35%, transparent) !important;
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: #fff !important;
+        }
+
+        .page-item.disabled .page-link {
+            border-color: var(--primary-color) !important;
+        }
+    }
+
+    .records-info {
+        color: var(--text-color) !important;
+        font-weight: 400 !important;
+    }
+}
+
+.paginationdiv .page-size-dropdown {
+    margin-left: 10px !important;
+}
+
+.paginationdiv.rtl-pagination,
+.paginationdiv[dir="rtl"],
+body.rtl-mode .paginationdiv {
+    direction: rtl;
+
+    .page-size-dropdown {
+        margin-left: 0 !important;
+        margin-right: 10px !important;
+
+        select {
+            direction: rtl !important;
+            text-align: right !important;
+            background-position: left 0.75rem center !important;
+            padding-left: 2rem !important;
+            padding-right: 0.75rem !important;
+        }
+    }
+
+    .records-info {
+        direction: rtl !important;
+        text-align: center !important;
+    }
+
+    .pagination {
+        direction: rtl !important;
+
+        .page-item:first-child .page-link {
+            border-top-right-radius: 4px !important;
+            border-bottom-right-radius: 4px !important;
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+        }
+
+        .page-item:last-child .page-link {
+            border-top-left-radius: 4px !important;
+            border-bottom-left-radius: 4px !important;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        .page-item:not(:first-child) .page-link {
+            margin-left: 0 !important;
+            margin-right: -1px !important;
+        }
+    }
+}

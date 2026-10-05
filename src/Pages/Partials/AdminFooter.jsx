@@ -31,6 +31,7 @@ const AdminFooter = () => {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                      if (HandleUnauthorized(data, logoutUser, navigate)) return;
                     if (data) {
                         if (data.copyright) setCopyright(data.copyright);
                         if (data.maintainedby) setMaintainedBy(data.maintainedby);
@@ -38,7 +39,8 @@ const AdminFooter = () => {
                     }
                 }
             } catch {
-                // Keep default footer content if API is not yet configured
+                setWarningMessage(translations.servererror);
+                setShowWarning(true);
             }
         };
 
