@@ -90,13 +90,13 @@ const OwnerLogin = () => {
         try {
             let response = await fetch(`${BackendPath}/admin/verify-token`, {
                 method: "GET",
-                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', "x-user": "admin" },
+                headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
             });
 
             if (response.status === 404) {
                 response = await fetch(`${BackendPath}/General/admin/verify-token`, {
                     method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', "x-user": "admin" },
+                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 });
             }
 
@@ -122,7 +122,7 @@ const OwnerLogin = () => {
             try {
                 const response = await fetch(`${BackendPath}/System/GetGeneralSetting_landingpage`, {
                     method: "GET",
-                    headers: { "Content-Type": "application/json", "x-user": "admin" },
+                    headers: { "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (!response.ok || !data) return;
@@ -156,7 +156,7 @@ const OwnerLogin = () => {
 
             response = await fetch(`${BackendPath}/admin/Signin`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', "x-user": "admin" },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, browserdetails, device, ipaddress, location }),
             });
 
