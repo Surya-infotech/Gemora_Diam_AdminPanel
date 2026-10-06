@@ -5,6 +5,7 @@ import { useAuth } from '../../Middleware/Auth';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
 import Dropdown from '../Dropdown/Dropdown';
+import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import CheckToken from '../../utils/CheckToken';
@@ -26,6 +27,8 @@ const AddItem = () => {
     const [itemName, setItemName] = useState("");
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [ringSizes, setRingSizes] = useState([]);
+    const [selectedRingSizes, setSelectedRingSizes] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -54,6 +57,33 @@ const AddItem = () => {
 
         fetchCategories();
     }, [adminPanelBackendPath]);
+
+    // Fetch active ring sizes for dropdown
+    useEffect(() => {
+        const fetchRingSizes = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveRingSizes`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setRingSizes(data);
+                }
+            } catch (err) {
+                console.error("Error loading ring sizes:", err);
+            }
+        };
+
+        fetchRingSizes();
+    }, [adminPanelBackendPath]);
+
+    const ringSizeOptions = ringSizes.map(r => ({
+        ringsizeid: r.ringsizeid,
+        ringsize: r.ringsize,
+        label: r.ringsize,
+        value: r.ringsizeid
+    }));
 
     const handleUploadClick = () => {
         if (fileInputRef.current) {
@@ -118,6 +148,7 @@ const AddItem = () => {
             const formData = new FormData();
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
+            formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("description", description.trim());
             if (imageFile) {
                 formData.append("image", imageFile);
@@ -256,6 +287,19 @@ const AddItem = () => {
                                             selectedValue={selectedCategory}
                                             onValueChange={(val) => setSelectedCategory(val)}
                                             placeholder={translations.selectcategory || "Select Category"}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.RingSize || translations.ringsize || "Ring Size"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={ringSizeOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedRingSizes}
+                                            onValueChange={(val) => setSelectedRingSizes(val)}
+                                            placeholder={translations.selectringsize || "Select Ring Size"}
                                         />
                                     </div>
                                 </div>
