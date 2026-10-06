@@ -156,7 +156,7 @@ const AddColor = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="btn btn-primary submit-btn"
+                                        className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
                                         {translations.save || "Save"}
