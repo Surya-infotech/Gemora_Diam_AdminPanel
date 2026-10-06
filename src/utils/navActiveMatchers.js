@@ -13,6 +13,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
     '/Attributes/DiamondSize': ['/Attributes/DiamondSize', '/Attributes/AddDiamondSize', '/Attributes/EditDiamondSize'],
     '/Attributes/RingSize': ['/Attributes/RingSize', '/Attributes/AddRingSize', '/Attributes/EditRingSize'],
+    '/Attributes/Shape': ['/Attributes/Shape', '/Attributes/AddShape', '/Attributes/EditShape'],
     '/System/ContactUs': ['/System/ContactUs'],
     '/System/Subscribers': ['/System/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],

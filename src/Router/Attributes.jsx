@@ -8,6 +8,9 @@ import EditDiamondSize from "../Components/Attributes/DiamondSize/EditDiamondSiz
 import RingSize from "../Pages/Attributes/RingSize";
 import AddRingSize from "../Components/Attributes/RingSize/AddRingSize";
 import EditRingSize from "../Components/Attributes/RingSize/EditRingSize";
+import Shape from "../Pages/Attributes/Shape";
+import AddShape from "../Components/Attributes/Shape/AddShape";
+import EditShape from "../Components/Attributes/Shape/EditShape";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -21,6 +24,9 @@ const AttributesRouter = () => (
         <Route path="/RingSize" element={<RingSize />} />
         <Route path="/AddRingSize" element={<AddRingSize />} />
         <Route path="/EditRingSize/:id" element={<EditRingSize />} />
+        <Route path="/Shape" element={<Shape />} />
+        <Route path="/AddShape" element={<AddShape />} />
+        <Route path="/EditShape/:id" element={<EditShape />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

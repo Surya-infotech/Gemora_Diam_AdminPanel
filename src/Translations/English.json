@@ -311,5 +311,20 @@
     "updateringsizesuccessfull": "Ring Size updated successfully",
     "deleteringsizesuccessfull": "Ring Size Deleted Successfully",
     "ringsizealreadyexists": "Ring Size Already Exists",
-    "ringsizenotfound": "Ring Size not found"
+    "ringsizenotfound": "Ring Size not found",
+    "Shape": "Shape",
+    "shape": "Shape",
+    "shapes": "Shapes",
+    "shapename": "Shape Name",
+    "addshape": "Add Shape",
+    "editshape": "Edit Shape",
+    "deleteshape": "Delete Shape",
+    "entershapename": "Enter Shape Name",
+    "shapestatusactive": "Shape Status updated to Active",
+    "shapestatusinactive": "Shape Status updated to Inactive",
+    "addshapesuccessfull": "Shape added successfully",
+    "updateshapesuccessfull": "Shape updated successfully",
+    "deleteshapesuccessfull": "Shape Deleted Successfully",
+    "shapealreadyexists": "Shape Already Exists",
+    "shapenotfound": "Shape not found"
 }

@@ -25,6 +25,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PeopleIcon from '@mui/icons-material/People';
 import CategoryIcon from '@mui/icons-material/Category';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import InterestsIcon from '@mui/icons-material/Interests';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -262,6 +263,14 @@ const AdminNavbar = () => {
                                     <RadioButtonUncheckedIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.RingSize || "Ring Size"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/Shape" className={navLinkClass('/Attributes/Shape')}>
+                                <NavTooltip title={translations.Shape || "Shape"}>
+                                    <InterestsIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Shape || "Shape"}
                             </NavLink>
                         </li>
                     </div>
