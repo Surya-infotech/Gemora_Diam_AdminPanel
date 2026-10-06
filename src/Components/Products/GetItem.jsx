@@ -223,8 +223,7 @@ const GetItem = ({ searchValue }) => {
                     <table className="itemtable">
                         <thead>
                             <tr>
-                                <th>{translations.image || "Image"}</th>
-                                <th onClick={() => sortItems("itemname")}>
+                                <th className="item-name-col" onClick={() => sortItems("itemname")}>
                                     {translations.itemname || "Item Name"} {renderSortIcon("itemname")}
                                 </th>
                                 <th onClick={() => sortItems("categoryname")}>
@@ -240,11 +239,11 @@ const GetItem = ({ searchValue }) => {
                             {visibleItems.length > 0 ? (
                                 visibleItems.map((item) => (
                                     <tr key={item._id || item.itemid}>
-                                        <td className="item-img-cell">
-                                            <ItemImage src={item.image} alt={item.itemname} />
-                                        </td>
-                                        <td>
-                                            <strong>{item.itemname}</strong>
+                                        <td className="item-name-col">
+                                            <div className="item-info-cell">
+                                                <ItemImage src={item.image} alt={item.itemname} />
+                                                <strong className="item-name-text">{item.itemname}</strong>
+                                            </div>
                                         </td>
                                         <td>
                                             <span className="category-badge">
@@ -262,7 +261,7 @@ const GetItem = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5">
+                                    <td colSpan="4">
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
