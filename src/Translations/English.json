@@ -422,5 +422,22 @@
     "updatefaqsuccessfull": "FAQ updated successfully",
     "deletefaqsuccessfull": "FAQ Deleted Successfully",
     "faqalreadyexists": "FAQ with this question already exists",
-    "faqnotfound": "FAQ not found"
+    "faqnotfound": "FAQ not found",
+    "Policy": "Policy",
+    "policy": "Policy",
+    "policies": "Policies",
+    "policyname": "Policy Name",
+    "enterpolicyname": "Enter Policy Name",
+    "policydescription": "Policy Description",
+    "enterpolicydescription": "Enter Policy Description",
+    "addpolicy": "Add Policy",
+    "editpolicy": "Edit Policy",
+    "deletepolicy": "Delete Policy",
+    "policystatusactive": "Policy Status updated to Active",
+    "policystatusinactive": "Policy Status updated to Inactive",
+    "addpolicysuccessfull": "Policy added successfully",
+    "updatepolicysuccessfull": "Policy updated successfully",
+    "deletepolicysuccessfull": "Policy Deleted Successfully",
+    "policyalreadyexists": "Policy Already Exists",
+    "policynotfound": "Policy not found"
 }

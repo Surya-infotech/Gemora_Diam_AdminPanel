@@ -32,6 +32,7 @@ import TokenIcon from '@mui/icons-material/Token';
 import StyleIcon from '@mui/icons-material/Style';
 import GridViewIcon from '@mui/icons-material/GridView';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
+import PolicyIcon from '@mui/icons-material/Policy';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -376,6 +377,14 @@ const AdminNavbar = () => {
                                     <LiveHelpIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.FAQ || "FAQ"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/Policy" className={navLinkClass('/System/Policy')}>
+                                <NavTooltip title={translations.Policy || "Policy"}>
+                                    <PolicyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Policy || "Policy"}
                             </NavLink>
                         </li>
                         <li>
