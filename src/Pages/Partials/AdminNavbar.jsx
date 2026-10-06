@@ -26,6 +26,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import CategoryIcon from '@mui/icons-material/Category';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import InterestsIcon from '@mui/icons-material/Interests';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -271,6 +272,14 @@ const AdminNavbar = () => {
                                     <InterestsIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Shape || "Shape"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/Clarity" className={navLinkClass('/Attributes/Clarity')}>
+                                <NavTooltip title={translations.Clarity || "Clarity"}>
+                                    <VisibilityIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Clarity || "Clarity"}
                             </NavLink>
                         </li>
                     </div>

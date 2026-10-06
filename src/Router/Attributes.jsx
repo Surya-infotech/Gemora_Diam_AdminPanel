@@ -11,6 +11,9 @@ import EditRingSize from "../Components/Attributes/RingSize/EditRingSize";
 import Shape from "../Pages/Attributes/Shape";
 import AddShape from "../Components/Attributes/Shape/AddShape";
 import EditShape from "../Components/Attributes/Shape/EditShape";
+import Clarity from "../Pages/Attributes/Clarity";
+import AddClarity from "../Components/Attributes/Clarity/AddClarity";
+import EditClarity from "../Components/Attributes/Clarity/EditClarity";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -27,6 +30,9 @@ const AttributesRouter = () => (
         <Route path="/Shape" element={<Shape />} />
         <Route path="/AddShape" element={<AddShape />} />
         <Route path="/EditShape/:id" element={<EditShape />} />
+        <Route path="/Clarity" element={<Clarity />} />
+        <Route path="/AddClarity" element={<AddClarity />} />
+        <Route path="/EditClarity/:id" element={<EditClarity />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

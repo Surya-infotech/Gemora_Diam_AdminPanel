@@ -326,5 +326,20 @@
     "updateshapesuccessfull": "Shape updated successfully",
     "deleteshapesuccessfull": "Shape Deleted Successfully",
     "shapealreadyexists": "Shape Already Exists",
-    "shapenotfound": "Shape not found"
+    "shapenotfound": "Shape not found",
+    "Clarity": "Clarity",
+    "clarity": "Clarity",
+    "clarities": "Clarities",
+    "clarityname": "Clarity Name",
+    "addclarity": "Add Clarity",
+    "editclarity": "Edit Clarity",
+    "deleteclarity": "Delete Clarity",
+    "enterclarityname": "Enter Clarity Name",
+    "claritystatusactive": "Clarity Status updated to Active",
+    "claritystatusinactive": "Clarity Status updated to Inactive",
+    "addclaritysuccessfull": "Clarity added successfully",
+    "updateclaritysuccessfull": "Clarity updated successfully",
+    "deleteclaritysuccessfull": "Clarity Deleted Successfully",
+    "clarityalreadyexists": "Clarity Already Exists",
+    "claritynotfound": "Clarity not found"
 }
