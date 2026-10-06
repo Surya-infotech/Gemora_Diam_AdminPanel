@@ -385,5 +385,20 @@
     "updatestylesuccessfull": "Style updated successfully",
     "deletestylesuccessfull": "Style Deleted Successfully",
     "stylealreadyexists": "Style Already Exists",
-    "stylenotfound": "Style not found"
+    "stylenotfound": "Style not found",
+    "Category": "Category",
+    "category": "Category",
+    "categories": "Categories",
+    "categoryname": "Category Name",
+    "addcategory": "Add Category",
+    "editcategory": "Edit Category",
+    "deletecategory": "Delete Category",
+    "entercategoryname": "Enter Category Name",
+    "categorystatusactive": "Category Status updated to Active",
+    "categorystatusinactive": "Category Status updated to Inactive",
+    "addcategorysuccessfull": "Category added successfully",
+    "updatecategorysuccessfull": "Category updated successfully",
+    "deletecategorysuccessfull": "Category Deleted Successfully",
+    "categoryalreadyexists": "Category Already Exists",
+    "categorynotfound": "Category not found"
 }

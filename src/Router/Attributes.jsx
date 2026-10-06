@@ -23,6 +23,9 @@ import EditStone from "../Components/Attributes/Stone/EditStone";
 import Style from "../Pages/Attributes/Style";
 import AddStyle from "../Components/Attributes/Style/AddStyle";
 import EditStyle from "../Components/Attributes/Style/EditStyle";
+import Category from "../Pages/Attributes/Category";
+import AddCategory from "../Components/Attributes/Category/AddCategory";
+import EditCategory from "../Components/Attributes/Category/EditCategory";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -51,6 +54,9 @@ const AttributesRouter = () => (
         <Route path="/Style" element={<Style />} />
         <Route path="/AddStyle" element={<AddStyle />} />
         <Route path="/EditStyle/:id" element={<EditStyle />} />
+        <Route path="/Category" element={<Category />} />
+        <Route path="/AddCategory" element={<AddCategory />} />
+        <Route path="/EditCategory/:id" element={<EditCategory />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

@@ -1,0 +1,33 @@
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+
+.Category-container {
+    @include mixin.main_page;
+
+    .category-container {
+        @include mixin.page;
+
+        .category-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .category-form-container {
+            @include mixin.page_size;
+
+            .category-header {
+                @include mixin.page_header;
+
+                .add-new-btn {
+                    @include mixin.add_new_btn;
+                }
+            }
+        }
+    }
+}
+
+.alert {
+    @include mixin.alert;
+}

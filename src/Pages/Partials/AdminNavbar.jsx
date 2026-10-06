@@ -30,6 +30,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import TokenIcon from '@mui/icons-material/Token';
 import StyleIcon from '@mui/icons-material/Style';
+import GridViewIcon from '@mui/icons-material/GridView';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -307,6 +308,14 @@ const AdminNavbar = () => {
                                     <StyleIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Style || "Style"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/Category" className={navLinkClass('/Attributes/Category')}>
+                                <NavTooltip title={translations.Category || "Category"}>
+                                    <GridViewIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Category || "Category"}
                             </NavLink>
                         </li>
                     </div>
