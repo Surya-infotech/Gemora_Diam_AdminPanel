@@ -35,6 +35,12 @@ const EditItem = () => {
     const [selectedShapes, setSelectedShapes] = useState([]);
     const [clarities, setClarities] = useState([]);
     const [selectedClarities, setSelectedClarities] = useState([]);
+    const [diamondColors, setDiamondColors] = useState([]);
+    const [selectedDiamondColors, setSelectedDiamondColors] = useState([]);
+    const [stones, setStones] = useState([]);
+    const [selectedStones, setSelectedStones] = useState([]);
+    const [styles, setStyles] = useState([]);
+    const [selectedStyles, setSelectedStyles] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -146,6 +152,87 @@ const EditItem = () => {
         value: c.clarityid
     }));
 
+    // Fetch active diamond colors for dropdown
+    useEffect(() => {
+        const fetchDiamondColors = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveDiamondColors`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setDiamondColors(data);
+                }
+            } catch (err) {
+                console.error("Error loading diamond colors:", err);
+            }
+        };
+
+        fetchDiamondColors();
+    }, [adminPanelBackendPath]);
+
+    const diamondColorOptions = diamondColors.map(d => ({
+        diamondcolorid: d.diamondcolorid,
+        diamondcolor: d.diamondcolor,
+        label: d.diamondcolor,
+        value: d.diamondcolorid
+    }));
+
+    // Fetch active stones for dropdown
+    useEffect(() => {
+        const fetchStones = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveStones`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setStones(data);
+                }
+            } catch (err) {
+                console.error("Error loading stones:", err);
+            }
+        };
+
+        fetchStones();
+    }, [adminPanelBackendPath]);
+
+    const stoneOptions = stones.map(s => ({
+        stoneid: s.stoneid,
+        stonename: s.stonename,
+        label: s.stonename,
+        value: s.stoneid
+    }));
+
+    // Fetch active styles for dropdown
+    useEffect(() => {
+        const fetchStyles = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveStyles`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setStyles(data);
+                }
+            } catch (err) {
+                console.error("Error loading styles:", err);
+            }
+        };
+
+        fetchStyles();
+    }, [adminPanelBackendPath]);
+
+    const styleOptions = styles.map(st => ({
+        styleid: st.styleid,
+        stylename: st.stylename,
+        label: st.stylename,
+        value: st.styleid
+    }));
+
     // Fetch item details
     useEffect(() => {
         const fetchDetails = async () => {
@@ -196,6 +283,36 @@ const EditItem = () => {
                         })));
                     } else {
                         setSelectedClarities([]);
+                    }
+                    if (result.diamondcolors && Array.isArray(result.diamondcolors)) {
+                        setSelectedDiamondColors(result.diamondcolors.map(d => ({
+                            diamondcolorid: d.diamondcolorid,
+                            diamondcolor: d.diamondcolor,
+                            label: d.diamondcolor,
+                            value: d.diamondcolorid
+                        })));
+                    } else {
+                        setSelectedDiamondColors([]);
+                    }
+                    if (result.stones && Array.isArray(result.stones)) {
+                        setSelectedStones(result.stones.map(s => ({
+                            stoneid: s.stoneid,
+                            stonename: s.stonename,
+                            label: s.stonename,
+                            value: s.stoneid
+                        })));
+                    } else {
+                        setSelectedStones([]);
+                    }
+                    if (result.styles && Array.isArray(result.styles)) {
+                        setSelectedStyles(result.styles.map(st => ({
+                            styleid: st.styleid,
+                            stylename: st.stylename,
+                            label: st.stylename,
+                            value: st.styleid
+                        })));
+                    } else {
+                        setSelectedStyles([]);
                     }
                     setDescription(result.description || "");
                     setStatus(Boolean(result.status));
@@ -289,6 +406,9 @@ const EditItem = () => {
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("clarities", JSON.stringify(selectedClarities));
+            formData.append("diamondcolors", JSON.stringify(selectedDiamondColors));
+            formData.append("stones", JSON.stringify(selectedStones));
+            formData.append("styles", JSON.stringify(selectedStyles));
             formData.append("description", description.trim());
             formData.append("status", status);
             if (imageFile) {
@@ -476,6 +596,48 @@ const EditItem = () => {
                                 </div>
 
                                 <div className="form-row">
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={diamondColorOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedDiamondColors}
+                                            onValueChange={(val) => setSelectedDiamondColors(val)}
+                                            placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Stone || translations.stone || "Stone"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={stoneOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedStones}
+                                            onValueChange={(val) => setSelectedStones(val)}
+                                            placeholder={translations.selectstone || "Select Stone"}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Style || translations.style || "Style"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={styleOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedStyles}
+                                            onValueChange={(val) => setSelectedStyles(val)}
+                                            placeholder={translations.selectstyle || "Select Style"}
+                                        />
+                                    </div>
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">
