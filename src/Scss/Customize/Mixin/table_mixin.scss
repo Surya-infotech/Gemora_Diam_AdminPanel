@@ -184,16 +184,6 @@
     }
 }
 
-@mixin timeslots_icon {
-    color: var.$table_edit_icon_color !important;
-    padding: 3px;
-
-    &:hover {
-        background-color: var.$table_edit_icon_bgcolor !important;
-        color: var.$table_edit_icon_hovercolor !important;
-    }
-}
-
 @mixin kpi_grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

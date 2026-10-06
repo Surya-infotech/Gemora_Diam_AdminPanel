@@ -1,7 +1,6 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
-import HomeIcon from '@mui/icons-material/Home';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import HistoryIcon from '@mui/icons-material/History';
 import BoltIcon from '@mui/icons-material/Bolt';

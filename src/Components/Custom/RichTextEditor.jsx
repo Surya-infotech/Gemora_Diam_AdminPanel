@@ -27,16 +27,6 @@ const FONT_SIZES = [
     { label: '36px', value: '36px', execSize: '7' }
 ];
 
-const SIZE_MAP = {
-    '1': '12px',
-    '2': '14px',
-    '3': '16px',
-    '4': '18px',
-    '5': '22px',
-    '6': '28px',
-    '7': '36px'
-};
-
 const formatInitialContent = (content) => {
     if (!content) return '';
     if (/<[a-z][\s\S]*>/i.test(content)) {
