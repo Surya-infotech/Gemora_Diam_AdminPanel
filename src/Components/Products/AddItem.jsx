@@ -102,6 +102,12 @@ const AddItem = () => {
             return;
         }
 
+        if (!imageFile) {
+            setWarningMessage(translations.imagerequired || "Image is required");
+            setShowWarning(true);
+            return;
+        }
+
         setIsLoading(true);
         if (!CheckToken(token, logoutUser, navigate)) {
             setIsLoading(false);
@@ -136,6 +142,7 @@ const AddItem = () => {
                 const errorMessages = {
                     "Item Name is required": translations.itemnamerequired || "Item Name is required",
                     "Category is required": translations.categoryrequired || "Category is required",
+                    "Image is required": translations.imagerequired || "Image is required",
                     "Item Already Exists": translations.itemalreadyexists || "Item Already Exists",
                     "Server error": translations.servererror
                 };

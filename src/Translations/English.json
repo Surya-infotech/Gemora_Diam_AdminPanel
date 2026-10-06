@@ -458,6 +458,7 @@
     "itemstatusinactive": "Item Status updated to Inactive",
     "selectcategory": "Select Category",
     "categoryrequired": "Please select a Category",
+    "imagerequired": "Image is required",
     "image": "Image",
     "clickordragimage": "Click to browse or drag and drop an image",
     "imagehint": "PNG, JPG, JPEG up to 10MB",

@@ -152,6 +152,12 @@ const EditItem = () => {
             return;
         }
 
+        if (!imageFile && (!imagePreview || imagePreview === Placeholder)) {
+            setWarningMessage(translations.imagerequired || "Image is required");
+            setShowWarning(true);
+            return;
+        }
+
         setIsLoading(true);
         if (!CheckToken(token, logoutUser, navigate)) {
             setIsLoading(false);
@@ -187,6 +193,7 @@ const EditItem = () => {
                 const errorMessages = {
                     "Item Name is required": translations.itemnamerequired || "Item Name is required",
                     "Category is required": translations.categoryrequired || "Category is required",
+                    "Image is required": translations.imagerequired || "Image is required",
                     "Item Already Exists": translations.itemalreadyexists || "Item with this name already exists",
                     "Item not found": translations.itemnotfound || "Item not found",
                     "Server error": translations.servererror
