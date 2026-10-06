@@ -230,7 +230,6 @@ const GetItem = ({ searchValue }) => {
                                 <th onClick={() => sortItems("categoryname")}>
                                     {translations.Category || "Category"} {renderSortIcon("categoryname")}
                                 </th>
-                                <th>{translations.description || "Description"}</th>
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
@@ -249,11 +248,8 @@ const GetItem = ({ searchValue }) => {
                                         </td>
                                         <td>
                                             <span className="category-badge">
-                                                {item.categoryname || "N/A"}
+                                                {item.categoryname || "-"}
                                             </span>
-                                        </td>
-                                        <td className="item-desc-cell" title={item.description || ""}>
-                                            {item.description ? item.description : "-"}
                                         </td>
                                         <td>
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
@@ -266,7 +262,7 @@ const GetItem = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="5">
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
