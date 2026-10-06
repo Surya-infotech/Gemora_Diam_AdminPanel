@@ -4,6 +4,7 @@ import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import "../../../Scss/System/Policy/addpolicy.scss";
+import RichTextEditor from '../../Custom/RichTextEditor';
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -121,19 +122,10 @@ const AddPolicy = () => {
                                         <label htmlFor="description">
                                             {translations.policydescription || translations.description || "Policy Description"} <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <textarea
-                                            id="description"
-                                            name="description"
-                                            rows="7"
-                                            autoComplete="off"
-                                            placeholder={translations.enterpolicydescription || "Enter Policy Description"}
-                                            required
+                                        <RichTextEditor
                                             value={description}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                if (value.length === 1 && value === " ") return;
-                                                setDescription(value);
-                                            }}
+                                            onChange={(val) => setDescription(val)}
+                                            placeholder={translations.enterpolicydescription || "Enter Policy Description"}
                                         />
                                     </div>
                                 </div>

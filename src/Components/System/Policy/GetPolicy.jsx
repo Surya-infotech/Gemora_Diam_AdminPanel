@@ -15,6 +15,11 @@ import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
+const stripHtml = (html) => {
+    if (!html) return "";
+    return html.replace(/<[^>]*>?/gm, " ").replace(/\s+/g, " ").trim();
+};
+
 const GetPolicy = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
     const navigate = useNavigate();
@@ -75,6 +80,9 @@ const GetPolicy = ({ searchValue = "" }) => {
             if (column === "status") {
                 valA = a[column] ? 1 : 0;
                 valB = b[column] ? 1 : 0;
+            } else if (column === "description") {
+                valA = stripHtml(valA).toLowerCase();
+                valB = stripHtml(valB).toLowerCase();
             } else {
                 valA = valA.toString().toLowerCase();
                 valB = valB.toString().toLowerCase();
@@ -93,9 +101,9 @@ const GetPolicy = ({ searchValue = "" }) => {
     const filteredItems = policies.filter((item) => {
         const search = (searchValue || "").toLowerCase().trim();
         if (!search) return true;
-        return Object.values(item).some((value) =>
-            value !== null && value !== undefined && value.toString().toLowerCase().includes(search)
-        );
+        const nameMatch = (item.policyname || "").toLowerCase().includes(search);
+        const descMatch = stripHtml(item.description || "").toLowerCase().includes(search);
+        return nameMatch || descMatch;
     });
 
     const totalRecords = filteredItems.length;
@@ -181,36 +189,28 @@ const GetPolicy = ({ searchValue = "" }) => {
                     <table className="policytable">
                         <thead>
                             <tr>
-                                <th className="col-policyname" onClick={() => sortItems("policyname")}>
+                                <th onClick={() => sortItems("policyname")}>
                                     {translations.policyname || "Policy Name"} {renderSortIcon("policyname")}
                                 </th>
-                                <th className="col-description" onClick={() => sortItems("description")}>
-                                    {translations.policydescription || translations.description || "Description"} {renderSortIcon("description")}
-                                </th>
-                                <th className="col-status" onClick={() => sortItems("status")}>
+                                <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th className="col-action">{translations.action || "Action"}</th>
+                                <th>{translations.action || "Action"}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {visibleItems.length > 0 ? (
                                 visibleItems.map((item) => (
                                     <tr key={item._id || item.policyid}>
-                                        <td className="td-policyname">
-                                            <div className="policy-name-text" title={item.policyname}>
+                                        <td>
+                                            <span className="policy-badge">
                                                 {item.policyname}
-                                            </div>
+                                            </span>
                                         </td>
-                                        <td className="td-description">
-                                            <div className="policy-description-text" title={item.description}>
-                                                {item.description}
-                                            </div>
-                                        </td>
-                                        <td className="td-status">
+                                        <td>
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
                                         </td>
-                                        <td className="td-action">
+                                        <td>
                                             <EditButton onClick={() => handleEditClick(item._id || item.policyid)} />
                                             <DeleteButton onClick={() => handleDeleteClick(item)} />
                                         </td>
@@ -218,7 +218,7 @@ const GetPolicy = ({ searchValue = "" }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="3" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
