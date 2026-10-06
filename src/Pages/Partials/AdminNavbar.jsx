@@ -23,7 +23,6 @@ import CategoryIcon from '@mui/icons-material/Category';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import ColorLensIcon from '@mui/icons-material/ColorLens';
 import TokenIcon from '@mui/icons-material/Token';
 import StyleIcon from '@mui/icons-material/Style';
 import GridViewIcon from '@mui/icons-material/GridView';
@@ -284,14 +283,6 @@ const AdminNavbar = () => {
                                     <VisibilityIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Clarity || "Clarity"}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/Attributes/DiamondColor" className={navLinkClass('/Attributes/DiamondColor')}>
-                                <NavTooltip title={translations.DiamondColor || "Diamond Color"}>
-                                    <ColorLensIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.DiamondColor || "Diamond Color"}
                             </NavLink>
                         </li>
                         <li>
