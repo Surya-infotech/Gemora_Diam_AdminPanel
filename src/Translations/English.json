@@ -472,5 +472,11 @@
     "imagehint": "PNG, JPG, JPEG up to 10MB",
     "noimage": "No Image",
     "changeimage": "Change",
-    "Products": "Products"
+    "Products": "Products",
+    "DiamondColor": "Diamond Color",
+    "diamondcolor": "Diamond Color",
+    "selectdiamondcolor": "Select Diamond Color",
+    "BandColor": "Band Color",
+    "bandcolor": "Band Color",
+    "selectbandcolor": "Select Band Color"
 }

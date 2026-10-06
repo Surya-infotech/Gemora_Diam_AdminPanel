@@ -40,6 +40,10 @@ const EditItem = () => {
     const [selectedStones, setSelectedStones] = useState([]);
     const [styles, setStyles] = useState([]);
     const [selectedStyles, setSelectedStyles] = useState([]);
+    const [diamondColors, setDiamondColors] = useState([]);
+    const [selectedDiamondColors, setSelectedDiamondColors] = useState([]);
+    const [bandColors, setBandColors] = useState([]);
+    const [selectedBandColors, setSelectedBandColors] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -205,6 +209,41 @@ const EditItem = () => {
         value: st.styleid
     }));
 
+    // Fetch active colors for dropdowns (Diamond Color and Band Color)
+    useEffect(() => {
+        const fetchColors = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveColors`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setDiamondColors(data.filter(c => c.colortype === "Diamond"));
+                    setBandColors(data.filter(c => c.colortype === "Band"));
+                }
+            } catch (err) {
+                console.error("Error loading colors:", err);
+            }
+        };
+
+        fetchColors();
+    }, [adminPanelBackendPath]);
+
+    const diamondColorOptions = diamondColors.map(c => ({
+        colorid: c.colorid,
+        colorname: c.colorname,
+        label: c.colorname,
+        value: c.colorid
+    }));
+
+    const bandColorOptions = bandColors.map(c => ({
+        colorid: c.colorid,
+        colorname: c.colorname,
+        label: c.colorname,
+        value: c.colorid
+    }));
+
     // Fetch item details
     useEffect(() => {
         const fetchDetails = async () => {
@@ -276,6 +315,26 @@ const EditItem = () => {
                         })));
                     } else {
                         setSelectedStyles([]);
+                    }
+                    if (result.diamondcolors && Array.isArray(result.diamondcolors)) {
+                        setSelectedDiamondColors(result.diamondcolors.map(dc => ({
+                            colorid: dc.colorid,
+                            colorname: dc.colorname,
+                            label: dc.colorname,
+                            value: dc.colorid
+                        })));
+                    } else {
+                        setSelectedDiamondColors([]);
+                    }
+                    if (result.bandcolors && Array.isArray(result.bandcolors)) {
+                        setSelectedBandColors(result.bandcolors.map(bc => ({
+                            colorid: bc.colorid,
+                            colorname: bc.colorname,
+                            label: bc.colorname,
+                            value: bc.colorid
+                        })));
+                    } else {
+                        setSelectedBandColors([]);
                     }
                     setDescription(result.description || "");
                     setStatus(Boolean(result.status));
@@ -376,6 +435,8 @@ const EditItem = () => {
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("clarities", JSON.stringify(selectedClarities));
+            formData.append("diamondcolors", JSON.stringify(selectedDiamondColors));
+            formData.append("bandcolors", JSON.stringify(selectedBandColors));
             formData.append("stones", JSON.stringify(selectedStones));
             formData.append("styles", JSON.stringify(selectedStyles));
             formData.append("description", description.trim());
@@ -611,6 +672,35 @@ const EditItem = () => {
                                             selectedValue={selectedStyles}
                                             onValueChange={(val) => setSelectedStyles(val)}
                                             placeholder={translations.selectstyle || "Select Style"}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={diamondColorOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedDiamondColors}
+                                            onValueChange={(val) => setSelectedDiamondColors(val)}
+                                            placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.BandColor || translations.bandcolor || "Band Color"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={bandColorOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedBandColors}
+                                            onValueChange={(val) => setSelectedBandColors(val)}
+                                            placeholder={translations.selectbandcolor || "Select Band Color"}
                                         />
                                     </div>
                                 </div>
