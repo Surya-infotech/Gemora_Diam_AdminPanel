@@ -24,6 +24,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PeopleIcon from '@mui/icons-material/People';
 import CategoryIcon from '@mui/icons-material/Category';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -253,6 +254,14 @@ const AdminNavbar = () => {
                                     <AutoAwesomeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.DiamondSize || "Diamond Size"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/RingSize" className={navLinkClass('/Attributes/RingSize')}>
+                                <NavTooltip title={translations.RingSize || "Ring Size"}>
+                                    <RadioButtonUncheckedIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.RingSize || "Ring Size"}
                             </NavLink>
                         </li>
                     </div>

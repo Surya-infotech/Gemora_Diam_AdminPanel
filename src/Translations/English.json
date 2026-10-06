@@ -297,5 +297,19 @@
     "updatediamondsizesuccessfull": "Diamond Size updated successfully",
     "deletediamondsizesuccessfull": "Diamond Size Deleted Successfully",
     "diamondsizealreadyexists": "Diamond Size Already Exists",
-    "diamondsizenotfound": "Diamond Size not found"
+    "diamondsizenotfound": "Diamond Size not found",
+    "RingSize": "Ring Size",
+    "ringsize": "Ring Size",
+    "ringsizes": "Ring Sizes",
+    "addringsize": "Add Ring Size",
+    "editringsize": "Edit Ring Size",
+    "deleteringsize": "Delete Ring Size",
+    "enterringsize": "Enter Ring Size",
+    "ringsizestatusactive": "Ring Size Status updated to Active",
+    "ringsizestatusinactive": "Ring Size Status updated to Inactive",
+    "addringsizesuccessfull": "Ring Size added successfully",
+    "updateringsizesuccessfull": "Ring Size updated successfully",
+    "deleteringsizesuccessfull": "Ring Size Deleted Successfully",
+    "ringsizealreadyexists": "Ring Size Already Exists",
+    "ringsizenotfound": "Ring Size not found"
 }
