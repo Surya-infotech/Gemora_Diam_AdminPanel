@@ -14,6 +14,9 @@ import EditShape from "../Components/Attributes/Shape/EditShape";
 import Clarity from "../Pages/Attributes/Clarity";
 import AddClarity from "../Components/Attributes/Clarity/AddClarity";
 import EditClarity from "../Components/Attributes/Clarity/EditClarity";
+import Color from "../Pages/Attributes/Color";
+import AddColor from "../Components/Attributes/Color/AddColor";
+import EditColor from "../Components/Attributes/Color/EditColor";
 import Stone from "../Pages/Attributes/Stone";
 import AddStone from "../Components/Attributes/Stone/AddStone";
 import EditStone from "../Components/Attributes/Stone/EditStone";
@@ -42,6 +45,9 @@ const AttributesRouter = () => (
         <Route path="/Clarity" element={<Clarity />} />
         <Route path="/AddClarity" element={<AddClarity />} />
         <Route path="/EditClarity/:id" element={<EditClarity />} />
+        <Route path="/Color" element={<Color />} />
+        <Route path="/AddColor" element={<AddColor />} />
+        <Route path="/EditColor/:id" element={<EditColor />} />
         <Route path="/Stone" element={<Stone />} />
         <Route path="/AddStone" element={<AddStone />} />
         <Route path="/EditStone/:id" element={<EditStone />} />

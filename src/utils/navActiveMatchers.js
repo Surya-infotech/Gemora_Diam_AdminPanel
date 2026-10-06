@@ -12,6 +12,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/RingSize': ['/Attributes/RingSize', '/Attributes/AddRingSize', '/Attributes/EditRingSize'],
     '/Attributes/Shape': ['/Attributes/Shape', '/Attributes/AddShape', '/Attributes/EditShape'],
     '/Attributes/Clarity': ['/Attributes/Clarity', '/Attributes/AddClarity', '/Attributes/EditClarity'],
+    '/Attributes/Color': ['/Attributes/Color', '/Attributes/AddColor', '/Attributes/EditColor'],
     '/Attributes/Stone': ['/Attributes/Stone', '/Attributes/AddStone', '/Attributes/EditStone'],
     '/Attributes/Style': ['/Attributes/Style', '/Attributes/AddStyle', '/Attributes/EditStyle'],
     '/Attributes/Category': ['/Attributes/Category', '/Attributes/AddCategory', '/Attributes/EditCategory'],
