@@ -5,8 +5,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import PercentIcon from '@mui/icons-material/Percent';
 import SettingsIcon from '@mui/icons-material/Settings';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -184,22 +182,6 @@ const AdminNavbar = () => {
                                     <LeaderboardIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Dashboard}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/Home/Business" className={navLinkClass('/Home/Business')}>
-                                <NavTooltip title={translations.Business}>
-                                    <StorefrontIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Business}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/Home/Branches" className={navLinkClass('/Home/Branches')}>
-                                <NavTooltip title={translations.Branches}>
-                                    <AddBusinessIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Branches}
                             </NavLink>
                         </li>
                     </div>

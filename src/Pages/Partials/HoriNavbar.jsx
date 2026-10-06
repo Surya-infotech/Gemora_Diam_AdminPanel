@@ -6,7 +6,6 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import HistoryIcon from '@mui/icons-material/History';
 import BoltIcon from '@mui/icons-material/Bolt';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import StorefrontIcon from '@mui/icons-material/Storefront';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -68,7 +67,6 @@ const HoriNavbar = () => {
     const quickLinks = useMemo(() => [
         { to: "/Home/Dashboard", label: translations.Dashboard, Icon: LeaderboardIcon },
         { to: "/System/Setting", label: translations.Setting, Icon: SettingsIcon },
-        { to: "/Home/Business", label: translations.Business, Icon: StorefrontIcon },
         { to: "/Users/Customer", label: translations.Customer, Icon: AccountCircleIcon },
     ], [translations]);
 
