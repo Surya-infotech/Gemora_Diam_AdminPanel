@@ -524,7 +524,7 @@ const EditItem = () => {
                                             <textarea
                                                 id="description"
                                                 name="description"
-                                                rows="3"
+                                                rows="1"
                                                 placeholder={translations.enterdescription || "Enter Description"}
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
