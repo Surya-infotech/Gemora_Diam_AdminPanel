@@ -6,7 +6,6 @@ import CustomSwitch from '../../Pages/Custom/CustomSwitch';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
 import Dropdown from '../Dropdown/Dropdown';
-import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import CheckToken from '../../utils/CheckToken';
@@ -29,8 +28,6 @@ const EditItem = () => {
     const [itemName, setItemName] = useState("");
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [metals, setMetals] = useState([]);
-    const [selectedMetals, setSelectedMetals] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -61,34 +58,6 @@ const EditItem = () => {
         fetchCategories();
     }, [adminPanelBackendPath]);
 
-    // Fetch active metals for dropdown
-    useEffect(() => {
-        const fetchMetals = async () => {
-            try {
-                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveMetals`, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-                const data = await response.json();
-                if (response.ok && Array.isArray(data)) {
-                    setMetals(data);
-                }
-            } catch (err) {
-                console.error("Error loading metals:", err);
-            }
-        };
-
-        fetchMetals();
-    }, [adminPanelBackendPath]);
-
-    const metalOptions = metals.map(m => ({
-        metalid: m.metalid,
-        metalname: m.metalname,
-        metaltype: m.metaltype,
-        label: m.metaltype ? `${m.metaltype} (${m.metalname})` : m.metalname,
-        value: m.metalid
-    }));
-
     // Fetch item details
     useEffect(() => {
         const fetchDetails = async () => {
@@ -110,17 +79,6 @@ const EditItem = () => {
                 if (response.ok) {
                     setItemName(result.itemname || "");
                     setSelectedCategory(result.categoryid != null ? result.categoryid : null);
-                    if (result.metals && Array.isArray(result.metals)) {
-                        setSelectedMetals(result.metals.map(m => ({
-                            metalid: m.metalid,
-                            metalname: m.metalname,
-                            metaltype: m.metaltype,
-                            label: m.metaltype ? `${m.metaltype} (${m.metalname})` : m.metalname,
-                            value: m.metalid
-                        })));
-                    } else {
-                        setSelectedMetals([]);
-                    }
                     setDescription(result.description || "");
                     setStatus(Boolean(result.status));
                     if (result.image) {
@@ -194,12 +152,6 @@ const EditItem = () => {
             return;
         }
 
-        if (!selectedMetals || selectedMetals.length === 0) {
-            setWarningMessage(translations.metalrequired || "Please select a Metal");
-            setShowWarning(true);
-            return;
-        }
-
         if (!imageFile && (!imagePreview || imagePreview === Placeholder)) {
             setWarningMessage(translations.imagerequired || "Image is required");
             setShowWarning(true);
@@ -216,7 +168,6 @@ const EditItem = () => {
             const formData = new FormData();
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
-            formData.append("metals", JSON.stringify(selectedMetals));
             formData.append("description", description.trim());
             formData.append("status", status);
             if (imageFile) {
@@ -242,7 +193,6 @@ const EditItem = () => {
                 const errorMessages = {
                     "Item Name is required": translations.itemnamerequired || "Item Name is required",
                     "Category is required": translations.categoryrequired || "Category is required",
-                    "Metal is required": translations.metalrequired || "Please select a Metal",
                     "Image is required": translations.imagerequired || "Image is required",
                     "Item Already Exists": translations.itemalreadyexists || "Item with this name already exists",
                     "Item not found": translations.itemnotfound || "Item not found",
@@ -360,22 +310,6 @@ const EditItem = () => {
                                             placeholder={translations.selectcategory || "Select Category"}
                                         />
                                     </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {translations.Metal || translations.metal || "Metal"} <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <MultiDropdown
-                                            options={metalOptions}
-                                            labelKey="label"
-                                            valueKey="value"
-                                            selectedValue={selectedMetals}
-                                            onValueChange={(val) => setSelectedMetals(val)}
-                                            placeholder={translations.selectmetal || "Select Metal"}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">
