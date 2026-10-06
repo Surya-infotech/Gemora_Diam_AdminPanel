@@ -30,6 +30,8 @@ const EditItem = () => {
     const [itemName, setItemName] = useState("");
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [subCategories, setSubCategories] = useState([]);
+    const [selectedSubCategory, setSelectedSubCategory] = useState(null);
     const [ringSizes, setRingSizes] = useState([]);
     const [selectedRingSizes, setSelectedRingSizes] = useState([]);
     const [shapes, setShapes] = useState([]);
@@ -73,6 +75,30 @@ const EditItem = () => {
 
         fetchCategories();
     }, [adminPanelBackendPath]);
+
+    // Fetch active subcategories for dropdown
+    useEffect(() => {
+        const fetchSubCategories = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveSubCategories`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setSubCategories(data);
+                }
+            } catch (err) {
+                console.error("Error loading subcategories:", err);
+            }
+        };
+
+        fetchSubCategories();
+    }, [adminPanelBackendPath]);
+
+    const filteredSubCategories = selectedCategory != null
+        ? subCategories.filter(sc => Number(sc.categoryid) === Number(selectedCategory))
+        : [];
 
     // Fetch active ring sizes for dropdown
     useEffect(() => {
@@ -266,6 +292,7 @@ const EditItem = () => {
                     setSku(result.sku || "");
                     setItemName(result.itemname || "");
                     setSelectedCategory(result.categoryid != null ? result.categoryid : null);
+                    setSelectedSubCategory(result.subcategoryid != null ? result.subcategoryid : null);
                     if (result.ringsizes && Array.isArray(result.ringsizes)) {
                         setSelectedRingSizes(result.ringsizes.map(r => ({
                             ringsizeid: r.ringsizeid,
@@ -432,6 +459,11 @@ const EditItem = () => {
             formData.append("sku", sku.trim());
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
+            if (selectedSubCategory) {
+                formData.append("subcategoryid", selectedSubCategory);
+            } else {
+                formData.append("subcategoryid", "");
+            }
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("clarities", JSON.stringify(selectedClarities));
@@ -599,10 +631,30 @@ const EditItem = () => {
                                             labelKey="categoryname"
                                             valueKey="categoryid"
                                             selectedValue={selectedCategory}
-                                            onValueChange={(val) => setSelectedCategory(val)}
+                                            onValueChange={(val) => {
+                                                setSelectedCategory(val);
+                                                setSelectedSubCategory(null);
+                                            }}
                                             placeholder={translations.selectcategory || "Select Category"}
                                         />
                                     </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.SubCategory || translations.subcategory || "Sub Category"}
+                                        </label>
+                                        <Dropdown
+                                            options={filteredSubCategories}
+                                            labelKey="subcategoryname"
+                                            valueKey="subcategoryid"
+                                            selectedValue={selectedSubCategory}
+                                            onValueChange={(val) => setSelectedSubCategory(val)}
+                                            placeholder={translations.selectsubcategory || "Select Sub Category"}
+                                            disabled={!selectedCategory || filteredSubCategories.length === 0}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.RingSize || translations.ringsize || "Ring Size"}
