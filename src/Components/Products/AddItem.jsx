@@ -187,16 +187,16 @@ const AddItem = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>
-                                                {translations.Category || "Category"} <span style={{ color: "red" }}>*</span>
+                                            <label htmlFor="description">
+                                                {translations.description || "Description"}
                                             </label>
-                                            <Dropdown
-                                                options={categories}
-                                                labelKey="categoryname"
-                                                valueKey="categoryid"
-                                                selectedValue={selectedCategory}
-                                                onValueChange={(val) => setSelectedCategory(val)}
-                                                placeholder={translations.selectcategory || "Select Category"}
+                                            <textarea
+                                                id="description"
+                                                name="description"
+                                                rows="3"
+                                                placeholder={translations.enterdescription || "Enter Description"}
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -237,18 +237,18 @@ const AddItem = () => {
                                     </div>
                                 </div>
 
-                                <div className="form-row full-width">
+                                <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="description">
-                                            {translations.description || "Description"}
+                                        <label>
+                                            {translations.Category || "Category"} <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <textarea
-                                            id="description"
-                                            name="description"
-                                            rows="4"
-                                            placeholder={translations.enterdescription || "Enter Description"}
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
+                                        <Dropdown
+                                            options={categories}
+                                            labelKey="categoryname"
+                                            valueKey="categoryid"
+                                            selectedValue={selectedCategory}
+                                            onValueChange={(val) => setSelectedCategory(val)}
+                                            placeholder={translations.selectcategory || "Select Category"}
                                         />
                                     </div>
                                 </div>
