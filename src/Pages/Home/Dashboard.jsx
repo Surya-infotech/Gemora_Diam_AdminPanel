@@ -1,4 +1,4 @@
-import { Groups, Paid, Payments, ReceiptLong, Savings, Subscriptions, TrendingDown, TrendingUp } from "@mui/icons-material";
+import { Groups, Paid, Payments, Savings, TrendingDown, TrendingUp } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -172,7 +172,7 @@ const Dashboard = () => {
     const kpiDifferences = dashboardData.kpiDifferences || {};
 
     const handleOwnersCardClick = () => navigate('/Home/Dashboard');
-    const handleSubscriptionCardClick = () => navigate('/Home/Dashboard');
+    const handleRevenueCardClick = () => navigate('/Home/Dashboard');
     const handleTaxCardClick = () => navigate('/Home/Dashboard');
 
     const cardData = [
@@ -184,23 +184,6 @@ const Dashboard = () => {
             onClick: handleOwnersCardClick,
             isClickable: true,
             variant: "highlight",
-        },
-        {
-            name: translations.activesubscriptions,
-            count: dashboardData.activeSubscriptionCount || 0,
-            icon: <Subscriptions className="card-icon" />,
-            onClick: handleSubscriptionCardClick,
-            isClickable: true,
-            variant: "positive",
-        },
-        {
-            name: translations.totalsubscriptions,
-            count: dashboardData.totalSubscriptionCount || 0,
-            difference: kpiDifferences.totalSubscriptionCountDifference,
-            icon: <ReceiptLong className="card-icon" />,
-            onClick: handleSubscriptionCardClick,
-            isClickable: true,
-            variant: "primary",
         },
         {
             name: translations.totaltax,
@@ -216,7 +199,7 @@ const Dashboard = () => {
             count: formatCurrency(dashboardData.totalSubtotalSum || 0, currencyDetails),
             difference: kpiDifferences.subtotalDifference,
             icon: <Paid className="card-icon" />,
-            onClick: handleSubscriptionCardClick,
+            onClick: handleRevenueCardClick,
             isClickable: true,
             variant: "income",
         },
@@ -225,7 +208,7 @@ const Dashboard = () => {
             count: formatCurrency(dashboardData.totalPriceSum || 0, currencyDetails),
             difference: kpiDifferences.revenueDifference,
             icon: <Savings className="card-icon" />,
-            onClick: handleSubscriptionCardClick,
+            onClick: handleRevenueCardClick,
             isClickable: true,
             variant: "revenue",
         },
