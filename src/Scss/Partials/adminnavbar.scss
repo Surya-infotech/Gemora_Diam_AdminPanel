@@ -115,11 +115,17 @@
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 0;
+    padding: 0 0 30px 0;
     width: 100%;
     margin-left: 0px !important;
-    height: calc(100vh - 120px);
-    overflow-y: hidden;
+    box-sizing: border-box;
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.25s ease;
 
     li {
         margin: 4px 6px;
@@ -147,23 +153,33 @@
             }
         }
     }
-
-    &:hover {
-        overflow-y: auto;
-        margin-right: 0px;
-    }
 }
 
-.admintab .admintab::-webkit-scrollbar {
-    width: 4px !important;
+.navbar:hover .admintab {
+    scrollbar-color: var.$hover_color transparent;
+}
+
+.admintab::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    background-color: transparent !important;
+}
+
+.admintab::-webkit-scrollbar-track {
+    background-color: transparent !important;
 }
 
 .admintab::-webkit-scrollbar-thumb {
-    background-color: var.$hover_color;
-    border-radius: 4px;
+    background-color: transparent !important;
+    border-radius: 10px !important;
+    transition: background-color 0.25s ease;
+}
+
+.navbar:hover .admintab::-webkit-scrollbar-thumb {
+    background-color: var.$hover_color !important;
 
     &:hover {
-        background-color: var.$text_hover_color;
+        background-color: var.$hover_color !important;
     }
 }
 
@@ -308,29 +324,19 @@
     }
 }
 
-/* Submenu layout and transition */
+/* Submenu layout and visibility */
 .submenu {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+    display: none;
     list-style: none;
     padding: 0;
     margin: 0;
 
     &.expanded {
-        grid-template-rows: 1fr;
+        display: block;
     }
 
     .submenu-content {
-        min-height: 0;
         padding-left: 12px; /* Indentation for nested items */
-        transition: opacity 0.2s;
-        opacity: 0;
-    }
-
-    &.expanded .submenu-content {
-        opacity: 1;
     }
 }
 
