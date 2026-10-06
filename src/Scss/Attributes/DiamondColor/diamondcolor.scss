@@ -1,0 +1,33 @@
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+
+.DiamondColor-container {
+    @include mixin.main_page;
+
+    .diamondcolor-container {
+        @include mixin.page;
+
+        .diamondcolor-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .diamondcolor-form-container {
+            @include mixin.page_size;
+
+            .diamondcolor-header {
+                @include mixin.page_header;
+
+                .add-new-btn {
+                    @include mixin.add_new_btn;
+                }
+            }
+        }
+    }
+}
+
+.alert {
+    @include mixin.alert;
+}

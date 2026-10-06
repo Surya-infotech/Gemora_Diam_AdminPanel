@@ -14,6 +14,9 @@ import EditShape from "../Components/Attributes/Shape/EditShape";
 import Clarity from "../Pages/Attributes/Clarity";
 import AddClarity from "../Components/Attributes/Clarity/AddClarity";
 import EditClarity from "../Components/Attributes/Clarity/EditClarity";
+import DiamondColor from "../Pages/Attributes/DiamondColor";
+import AddDiamondColor from "../Components/Attributes/DiamondColor/AddDiamondColor";
+import EditDiamondColor from "../Components/Attributes/DiamondColor/EditDiamondColor";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -33,6 +36,9 @@ const AttributesRouter = () => (
         <Route path="/Clarity" element={<Clarity />} />
         <Route path="/AddClarity" element={<AddClarity />} />
         <Route path="/EditClarity/:id" element={<EditClarity />} />
+        <Route path="/DiamondColor" element={<DiamondColor />} />
+        <Route path="/AddDiamondColor" element={<AddDiamondColor />} />
+        <Route path="/EditDiamondColor/:id" element={<EditDiamondColor />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

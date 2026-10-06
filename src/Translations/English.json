@@ -341,5 +341,19 @@
     "updateclaritysuccessfull": "Clarity updated successfully",
     "deleteclaritysuccessfull": "Clarity Deleted Successfully",
     "clarityalreadyexists": "Clarity Already Exists",
-    "claritynotfound": "Clarity not found"
+    "claritynotfound": "Clarity not found",
+    "DiamondColor": "Diamond Color",
+    "diamondcolor": "Diamond Color",
+    "diamondcolors": "Diamond Colors",
+    "adddiamondcolor": "Add Diamond Color",
+    "editdiamondcolor": "Edit Diamond Color",
+    "deletediamondcolor": "Delete Diamond Color",
+    "enterdiamondcolor": "Enter Diamond Color",
+    "diamondcolorstatusactive": "Diamond Color Status updated to Active",
+    "diamondcolorstatusinactive": "Diamond Color Status updated to Inactive",
+    "adddiamondcolorsuccessfull": "Diamond Color added successfully",
+    "updatediamondcolorsuccessfull": "Diamond Color updated successfully",
+    "deletediamondcolorsuccessfull": "Diamond Color Deleted Successfully",
+    "diamondcoloralreadyexists": "Diamond Color Already Exists",
+    "diamondcolornotfound": "Diamond Color not found"
 }
