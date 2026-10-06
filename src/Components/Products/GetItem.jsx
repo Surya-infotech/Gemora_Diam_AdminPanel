@@ -134,10 +134,11 @@ const GetItem = ({ searchValue }) => {
     const filteredItems = items.filter((item) => {
         const search = (searchValue || "").toLowerCase().trim();
         if (!search) return true;
+        const skuMatch = (item.sku || "").toLowerCase().includes(search);
         const nameMatch = (item.itemname || "").toLowerCase().includes(search);
         const catMatch = (item.categoryname || "").toLowerCase().includes(search);
         const descMatch = (item.description || "").toLowerCase().includes(search);
-        return nameMatch || catMatch || descMatch;
+        return skuMatch || nameMatch || catMatch || descMatch;
     });
 
     const totalRecords = filteredItems.length;
@@ -242,7 +243,10 @@ const GetItem = ({ searchValue }) => {
                                         <td className="item-name-col">
                                             <div className="item-info-cell">
                                                 <ItemImage src={item.image} alt={item.itemname} />
-                                                <strong className="item-name-text">{item.itemname}</strong>
+                                                <div className="item-text-wrapper">
+                                                    <strong className="item-name-text">{item.itemname}</strong>
+                                                    {item.sku && <span className="item-sku-text">{item.sku}</span>}
+                                                </div>
                                             </div>
                                         </td>
                                         <td>

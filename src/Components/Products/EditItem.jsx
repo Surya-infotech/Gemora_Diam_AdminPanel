@@ -26,6 +26,7 @@ const EditItem = () => {
     const [showWarning, setShowWarning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [sku, setSku] = useState("");
     const [itemName, setItemName] = useState("");
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -252,6 +253,7 @@ const EditItem = () => {
                 if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
                 if (response.ok) {
+                    setSku(result.sku || "");
                     setItemName(result.itemname || "");
                     setSelectedCategory(result.categoryid != null ? result.categoryid : null);
                     if (result.ringsizes && Array.isArray(result.ringsizes)) {
@@ -375,6 +377,12 @@ const EditItem = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!sku.trim()) {
+            setWarningMessage(translations.skurequired || "SKU is required");
+            setShowWarning(true);
+            return;
+        }
+
         if (!itemName.trim()) {
             setWarningMessage(translations.itemnamerequired || "Item Name is required");
             setShowWarning(true);
@@ -401,6 +409,7 @@ const EditItem = () => {
 
         try {
             const formData = new FormData();
+            formData.append("sku", sku.trim());
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
@@ -432,6 +441,8 @@ const EditItem = () => {
                 });
             } else {
                 const errorMessages = {
+                    "SKU is required": translations.skurequired || "SKU is required",
+                    "SKU Already Exists": translations.skualreadyexists || "SKU Already Exists",
                     "Item Name is required": translations.itemnamerequired || "Item Name is required",
                     "Category is required": translations.categoryrequired || "Category is required",
                     "Image is required": translations.imagerequired || "Image is required",
@@ -466,6 +477,27 @@ const EditItem = () => {
                                 <div className="imageflex">
                                     <div className="formdiv">
                                         <div className="form-group">
+                                            <label htmlFor="sku">
+                                                {translations.sku || "SKU"} <span style={{ color: "red" }}>*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="sku"
+                                                name="sku"
+                                                autoComplete="off"
+                                                placeholder={translations.entersku || "Enter SKU"}
+                                                autoFocus
+                                                required
+                                                value={sku}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value.length === 1 && value === " ") return;
+                                                    setSku(value);
+                                                }}
+                                                onInput={(e) => (e.target.value = e.target.value.replace(/^\s+/, ""))}
+                                            />
+                                        </div>
+                                        <div className="form-group">
                                             <label htmlFor="itemname">
                                                 {translations.itemname || "Item Name"} <span style={{ color: "red" }}>*</span>
                                             </label>
@@ -475,7 +507,6 @@ const EditItem = () => {
                                                 name="itemname"
                                                 autoComplete="off"
                                                 placeholder={translations.enteritemname || "Enter Item Name"}
-                                                autoFocus
                                                 required
                                                 value={itemName}
                                                 onChange={(e) => {
