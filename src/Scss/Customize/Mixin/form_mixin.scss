@@ -47,10 +47,6 @@
     }
 }
 
-@mixin form-row {
-    @include form_row;
-}
-
 @mixin form-row-three {
     display: flex;
     justify-content: space-between;
@@ -476,20 +472,6 @@
     justify-content: center;
     gap: 15px;
     margin-top: 40px;
-
-    button {
-        @include btn;
-    }
-
-    .submit-btn,
-    .save-btn {
-        @include save_btn;
-    }
-
-    .cancelbtn,
-    .cancel-btn {
-        @include cancel_btn;
-    }
 }
 
 @mixin btn {

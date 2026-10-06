@@ -322,6 +322,15 @@
 
             td {
                 @include table_td;
+
+                &:has(.edit-icon),
+                &:has(.delete-icon) {
+                    white-space: nowrap;
+
+                    span {
+                        margin: 0 2px;
+                    }
+                }
             }
         }
 
