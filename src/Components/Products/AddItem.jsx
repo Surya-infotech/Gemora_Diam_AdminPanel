@@ -29,6 +29,8 @@ const AddItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [ringSizes, setRingSizes] = useState([]);
     const [selectedRingSizes, setSelectedRingSizes] = useState([]);
+    const [shapes, setShapes] = useState([]);
+    const [selectedShapes, setSelectedShapes] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -83,6 +85,33 @@ const AddItem = () => {
         ringsize: r.ringsize,
         label: r.ringsize,
         value: r.ringsizeid
+    }));
+
+    // Fetch active shapes for dropdown
+    useEffect(() => {
+        const fetchShapes = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveShapes`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setShapes(data);
+                }
+            } catch (err) {
+                console.error("Error loading shapes:", err);
+            }
+        };
+
+        fetchShapes();
+    }, [adminPanelBackendPath]);
+
+    const shapeOptions = shapes.map(s => ({
+        shapeid: s.shapeid,
+        shapename: s.shapename,
+        label: s.shapename,
+        value: s.shapeid
     }));
 
     const handleUploadClick = () => {
@@ -149,6 +178,7 @@ const AddItem = () => {
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
+            formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("description", description.trim());
             if (imageFile) {
                 formData.append("image", imageFile);
@@ -300,6 +330,22 @@ const AddItem = () => {
                                             selectedValue={selectedRingSizes}
                                             onValueChange={(val) => setSelectedRingSizes(val)}
                                             placeholder={translations.selectringsize || "Select Ring Size"}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Shape || translations.shape || "Shape"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={shapeOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedShapes}
+                                            onValueChange={(val) => setSelectedShapes(val)}
+                                            placeholder={translations.selectshape || "Select Shape"}
                                         />
                                     </div>
                                 </div>

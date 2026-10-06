@@ -31,6 +31,8 @@ const EditItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [ringSizes, setRingSizes] = useState([]);
     const [selectedRingSizes, setSelectedRingSizes] = useState([]);
+    const [shapes, setShapes] = useState([]);
+    const [selectedShapes, setSelectedShapes] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -88,6 +90,33 @@ const EditItem = () => {
         value: r.ringsizeid
     }));
 
+    // Fetch active shapes for dropdown
+    useEffect(() => {
+        const fetchShapes = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveShapes`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setShapes(data);
+                }
+            } catch (err) {
+                console.error("Error loading shapes:", err);
+            }
+        };
+
+        fetchShapes();
+    }, [adminPanelBackendPath]);
+
+    const shapeOptions = shapes.map(s => ({
+        shapeid: s.shapeid,
+        shapename: s.shapename,
+        label: s.shapename,
+        value: s.shapeid
+    }));
+
     // Fetch item details
     useEffect(() => {
         const fetchDetails = async () => {
@@ -118,6 +147,16 @@ const EditItem = () => {
                         })));
                     } else {
                         setSelectedRingSizes([]);
+                    }
+                    if (result.shapes && Array.isArray(result.shapes)) {
+                        setSelectedShapes(result.shapes.map(s => ({
+                            shapeid: s.shapeid,
+                            shapename: s.shapename,
+                            label: s.shapename,
+                            value: s.shapeid
+                        })));
+                    } else {
+                        setSelectedShapes([]);
                     }
                     setDescription(result.description || "");
                     setStatus(Boolean(result.status));
@@ -209,6 +248,7 @@ const EditItem = () => {
             formData.append("itemname", itemName.trim());
             formData.append("categoryid", selectedCategory);
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
+            formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("description", description.trim());
             formData.append("status", status);
             if (imageFile) {
@@ -367,6 +407,19 @@ const EditItem = () => {
                                 </div>
 
                                 <div className="form-row">
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Shape || translations.shape || "Shape"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={shapeOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedShapes}
+                                            onValueChange={(val) => setSelectedShapes(val)}
+                                            placeholder={translations.selectshape || "Select Shape"}
+                                        />
+                                    </div>
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">
