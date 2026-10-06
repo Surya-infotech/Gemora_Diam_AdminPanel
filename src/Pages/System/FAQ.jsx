@@ -33,7 +33,7 @@ const FAQ = () => {
         }
     }, [location, navigate]);
 
-    const handleAddNewClick = () => navigate(`/System/AddFAQ`);
+    const handleAddNewClick = () => navigate(`/Support/AddFAQ`);
 
     return (
         <div className={`FAQ-container ${isRtl ? 'rtl-faq' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>

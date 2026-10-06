@@ -33,7 +33,7 @@ const Policy = () => {
         }
     }, [location, navigate]);
 
-    const handleAddNewClick = () => navigate(`/System/AddPolicy`);
+    const handleAddNewClick = () => navigate(`/Support/AddPolicy`);
 
     return (
         <div className={`Policy-container ${isRtl ? 'rtl-policy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>

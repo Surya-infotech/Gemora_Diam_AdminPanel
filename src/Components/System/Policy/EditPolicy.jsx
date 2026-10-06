@@ -39,7 +39,7 @@ const EditPolicy = () => {
             }
 
             try {
-                const response = await fetch(`${adminPanelBackendPath}/System/EditPolicy/${id}`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/EditPolicy/${id}`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -92,7 +92,7 @@ const EditPolicy = () => {
                 status
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdatePolicy/${id}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdatePolicy/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -105,7 +105,7 @@ const EditPolicy = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate("/System/Policy", {
+                navigate("/Support/Policy", {
                     state: { message: translations.updatepolicysuccessfull || "Policy updated successfully" }
                 });
             } else {
@@ -126,7 +126,7 @@ const EditPolicy = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Policy`);
+    const handleCancel = () => navigate(`/Support/Policy`);
 
     return (
         <>

@@ -45,7 +45,7 @@ const GetPolicy = ({ searchValue = "" }) => {
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
                 setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/System/GetPolicies`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/GetPolicies`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
@@ -110,7 +110,7 @@ const GetPolicy = ({ searchValue = "" }) => {
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
     const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const handleEditClick = (id) => navigate(`/System/EditPolicy/${id}`);
+    const handleEditClick = (id) => navigate(`/Support/EditPolicy/${id}`);
 
     const handleDeleteClick = (item) => {
         setIsModalOpen(true);
@@ -122,7 +122,7 @@ const GetPolicy = ({ searchValue = "" }) => {
         try {
             const updatedStatus = !item.status;
             const targetId = item._id || item.policyid;
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdatePolicyStatus/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdatePolicyStatus/${targetId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify({ status: updatedStatus }),
@@ -154,7 +154,7 @@ const GetPolicy = ({ searchValue = "" }) => {
             return;
         }
         try {
-            const response = await fetch(`${adminPanelBackendPath}/System/DeletePolicy/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/DeletePolicy/${targetId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });

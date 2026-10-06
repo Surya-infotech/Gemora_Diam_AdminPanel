@@ -15,10 +15,10 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/Stone': ['/Attributes/Stone', '/Attributes/AddStone', '/Attributes/EditStone'],
     '/Attributes/Style': ['/Attributes/Style', '/Attributes/AddStyle', '/Attributes/EditStyle'],
     '/Attributes/Category': ['/Attributes/Category', '/Attributes/AddCategory', '/Attributes/EditCategory'],
-    '/System/ContactUs': ['/System/ContactUs'],
-    '/System/FAQ': ['/System/FAQ', '/System/AddFAQ', '/System/EditFAQ'],
-    '/System/Policy': ['/System/Policy', '/System/AddPolicy', '/System/EditPolicy'],
-    '/System/Subscribers': ['/System/Subscribers'],
+    '/Support/ContactUs': ['/Support/ContactUs'],
+    '/Support/FAQ': ['/Support/FAQ', '/Support/AddFAQ', '/Support/EditFAQ'],
+    '/Support/Policy': ['/Support/Policy', '/Support/AddPolicy', '/Support/EditPolicy'],
+    '/Support/Subscribers': ['/Support/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
 };
 

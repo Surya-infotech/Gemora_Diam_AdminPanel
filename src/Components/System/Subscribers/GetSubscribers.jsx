@@ -50,7 +50,7 @@ const GetSubscribers = ({ searchValue }) => {
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             setLoading(true);
-            const response = await fetch(`${adminPanelBackendPath}/System/GetSubscribers`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/GetSubscribers`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${token}`,

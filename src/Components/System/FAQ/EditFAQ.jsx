@@ -46,7 +46,7 @@ const EditFAQ = () => {
             }
 
             try {
-                const response = await fetch(`${adminPanelBackendPath}/System/EditFAQ/${id}`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/EditFAQ/${id}`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -101,7 +101,7 @@ const EditFAQ = () => {
                 status
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateFAQ/${id}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdateFAQ/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const EditFAQ = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate("/System/FAQ", {
+                navigate("/Support/FAQ", {
                     state: { message: translations.updatefaqsuccessfull || "FAQ updated successfully" }
                 });
             } else {
@@ -135,7 +135,7 @@ const EditFAQ = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/FAQ`);
+    const handleCancel = () => navigate(`/Support/FAQ`);
 
     return (
         <>

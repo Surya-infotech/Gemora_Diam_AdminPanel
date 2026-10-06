@@ -56,7 +56,7 @@ const AddFAQ = () => {
                 answer: answer.trim()
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/AddFAQ`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/AddFAQ`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const AddFAQ = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate("/System/FAQ", {
+                navigate("/Support/FAQ", {
                     state: { message: translations.addfaqsuccessfull || "FAQ added successfully" }
                 });
             } else {
@@ -89,7 +89,7 @@ const AddFAQ = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/FAQ`);
+    const handleCancel = () => navigate(`/Support/FAQ`);
 
     return (
         <>

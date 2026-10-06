@@ -39,10 +39,7 @@ const AdminNavbar = () => {
     const toggleNavbar = () => setIsCollapsed(prevState => !prevState);
 
     const isSupportActive =
-        pathname.startsWith('/System/ContactUs') ||
-        pathname.startsWith('/System/Subscribers') ||
-        pathname.startsWith('/System/FAQ') ||
-        pathname.startsWith('/System/Policy');
+        pathname.startsWith('/Support');
 
     const isSystemActive =
         pathname.startsWith('/System/Currency') ||
@@ -63,12 +60,7 @@ const AdminNavbar = () => {
     const getCategoryForPath = (path) => {
         if (path.startsWith('/Home')) return 'main';
         if (path.startsWith('/Attributes')) return 'attributes';
-        if (
-            path.startsWith('/System/ContactUs') ||
-            path.startsWith('/System/Subscribers') ||
-            path.startsWith('/System/FAQ') ||
-            path.startsWith('/System/Policy')
-        ) return 'support';
+        if (path.startsWith('/Support')) return 'support';
         if (path.startsWith('/System')) return 'system';
         return null;
     };
@@ -309,7 +301,7 @@ const AdminNavbar = () => {
                 <div className={`submenu ${(expandedCategories.support && !isCollapsed) ? 'expanded' : ''}`}>
                     <div className="submenu-content">
                         <li>
-                            <NavLink to="/System/ContactUs" className={navLinkClass('/System/ContactUs')}>
+                            <NavLink to="/Support/ContactUs" className={navLinkClass('/Support/ContactUs')}>
                                 <NavTooltip title={translations.ContactUs}>
                                     <ContactMailIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
@@ -317,7 +309,7 @@ const AdminNavbar = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/System/Subscribers" className={navLinkClass('/System/Subscribers')}>
+                            <NavLink to="/Support/Subscribers" className={navLinkClass('/Support/Subscribers')}>
                                 <NavTooltip title={translations.Subscribers}>
                                     <MarkEmailReadIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
@@ -325,7 +317,7 @@ const AdminNavbar = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/System/FAQ" className={navLinkClass('/System/FAQ')}>
+                            <NavLink to="/Support/FAQ" className={navLinkClass('/Support/FAQ')}>
                                 <NavTooltip title={translations.FAQ || "FAQ"}>
                                     <LiveHelpIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
@@ -333,7 +325,7 @@ const AdminNavbar = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/System/Policy" className={navLinkClass('/System/Policy')}>
+                            <NavLink to="/Support/Policy" className={navLinkClass('/Support/Policy')}>
                                 <NavTooltip title={translations.Policy || "Policy"}>
                                     <PolicyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>

@@ -48,7 +48,7 @@ const AddPolicy = () => {
                 description: description.trim(),
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/AddPolicy`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/AddPolicy`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const AddPolicy = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate("/System/Policy", {
+                navigate("/Support/Policy", {
                     state: { message: translations.addpolicysuccessfull || "Policy added successfully" }
                 });
             } else {
@@ -81,7 +81,7 @@ const AddPolicy = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Policy`);
+    const handleCancel = () => navigate(`/Support/Policy`);
 
     return (
         <>

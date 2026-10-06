@@ -440,5 +440,6 @@
     "deletepolicysuccessfull": "Policy Deleted Successfully",
     "policyalreadyexists": "Policy Already Exists",
     "policynotfound": "Policy not found",
-    "contentsupport": "Content & Support"
+    "contentsupport": "Content & Support",
+    "Support": "Support"
 }

@@ -45,7 +45,7 @@ const GetContactUs = ({ searchValue }) => {
         const fetchContactUs = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/System/GetContactUs`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/GetContactUs`, {
                     method: 'GET',
                     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
                 });

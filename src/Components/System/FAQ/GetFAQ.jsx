@@ -40,7 +40,7 @@ const GetFAQ = ({ searchValue = "" }) => {
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
                 setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/System/GetFAQs`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/GetFAQs`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
@@ -102,7 +102,7 @@ const GetFAQ = ({ searchValue = "" }) => {
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
     const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const handleEditClick = (id) => navigate(`/System/EditFAQ/${id}`);
+    const handleEditClick = (id) => navigate(`/Support/EditFAQ/${id}`);
 
     const handleDeleteClick = (item) => {
         setIsModalOpen(true);
@@ -114,7 +114,7 @@ const GetFAQ = ({ searchValue = "" }) => {
         try {
             const updatedStatus = !item.status;
             const targetId = item._id || item.faqid;
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateFAQStatus/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdateFAQStatus/${targetId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify({ status: updatedStatus }),
@@ -146,7 +146,7 @@ const GetFAQ = ({ searchValue = "" }) => {
             return;
         }
         try {
-            const response = await fetch(`${adminPanelBackendPath}/System/DeleteFAQ/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/DeleteFAQ/${targetId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
