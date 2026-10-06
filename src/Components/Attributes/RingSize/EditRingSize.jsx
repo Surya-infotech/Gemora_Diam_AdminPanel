@@ -25,7 +25,7 @@ const EditRingSize = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        document.title = translations.editringsize || "Edit Ring Size";
+        if (translations.editringsize) document.title = translations.editringsize;
     }, [translations]);
 
     useEffect(() => {

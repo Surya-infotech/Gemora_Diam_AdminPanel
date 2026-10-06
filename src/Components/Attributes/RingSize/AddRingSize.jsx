@@ -22,7 +22,7 @@ const AddRingSize = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        document.title = translations.addringsize || "Add Ring Size";
+        if (translations.addringsize) document.title = translations.addringsize;
     }, [translations]);
 
     const handleSubmit = async (e) => {

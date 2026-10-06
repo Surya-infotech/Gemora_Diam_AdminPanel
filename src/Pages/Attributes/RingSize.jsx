@@ -16,7 +16,7 @@ const RingSize = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        document.title = translations.RingSize || translations.ringsizes || "Ring Size";
+        if (translations.RingSize) document.title = translations.RingSize;
     }, [translations]);
 
     useEffect(() => {

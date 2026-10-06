@@ -16,9 +16,7 @@ const DiamondSize = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.DiamondSize || translations.diamondsizes) {
-            document.title = translations.DiamondSize || translations.diamondsizes || "Diamond Size";
-        }
+        if (translations.DiamondSize) document.title = translations.DiamondSize;
     }, [translations]);
 
     useEffect(() => {

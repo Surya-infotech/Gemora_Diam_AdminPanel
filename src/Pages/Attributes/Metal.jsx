@@ -16,9 +16,7 @@ const Metal = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.Metal || translations.metals) {
-            document.title = translations.Metal || translations.metals || "Metal";
-        }
+        if (translations.Metal) document.title = translations.Metal;
     }, [translations]);
 
     useEffect(() => {
