@@ -1,0 +1,177 @@
+@use "../Customize/Mixin/form_mixin.scss" as form_mixin;
+@use "../Customize/Mixin/page_mixin.scss" as mixin;
+@use "../Customize/var.scss" as var;
+
+.AddItem-container {
+    @include mixin.main_page;
+
+    .Additem-container {
+        @include mixin.page;
+
+        .Additem-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .Additem-form-container {
+            @include mixin.page_size;
+
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .form-group {
+                label {
+                    @include form_mixin.form_label;
+                }
+
+                input:not([type="radio"]):not([type="checkbox"]) {
+                    @include form_mixin.form_input;
+                }
+
+                textarea {
+                    @include form_mixin.form_input;
+                    min-height: 110px;
+                    resize: vertical;
+                    padding-top: 10px;
+                    line-height: 1.5;
+                }
+
+                .switch-container {
+                    display: flex;
+                    align-items: center;
+                    min-height: 42px;
+                }
+
+                .image-upload-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+
+                    .upload-dropzone {
+                        border: 2px dashed color-mix(in srgb, var(--primary-color) 40%, transparent);
+                        border-radius: var(--radius-sm);
+                        padding: 24px 16px;
+                        text-align: center;
+                        cursor: pointer;
+                        background: color-mix(in srgb, var(--primary-color) 3%, transparent);
+                        transition: all 0.25s ease;
+
+                        &:hover {
+                            border-color: var(--primary-color);
+                            background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+                        }
+
+                        .upload-icon {
+                            font-size: 38px;
+                            color: var(--primary-color);
+                            margin-bottom: 6px;
+                        }
+
+                        .upload-text {
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: var(--text-color);
+                            margin-bottom: 4px;
+                        }
+
+                        .upload-hint {
+                            font-size: 12px;
+                            color: color-mix(in srgb, var(--text-color) 60%, transparent);
+                        }
+                    }
+
+                    .image-preview-card {
+                        position: relative;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 14px;
+                        padding: 10px 14px;
+                        border-radius: var(--radius-sm);
+                        border: 1px solid color-mix(in srgb, var(--text-color) 15%, transparent);
+                        background: var(--card-bg, #fff);
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                        max-width: fit-content;
+
+                        .preview-img {
+                            width: 64px;
+                            height: 64px;
+                            border-radius: 8px;
+                            object-fit: cover;
+                            border: 1px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
+                        }
+
+                        .preview-info {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 2px;
+
+                            .file-name {
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: var(--text-color);
+                                max-width: 200px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+
+                            .file-size {
+                                font-size: 11px;
+                                color: color-mix(in srgb, var(--text-color) 60%, transparent);
+                            }
+                        }
+
+                        .remove-img-btn {
+                            background: #ff4d4f;
+                            color: #fff;
+                            border: none;
+                            border-radius: 50%;
+                            width: 26px;
+                            height: 26px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            transition: transform 0.2s ease, background 0.2s ease;
+                            margin-left: 10px;
+
+                            &:hover {
+                                background: #d9363e;
+                                transform: scale(1.1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .button-group {
+                @include form_mixin.btn_group;
+
+                button {
+                    @include form_mixin.btn;
+                }
+            }
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
+            }
+        }
+    }
+}

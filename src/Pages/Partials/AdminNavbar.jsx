@@ -29,6 +29,8 @@ import StyleIcon from '@mui/icons-material/Style';
 import GridViewIcon from '@mui/icons-material/GridView';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import PolicyIcon from '@mui/icons-material/Policy';
+import Inventory2Icon from '@mui/icons-material/Inventory2';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -37,6 +39,9 @@ const AdminNavbar = () => {
     const { pathname } = useLocation();
     const navLinkClass = (to) => () => (isAdminNavLinkActive(to, pathname) ? 'active' : '');
     const toggleNavbar = () => setIsCollapsed(prevState => !prevState);
+
+    const isProductsActive =
+        pathname.startsWith('/Products');
 
     const isSupportActive =
         pathname.startsWith('/Support');
@@ -52,6 +57,7 @@ const AdminNavbar = () => {
 
     const [expandedCategories, setExpandedCategories] = useState({
         main: true,
+        products: false,
         attributes: false,
         support: false,
         system: false,
@@ -59,6 +65,7 @@ const AdminNavbar = () => {
 
     const getCategoryForPath = (path) => {
         if (path.startsWith('/Home')) return 'main';
+        if (path.startsWith('/Products')) return 'products';
         if (path.startsWith('/Attributes')) return 'attributes';
         if (path.startsWith('/Support')) return 'support';
         if (path.startsWith('/System')) return 'system';
@@ -70,6 +77,7 @@ const AdminNavbar = () => {
         if (activeCategory) {
             setExpandedCategories({
                 main: activeCategory === 'main',
+                products: activeCategory === 'products',
                 attributes: activeCategory === 'attributes',
                 support: activeCategory === 'support',
                 system: activeCategory === 'system',
@@ -82,6 +90,7 @@ const AdminNavbar = () => {
             setIsCollapsed(false);
             setExpandedCategories({
                 main: categoryKey === 'main',
+                products: categoryKey === 'products',
                 attributes: categoryKey === 'attributes',
                 support: categoryKey === 'support',
                 system: categoryKey === 'system',
@@ -91,6 +100,7 @@ const AdminNavbar = () => {
                 const nextState = !prev[categoryKey];
                 return {
                     main: categoryKey === 'main' ? nextState : false,
+                    products: categoryKey === 'products' ? nextState : false,
                     attributes: categoryKey === 'attributes' ? nextState : false,
                     support: categoryKey === 'support' ? nextState : false,
                     system: categoryKey === 'system' ? nextState : false,
@@ -193,7 +203,34 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                {/* Category 2: Attributes */}
+                {/* Category 2: Products */}
+                <NavTooltip title={translations.Products || "Products"}>
+                    <div className={`category-trigger ${isProductsActive ? 'active-category' : ''}`} onClick={() => toggleCategory('products')}>
+                        <div className="category-trigger-left">
+                            <Inventory2Icon className="category-icon" style={{ color: 'var(--primary-color)' }} />
+                            {!isCollapsed && <span className="category-title">{translations.Products || "Products"}</span>}
+                        </div>
+                        {!isCollapsed && (
+                            <span className="category-chevron">
+                                <CategoryChevron isExpanded={expandedCategories.products} />
+                            </span>
+                        )}
+                    </div>
+                </NavTooltip>
+                <div className={`submenu ${(expandedCategories.products && !isCollapsed) ? 'expanded' : ''}`}>
+                    <div className="submenu-content">
+                        <li>
+                            <NavLink to="/Products/Item" className={navLinkClass('/Products/Item')}>
+                                <NavTooltip title={translations.Item || "Item"}>
+                                    <LocalOfferIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Item || "Item"}
+                            </NavLink>
+                        </li>
+                    </div>
+                </div>
+
+                {/* Category 3: Attributes */}
                 <NavTooltip title={translations.Attributes || "Attributes"}>
                     <div className={`category-trigger ${pathname.startsWith('/Attributes') ? 'active-category' : ''}`} onClick={() => toggleCategory('attributes')}>
                         <div className="category-trigger-left">
