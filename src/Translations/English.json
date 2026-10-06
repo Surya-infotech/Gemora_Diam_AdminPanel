@@ -370,5 +370,20 @@
     "updatestonesuccessfull": "Stone updated successfully",
     "deletestonesuccessfull": "Stone Deleted Successfully",
     "stonealreadyexists": "Stone Already Exists",
-    "stonenotfound": "Stone not found"
+    "stonenotfound": "Stone not found",
+    "Style": "Style",
+    "style": "Style",
+    "styles": "Styles",
+    "stylename": "Style Name",
+    "addstyle": "Add Style",
+    "editstyle": "Edit Style",
+    "deletestyle": "Delete Style",
+    "enterstylename": "Enter Style Name",
+    "stylestatusactive": "Style Status updated to Active",
+    "stylestatusinactive": "Style Status updated to Inactive",
+    "addstylesuccessfull": "Style added successfully",
+    "updatestylesuccessfull": "Style updated successfully",
+    "deletestylesuccessfull": "Style Deleted Successfully",
+    "stylealreadyexists": "Style Already Exists",
+    "stylenotfound": "Style not found"
 }

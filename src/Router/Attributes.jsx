@@ -20,6 +20,9 @@ import EditDiamondColor from "../Components/Attributes/DiamondColor/EditDiamondC
 import Stone from "../Pages/Attributes/Stone";
 import AddStone from "../Components/Attributes/Stone/AddStone";
 import EditStone from "../Components/Attributes/Stone/EditStone";
+import Style from "../Pages/Attributes/Style";
+import AddStyle from "../Components/Attributes/Style/AddStyle";
+import EditStyle from "../Components/Attributes/Style/EditStyle";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -45,6 +48,9 @@ const AttributesRouter = () => (
         <Route path="/Stone" element={<Stone />} />
         <Route path="/AddStone" element={<AddStone />} />
         <Route path="/EditStone/:id" element={<EditStone />} />
+        <Route path="/Style" element={<Style />} />
+        <Route path="/AddStyle" element={<AddStyle />} />
+        <Route path="/EditStyle/:id" element={<EditStyle />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

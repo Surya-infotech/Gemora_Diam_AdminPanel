@@ -17,6 +17,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/Clarity': ['/Attributes/Clarity', '/Attributes/AddClarity', '/Attributes/EditClarity'],
     '/Attributes/DiamondColor': ['/Attributes/DiamondColor', '/Attributes/AddDiamondColor', '/Attributes/EditDiamondColor'],
     '/Attributes/Stone': ['/Attributes/Stone', '/Attributes/AddStone', '/Attributes/EditStone'],
+    '/Attributes/Style': ['/Attributes/Style', '/Attributes/AddStyle', '/Attributes/EditStyle'],
     '/System/ContactUs': ['/System/ContactUs'],
     '/System/Subscribers': ['/System/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],

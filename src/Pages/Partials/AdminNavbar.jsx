@@ -29,6 +29,7 @@ import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 import TokenIcon from '@mui/icons-material/Token';
+import StyleIcon from '@mui/icons-material/Style';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -298,6 +299,14 @@ const AdminNavbar = () => {
                                     <TokenIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Stone || "Stone"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/Style" className={navLinkClass('/Attributes/Style')}>
+                                <NavTooltip title={translations.Style || "Style"}>
+                                    <StyleIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Style || "Style"}
                             </NavLink>
                         </li>
                     </div>
