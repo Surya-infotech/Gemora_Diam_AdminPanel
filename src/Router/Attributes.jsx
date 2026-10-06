@@ -26,6 +26,9 @@ import EditStyle from "../Components/Attributes/Style/EditStyle";
 import Category from "../Pages/Attributes/Category";
 import AddCategory from "../Components/Attributes/Category/AddCategory";
 import EditCategory from "../Components/Attributes/Category/EditCategory";
+import SubCategory from "../Pages/Attributes/SubCategory";
+import AddSubCategory from "../Components/Attributes/SubCategory/AddSubCategory";
+import EditSubCategory from "../Components/Attributes/SubCategory/EditSubCategory";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const AttributesRouter = () => (
@@ -57,6 +60,9 @@ const AttributesRouter = () => (
         <Route path="/Category" element={<Category />} />
         <Route path="/AddCategory" element={<AddCategory />} />
         <Route path="/EditCategory/:id" element={<EditCategory />} />
+        <Route path="/SubCategory" element={<SubCategory />} />
+        <Route path="/AddSubCategory" element={<AddSubCategory />} />
+        <Route path="/EditSubCategory/:id" element={<EditSubCategory />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

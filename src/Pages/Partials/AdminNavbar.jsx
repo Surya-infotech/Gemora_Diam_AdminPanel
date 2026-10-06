@@ -27,6 +27,7 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import TokenIcon from '@mui/icons-material/Token';
 import StyleIcon from '@mui/icons-material/Style';
 import GridViewIcon from '@mui/icons-material/GridView';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import PolicyIcon from '@mui/icons-material/Policy';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
@@ -316,6 +317,14 @@ const AdminNavbar = () => {
                                     <GridViewIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Category || "Category"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/SubCategory" className={navLinkClass('/Attributes/SubCategory')}>
+                                <NavTooltip title={translations.SubCategory || "Sub Category"}>
+                                    <AccountTreeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.SubCategory || "Sub Category"}
                             </NavLink>
                         </li>
                     </div>

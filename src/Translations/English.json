@@ -478,5 +478,20 @@
     "selectdiamondcolor": "Select Diamond Color",
     "BandColor": "Band Color",
     "bandcolor": "Band Color",
-    "selectbandcolor": "Select Band Color"
+    "selectbandcolor": "Select Band Color",
+    "SubCategory": "Sub Category",
+    "subcategory": "Sub Category",
+    "subcategories": "Sub Categories",
+    "addsubcategory": "Add Sub Category",
+    "editsubcategory": "Edit Sub Category",
+    "deletesubcategory": "Delete Sub Category",
+    "subcategoryname": "Sub Category Name",
+    "entersubcategoryname": "Enter Sub Category Name",
+    "subcategoryalreadyexists": "Sub Category Already Exists",
+    "subcategorynotfound": "Sub Category not found",
+    "addsubcategorysuccessfull": "Sub Category added successfully",
+    "updatesubcategorysuccessfull": "Sub Category updated successfully",
+    "deletesubcategorysuccessfull": "Sub Category Deleted Successfully",
+    "subcategorystatusactive": "Sub Category Status updated to Active",
+    "subcategorystatusinactive": "Sub Category Status updated to Inactive"
 }

@@ -16,6 +16,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/Stone': ['/Attributes/Stone', '/Attributes/AddStone', '/Attributes/EditStone'],
     '/Attributes/Style': ['/Attributes/Style', '/Attributes/AddStyle', '/Attributes/EditStyle'],
     '/Attributes/Category': ['/Attributes/Category', '/Attributes/AddCategory', '/Attributes/EditCategory'],
+    '/Attributes/SubCategory': ['/Attributes/SubCategory', '/Attributes/AddSubCategory', '/Attributes/EditSubCategory'],
     '/Support/ContactUs': ['/Support/ContactUs'],
     '/Support/FAQ': ['/Support/FAQ', '/Support/AddFAQ', '/Support/EditFAQ'],
     '/Support/Policy': ['/Support/Policy', '/Support/AddPolicy', '/Support/EditPolicy'],
