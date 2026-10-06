@@ -33,6 +33,8 @@ const EditItem = () => {
     const [selectedRingSizes, setSelectedRingSizes] = useState([]);
     const [shapes, setShapes] = useState([]);
     const [selectedShapes, setSelectedShapes] = useState([]);
+    const [clarities, setClarities] = useState([]);
+    const [selectedClarities, setSelectedClarities] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -117,6 +119,33 @@ const EditItem = () => {
         value: s.shapeid
     }));
 
+    // Fetch active clarities for dropdown
+    useEffect(() => {
+        const fetchClarities = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveClarities`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setClarities(data);
+                }
+            } catch (err) {
+                console.error("Error loading clarities:", err);
+            }
+        };
+
+        fetchClarities();
+    }, [adminPanelBackendPath]);
+
+    const clarityOptions = clarities.map(c => ({
+        clarityid: c.clarityid,
+        clarityname: c.clarityname,
+        label: c.clarityname,
+        value: c.clarityid
+    }));
+
     // Fetch item details
     useEffect(() => {
         const fetchDetails = async () => {
@@ -157,6 +186,16 @@ const EditItem = () => {
                         })));
                     } else {
                         setSelectedShapes([]);
+                    }
+                    if (result.clarities && Array.isArray(result.clarities)) {
+                        setSelectedClarities(result.clarities.map(c => ({
+                            clarityid: c.clarityid,
+                            clarityname: c.clarityname,
+                            label: c.clarityname,
+                            value: c.clarityid
+                        })));
+                    } else {
+                        setSelectedClarities([]);
                     }
                     setDescription(result.description || "");
                     setStatus(Boolean(result.status));
@@ -249,6 +288,7 @@ const EditItem = () => {
             formData.append("categoryid", selectedCategory);
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
+            formData.append("clarities", JSON.stringify(selectedClarities));
             formData.append("description", description.trim());
             formData.append("status", status);
             if (imageFile) {
@@ -420,6 +460,22 @@ const EditItem = () => {
                                             placeholder={translations.selectshape || "Select Shape"}
                                         />
                                     </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Clarity || translations.clarity || "Clarity"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={clarityOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedClarities}
+                                            onValueChange={(val) => setSelectedClarities(val)}
+                                            placeholder={translations.selectclarity || "Select Clarity"}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">

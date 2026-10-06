@@ -31,6 +31,8 @@ const AddItem = () => {
     const [selectedRingSizes, setSelectedRingSizes] = useState([]);
     const [shapes, setShapes] = useState([]);
     const [selectedShapes, setSelectedShapes] = useState([]);
+    const [clarities, setClarities] = useState([]);
+    const [selectedClarities, setSelectedClarities] = useState([]);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -114,6 +116,33 @@ const AddItem = () => {
         value: s.shapeid
     }));
 
+    // Fetch active clarities for dropdown
+    useEffect(() => {
+        const fetchClarities = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveClarities`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await response.json();
+                if (response.ok && Array.isArray(data)) {
+                    setClarities(data);
+                }
+            } catch (err) {
+                console.error("Error loading clarities:", err);
+            }
+        };
+
+        fetchClarities();
+    }, [adminPanelBackendPath]);
+
+    const clarityOptions = clarities.map(c => ({
+        clarityid: c.clarityid,
+        clarityname: c.clarityname,
+        label: c.clarityname,
+        value: c.clarityid
+    }));
+
     const handleUploadClick = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -179,6 +208,7 @@ const AddItem = () => {
             formData.append("categoryid", selectedCategory);
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
+            formData.append("clarities", JSON.stringify(selectedClarities));
             formData.append("description", description.trim());
             if (imageFile) {
                 formData.append("image", imageFile);
@@ -346,6 +376,19 @@ const AddItem = () => {
                                             selectedValue={selectedShapes}
                                             onValueChange={(val) => setSelectedShapes(val)}
                                             placeholder={translations.selectshape || "Select Shape"}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>
+                                            {translations.Clarity || translations.clarity || "Clarity"}
+                                        </label>
+                                        <MultiDropdown
+                                            options={clarityOptions}
+                                            labelKey="label"
+                                            valueKey="value"
+                                            selectedValue={selectedClarities}
+                                            onValueChange={(val) => setSelectedClarities(val)}
+                                            placeholder={translations.selectclarity || "Select Clarity"}
                                         />
                                     </div>
                                 </div>
