@@ -4,13 +4,13 @@ import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
-import Dropdown from '../../Dropdown/Dropdown';
-import "../../../Scss/System/FAQ/addfaq.scss";
+import "../../../Scss/Support/Policy/addpolicy.scss";
+import RichTextEditor from '../../Custom/RichTextEditor';
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
-const EditFAQ = () => {
+const EditPolicy = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { translations, isRtl } = useLanguage();
@@ -21,20 +21,13 @@ const EditFAQ = () => {
     const [showWarning, setShowWarning] = useState(false);
     const token = localStorage.getItem(tokenname);
 
-    const [faqType, setFaqType] = useState("");
-    const [question, setQuestion] = useState("");
-    const [answer, setAnswer] = useState("");
+    const [policyName, setPolicyName] = useState("");
+    const [description, setDescription] = useState("");
     const [status, setStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const faqTypeOptions = [
-        { value: "Shipping policy", label: translations.shippingpolicy || "Shipping policy" },
-        { value: "Returns and exchanges", label: translations.returnsandexchanges || "Returns and exchanges" },
-        { value: "Frequently asked questions", label: translations.frequentlyaskedquestions || "Frequently asked questions" }
-    ];
-
     useEffect(() => {
-        if (translations.editfaq) document.title = translations.editfaq;
+        if (translations.editpolicy) document.title = translations.editpolicy;
     }, [translations]);
 
     useEffect(() => {
@@ -46,7 +39,7 @@ const EditFAQ = () => {
             }
 
             try {
-                const response = await fetch(`${adminPanelBackendPath}/Support/EditFAQ/${id}`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/EditPolicy/${id}`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -55,13 +48,12 @@ const EditFAQ = () => {
                 if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
                 if (response.ok) {
-                    setFaqType(result.faqtype || "");
-                    setQuestion(result.question || "");
-                    setAnswer(result.answer || "");
+                    setPolicyName(result.policyname || "");
+                    setDescription(result.description || "");
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "FAQ not found": translations.faqnotfound || "FAQ not found",
+                        "Policy not found": translations.policynotfound || "Policy not found",
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -81,7 +73,7 @@ const EditFAQ = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!faqType || !question.trim() || !answer.trim()) {
+        if (!policyName.trim() || !description.trim()) {
             setWarningMessage(translations.allfieldrequired || "All fields are required");
             setShowWarning(true);
             return;
@@ -95,13 +87,12 @@ const EditFAQ = () => {
 
         try {
             const payload = {
-                faqtype: faqType,
-                question: question.trim(),
-                answer: answer.trim(),
+                policyname: policyName.trim(),
+                description: description.trim(),
                 status
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/Support/UpdateFAQ/${id}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdatePolicy/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,14 +105,14 @@ const EditFAQ = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate("/Support/FAQ", {
-                    state: { message: translations.updatefaqsuccessfull || "FAQ updated successfully" }
+                navigate("/Support/Policy", {
+                    state: { message: translations.updatepolicysuccessfull || "Policy updated successfully" }
                 });
             } else {
                 const errorMessages = {
                     "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "FAQ Already Exists": translations.faqalreadyexists || "FAQ with this question already exists",
-                    "FAQ not found": translations.faqnotfound || "FAQ not found",
+                    "Policy Already Exists": translations.policyalreadyexists || "Policy Already Exists",
+                    "Policy not found": translations.policynotfound || "Policy not found",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -135,30 +126,37 @@ const EditFAQ = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/Support/FAQ`);
+    const handleCancel = () => navigate(`/Support/Policy`);
 
     return (
         <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
-            <div className={`AddFAQ-container ${isRtl ? 'rtl-addfaq' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
-                <div className="Addfaq-container">
-                    <h6 className="Addfaq-headingname">{translations.editfaq || "Edit FAQ"}</h6>
-                    <div className="Addfaq-form-container">
+            <div className={`AddPolicy-container ${isRtl ? 'rtl-addpolicy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
+                <div className="Addpolicy-container">
+                    <h6 className="Addpolicy-headingname">{translations.editpolicy || "Edit Policy"}</h6>
+                    <div className="Addpolicy-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
                         ) : (
                             <form onSubmit={handleSubmit}>
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <Dropdown
-                                            label={<>{translations.faqtype || "FAQ Type"} <span style={{ color: "red" }}>*</span></>}
-                                            options={faqTypeOptions}
-                                            selectedValue={faqType}
-                                            onValueChange={(val) => setFaqType(val)}
-                                            labelKey="label"
-                                            valueKey="value"
-                                            placeholder={translations.selectfaqtype || "Select FAQ Type"}
-                                            showSearch={false}
+                                        <label htmlFor="policyname">
+                                            {translations.policyname || "Policy Name"} <span style={{ color: "red" }}>*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="policyname"
+                                            name="policyname"
+                                            autoComplete="off"
+                                            placeholder={translations.enterpolicyname || "Enter Policy Name"}
+                                            required
+                                            value={policyName}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                setPolicyName(value);
+                                            }}
                                         />
                                     </div>
                                     <div className="form-group">
@@ -174,44 +172,13 @@ const EditFAQ = () => {
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label htmlFor="question">
-                                            {translations.question || "Question"} <span style={{ color: "red" }}>*</span>
+                                        <label htmlFor="description">
+                                            {translations.policydescription || translations.description || "Policy Description"} <span style={{ color: "red" }}>*</span>
                                         </label>
-                                        <input
-                                            type="text"
-                                            id="question"
-                                            name="question"
-                                            autoComplete="off"
-                                            placeholder={translations.enterquestion || "Enter Question"}
-                                            required
-                                            value={question}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                if (value.length === 1 && value === " ") return;
-                                                setQuestion(value);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="form-row full-width">
-                                    <div className="form-group">
-                                        <label htmlFor="answer">
-                                            {translations.answer || "Answer"} <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <textarea
-                                            id="answer"
-                                            name="answer"
-                                            rows="5"
-                                            autoComplete="off"
-                                            placeholder={translations.enteranswer || "Enter Answer"}
-                                            required
-                                            value={answer}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                if (value.length === 1 && value === " ") return;
-                                                setAnswer(value);
-                                            }}
+                                        <RichTextEditor
+                                            value={description}
+                                            onChange={(val) => setDescription(val)}
+                                            placeholder={translations.enterpolicydescription || "Enter Policy Description"}
                                         />
                                     </div>
                                 </div>
@@ -242,4 +209,4 @@ const EditFAQ = () => {
     );
 };
 
-export default EditFAQ;
+export default EditPolicy;

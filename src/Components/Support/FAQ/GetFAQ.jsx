@@ -10,17 +10,12 @@ import DeleteModal from '../../../Pages/Custom/DeleteModal';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Policy/getpolicy.scss";
+import "../../../Scss/Support/FAQ/getfaq.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
-const stripHtml = (html) => {
-    if (!html) return "";
-    return html.replace(/<[^>]*>?/gm, " ").replace(/\s+/g, " ").trim();
-};
-
-const GetPolicy = ({ searchValue = "" }) => {
+const GetFAQ = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
     const navigate = useNavigate();
     const { translations } = useLanguage();
@@ -36,23 +31,23 @@ const GetPolicy = ({ searchValue = "" }) => {
     const token = localStorage.getItem(tokenname);
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState("asc");
-    const [policies, setPolicies] = useState([]);
+    const [faqs, setFaqs] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
-        const fetchPolicies = async () => {
+        const fetchFAQs = async () => {
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
                 setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/Support/GetPolicies`, {
+                const response = await fetch(`${adminPanelBackendPath}/Support/GetFAQs`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
                 if (response.ok) {
-                    setPolicies(data.policies || []);
+                    setFaqs(data.faqs || []);
                 } else {
                     setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
@@ -66,23 +61,20 @@ const GetPolicy = ({ searchValue = "" }) => {
         };
 
         setCurrentPage(1);
-        fetchPolicies();
+        fetchFAQs();
     }, [navigate, logoutUser, token, adminPanelBackendPath, translations]);
 
     const sortItems = (column) => {
         const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
         setSortColumn(column);
         setSortDirection(direction);
-        setPolicies([...policies].sort((a, b) => {
+        setFaqs([...faqs].sort((a, b) => {
             let valA = a[column] ?? "";
             let valB = b[column] ?? "";
 
             if (column === "status") {
                 valA = a[column] ? 1 : 0;
                 valB = b[column] ? 1 : 0;
-            } else if (column === "description") {
-                valA = stripHtml(valA).toLowerCase();
-                valB = stripHtml(valB).toLowerCase();
             } else {
                 valA = valA.toString().toLowerCase();
                 valB = valB.toString().toLowerCase();
@@ -98,19 +90,19 @@ const GetPolicy = ({ searchValue = "" }) => {
         sortColumn !== column ? <UnfoldMore fontSize="small" /> : sortDirection === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />
     );
 
-    const filteredItems = policies.filter((item) => {
+    const filteredItems = faqs.filter((item) => {
         const search = (searchValue || "").toLowerCase().trim();
         if (!search) return true;
-        const nameMatch = (item.policyname || "").toLowerCase().includes(search);
-        const descMatch = stripHtml(item.description || "").toLowerCase().includes(search);
-        return nameMatch || descMatch;
+        return Object.values(item).some((value) =>
+            value !== null && value !== undefined && value.toString().toLowerCase().includes(search)
+        );
     });
 
     const totalRecords = filteredItems.length;
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
     const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const handleEditClick = (id) => navigate(`/Support/EditPolicy/${id}`);
+    const handleEditClick = (id) => navigate(`/Support/EditFAQ/${id}`);
 
     const handleDeleteClick = (item) => {
         setIsModalOpen(true);
@@ -121,8 +113,8 @@ const GetPolicy = ({ searchValue = "" }) => {
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !item.status;
-            const targetId = item._id || item.policyid;
-            const response = await fetch(`${adminPanelBackendPath}/Support/UpdatePolicyStatus/${targetId}`, {
+            const targetId = item._id || item.faqid;
+            const response = await fetch(`${adminPanelBackendPath}/Support/UpdateFAQStatus/${targetId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify({ status: updatedStatus }),
@@ -131,11 +123,11 @@ const GetPolicy = ({ searchValue = "" }) => {
             const data = await response.json();
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
-                setPolicies(policies.map(p => (p._id === item._id || p.policyid === item.policyid) ? { ...p, status: updatedStatus } : p));
-                setSuccessMessage(updatedStatus ? (translations.policystatusactive || "Policy Status updated to Active") : (translations.policystatusinactive || "Policy Status updated to Inactive"));
+                setFaqs(faqs.map(f => (f._id === item._id || f.faqid === item.faqid) ? { ...f, status: updatedStatus } : f));
+                setSuccessMessage(updatedStatus ? (translations.faqstatusactive || "FAQ Status updated to Active") : (translations.faqstatusinactive || "FAQ Status updated to Inactive"));
             } else {
                 const errorMessages = {
-                    "Policy not found": translations.policynotfound || "Policy not found",
+                    "FAQ not found": translations.faqnotfound || "FAQ not found",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -154,19 +146,19 @@ const GetPolicy = ({ searchValue = "" }) => {
             return;
         }
         try {
-            const response = await fetch(`${adminPanelBackendPath}/Support/DeletePolicy/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Support/DeleteFAQ/${targetId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });
             const result = await response.json();
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
             if (response.ok) {
-                setPolicies(policies.filter(p => p._id !== targetId && p.policyid !== targetId));
+                setFaqs(faqs.filter(f => f._id !== targetId && f.faqid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletepolicysuccessfull || "Policy Deleted Successfully");
+                setSuccessMessage(translations.deletefaqsuccessfull || "FAQ Deleted Successfully");
             } else {
                 const errorMessages = {
-                    "Policy not found": translations.policynotfound || "Policy not found",
+                    "FAQ not found": translations.faqnotfound || "FAQ not found",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -186,39 +178,55 @@ const GetPolicy = ({ searchValue = "" }) => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className="tablediv">
                 {loading ? <LoadingSpinner /> : (
-                    <table className="policytable">
+                    <table className="faqtable">
                         <thead>
                             <tr>
-                                <th onClick={() => sortItems("policyname")}>
-                                    {translations.policyname || "Policy Name"} {renderSortIcon("policyname")}
+                                <th className="col-faqtype" onClick={() => sortItems("faqtype")}>
+                                    {translations.faqtype || "FAQ Type"} {renderSortIcon("faqtype")}
                                 </th>
-                                <th onClick={() => sortItems("status")}>
+                                <th className="col-question" onClick={() => sortItems("question")}>
+                                    {translations.question || "Question"} {renderSortIcon("question")}
+                                </th>
+                                <th className="col-answer" onClick={() => sortItems("answer")}>
+                                    {translations.answer || "Answer"} {renderSortIcon("answer")}
+                                </th>
+                                <th className="col-status" onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th className="col-action">{translations.action || "Action"}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {visibleItems.length > 0 ? (
                                 visibleItems.map((item) => (
-                                    <tr key={item._id || item.policyid}>
-                                        <td>
-                                            <span className="policy-badge">
-                                                {item.policyname}
+                                    <tr key={item._id || item.faqid}>
+                                        <td className="td-faqtype">
+                                            <span className="faq-type-badge">
+                                                {item.faqtype}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td className="td-question">
+                                            <div className="faq-question-text" title={item.question}>
+                                                {item.question}
+                                            </div>
+                                        </td>
+                                        <td className="td-answer">
+                                            <div className="faq-answer-text" title={item.answer}>
+                                                {item.answer}
+                                            </div>
+                                        </td>
+                                        <td className="td-status">
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
                                         </td>
-                                        <td>
-                                            <EditButton onClick={() => handleEditClick(item._id || item.policyid)} />
+                                        <td className="td-action">
+                                            <EditButton onClick={() => handleEditClick(item._id || item.faqid)} />
                                             <DeleteButton onClick={() => handleDeleteClick(item)} />
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="3" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="5" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
@@ -245,10 +253,10 @@ const GetPolicy = ({ searchValue = "" }) => {
                 <DeleteModal
                     open={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onDelete={() => DeleteItem(selectedItem._id || selectedItem.policyid)}
-                    name={`${selectedItem?.policyname}`}
-                    message={translations.policy || "Policy"}
-                    headingname={translations.deletepolicy || "Delete Policy"}
+                    onDelete={() => DeleteItem(selectedItem._id || selectedItem.faqid)}
+                    name={`${selectedItem?.question}`}
+                    message={translations.faq || "FAQ"}
+                    headingname={translations.deletefaq || "Delete FAQ"}
                     isLoading={isDeleting}
                 />
             )}
@@ -257,4 +265,4 @@ const GetPolicy = ({ searchValue = "" }) => {
     );
 };
 
-export default GetPolicy;
+export default GetFAQ;

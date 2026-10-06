@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import "../../Scss/System/FAQ/faq.scss";
+import "../../Scss/Support/FAQ/faq.scss";
 import { useLanguage } from '../../Context/LanguageContext';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
-import GetFAQ from '../../Components/System/FAQ/GetFAQ';
+import GetFAQ from '../../Components/Support/FAQ/GetFAQ';
 import SearchInput from '../Custom/SearchInput';
 
 const FAQ = () => {

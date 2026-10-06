@@ -9,7 +9,7 @@ import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import AlertMessage from '../../../Pages/Custom/AlertMessage';
-import '../../../Scss/System/Subscribers/getsubscribers.scss';
+import '../../../Scss/Support/Subscribers/getsubscribers.scss';
 
 const formatDate = (dateString) => {
     if (!dateString) return '-';

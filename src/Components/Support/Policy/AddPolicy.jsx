@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
-import "../../../Scss/System/Policy/addpolicy.scss";
+import "../../../Scss/Support/Policy/addpolicy.scss";
 import RichTextEditor from '../../Custom/RichTextEditor';
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
-const EditPolicy = () => {
-    const { id } = useParams();
+const AddPolicy = () => {
     const navigate = useNavigate();
     const { translations, isRtl } = useLanguage();
     const { logoutUser } = useAuth();
@@ -23,52 +21,11 @@ const EditPolicy = () => {
 
     const [policyName, setPolicyName] = useState("");
     const [description, setDescription] = useState("");
-    const [status, setStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (translations.editpolicy) document.title = translations.editpolicy;
+        if (translations.addpolicy) document.title = translations.addpolicy;
     }, [translations]);
-
-    useEffect(() => {
-        const fetchDetails = async () => {
-            setIsLoading(true);
-            if (!CheckToken(token, logoutUser, navigate)) {
-                setIsLoading(false);
-                return;
-            }
-
-            try {
-                const response = await fetch(`${adminPanelBackendPath}/Support/EditPolicy/${id}`, {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-
-                const result = await response.json();
-                if (HandleUnauthorized(result, logoutUser, navigate)) return;
-
-                if (response.ok) {
-                    setPolicyName(result.policyname || "");
-                    setDescription(result.description || "");
-                    setStatus(Boolean(result.status));
-                } else {
-                    const errorMessages = {
-                        "Policy not found": translations.policynotfound || "Policy not found",
-                        "Server error": translations.servererror
-                    };
-                    setWarningMessage(errorMessages[result.message] || translations.servererror);
-                    setShowWarning(true);
-                }
-            } catch {
-                setWarningMessage(translations.servererror);
-                setShowWarning(true);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchDetails();
-    }, [id, token, adminPanelBackendPath, logoutUser, navigate, translations]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,11 +46,10 @@ const EditPolicy = () => {
             const payload = {
                 policyname: policyName.trim(),
                 description: description.trim(),
-                status
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/Support/UpdatePolicy/${id}`, {
-                method: "PUT",
+            const response = await fetch(`${adminPanelBackendPath}/Support/AddPolicy`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`
@@ -106,13 +62,12 @@ const EditPolicy = () => {
 
             if (response.ok) {
                 navigate("/Support/Policy", {
-                    state: { message: translations.updatepolicysuccessfull || "Policy updated successfully" }
+                    state: { message: translations.addpolicysuccessfull || "Policy added successfully" }
                 });
             } else {
                 const errorMessages = {
                     "All fields are required": translations.allfieldrequired || "All fields are required",
                     "Policy Already Exists": translations.policyalreadyexists || "Policy Already Exists",
-                    "Policy not found": translations.policynotfound || "Policy not found",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -133,7 +88,7 @@ const EditPolicy = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddPolicy-container ${isRtl ? 'rtl-addpolicy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addpolicy-container">
-                    <h6 className="Addpolicy-headingname">{translations.editpolicy || "Edit Policy"}</h6>
+                    <h6 className="Addpolicy-headingname">{translations.addpolicy || "Add Policy"}</h6>
                     <div className="Addpolicy-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -150,6 +105,7 @@ const EditPolicy = () => {
                                             name="policyname"
                                             autoComplete="off"
                                             placeholder={translations.enterpolicyname || "Enter Policy Name"}
+                                            autoFocus
                                             required
                                             value={policyName}
                                             onChange={(e) => {
@@ -158,15 +114,6 @@ const EditPolicy = () => {
                                                 setPolicyName(value);
                                             }}
                                         />
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
-                                        <div className="switch-container">
-                                            <CustomSwitch
-                                                checked={status}
-                                                onChange={(e) => setStatus(e.target.checked)}
-                                            />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -209,4 +156,4 @@ const EditPolicy = () => {
     );
 };
 
-export default EditPolicy;
+export default AddPolicy;

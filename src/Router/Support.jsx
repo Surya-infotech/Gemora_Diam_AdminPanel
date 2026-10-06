@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import ContactUs from "../Pages/System/ContactUs";
-import Subscribers from "../Pages/System/Subscribers";
-import FAQ from "../Pages/System/FAQ";
-import AddFAQ from "../Components/System/FAQ/AddFAQ";
-import EditFAQ from "../Components/System/FAQ/EditFAQ";
-import Policy from "../Pages/System/Policy";
-import AddPolicy from "../Components/System/Policy/AddPolicy";
-import EditPolicy from "../Components/System/Policy/EditPolicy";
+import ContactUs from "../Pages/Support/ContactUs";
+import Subscribers from "../Pages/Support/Subscribers";
+import FAQ from "../Pages/Support/FAQ";
+import AddFAQ from "../Components/Support/FAQ/AddFAQ";
+import EditFAQ from "../Components/Support/FAQ/EditFAQ";
+import Policy from "../Pages/Support/Policy";
+import AddPolicy from "../Components/Support/Policy/AddPolicy";
+import EditPolicy from "../Components/Support/Policy/EditPolicy";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SupportRouter = () => (

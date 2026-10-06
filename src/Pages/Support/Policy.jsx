@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
+import "../../Scss/Support/Policy/policy.scss";
 import { useLanguage } from '../../Context/LanguageContext';
-import GetSubscribers from '../../Components/System/Subscribers/GetSubscribers';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
+import GetPolicy from '../../Components/Support/Policy/GetPolicy';
 import SearchInput from '../Custom/SearchInput';
-import "../../Scss/System/Subscribers/subscribers.scss";
 
-const Subscribers = () => {
+const Policy = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { translations } = useLanguage();
+    const { translations, isRtl } = useLanguage();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.Subscribers) document.title = translations.Subscribers;
+        if (translations.Policy) document.title = translations.Policy;
     }, [translations]);
 
     useEffect(() => {
@@ -33,25 +33,30 @@ const Subscribers = () => {
         }
     }, [location, navigate]);
 
+    const handleAddNewClick = () => navigate(`/Support/AddPolicy`);
+
     return (
-        <div className="Subscribers-container">
-            <div className="subscribers-container">
-                <h6 className="subscribers-headingname">{translations.Subscribers}</h6>
-                <div className="subscribers-form-container">
+        <div className={`Policy-container ${isRtl ? 'rtl-policy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
+            <div className="policy-container">
+                <h6 className="policy-headingname">{translations.Policy || "Policy"}</h6>
+                <div className="policy-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
-                    <div className="subscribers-header">
+                    <div className="policy-header">
                         <SearchInput
                             placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
+                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                            {translations.addNew}
+                        </button>
                     </div>
-                    <GetSubscribers searchValue={searchValue} />
+                    <GetPolicy searchValue={searchValue} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default Subscribers;
+export default Policy;

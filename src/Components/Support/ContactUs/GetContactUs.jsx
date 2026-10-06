@@ -10,7 +10,7 @@ import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import AlertMessage from '../../../Pages/Custom/AlertMessage';
-import '../../../Scss/System/ContactUs/getcontactus.scss';
+import '../../../Scss/Support/ContactUs/getcontactus.scss';
 
 const MESSAGE_TRUNCATE_LENGTH = 50;
 

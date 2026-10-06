@@ -4,7 +4,7 @@ import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import Dropdown from '../../Dropdown/Dropdown';
-import "../../../Scss/System/FAQ/addfaq.scss";
+import "../../../Scss/Support/FAQ/addfaq.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
