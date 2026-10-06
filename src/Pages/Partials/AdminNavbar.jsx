@@ -13,6 +13,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import "../../Scss/Partials/adminnavbar.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import { isAdminNavLinkActive } from '../../utils/navActiveMatchers';
+import DiamondIcon from '@mui/icons-material/Diamond';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -253,6 +254,14 @@ const AdminNavbar = () => {
                                     <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Taxes}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/Metal" className={navLinkClass('/System/Metal')}>
+                                <NavTooltip title={translations.Metal || "Metal"}>
+                                    <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Metal || "Metal"}
                             </NavLink>
                         </li>
                         <li>
