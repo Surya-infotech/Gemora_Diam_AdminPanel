@@ -22,6 +22,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PeopleIcon from '@mui/icons-material/People';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,12 +35,14 @@ const AdminNavbar = () => {
     const [expandedCategories, setExpandedCategories] = useState({
         main: true,
         users: false,
+        attributes: false,
         system: false,
     });
 
     const getCategoryForPath = (path) => {
         if (path.startsWith('/Home')) return 'main';
         if (path.startsWith('/Users')) return 'users';
+        if (path.startsWith('/Attributes')) return 'attributes';
         if (path.startsWith('/System')) return 'system';
         return null;
     };
@@ -50,6 +53,7 @@ const AdminNavbar = () => {
             setExpandedCategories({
                 main: activeCategory === 'main',
                 users: activeCategory === 'users',
+                attributes: activeCategory === 'attributes',
                 system: activeCategory === 'system',
             });
         }
@@ -62,6 +66,7 @@ const AdminNavbar = () => {
                 main: categoryKey === 'main',
                 subscription: categoryKey === 'subscription',
                 users: categoryKey === 'users',
+                attributes: categoryKey === 'attributes',
                 reports: categoryKey === 'reports',
                 system: categoryKey === 'system',
             });
@@ -72,6 +77,7 @@ const AdminNavbar = () => {
                     main: categoryKey === 'main' ? nextState : false,
                     subscription: categoryKey === 'subscription' ? nextState : false,
                     users: categoryKey === 'users' ? nextState : false,
+                    attributes: categoryKey === 'attributes' ? nextState : false,
                     reports: categoryKey === 'reports' ? nextState : false,
                     system: categoryKey === 'system' ? nextState : false,
                 };
@@ -216,7 +222,34 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                {/* Category 3: System */}
+                {/* Category: Attributes */}
+                <NavTooltip title={translations.Attributes || "Attributes"}>
+                    <div className={`category-trigger ${pathname.startsWith('/Attributes') ? 'active-category' : ''}`} onClick={() => toggleCategory('attributes')}>
+                        <div className="category-trigger-left">
+                            <CategoryIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
+                            {!isCollapsed && <span className="category-title">{translations.Attributes || "Attributes"}</span>}
+                        </div>
+                        {!isCollapsed && (
+                            <span className="category-chevron">
+                                <CategoryChevron isExpanded={expandedCategories.attributes} />
+                            </span>
+                        )}
+                    </div>
+                </NavTooltip>
+                <div className={`submenu ${(expandedCategories.attributes && !isCollapsed) ? 'expanded' : ''}`}>
+                    <div className="submenu-content">
+                        <li>
+                            <NavLink to="/Attributes/Metal" className={navLinkClass('/Attributes/Metal')}>
+                                <NavTooltip title={translations.Metal || "Metal"}>
+                                    <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Metal || "Metal"}
+                            </NavLink>
+                        </li>
+                    </div>
+                </div>
+
+                {/* Category 4: System */}
                 <NavTooltip title={translations.System}>
                     <div className={`category-trigger ${pathname.startsWith('/System') ? 'active-category' : ''}`} onClick={() => toggleCategory('system')}>
                         <div className="category-trigger-left">
@@ -254,14 +287,6 @@ const AdminNavbar = () => {
                                     <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Taxes}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/System/Metal" className={navLinkClass('/System/Metal')}>
-                                <NavTooltip title={translations.Metal || "Metal"}>
-                                    <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Metal || "Metal"}
                             </NavLink>
                         </li>
                         <li>

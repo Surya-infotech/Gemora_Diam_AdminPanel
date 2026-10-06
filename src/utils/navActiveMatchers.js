@@ -10,7 +10,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/System/HelpCenter': ['/System/HelpCenter', '/System/HelpCenterDetail'],
     '/System/Currency': ['/System/Currency', '/System/AddCurrency', '/System/EditCurrency'],
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],
-    '/System/Metal': ['/System/Metal', '/System/AddMetal', '/System/EditMetal'],
+    '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
     '/System/ContactUs': ['/System/ContactUs'],
     '/System/Subscribers': ['/System/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Metal/addmetal.scss";
+import "../../../Scss/Attributes/Metal/addmetal.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -44,10 +44,11 @@ const AddMetal = () => {
         try {
             const payload = {
                 metalname: metalName.trim(),
-                metaltype: metalType.trim()
+                metaltype: metalType.trim(),
+                status: true
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/AddMetal`, {
+            const response = await fetch(`${adminPanelBackendPath}/Attributes/AddMetal`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,7 +61,7 @@ const AddMetal = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate(`/System/Metal`, {
+                navigate(`/Attributes/Metal`, {
                     state: { message: translations.addmetalsuccessfull || "Metal added successfully" }
                 });
             } else {
@@ -80,7 +81,7 @@ const AddMetal = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Metal`);
+    const handleCancel = () => navigate(`/Attributes/Metal`);
 
     return (
         <>

@@ -282,5 +282,6 @@
     "updatemetalsuccessfull": "Metal updated successfully",
     "deletemetalsuccessfull": "Metal Deleted Successfully",
     "metalnamealreadyexists": "Metal Name Already Exists",
-    "metalnotfound": "Metal not found"
+    "metalnotfound": "Metal not found",
+    "Attributes": "Attributes"
 }

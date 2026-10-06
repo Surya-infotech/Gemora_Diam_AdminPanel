@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import "../../Scss/System/Metal/metal.scss";
+import "../../Scss/Attributes/Metal/metal.scss";
 import { useLanguage } from '../../Context/LanguageContext';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
-import GetMetal from '../../Components/System/Metal/GetMetal';
+import GetMetal from '../../Components/Attributes/Metal/GetMetal';
 import SearchInput from '../Custom/SearchInput';
 
 const Metal = () => {
@@ -35,7 +35,7 @@ const Metal = () => {
         }
     }, [location, navigate]);
 
-    const handleAddNewClick = () => navigate(`/System/AddMetal`);
+    const handleAddNewClick = () => navigate(`/Attributes/AddMetal`);
 
     return (
         <div className={`Metal-container ${isRtl ? 'rtl-metal' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>

@@ -10,6 +10,7 @@ import AdminFooter from "./Pages/Partials/AdminFooter.jsx";
 import AdminNavbar from "./Pages/Partials/AdminNavbar.jsx";
 import HoriNavbar from "./Pages/Partials/HoriNavbar.jsx";
 import SystemRouter from "./Router/System.jsx";
+import AttributesRouter from "./Router/Attributes.jsx";
 import MainRouter from "./Router/Main.jsx";
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import { FiscalYearProvider } from './Context/FiscalYearContext.jsx';
@@ -72,6 +73,7 @@ const AppContent = () => {
         <Route path="/Logout" element={<Logout />} />
         <Route path="/Signin" element={<AdminLogin />} />
         <Route path={`/Home/*`} element={<MainRouter />} />
+        <Route path={`/Attributes/*`} element={<AttributesRouter />} />
         <Route path={`/System/*`} element={<SystemRouter />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

@@ -10,7 +10,7 @@ import DeleteModal from '../../../Pages/Custom/DeleteModal';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Metal/getmetal.scss";
+import "../../../Scss/Attributes/Metal/getmetal.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -40,7 +40,7 @@ const GetMetal = ({ searchValue = "" }) => {
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
                 setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/System/GetMetals`, {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetMetals`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
@@ -102,7 +102,7 @@ const GetMetal = ({ searchValue = "" }) => {
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
     const visibleMetals = filteredMetals.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const handleEditClick = (id) => navigate(`/System/EditMetal/${id}`);
+    const handleEditClick = (id) => navigate(`/Attributes/EditMetal/${id}`);
 
     const handleDeleteClick = (metal) => {
         setIsModalOpen(true);
@@ -114,7 +114,7 @@ const GetMetal = ({ searchValue = "" }) => {
         try {
             const updatedStatus = !metal.status;
             const targetId = metal._id || metal.metalid;
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateMetalStatus/${targetId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Attributes/UpdateMetalStatus/${targetId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify({ status: updatedStatus }),
@@ -146,7 +146,7 @@ const GetMetal = ({ searchValue = "" }) => {
             return;
         }
         try {
-            const response = await fetch(`${adminPanelBackendPath}/System/DeleteMetal/${metalId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Attributes/DeleteMetal/${metalId}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
             });

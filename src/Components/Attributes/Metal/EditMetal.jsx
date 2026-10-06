@@ -4,7 +4,7 @@ import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
-import "../../../Scss/System/Metal/addmetal.scss";
+import "../../../Scss/Attributes/Metal/addmetal.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -38,7 +38,7 @@ const EditMetal = () => {
             }
 
             try {
-                const response = await fetch(`${adminPanelBackendPath}/System/EditMetal/${id}`, {
+                const response = await fetch(`${adminPanelBackendPath}/Attributes/EditMetal/${id}`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -91,7 +91,7 @@ const EditMetal = () => {
                 status: Boolean(status)
             };
 
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateMetal/${id}`, {
+            const response = await fetch(`${adminPanelBackendPath}/Attributes/UpdateMetal/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const EditMetal = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate(`/System/Metal`, {
+                navigate(`/Attributes/Metal`, {
                     state: { message: translations.updatemetalsuccessfull || "Metal updated successfully" }
                 });
             } else {
@@ -125,7 +125,7 @@ const EditMetal = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Metal`);
+    const handleCancel = () => navigate(`/Attributes/Metal`);
 
     return (
         <>
