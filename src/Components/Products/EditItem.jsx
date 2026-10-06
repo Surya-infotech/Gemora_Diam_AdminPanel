@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import profilePlaceholder from '../../assets/profile-placeholder.png';
+import Placeholder from '../../assets/placeholder.png';
 import { useAuth } from '../../Middleware/Auth';
 import CustomSwitch from '../../Pages/Custom/CustomSwitch';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
@@ -30,7 +30,7 @@ const EditItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(profilePlaceholder);
+    const [imagePreview, setImagePreview] = useState(Placeholder);
     const [status, setStatus] = useState(true);
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const EditItem = () => {
                     if (result.image) {
                         setImagePreview(result.image);
                     } else {
-                        setImagePreview(profilePlaceholder);
+                        setImagePreview(Placeholder);
                     }
                 } else {
                     const errorMessages = {
@@ -263,7 +263,7 @@ const EditItem = () => {
                                                             className="image-preview"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
-                                                                e.target.src = profilePlaceholder;
+                                                                e.target.src = Placeholder;
                                                             }}
                                                         />
                                                     </div>

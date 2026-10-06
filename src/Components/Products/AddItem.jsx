@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import profilePlaceholder from '../../assets/profile-placeholder.png';
+import Placeholder from '../../assets/placeholder.png';
 import { useAuth } from '../../Middleware/Auth';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
@@ -28,7 +28,7 @@ const AddItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(profilePlaceholder);
+    const [imagePreview, setImagePreview] = useState(Placeholder);
 
     useEffect(() => {
         if (translations.additem) document.title = translations.additem;
@@ -211,7 +211,7 @@ const AddItem = () => {
                                                             className="image-preview"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
-                                                                e.target.src = profilePlaceholder;
+                                                                e.target.src = Placeholder;
                                                             }}
                                                         />
                                                     </div>
