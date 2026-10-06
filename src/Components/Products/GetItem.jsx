@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
-import BrokenImageIcon from "@mui/icons-material/BrokenImage";
+import Placeholder from "../../assets/placeholder.png";
 import { useAuth } from "../../Middleware/Auth";
 import AlertMessage from "../../Pages/Custom/AlertMessage";
 import CustomSwitch from "../../Pages/Custom/CustomSwitch";
@@ -15,6 +15,45 @@ import "../../Scss/Products/getitem.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
+
+const ItemImage = ({ src, alt }) => {
+    const [loaded, setLoaded] = useState(false);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        setLoaded(false);
+        setHasError(false);
+    }, [src]);
+
+    if (!src || hasError) {
+        return (
+            <img
+                src={Placeholder}
+                alt={alt || "placeholder"}
+                className="item-thumbnail"
+            />
+        );
+    }
+
+    return (
+        <div className="item-thumbnail-wrapper">
+            {!loaded && (
+                <img
+                    src={Placeholder}
+                    alt="Loading..."
+                    className="item-thumbnail placeholder-loading"
+                />
+            )}
+            <img
+                src={src}
+                alt={alt || "item"}
+                className={`item-thumbnail ${!loaded ? "is-loading" : ""}`}
+                onLoad={() => setLoaded(true)}
+                onError={() => setHasError(true)}
+            />
+        </div>
+    );
+};
 
 const GetItem = ({ searchValue }) => {
     const navigate = useNavigate();
@@ -203,24 +242,7 @@ const GetItem = ({ searchValue }) => {
                                 visibleItems.map((item) => (
                                     <tr key={item._id || item.itemid}>
                                         <td className="item-img-cell">
-                                            {item.image ? (
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.itemname}
-                                                    className="item-thumbnail"
-                                                    onError={(e) => {
-                                                        e.target.style.display = 'none';
-                                                        e.target.nextSibling && (e.target.nextSibling.style.display = 'inline-flex');
-                                                    }}
-                                                />
-                                            ) : null}
-                                            <span
-                                                className="item-no-img"
-                                                style={{ display: item.image ? 'none' : 'inline-flex' }}
-                                                title={translations.noimage || "No image"}
-                                            >
-                                                <BrokenImageIcon fontSize="small" />
-                                            </span>
+                                            <ItemImage src={item.image} alt={item.itemname} />
                                         </td>
                                         <td>
                                             <strong>{item.itemname}</strong>
