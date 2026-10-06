@@ -11,6 +11,7 @@ const CustomSwitch = ({ checked, onChange, disabled = false }) => {
                         disabled={disabled}
                         inputProps={{ 'aria-label': 'controlled' }}
                         sx={{
+                            '& .MuiSwitch-switchBase': { color: '#fff' },
                             '& .MuiSwitch-switchBase.Mui-checked': { color: 'var(--primary-color)' },
                             '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: 'var(--primary-color)' },
                         }}

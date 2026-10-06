@@ -36,9 +36,11 @@
     text-align: center;
     vertical-align: middle;
     table-layout: auto;
-    width: auto;
+    width: 100% !important;
     min-width: 100% !important;
     background-color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
 
     [dir="rtl"] &,
     body.rtl-mode & {
@@ -53,6 +55,17 @@
     td {
         width: auto;
         min-width: fit-content;
+
+        &[colspan] {
+            text-align: center !important;
+            vertical-align: middle !important;
+            height: 55px !important;
+            padding: 14px !important;
+            color: var.$table_td_font_color !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            border-bottom: 0.1px solid var(--border-color) !important;
+        }
     }
 
     tr {
@@ -67,13 +80,21 @@
 @mixin table_thead {
     white-space: nowrap;
     position: sticky;
-    padding: 10px !important;
+    padding: 12px 14px !important;
     font-weight: var.$table_heading_font_weight !important;
     top: 0;
     background-color: var(--primary-color) !important;
-    z-index: 1;
+    z-index: 2;
     color: white !important;
     box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+
+    &:first-child {
+        border-top-left-radius: 11px;
+    }
+
+    &:last-child {
+        border-top-right-radius: 11px;
+    }
 
     &:has(svg) {
         cursor: pointer !important;
@@ -82,10 +103,23 @@
 
     svg {
         cursor: pointer !important;
+        vertical-align: middle;
+        font-size: 16px;
+        margin-left: 4px;
     }
 
     [dir="rtl"] &,
     body.rtl-mode & {
+        &:first-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 11px;
+        }
+
+        &:last-child {
+            border-top-right-radius: 0;
+            border-top-left-radius: 11px;
+        }
+
         svg {
             margin-left: 0 !important;
             margin-right: 5px !important;
@@ -260,66 +294,127 @@
                 color: #2563eb;
             }
         }
+    }
+}
 
-        &.primary .kpi-icon-box,
-        &.revenue .kpi-icon-box,
-        &.highlight .kpi-icon-box {
-            background: color-mix(in srgb, var(--primary-color, #10b981) 12%, transparent);
-            color: var(--primary-color, #10b981);
+// Universal tablediv rules: guarantees ANY table inside .tablediv project-wide gets standard SavoryOps OwnerWeb styling
+.tablediv {
+    @include main_table;
+
+    table,
+    .table {
+        @include table;
+
+        thead {
+            th {
+                @include table_thead;
+            }
+
+            td {
+                @include table_td;
+            }
         }
 
-        &.positive .kpi-icon-box,
-        &.income .kpi-icon-box,
-        &.success .kpi-icon-box,
-        &.ontime .kpi-icon-box {
-            background: color-mix(in srgb, #059669 12%, transparent);
-            color: #059669;
+        tbody {
+            tr {
+                @include table_tr;
+            }
+
+            td {
+                @include table_td;
+            }
         }
 
-        &.negative .kpi-icon-box,
-        &.danger .kpi-icon-box,
-        &.expenses .kpi-icon-box,
-        &.delayed .kpi-icon-box {
-            background: color-mix(in srgb, #dc2626 12%, transparent);
-            color: #dc2626;
+        .tdclick {
+            @include table_tdclick;
         }
 
-        &.warning .kpi-icon-box {
-            background: color-mix(in srgb, #d97706 12%, transparent);
-            color: #d97706;
+        .edit-icon {
+            @include edit_icon;
         }
 
-        &.info .kpi-icon-box {
-            background: color-mix(in srgb, #2563eb 12%, transparent);
-            color: #2563eb;
+        .delete-icon {
+            @include delete_icon;
         }
 
-        &.primary .kpi-value,
-        &.revenue .kpi-value,
-        &.highlight .kpi-value {
-            color: var(--primary-color, #ff6b35);
+        .action-buttons-cell {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
-        &.positive .kpi-value,
-        &.income .kpi-value,
-        &.success .kpi-value,
-        &.ontime .kpi-value {
-            color: #059669;
+        .font-semibold {
+            font-weight: 600 !important;
         }
 
-        &.negative .kpi-value,
-        &.danger .kpi-value,
-        &.expenses .kpi-value,
-        &.delayed .kpi-value {
-            color: #dc2626;
+        .font-bold {
+            font-weight: 700 !important;
         }
 
-        &.warning .kpi-value {
-            color: #d97706;
+        .text-primary-color {
+            color: var(--primary-color) !important;
         }
 
-        &.info .kpi-value {
-            color: #2563eb;
+        .text-success-color {
+            color: #16a34a !important;
+        }
+
+        .text-danger-color {
+            color: #dc2626 !important;
+        }
+
+        .text-warning-color {
+            color: #d97706 !important;
+        }
+
+        .text-info-color {
+            color: #2563eb !important;
+        }
+
+        .text-end {
+            text-align: right !important;
+        }
+
+        .text-center {
+            text-align: center !important;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            white-space: nowrap;
+
+            &.positive,
+            &.received,
+            &.completed,
+            &.in_use {
+                background-color: #ecfdf5;
+                color: #047857;
+                border-color: #a7f3d0;
+            }
+
+            &.negative,
+            &.cancelled,
+            &.damaged {
+                background-color: #fee2e2;
+                color: #991b1b;
+                border-color: #fecaca;
+            }
+
+            &.warning,
+            &.dispatched,
+            &.under_maintenance {
+                background-color: #fffbeb;
+                color: #b45309;
+                border-color: #fde68a;
+            }
         }
     }
 }

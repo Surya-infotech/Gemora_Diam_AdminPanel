@@ -2,7 +2,12 @@
 
 .paginationdiv {
     margin-top: 20px !important;
-    margin-bottom: -30px !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap;
+    gap: 12px;
 
     .page-size-dropdown {
         border-radius: 5px !important;
@@ -10,11 +15,13 @@
 
         select {
             background-color: var(--page-color) !important;
-            border: var.$form_input_border_color !important;
-            border-radius: 4px !important;
-            padding: 5px !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 6px !important;
+            padding: 6px 8px !important;
             color: var(--text-color) !important;
             font-size: 14px !important;
+            cursor: pointer;
+            outline: none;
 
             &:focus {
                 border-color: var(--primary-color) !important;
@@ -31,15 +38,27 @@
         }
     }
 
-    .pagination{
-        button{
+    .pagination {
+        display: flex;
+        align-items: center;
+        margin: 0 !important;
+        gap: 4px;
+
+        button.page-link,
+        .page-link {
             background-color: var(--page-color) !important;
             color: var(--text-color) !important;
-            border-color: var(--primary-color) !important;
+            border: 1px solid var(--primary-color) !important;
+            border-radius: 4px !important;
+            padding: 6px 14px !important;
+            font-size: 14px !important;
+            line-height: 1.4;
+            cursor: pointer;
+            transition: all 0.15s ease;
         }
 
         .page-link:hover {
-            background-color: var(--secondary-color) !important;
+            background-color: color-mix(in srgb, var(--secondary-color) 38%, transparent) !important;
             color: var(--primary-color) !important;
             border-color: var(--primary-color) !important;
         }
@@ -52,16 +71,20 @@
             background-color: var(--primary-color) !important;
             border-color: var(--primary-color) !important;
             color: #fff !important;
+            font-weight: 600 !important;
         }
 
         .page-item.disabled .page-link {
-            border-color: var(--primary-color) !important;
+            border-color: color-mix(in srgb, var(--primary-color) 45%, #ccc) !important;
+            opacity: 0.55 !important;
+            cursor: not-allowed !important;
         }
     }
 
     .records-info {
         color: var(--text-color) !important;
         font-weight: 400 !important;
+        font-size: 14px !important;
     }
 }
 

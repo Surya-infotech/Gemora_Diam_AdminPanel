@@ -1,4 +1,5 @@
 @use "../Customize/var.scss" as var;
+@use "../Customize/Mixin/form_mixin.scss" as form_mixin;
 
 .modal {
 
@@ -61,6 +62,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 0 !important;
 
     .modal-title {
         font-weight: 600;
@@ -99,32 +101,106 @@
 
     .btn {
         border-radius: 10px !important;
-        font-weight: 600;
-        text-transform: none;
-        padding: 8px 18px;
-        font-size: 14px;
+        font-weight: 600 !important;
+        text-transform: none !important;
+        padding: 0.45rem 1.25rem !important;
+        min-width: 85px;
         transition: all 0.2s ease;
     }
+}
 
-    .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
-        color: #fff;
+.delete-modal {
+    display: block !important;
+    z-index: 99999 !important;
 
-        &:hover {
-            background-color: #5c636a;
-            border-color: #565e64;
+    .modal-header {
+        margin-bottom: 0 !important;
+    }
+
+    .modal-body {
+        padding: 1.15rem 1.25rem;
+
+        .form-group {
+            width: 100%;
+            margin-top: 15px;
+            text-align: left;
+
+            [dir="rtl"] &,
+            body.rtl-mode & {
+                text-align: right;
+            }
+
+            label {
+                @include form_mixin.form_label;
+            }
+
+            input {
+                @include form_mixin.form_input;
+                width: 100%;
+                margin-bottom: 0 !important;
+
+                &.is-invalid {
+                    border-color: #dc3545 !important;
+                    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+                }
+            }
+
+            .error-message,
+            .invalid-feedback {
+                display: block;
+                margin-top: 5px;
+                font-size: 0.85rem;
+                color: #dc3545 !important;
+                font-weight: 500;
+            }
         }
     }
 
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-        color: #fff;
+    .delete-spinner {
+        color: var(--primary-color, #e53935) !important;
+    }
+}
 
-        &:hover {
-            background-color: #bb2d3b;
-            border-color: #b02a37;
+.delete-modal-backdrop,
+.modal-backdrop-top {
+    z-index: 99998 !important;
+}
+
+.warning-modal {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 100005 !important;
+
+    .modal-dialog {
+        max-width: 460px !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .modal-header {
+        flex-direction: column !important;
+        align-items: center !important;
+
+        .warning-icon {
+            font-size: 48px !important;
+            color: #dc3545 !important;
+            margin-bottom: 4px !important;
+        }
+
+        .modal-title {
+            color: #dc3545 !important;
+            margin: 0 !important;
         }
     }
+
+    .modal-body {
+        p {
+            margin-bottom: 0 !important;
+        }
+    }
+}
+
+.warning-modal-backdrop {
+    z-index: 100004 !important;
 }
