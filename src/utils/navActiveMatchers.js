@@ -4,8 +4,6 @@
  */
 const NAV_ACTIVE_PREFIXES = {
     '/Home/Dashboard': ['/Home/Dashboard'],
-    '/Users/Customer': ['/Users/Customer'],
-    '/System/HelpCenter': ['/System/HelpCenter', '/System/HelpCenterDetail'],
     '/System/Currency': ['/System/Currency', '/System/AddCurrency', '/System/EditCurrency'],
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],

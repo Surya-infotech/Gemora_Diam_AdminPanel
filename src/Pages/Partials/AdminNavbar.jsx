@@ -1,5 +1,4 @@
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import GroupsIcon from '@mui/icons-material/Groups';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -20,7 +19,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import PeopleIcon from '@mui/icons-material/People';
 import CategoryIcon from '@mui/icons-material/Category';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import InterestsIcon from '@mui/icons-material/Interests';
@@ -40,17 +38,37 @@ const AdminNavbar = () => {
     const navLinkClass = (to) => () => (isAdminNavLinkActive(to, pathname) ? 'active' : '');
     const toggleNavbar = () => setIsCollapsed(prevState => !prevState);
 
+    const isSupportActive =
+        pathname.startsWith('/System/ContactUs') ||
+        pathname.startsWith('/System/Subscribers') ||
+        pathname.startsWith('/System/FAQ') ||
+        pathname.startsWith('/System/Policy');
+
+    const isSystemActive =
+        pathname.startsWith('/System/Currency') ||
+        pathname.startsWith('/System/AddCurrency') ||
+        pathname.startsWith('/System/EditCurrency') ||
+        pathname.startsWith('/System/Taxes') ||
+        pathname.startsWith('/System/AddTax') ||
+        pathname.startsWith('/System/EditTax') ||
+        pathname.startsWith('/System/Setting');
+
     const [expandedCategories, setExpandedCategories] = useState({
         main: true,
-        users: false,
         attributes: false,
+        support: false,
         system: false,
     });
 
     const getCategoryForPath = (path) => {
         if (path.startsWith('/Home')) return 'main';
-        if (path.startsWith('/Users')) return 'users';
         if (path.startsWith('/Attributes')) return 'attributes';
+        if (
+            path.startsWith('/System/ContactUs') ||
+            path.startsWith('/System/Subscribers') ||
+            path.startsWith('/System/FAQ') ||
+            path.startsWith('/System/Policy')
+        ) return 'support';
         if (path.startsWith('/System')) return 'system';
         return null;
     };
@@ -60,8 +78,8 @@ const AdminNavbar = () => {
         if (activeCategory) {
             setExpandedCategories({
                 main: activeCategory === 'main',
-                users: activeCategory === 'users',
                 attributes: activeCategory === 'attributes',
+                support: activeCategory === 'support',
                 system: activeCategory === 'system',
             });
         }
@@ -72,10 +90,8 @@ const AdminNavbar = () => {
             setIsCollapsed(false);
             setExpandedCategories({
                 main: categoryKey === 'main',
-                subscription: categoryKey === 'subscription',
-                users: categoryKey === 'users',
                 attributes: categoryKey === 'attributes',
-                reports: categoryKey === 'reports',
+                support: categoryKey === 'support',
                 system: categoryKey === 'system',
             });
         } else {
@@ -83,10 +99,8 @@ const AdminNavbar = () => {
                 const nextState = !prev[categoryKey];
                 return {
                     main: categoryKey === 'main' ? nextState : false,
-                    subscription: categoryKey === 'subscription' ? nextState : false,
-                    users: categoryKey === 'users' ? nextState : false,
                     attributes: categoryKey === 'attributes' ? nextState : false,
-                    reports: categoryKey === 'reports' ? nextState : false,
+                    support: categoryKey === 'support' ? nextState : false,
                     system: categoryKey === 'system' ? nextState : false,
                 };
             });
@@ -187,34 +201,7 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                {/* Category 2: Users */}
-                <NavTooltip title={translations.Users}>
-                    <div className={`category-trigger ${pathname.startsWith('/Users') ? 'active-category' : ''}`} onClick={() => toggleCategory('users')}>
-                        <div className="category-trigger-left">
-                            <PeopleIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                            {!isCollapsed && <span className="category-title">{translations.Users}</span>}
-                        </div>
-                        {!isCollapsed && (
-                            <span className="category-chevron">
-                                <CategoryChevron isExpanded={expandedCategories.users} />
-                            </span>
-                        )}
-                    </div>
-                </NavTooltip>
-                <div className={`submenu ${(expandedCategories.users && !isCollapsed) ? 'expanded' : ''}`}>
-                    <div className="submenu-content">
-                        <li>
-                            <NavLink to="/Users/Customer" className={navLinkClass('/Users/Customer')}>
-                                <NavTooltip title={translations.Customer}>
-                                    <GroupsIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Customer}
-                            </NavLink>
-                        </li>
-                    </div>
-                </div>
-
-                {/* Category: Attributes */}
+                {/* Category 2: Attributes */}
                 <NavTooltip title={translations.Attributes || "Attributes"}>
                     <div className={`category-trigger ${pathname.startsWith('/Attributes') ? 'active-category' : ''}`} onClick={() => toggleCategory('attributes')}>
                         <div className="category-trigger-left">
@@ -305,52 +292,36 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                {/* Category 4: System */}
-                <NavTooltip title={translations.System}>
-                    <div className={`category-trigger ${pathname.startsWith('/System') ? 'active-category' : ''}`} onClick={() => toggleCategory('system')}>
+                {/* Category 3: Content & Support */}
+                <NavTooltip title={translations.contentsupport || "Content & Support"}>
+                    <div className={`category-trigger ${isSupportActive ? 'active-category' : ''}`} onClick={() => toggleCategory('support')}>
                         <div className="category-trigger-left">
-                            <SettingsIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                            {!isCollapsed && <span className="category-title">{translations.System}</span>}
+                            <SupportAgentIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
+                            {!isCollapsed && <span className="category-title">{translations.contentsupport || "Content & Support"}</span>}
                         </div>
                         {!isCollapsed && (
                             <span className="category-chevron">
-                                <CategoryChevron isExpanded={expandedCategories.system} />
+                                <CategoryChevron isExpanded={expandedCategories.support} />
                             </span>
                         )}
                     </div>
                 </NavTooltip>
-                <div className={`submenu ${(expandedCategories.system && !isCollapsed) ? 'expanded' : ''}`}>
+                <div className={`submenu ${(expandedCategories.support && !isCollapsed) ? 'expanded' : ''}`}>
                     <div className="submenu-content">
-                        <li>
-                            <NavLink to="/System/HelpCenter" className={navLinkClass('/System/HelpCenter')}>
-                                <NavTooltip title={translations.helpcenter}>
-                                    <SupportAgentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.helpcenter}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/System/Currency" className={navLinkClass('/System/Currency')}>
-                                <NavTooltip title={translations.currency}>
-                                    <AttachMoneyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.currency}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/System/Taxes" className={navLinkClass('/System/Taxes')}>
-                                <NavTooltip title={translations.Taxes}>
-                                    <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Taxes}
-                            </NavLink>
-                        </li>
                         <li>
                             <NavLink to="/System/ContactUs" className={navLinkClass('/System/ContactUs')}>
                                 <NavTooltip title={translations.ContactUs}>
                                     <ContactMailIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.ContactUs}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/Subscribers" className={navLinkClass('/System/Subscribers')}>
+                                <NavTooltip title={translations.Subscribers}>
+                                    <MarkEmailReadIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Subscribers}
                             </NavLink>
                         </li>
                         <li>
@@ -369,12 +340,39 @@ const AdminNavbar = () => {
                                 {translations.Policy || "Policy"}
                             </NavLink>
                         </li>
+                    </div>
+                </div>
+
+                {/* Category 4: System */}
+                <NavTooltip title={translations.System}>
+                    <div className={`category-trigger ${isSystemActive ? 'active-category' : ''}`} onClick={() => toggleCategory('system')}>
+                        <div className="category-trigger-left">
+                            <SettingsIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
+                            {!isCollapsed && <span className="category-title">{translations.System}</span>}
+                        </div>
+                        {!isCollapsed && (
+                            <span className="category-chevron">
+                                <CategoryChevron isExpanded={expandedCategories.system} />
+                            </span>
+                        )}
+                    </div>
+                </NavTooltip>
+                <div className={`submenu ${(expandedCategories.system && !isCollapsed) ? 'expanded' : ''}`}>
+                    <div className="submenu-content">
                         <li>
-                            <NavLink to="/System/Subscribers" className={navLinkClass('/System/Subscribers')}>
-                                <NavTooltip title={translations.Subscribers}>
-                                    <MarkEmailReadIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                            <NavLink to="/System/Currency" className={navLinkClass('/System/Currency')}>
+                                <NavTooltip title={translations.currency}>
+                                    <AttachMoneyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
-                                {translations.Subscribers}
+                                {translations.currency}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/Taxes" className={navLinkClass('/System/Taxes')}>
+                                <NavTooltip title={translations.Taxes}>
+                                    <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Taxes}
                             </NavLink>
                         </li>
                         <li>

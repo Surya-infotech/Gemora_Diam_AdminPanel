@@ -439,5 +439,6 @@
     "updatepolicysuccessfull": "Policy updated successfully",
     "deletepolicysuccessfull": "Policy Deleted Successfully",
     "policyalreadyexists": "Policy Already Exists",
-    "policynotfound": "Policy not found"
+    "policynotfound": "Policy not found",
+    "contentsupport": "Content & Support"
 }
