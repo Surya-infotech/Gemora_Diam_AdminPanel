@@ -31,6 +31,7 @@ import ColorLensIcon from '@mui/icons-material/ColorLens';
 import TokenIcon from '@mui/icons-material/Token';
 import StyleIcon from '@mui/icons-material/Style';
 import GridViewIcon from '@mui/icons-material/GridView';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -367,6 +368,14 @@ const AdminNavbar = () => {
                                     <ContactMailIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.ContactUs}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/FAQ" className={navLinkClass('/System/FAQ')}>
+                                <NavTooltip title={translations.FAQ || "FAQ"}>
+                                    <LiveHelpIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.FAQ || "FAQ"}
                             </NavLink>
                         </li>
                         <li>
