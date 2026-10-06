@@ -24,9 +24,9 @@
 
 @mixin heading_name {
     content: "\2022" !important;
-    font-size: var.$page_headingfont_size !important;
+    font-size: var.$page_heading_font_size !important;
     margin-right: 10px !important;
-    color: var.$page_headingfont_color !important;
+    color: var.$page_heading_font_color !important;
 
     [dir="rtl"] &,
     body.rtl-mode & {
@@ -97,6 +97,24 @@
         margin-left: 0 !important;
     }
 
+    .search-filter-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        flex-wrap: wrap !important;
+
+        .search-input-container {
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        .report-filter-bar {
+            margin-bottom: 0 !important;
+        }
+    }
+
     .export-button-wrapper {
         display: inline-flex !important;
         margin-right: 0 !important;
@@ -108,6 +126,11 @@
         justify-content: flex-start !important;
 
         .search-input-container {
+            margin-right: 0 !important;
+            margin-left: auto !important;
+        }
+
+        .search-filter-wrapper {
             margin-right: 0 !important;
             margin-left: auto !important;
         }
