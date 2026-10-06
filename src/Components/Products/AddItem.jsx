@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CloseIcon from '@mui/icons-material/Close';
+import profilePlaceholder from '../../assets/profile-placeholder.png';
 import { useAuth } from '../../Middleware/Auth';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
@@ -29,7 +28,7 @@ const AddItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState("");
+    const [imagePreview, setImagePreview] = useState(profilePlaceholder);
 
     useEffect(() => {
         if (translations.additem) document.title = translations.additem;
@@ -56,71 +55,36 @@ const AddItem = () => {
         fetchCategories();
     }, [adminPanelBackendPath]);
 
-    const handleFileValidation = (file) => {
-        if (!file) return false;
-        const allowedExtensions = ['jpg', 'jpeg', 'png'];
-        const fileExt = file.name.split('.').pop().toLowerCase();
-
-        if (!allowedExtensions.includes(fileExt)) {
-            setWarningMessage(translations.invalidfileextension || "Only JPG, JPEG, and PNG images are allowed.");
-            setShowWarning(true);
-            return false;
+    const handleUploadClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
         }
-
-        const maxSize = 10 * 1024 * 1024;
-        if (file.size > maxSize) {
-            setWarningMessage(translations.filesizetoolarge || "Image size exceeds the 10MB limit.");
-            setShowWarning(true);
-            return false;
-        }
-        return true;
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files && e.target.files[0];
         if (file) {
-            if (handleFileValidation(file)) {
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
-            } else {
-                e.target.value = "";
+            const allowedExtensions = ['jpg', 'jpeg', 'png'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!allowedExtensions.includes(fileExtension)) {
+                setWarningMessage(translations.invalidfileextension || "Only JPG, JPEG, and PNG images are allowed.");
+                setShowWarning(true);
+                e.target.value = '';
+                return;
             }
-        }
-    };
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-        if (file) {
-            if (handleFileValidation(file)) {
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
+            const maxSize = 10 * 1024 * 1024;
+            if (file.size > maxSize) {
+                setWarningMessage(translations.filesizetoolarge || "Image size exceeds the 10MB limit.");
+                setShowWarning(true);
+                e.target.value = '';
+                return;
             }
-        }
-    };
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
-    const handleRemoveImage = () => {
-        setImageFile(null);
-        if (imagePreview) {
-            URL.revokeObjectURL(imagePreview);
-            setImagePreview("");
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
         }
-        if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-        }
-    };
-
-    const formatFileSize = (bytes) => {
-        if (!bytes) return "";
-        if (bytes < 1024) return `${bytes} B`;
-        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-        return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     };
 
     const handleSubmit = async (e) => {
@@ -199,39 +163,77 @@ const AddItem = () => {
                             <LoadingSpinner />
                         ) : (
                             <form onSubmit={handleSubmit}>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label htmlFor="itemname">
-                                            {translations.itemname || "Item Name"} <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="itemname"
-                                            name="itemname"
-                                            autoComplete="off"
-                                            placeholder={translations.enteritemname || "Enter Item Name"}
-                                            autoFocus
-                                            required
-                                            value={itemName}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                if (value.length === 1 && value === " ") return;
-                                                setItemName(value);
-                                            }}
-                                        />
+                                <div className="imageflex">
+                                    <div className="formdiv">
+                                        <div className="form-group">
+                                            <label htmlFor="itemname">
+                                                {translations.itemname || "Item Name"} <span style={{ color: "red" }}>*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="itemname"
+                                                name="itemname"
+                                                autoComplete="off"
+                                                placeholder={translations.enteritemname || "Enter Item Name"}
+                                                autoFocus
+                                                required
+                                                value={itemName}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value.length === 1 && value === " ") return;
+                                                    setItemName(value);
+                                                }}
+                                                onInput={(e) => (e.target.value = e.target.value.replace(/^\s+/, ""))}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>
+                                                {translations.Category || "Category"} <span style={{ color: "red" }}>*</span>
+                                            </label>
+                                            <Dropdown
+                                                options={categories}
+                                                labelKey="categoryname"
+                                                valueKey="categoryid"
+                                                selectedValue={selectedCategory}
+                                                onValueChange={(val) => setSelectedCategory(val)}
+                                                placeholder={translations.selectcategory || "Select Category"}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {translations.Category || "Category"} <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <Dropdown
-                                            options={categories}
-                                            labelKey="categoryname"
-                                            valueKey="categoryid"
-                                            selectedValue={selectedCategory}
-                                            onValueChange={(val) => setSelectedCategory(val)}
-                                            placeholder={translations.selectcategory || "Select Category"}
-                                        />
+                                    <div className="imagediv">
+                                        <div className="form-group">
+                                            <div className="imgpreview">
+                                                {imagePreview && (
+                                                    <div className="image-preview-container">
+                                                        <img
+                                                            src={imagePreview}
+                                                            alt={translations.itempreview || "Item Preview"}
+                                                            className="image-preview"
+                                                            onError={(e) => {
+                                                                e.target.onerror = null;
+                                                                e.target.src = profilePlaceholder;
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-primary upload-btn"
+                                                    onClick={handleUploadClick}
+                                                >
+                                                    {translations.upload || "Upload"}
+                                                </button>
+                                                <input
+                                                    type="file"
+                                                    id="itemimage"
+                                                    name="image"
+                                                    accept="image/*"
+                                                    ref={fileInputRef}
+                                                    onChange={handleImageChange}
+                                                    style={{ display: "none" }}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -244,59 +246,10 @@ const AddItem = () => {
                                             id="description"
                                             name="description"
                                             rows="4"
-                                            placeholder={translations.enterdescription || "Enter Item Description"}
+                                            placeholder={translations.enterdescription || "Enter Description"}
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                         />
-                                    </div>
-                                </div>
-
-                                <div className="form-row full-width">
-                                    <div className="form-group">
-                                        <label>
-                                            {translations.image || "Image"}
-                                        </label>
-                                        <div className="image-upload-wrapper">
-                                            {!imagePreview ? (
-                                                <div
-                                                    className="upload-dropzone"
-                                                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                                                    onDrop={handleDrop}
-                                                    onDragOver={handleDragOver}
-                                                >
-                                                    <CloudUploadIcon className="upload-icon" />
-                                                    <div className="upload-text">
-                                                        {translations.clickordragimage || "Click to browse or drag and drop an image"}
-                                                    </div>
-                                                    <div className="upload-hint">
-                                                        {translations.imagehint || "PNG, JPG, JPEG up to 10MB"}
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <div className="image-preview-card">
-                                                    <img src={imagePreview} alt="Preview" className="preview-img" />
-                                                    <div className="preview-info">
-                                                        <span className="file-name">{imageFile?.name || "image"}</span>
-                                                        <span className="file-size">{formatFileSize(imageFile?.size)}</span>
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        className="remove-img-btn"
-                                                        onClick={handleRemoveImage}
-                                                        title={translations.remove || "Remove"}
-                                                    >
-                                                        <CloseIcon fontSize="small" />
-                                                    </button>
-                                                </div>
-                                            )}
-                                            <input
-                                                type="file"
-                                                ref={fileInputRef}
-                                                accept="image/png,image/jpeg,image/jpg"
-                                                style={{ display: "none" }}
-                                                onChange={handleImageChange}
-                                            />
-                                        </div>
                                     </div>
                                 </div>
 
@@ -307,14 +260,14 @@ const AddItem = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel}
+                                        {translations.cancel || "Cancel"}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-primary submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save}
+                                        {translations.save || "Save"}
                                     </button>
                                 </div>
                             </form>
