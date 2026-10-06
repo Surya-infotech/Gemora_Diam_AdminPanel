@@ -14,6 +14,7 @@ import "../../Scss/Partials/adminnavbar.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import { isAdminNavLinkActive } from '../../utils/navActiveMatchers';
 import DiamondIcon from '@mui/icons-material/Diamond';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -244,6 +245,14 @@ const AdminNavbar = () => {
                                     <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Metal || "Metal"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/DiamondSize" className={navLinkClass('/Attributes/DiamondSize')}>
+                                <NavTooltip title={translations.DiamondSize || "Diamond Size"}>
+                                    <AutoAwesomeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.DiamondSize || "Diamond Size"}
                             </NavLink>
                         </li>
                     </div>

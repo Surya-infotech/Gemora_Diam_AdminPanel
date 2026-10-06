@@ -283,5 +283,19 @@
     "deletemetalsuccessfull": "Metal Deleted Successfully",
     "metalnamealreadyexists": "Metal Name Already Exists",
     "metalnotfound": "Metal not found",
-    "Attributes": "Attributes"
+    "Attributes": "Attributes",
+    "DiamondSize": "Diamond Size",
+    "diamondsize": "Diamond Size",
+    "diamondsizes": "Diamond Sizes",
+    "adddiamondsize": "Add Diamond Size",
+    "editdiamondsize": "Edit Diamond Size",
+    "deletediamondsize": "Delete Diamond Size",
+    "enterdiamondsize": "Enter Diamond Size",
+    "diamondsizestatusactive": "Diamond Size Status updated to Active",
+    "diamondsizestatusinactive": "Diamond Size Status updated to Inactive",
+    "adddiamondsizesuccessfull": "Diamond Size added successfully",
+    "updatediamondsizesuccessfull": "Diamond Size updated successfully",
+    "deletediamondsizesuccessfull": "Diamond Size Deleted Successfully",
+    "diamondsizealreadyexists": "Diamond Size Already Exists",
+    "diamondsizenotfound": "Diamond Size not found"
 }

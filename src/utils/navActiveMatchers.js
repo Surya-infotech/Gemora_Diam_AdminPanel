@@ -11,6 +11,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/System/Currency': ['/System/Currency', '/System/AddCurrency', '/System/EditCurrency'],
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
+    '/Attributes/DiamondSize': ['/Attributes/DiamondSize', '/Attributes/AddDiamondSize', '/Attributes/EditDiamondSize'],
     '/System/ContactUs': ['/System/ContactUs'],
     '/System/Subscribers': ['/System/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
