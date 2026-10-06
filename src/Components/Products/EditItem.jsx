@@ -36,8 +36,6 @@ const EditItem = () => {
     const [selectedShapes, setSelectedShapes] = useState([]);
     const [clarities, setClarities] = useState([]);
     const [selectedClarities, setSelectedClarities] = useState([]);
-    const [diamondColors, setDiamondColors] = useState([]);
-    const [selectedDiamondColors, setSelectedDiamondColors] = useState([]);
     const [stones, setStones] = useState([]);
     const [selectedStones, setSelectedStones] = useState([]);
     const [styles, setStyles] = useState([]);
@@ -153,33 +151,6 @@ const EditItem = () => {
         value: c.clarityid
     }));
 
-    // Fetch active diamond colors for dropdown
-    useEffect(() => {
-        const fetchDiamondColors = async () => {
-            try {
-                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveDiamondColors`, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-                const data = await response.json();
-                if (response.ok && Array.isArray(data)) {
-                    setDiamondColors(data);
-                }
-            } catch (err) {
-                console.error("Error loading diamond colors:", err);
-            }
-        };
-
-        fetchDiamondColors();
-    }, [adminPanelBackendPath]);
-
-    const diamondColorOptions = diamondColors.map(d => ({
-        diamondcolorid: d.diamondcolorid,
-        diamondcolor: d.diamondcolor,
-        label: d.diamondcolor,
-        value: d.diamondcolorid
-    }));
-
     // Fetch active stones for dropdown
     useEffect(() => {
         const fetchStones = async () => {
@@ -285,16 +256,6 @@ const EditItem = () => {
                         })));
                     } else {
                         setSelectedClarities([]);
-                    }
-                    if (result.diamondcolors && Array.isArray(result.diamondcolors)) {
-                        setSelectedDiamondColors(result.diamondcolors.map(d => ({
-                            diamondcolorid: d.diamondcolorid,
-                            diamondcolor: d.diamondcolor,
-                            label: d.diamondcolor,
-                            value: d.diamondcolorid
-                        })));
-                    } else {
-                        setSelectedDiamondColors([]);
                     }
                     if (result.stones && Array.isArray(result.stones)) {
                         setSelectedStones(result.stones.map(s => ({
@@ -415,7 +376,6 @@ const EditItem = () => {
             formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("clarities", JSON.stringify(selectedClarities));
-            formData.append("diamondcolors", JSON.stringify(selectedDiamondColors));
             formData.append("stones", JSON.stringify(selectedStones));
             formData.append("styles", JSON.stringify(selectedStyles));
             formData.append("description", description.trim());
@@ -629,19 +589,6 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
-                                        </label>
-                                        <MultiDropdown
-                                            options={diamondColorOptions}
-                                            labelKey="label"
-                                            valueKey="value"
-                                            selectedValue={selectedDiamondColors}
-                                            onValueChange={(val) => setSelectedDiamondColors(val)}
-                                            placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
                                             {translations.Stone || translations.stone || "Stone"}
                                         </label>
                                         <MultiDropdown
@@ -653,9 +600,6 @@ const EditItem = () => {
                                             placeholder={translations.selectstone || "Select Stone"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Style || translations.style || "Style"}
@@ -669,6 +613,9 @@ const EditItem = () => {
                                             placeholder={translations.selectstyle || "Select Style"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">
