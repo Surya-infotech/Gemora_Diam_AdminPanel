@@ -668,9 +668,6 @@ const EditItem = () => {
                                             placeholder={translations.selectringsize || "Select Ring Size"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Shape || translations.shape || "Shape"}
@@ -684,6 +681,9 @@ const EditItem = () => {
                                             placeholder={translations.selectshape || "Select Shape"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Clarity || translations.clarity || "Clarity"}
@@ -697,9 +697,6 @@ const EditItem = () => {
                                             placeholder={translations.selectclarity || "Select Clarity"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Stone || translations.stone || "Stone"}
@@ -713,6 +710,9 @@ const EditItem = () => {
                                             placeholder={translations.selectstone || "Select Stone"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Style || translations.style || "Style"}
@@ -726,9 +726,6 @@ const EditItem = () => {
                                             placeholder={translations.selectstyle || "Select Style"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
@@ -742,6 +739,9 @@ const EditItem = () => {
                                             placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.BandColor || translations.bandcolor || "Band Color"}
@@ -755,9 +755,6 @@ const EditItem = () => {
                                             placeholder={translations.selectbandcolor || "Select Band Color"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>{translations.status || "Status"}</label>
                                         <div className="switch-container">

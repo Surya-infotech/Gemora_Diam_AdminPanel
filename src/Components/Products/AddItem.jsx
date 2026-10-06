@@ -542,9 +542,6 @@ const AddItem = () => {
                                             placeholder={translations.selectringsize || "Select Ring Size"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Shape || translations.shape || "Shape"}
@@ -558,6 +555,9 @@ const AddItem = () => {
                                             placeholder={translations.selectshape || "Select Shape"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Clarity || translations.clarity || "Clarity"}
@@ -571,9 +571,6 @@ const AddItem = () => {
                                             placeholder={translations.selectclarity || "Select Clarity"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Stone || translations.stone || "Stone"}
@@ -587,6 +584,9 @@ const AddItem = () => {
                                             placeholder={translations.selectstone || "Select Stone"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Style || translations.style || "Style"}
@@ -600,9 +600,6 @@ const AddItem = () => {
                                             placeholder={translations.selectstyle || "Select Style"}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
@@ -616,6 +613,9 @@ const AddItem = () => {
                                             placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.BandColor || translations.bandcolor || "Band Color"}
