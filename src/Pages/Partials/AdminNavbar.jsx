@@ -28,6 +28,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
+import TokenIcon from '@mui/icons-material/Token';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -289,6 +290,14 @@ const AdminNavbar = () => {
                                     <ColorLensIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.DiamondColor || "Diamond Color"}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Attributes/Stone" className={navLinkClass('/Attributes/Stone')}>
+                                <NavTooltip title={translations.Stone || "Stone"}>
+                                    <TokenIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Stone || "Stone"}
                             </NavLink>
                         </li>
                     </div>

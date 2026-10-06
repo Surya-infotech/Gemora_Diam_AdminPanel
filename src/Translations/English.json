@@ -355,5 +355,20 @@
     "updatediamondcolorsuccessfull": "Diamond Color updated successfully",
     "deletediamondcolorsuccessfull": "Diamond Color Deleted Successfully",
     "diamondcoloralreadyexists": "Diamond Color Already Exists",
-    "diamondcolornotfound": "Diamond Color not found"
+    "diamondcolornotfound": "Diamond Color not found",
+    "Stone": "Stone",
+    "stone": "Stone",
+    "stones": "Stones",
+    "stonename": "Stone Name",
+    "addstone": "Add Stone",
+    "editstone": "Edit Stone",
+    "deletestone": "Delete Stone",
+    "enterstonename": "Enter Stone Name",
+    "stonestatusactive": "Stone Status updated to Active",
+    "stonestatusinactive": "Stone Status updated to Inactive",
+    "addstonesuccessfull": "Stone added successfully",
+    "updatestonesuccessfull": "Stone updated successfully",
+    "deletestonesuccessfull": "Stone Deleted Successfully",
+    "stonealreadyexists": "Stone Already Exists",
+    "stonenotfound": "Stone not found"
 }
