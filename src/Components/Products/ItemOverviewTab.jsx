@@ -78,18 +78,6 @@ const ItemOverviewTab = ({ itemData }) => {
                         <span className="detail-value">{itemData.itemid || itemData._id || '-'}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.sku}</span>
-                        <span className="detail-value">{itemData.sku || '-'}</span>
-                    </div>
-                    <div className="detail-item">
-                        <span className="detail-label">{translations.Category}</span>
-                        <span className="detail-value">{itemData.categoryname || '-'}</span>
-                    </div>
-                    <div className="detail-item">
-                        <span className="detail-label">{translations.subcategory}</span>
-                        <span className="detail-value">{itemData.subcategoryname || '-'}</span>
-                    </div>
-                    <div className="detail-item">
                         <span className="detail-label">{translations.createdat}</span>
                         <span className="detail-value">{formatDateTime(itemData.createdAt)}</span>
                     </div>
