@@ -605,5 +605,6 @@
   "novideofound": "No videos uploaded for this item yet",
   "deletevideomessage": "Are you sure you want to delete this video?",
   "pleaseselectvideo": "Please select at least one video to upload.",
-  "saveprice": "Save Price"
+  "saveprice": "Save Price",
+  "viewdetails": "View Details"
 }

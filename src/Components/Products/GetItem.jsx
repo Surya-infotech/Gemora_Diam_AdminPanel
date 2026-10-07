@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 import Placeholder from "../../assets/placeholder.png";
 import { useAuth } from "../../Middleware/Auth";
 import AlertMessage from "../../Pages/Custom/AlertMessage";
@@ -192,10 +193,17 @@ const GetItem = ({ searchValue }) => {
                                                         e.target.src = Placeholder;
                                                     }}
                                                 />
-                                                <div className="item-text-wrapper">
-                                                    <strong className="item-name-text">{item.itemname}</strong>
-                                                    {item.sku && <span className="item-sku-text">{item.sku}</span>}
-                                                </div>
+                                                <Tooltip
+                                                    title={canViewOverview ? (translations.viewdetails || "View Details") : ""}
+                                                    arrow
+                                                    placement="bottom"
+                                                    disableHoverListener={!canViewOverview}
+                                                >
+                                                    <div className="item-text-wrapper">
+                                                        <strong className="item-name-text">{item.itemname}</strong>
+                                                        {item.sku && <span className="item-sku-text">{item.sku}</span>}
+                                                    </div>
+                                                </Tooltip>
                                             </div>
                                         </td>
                                         <td>
