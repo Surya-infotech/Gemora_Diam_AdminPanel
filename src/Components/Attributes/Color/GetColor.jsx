@@ -111,7 +111,10 @@ const GetColor = ({ searchValue = "" }) => {
         setSelectedItem(item);
     };
 
+    const showActionColumn = canEdit('color') || canDelete('color');
+
     const handleStatusChange = async (item) => {
+        if (!canEdit('color')) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !item.status;
@@ -192,7 +195,7 @@ const GetColor = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -210,17 +213,19 @@ const GetColor = ({ searchValue = "" }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
+                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('color')} />
                                         </td>
-                                        <td>
-                                            {canEdit('color') && <EditButton onClick={() => handleEditClick(item._id || item.colorid)} />}
-                                            {canDelete('color') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                        </td>
+                                        {showActionColumn && (
+                                            <td>
+                                                {canEdit('color') && <EditButton onClick={() => handleEditClick(item._id || item.colorid)} />}
+                                                {canDelete('color') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan={showActionColumn ? 4 : 3} style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

@@ -111,7 +111,10 @@ const GetSubCategory = ({ searchValue = "" }) => {
         setSelectedItem(item);
     };
 
+    const showActionColumn = canEdit('subCategory') || canDelete('subCategory');
+
     const handleStatusChange = async (item) => {
+        if (!canEdit('subCategory')) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !item.status;
@@ -192,7 +195,7 @@ const GetSubCategory = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -210,17 +213,19 @@ const GetSubCategory = ({ searchValue = "" }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
+                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('subCategory')} />
                                         </td>
-                                        <td>
-                                            {canEdit('subCategory') && <EditButton onClick={() => handleEditClick(item._id || item.subcategoryid)} />}
-                                            {canDelete('subCategory') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                        </td>
+                                        {showActionColumn && (
+                                            <td>
+                                                {canEdit('subCategory') && <EditButton onClick={() => handleEditClick(item._id || item.subcategoryid)} />}
+                                                {canDelete('subCategory') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan={showActionColumn ? 4 : 3} style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

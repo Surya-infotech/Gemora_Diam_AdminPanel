@@ -111,7 +111,10 @@ const GetStone = ({ searchValue = "" }) => {
         setSelectedItem(item);
     };
 
+    const showActionColumn = canEdit('stone') || canDelete('stone');
+
     const handleStatusChange = async (item) => {
+        if (!canEdit('stone')) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !item.status;
@@ -189,7 +192,7 @@ const GetStone = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -202,17 +205,19 @@ const GetStone = ({ searchValue = "" }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
+                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('stone')} />
                                         </td>
-                                        <td>
-                                            {canEdit('stone') && <EditButton onClick={() => handleEditClick(item._id || item.stoneid)} />}
-                                            {canDelete('stone') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                        </td>
+                                        {showActionColumn && (
+                                            <td>
+                                                {canEdit('stone') && <EditButton onClick={() => handleEditClick(item._id || item.stoneid)} />}
+                                                {canDelete('stone') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="3" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan={showActionColumn ? 3 : 2} style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

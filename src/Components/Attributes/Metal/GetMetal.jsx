@@ -111,7 +111,10 @@ const GetMetal = ({ searchValue = "" }) => {
         setSelectedMetal(metal);
     };
 
+    const showActionColumn = canEdit('metal') || canDelete('metal');
+
     const handleStatusChange = async (metal) => {
+        if (!canEdit('metal')) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !metal.status;
@@ -192,7 +195,7 @@ const GetMetal = ({ searchValue = "" }) => {
                                 <th onClick={() => sortMetals("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -206,17 +209,19 @@ const GetMetal = ({ searchValue = "" }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <CustomSwitch checked={metal.status} onChange={() => handleStatusChange(metal)} />
+                                            <CustomSwitch checked={metal.status} onChange={() => handleStatusChange(metal)} disabled={!canEdit('metal')} />
                                         </td>
-                                        <td>
-                                            {canEdit('metal') && <EditButton onClick={() => handleEditClick(metal._id || metal.metalid)} />}
-                                            {canDelete('metal') && <DeleteButton onClick={() => handleDeleteClick(metal)} />}
-                                        </td>
+                                        {showActionColumn && (
+                                            <td>
+                                                {canEdit('metal') && <EditButton onClick={() => handleEditClick(metal._id || metal.metalid)} />}
+                                                {canDelete('metal') && <DeleteButton onClick={() => handleDeleteClick(metal)} />}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan={showActionColumn ? 4 : 3} style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

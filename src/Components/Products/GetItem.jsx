@@ -154,7 +154,10 @@ const GetItem = ({ searchValue }) => {
         setSelectedItem(item);
     };
 
+    const showActionColumn = canEdit('item') || canDelete('item');
+
     const handleStatusChange = async (item) => {
+        if (!canEdit('item')) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             const updatedStatus = !item.status;
@@ -235,7 +238,7 @@ const GetItem = ({ searchValue }) => {
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -257,17 +260,19 @@ const GetItem = ({ searchValue }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
+                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('item')} />
                                         </td>
-                                        <td>
-                                            {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
-                                            {canDelete('item') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                        </td>
+                                        {showActionColumn && (
+                                            <td>
+                                                {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
+                                                {canDelete('item') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4">
+                                    <td colSpan={showActionColumn ? 4 : 3}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
