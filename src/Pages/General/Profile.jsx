@@ -21,6 +21,7 @@ const Profile = () => {
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
+    const EmployeeId = localStorage.getItem("EmployeeID");
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
@@ -65,7 +66,8 @@ const Profile = () => {
         const fetchAdminDetails = async () => {
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
-                let response = await fetch(`${adminPanelBackendPath}/admin/GetAdminDetails`, {
+                let endpoint = `${adminPanelBackendPath}/admin/GetAdminDetails/${EmployeeId}`;
+                let response = await fetch(endpoint, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
@@ -133,7 +135,7 @@ const Profile = () => {
         };
 
         fetchAdminDetails();
-    }, [token, adminPanelBackendPath, translations, logoutUser, navigate]);
+    }, [token, adminPanelBackendPath, translations, logoutUser, navigate, EmployeeId]);
 
     useEffect(() => {
         const allCountries = Country.getAllCountries().map(country => ({
@@ -293,19 +295,12 @@ const Profile = () => {
         if (profileData.image) formDataToSend.append("image", profileData.image);
 
         try {
-            let response = await fetch(`${adminPanelBackendPath}/admin/UpdateAdminDetails`, {
+            let endpoint = `${adminPanelBackendPath}/admin/UpdateAdminDetails/${EmployeeId}`;
+            let response = await fetch(endpoint, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}` },
                 body: formDataToSend,
             });
-
-            if (response.status === 404) {
-                response = await fetch(`${adminPanelBackendPath}/General/admin/UpdateAdminDetails`, {
-                    method: "PUT",
-                    headers: { Authorization: `Bearer ${token}` },
-                    body: formDataToSend,
-                });
-            }
 
             const data = await response.json();
 
