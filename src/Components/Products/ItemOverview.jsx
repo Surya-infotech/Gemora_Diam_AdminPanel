@@ -1,5 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import { useAuth } from '../../Middleware/Auth';
@@ -10,6 +10,7 @@ import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import "../../Scss/Products/itemoverview.scss";
 import ItemOverviewTab from './ItemOverviewTab';
 import ItemAttributesTab from './ItemAttributesTab';
+import ItemGalleryTab from './ItemGalleryTab';
 import ItemPriceTab from './ItemPriceTab';
 
 const ItemOverview = () => {
@@ -75,29 +76,15 @@ const ItemOverview = () => {
         navigate('/Products/Item');
     };
 
+    const handleItemUpdated = useCallback((updated) => {
+        setItemData(prev => ({ ...prev, ...updated }));
+    }, []);
+
     const tabs = [
-        {
-            title: translations.overview,
-            content: (
-                <ItemOverviewTab
-                    itemData={itemData}
-                    onItemUpdated={(updated) => setItemData(prev => ({ ...prev, ...updated }))}
-                />
-            )
-        },
-        {
-            title: translations.Attributes,
-            content: <ItemAttributesTab itemData={itemData} />
-        },
-        {
-            title: translations.pricetab,
-            content: (
-                <ItemPriceTab
-                    itemData={itemData}
-                    onItemUpdated={(updated) => setItemData(prev => ({ ...prev, ...updated }))}
-                />
-            )
-        }
+        { title: translations.overview },
+        { title: translations.Attributes },
+        { title: translations.gallery || "Gallery" },
+        { title: translations.pricetab }
     ];
 
     if (loading) {
@@ -141,7 +128,29 @@ const ItemOverview = () => {
                             ))}
                         </div>
                         <div className="tab-content">
-                            <div className="tab-content-body">{tabs[activeTab]?.content || tabs[0]?.content}</div>
+                            <div className="tab-content-body">
+                                {activeTab === 0 && (
+                                    <ItemOverviewTab
+                                        itemData={itemData}
+                                        onItemUpdated={handleItemUpdated}
+                                    />
+                                )}
+                                {activeTab === 1 && (
+                                    <ItemAttributesTab itemData={itemData} />
+                                )}
+                                {activeTab === 2 && (
+                                    <ItemGalleryTab
+                                        itemData={itemData}
+                                        onItemUpdated={handleItemUpdated}
+                                    />
+                                )}
+                                {activeTab === 3 && (
+                                    <ItemPriceTab
+                                        itemData={itemData}
+                                        onItemUpdated={handleItemUpdated}
+                                    />
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
