@@ -1,6 +1,6 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useLanguage } from '../../../Context/LanguageContext';
 import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
@@ -13,7 +13,6 @@ import PermissionTab from './PermissionTab';
 
 const EmployeeOverview = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const { translations, isRtl } = useLanguage();
     const { logoutUser } = useAuth();
     const { id } = useParams();

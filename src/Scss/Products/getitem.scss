@@ -55,16 +55,6 @@
       gap: 14px;
       vertical-align: middle;
 
-      .item-thumbnail-wrapper {
-        position: relative;
-        width: 44px;
-        height: 44px;
-        flex-shrink: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
       .item-thumbnail {
         width: 44px;
         height: 44px;
@@ -145,16 +135,6 @@
         color: #b45309;
         border: 1px solid #fde68a;
       }
-    }
-
-    .item-desc-cell {
-      max-width: 250px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--text-color);
-      opacity: 0.85;
-      font-size: 13px;
     }
   }
 }

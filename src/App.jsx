@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { CssBaseline, ThemeProvider, LinearProgress } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
 import "bootstrap/dist/css/bootstrap.min.css";
