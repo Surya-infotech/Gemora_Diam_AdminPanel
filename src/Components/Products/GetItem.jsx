@@ -100,6 +100,7 @@ const GetItem = ({ searchValue }) => {
     const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     const handleEditClick = (id) => navigate(`/Products/EditItem/${id}`);
+    const handleItemNameClick = (id) => navigate(`/Products/ItemOverview/${id}`);
 
     const handleDeleteClick = (item) => {
         setIsModalOpen(true);
@@ -167,7 +168,18 @@ const GetItem = ({ searchValue }) => {
                                 visibleItems.map((item) => (
                                     <tr key={item._id || item.itemid}>
                                         <td className="item-name-col">
-                                            <div className="item-info-cell">
+                                            <div
+                                                className="item-info-cell clickable"
+                                                onClick={() => handleItemNameClick(item._id || item.itemid)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter" || e.key === " ") {
+                                                        e.preventDefault();
+                                                        handleItemNameClick(item._id || item.itemid);
+                                                    }
+                                                }}
+                                            >
                                                 <img
                                                     src={item.image || item.imageUrl || Placeholder}
                                                     alt={item.itemname}

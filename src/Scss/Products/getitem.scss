@@ -55,6 +55,20 @@
       gap: 14px;
       vertical-align: middle;
 
+      &.clickable {
+        cursor: pointer;
+
+        .item-name-text {
+          transition: color 0.15s ease;
+        }
+
+        &:hover {
+          .item-name-text {
+            color: var(--primary-color);
+          }
+        }
+      }
+
       .item-thumbnail {
         width: 44px;
         height: 44px;

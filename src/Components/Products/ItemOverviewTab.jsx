@@ -1,0 +1,123 @@
+import Placeholder from '../../assets/placeholder.png';
+import { useLanguage } from '../../Context/LanguageContext';
+
+const ItemOverviewTab = ({ itemData }) => {
+    const { translations } = useLanguage();
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch {
+            return dateString;
+        }
+    };
+
+    if (!itemData) {
+        return (
+            <div className="no-data-message">
+                <p>{translations.nodatafound}</p>
+            </div>
+        );
+    }
+
+    const itemName = itemData.itemname || '-';
+    const status = itemData.status || 'Draft';
+    const isPublished = status === 'Published';
+
+    return (
+        <div className="itemoverview-card">
+            <div className="item-header-section">
+                <div className="item-image-container">
+                    <img
+                        src={itemData.image || Placeholder}
+                        alt={itemName}
+                        className="item-overview-image"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = Placeholder;
+                        }}
+                    />
+                </div>
+                <div className="item-title-section">
+                    <h4 className="item-name-title">{itemName}</h4>
+                    {itemData.sku && (
+                        <p className="item-sku-title">
+                            <span className="sku-label">{translations.sku}:</span> {itemData.sku}
+                        </p>
+                    )}
+                    <div className="item-meta-tags">
+                        {itemData.categoryname && (
+                            <span className="meta-pill category-pill">
+                                {itemData.categoryname}
+                            </span>
+                        )}
+                        {itemData.subcategoryname && (
+                            <span className="meta-pill subcategory-pill">
+                                {itemData.subcategoryname}
+                            </span>
+                        )}
+                    </div>
+                </div>
+                <span className={`status-badge ${isPublished ? 'published' : 'draft'}`}>
+                    {isPublished ? translations.published : translations.draft}
+                </span>
+            </div>
+
+            <div className="item-details-section">
+                <div className="details-grid">
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.Item} ID</span>
+                        <span className="detail-value">{itemData.itemid || itemData._id || '-'}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.itemname}</span>
+                        <span className="detail-value">{itemName}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.sku}</span>
+                        <span className="detail-value">{itemData.sku || '-'}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.Category}</span>
+                        <span className="detail-value">{itemData.categoryname || '-'}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.subcategory}</span>
+                        <span className="detail-value">{itemData.subcategoryname || '-'}</span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.status}</span>
+                        <span className={`detail-value status-text ${isPublished ? 'published' : 'draft'}`}>
+                            {isPublished ? translations.published : translations.draft}
+                        </span>
+                    </div>
+                    <div className="detail-item">
+                        <span className="detail-label">{translations.createdat}</span>
+                        <span className="detail-value">{formatDate(itemData.createdAt)}</span>
+                    </div>
+                    {itemData.updatedAt && (
+                        <div className="detail-item">
+                            <span className="detail-label">{translations.updatedat}</span>
+                            <span className="detail-value">{formatDate(itemData.updatedAt)}</span>
+                        </div>
+                    )}
+                </div>
+
+                {itemData.description && itemData.description.trim() && (
+                    <div className="item-description-block">
+                        <h6 className="description-heading">{translations.description}</h6>
+                        <div
+                            className="description-content"
+                            dangerouslySetInnerHTML={{ __html: itemData.description }}
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default ItemOverviewTab;
