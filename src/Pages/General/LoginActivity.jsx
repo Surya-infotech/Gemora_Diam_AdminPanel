@@ -35,8 +35,8 @@ const LoginActivity = () => {
     const [miscSettings, setMiscSettings] = useState(null);
 
     useEffect(() => {
-        document.title = `${translations.LoginActivity} - Gemora Diam`;
-    }, [translations.LoginActivity]);
+        if (translations.LoginActivity) document.title = translations.LoginActivity;
+    }, [translations]);
 
     useEffect(() => {
         if (location.state && location.state.message) {

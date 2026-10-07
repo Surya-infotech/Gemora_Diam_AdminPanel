@@ -50,7 +50,6 @@ const AddItem = () => {
 
     useEffect(() => {
         if (translations.additem) document.title = translations.additem;
-        else document.title = "Add Item";
     }, [translations]);
 
     // Fetch active categories for dropdown

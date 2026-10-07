@@ -33,10 +33,8 @@ const Setting = () => {
     const [activeTabId, setActiveTabId] = useState('general');
 
     useEffect(() => {
-        if (translations.Setting) {
-            document.title = `${translations.Setting} - Gemora Diam`;
-        }
-    }, [translations.Setting]);
+        if (translations.Setting) document.title = translations.Setting;
+    }, [translations]);
 
     const tabs = useMemo(
         () =>

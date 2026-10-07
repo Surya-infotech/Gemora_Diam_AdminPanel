@@ -69,11 +69,8 @@ const EmployeeOverview = () => {
         : '';
 
     useEffect(() => {
-        const titleText = employeeFullName
-            ? `${employeeFullName} - ${translations.employeeoverview} | Gemora Diam`
-            : `${translations.employeeoverview} | Gemora Diam`;
-        document.title = titleText;
-    }, [translations, employeeFullName]);
+        if (translations.employeeoverview) document.title = translations.employeeoverview;
+    }, [translations]);
 
     const handleBackClick = () => {
         navigate('/User/Employee');

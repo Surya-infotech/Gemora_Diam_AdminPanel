@@ -19,7 +19,6 @@ const Color = () => {
 
     useEffect(() => {
         if (translations.Color) document.title = translations.Color;
-        else document.title = "Color";
     }, [translations]);
 
     useEffect(() => {

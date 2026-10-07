@@ -19,7 +19,6 @@ const Shape = () => {
 
     useEffect(() => {
         if (translations.Shape) document.title = translations.Shape;
-        else document.title = "Shape";
     }, [translations]);
 
     useEffect(() => {

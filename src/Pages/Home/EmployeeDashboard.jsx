@@ -76,11 +76,8 @@ const EmployeeDashboard = () => {
         : '';
 
     useEffect(() => {
-        const titleText = employeeFullName
-            ? `${employeeFullName} - ${translations.Dashboard} | Gemora Diam`
-            : `${translations.Dashboard} | Gemora Diam`;
-        document.title = titleText;
-    }, [translations, employeeFullName]);
+        if (translations.Dashboard) document.title = translations.Dashboard;
+    }, [translations]);
 
     const formatDate = (dateString) => {
         if (!dateString) return '-';

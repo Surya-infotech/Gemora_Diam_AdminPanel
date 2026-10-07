@@ -19,7 +19,6 @@ const Style = () => {
 
     useEffect(() => {
         if (translations.Style) document.title = translations.Style;
-        else document.title = "Style";
     }, [translations]);
 
     useEffect(() => {

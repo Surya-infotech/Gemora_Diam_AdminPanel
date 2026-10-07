@@ -53,7 +53,6 @@ const OwnerLogin = () => {
 
     useEffect(() => {
         if (translations.signin) document.title = translations.signin;
-        else document.title = 'Gemora Diam - Signin';
     }, [translations]);
 
     const handleLanguageSelect = (language) => {

@@ -19,7 +19,6 @@ const Category = () => {
 
     useEffect(() => {
         if (translations.Category) document.title = translations.Category;
-        else document.title = "Category";
     }, [translations]);
 
     useEffect(() => {

@@ -19,7 +19,6 @@ const DiamondSize = () => {
 
     useEffect(() => {
         if (translations.DiamondSize) document.title = translations.DiamondSize;
-        else document.title = "Diamond Size";
     }, [translations]);
 
     useEffect(() => {

@@ -33,7 +33,6 @@ const EditColor = () => {
 
     useEffect(() => {
         if (translations.editcolor) document.title = translations.editcolor;
-        else document.title = "Edit Color";
     }, [translations]);
 
     useEffect(() => {

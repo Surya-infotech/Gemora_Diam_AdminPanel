@@ -51,7 +51,6 @@ const EditItem = () => {
 
     useEffect(() => {
         if (translations.edititem) document.title = translations.edititem;
-        else document.title = "Edit Item";
     }, [translations]);
 
     // Fetch active categories

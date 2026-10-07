@@ -29,7 +29,6 @@ const EditSubCategory = () => {
 
     useEffect(() => {
         if (translations.editsubcategory) document.title = translations.editsubcategory;
-        else document.title = "Edit Sub Category";
     }, [translations]);
 
     // Fetch active categories for dropdown

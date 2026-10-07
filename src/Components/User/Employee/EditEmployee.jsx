@@ -41,11 +41,7 @@ const EditEmployee = () => {
     ];
 
     useEffect(() => {
-        if (translations.editemployee) {
-            document.title = translations.editemployee;
-        } else {
-            document.title = "Edit Employee";
-        }
+        if (translations.editemployee) document.title = translations.editemployee;
     }, [translations]);
 
     useEffect(() => {

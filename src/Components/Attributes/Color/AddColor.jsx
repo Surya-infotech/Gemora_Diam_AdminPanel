@@ -30,7 +30,6 @@ const AddColor = () => {
 
     useEffect(() => {
         if (translations.addcolor) document.title = translations.addcolor;
-        else document.title = "Add Color";
     }, [translations]);
 
     const handleSubmit = async (e) => {

@@ -19,7 +19,6 @@ const SubCategory = () => {
 
     useEffect(() => {
         if (translations.SubCategory) document.title = translations.SubCategory;
-        else document.title = "Sub Category";
     }, [translations]);
 
     useEffect(() => {

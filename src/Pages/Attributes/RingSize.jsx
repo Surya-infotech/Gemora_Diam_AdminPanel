@@ -19,7 +19,6 @@ const RingSize = () => {
 
     useEffect(() => {
         if (translations.RingSize) document.title = translations.RingSize;
-        else document.title = "Ring Size";
     }, [translations]);
 
     useEffect(() => {

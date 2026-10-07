@@ -42,11 +42,7 @@ const AddEmployee = () => {
     ];
 
     useEffect(() => {
-        if (translations.addemployee) {
-            document.title = translations.addemployee;
-        } else {
-            document.title = "Add Employee";
-        }
+        if (translations.addemployee) document.title = translations.addemployee;
     }, [translations]);
 
     const handleInputChange = (e) => {

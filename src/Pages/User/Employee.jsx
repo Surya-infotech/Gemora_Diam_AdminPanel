@@ -16,9 +16,7 @@ const Employee = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.Employee || translations.Employees) {
-            document.title = translations.Employee || translations.Employees;
-        }
+        if (translations.Employee) document.title = translations.Employee;
     }, [translations]);
 
     useEffect(() => {

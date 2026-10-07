@@ -19,7 +19,6 @@ const Stone = () => {
 
     useEffect(() => {
         if (translations.Stone) document.title = translations.Stone;
-        else document.title = "Stone";
     }, [translations]);
 
     useEffect(() => {

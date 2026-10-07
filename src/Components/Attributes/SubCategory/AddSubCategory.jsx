@@ -26,7 +26,6 @@ const AddSubCategory = () => {
 
     useEffect(() => {
         if (translations.addsubcategory) document.title = translations.addsubcategory;
-        else document.title = "Add Sub Category";
     }, [translations]);
 
     // Fetch active categories for dropdown

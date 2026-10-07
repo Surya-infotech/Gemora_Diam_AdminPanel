@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../Context/LanguageContext";
 
 const PageNotFound = () => {
     const navigate = useNavigate();
     const { translations } = useLanguage();
+
+    useEffect(() => {
+        if (translations.pagenotfound) document.title = translations.pagenotfound;
+    }, [translations]);
 
     return (
         <div style={{

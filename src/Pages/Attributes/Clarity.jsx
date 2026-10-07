@@ -19,7 +19,6 @@ const Clarity = () => {
 
     useEffect(() => {
         if (translations.Clarity) document.title = translations.Clarity;
-        else document.title = "Clarity";
     }, [translations]);
 
     useEffect(() => {
