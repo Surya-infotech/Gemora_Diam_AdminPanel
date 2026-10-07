@@ -16,6 +16,7 @@ const ChangePassword = () => {
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
+    const EmployeeId = localStorage.getItem("EmployeeID");
 
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
@@ -73,7 +74,7 @@ const ChangePassword = () => {
 
         setIsVerifyingOldPassword(true);
         try {
-            let endpoint = `${adminPanelBackendPath}/admin/VerifyOldPassword`;
+            let endpoint = `${adminPanelBackendPath}/admin/VerifyOldPassword/${EmployeeId}`
             let response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
@@ -82,18 +83,6 @@ const ChangePassword = () => {
                 },
                 body: JSON.stringify({ oldPassword: trimmedOldPassword }),
             });
-
-            if (response.status === 404) {
-                endpoint = `${adminPanelBackendPath}/admin/VerifyOldPassword`;
-                response = await fetch(endpoint, {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ oldPassword: trimmedOldPassword }),
-                });
-            }
 
             const data = await response.json();
             if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
@@ -140,7 +129,7 @@ const ChangePassword = () => {
 
         setIsSaving(true);
         try {
-            let endpoint = `${adminPanelBackendPath}/admin/ChangePassword`;
+            let endpoint = `${adminPanelBackendPath}/admin/ChangePassword/${EmployeeId}`
             let response = await fetch(endpoint, {
                 method: "PUT",
                 headers: {
@@ -149,18 +138,6 @@ const ChangePassword = () => {
                 },
                 body: JSON.stringify({ newPassword: passwordData.newPassword }),
             });
-
-            if (response.status === 404) {
-                endpoint = `${adminPanelBackendPath}/admin/ChangePassword`;
-                response = await fetch(endpoint, {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ newPassword: passwordData.newPassword }),
-                });
-            }
 
             const data = await response.json();
             if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
