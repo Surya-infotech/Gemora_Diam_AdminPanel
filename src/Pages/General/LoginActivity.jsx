@@ -27,6 +27,7 @@ const LoginActivity = () => {
     const [pageSize, setPageSize] = useState(10);
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
+    const EmployeeId = localStorage.getItem("EmployeeID");
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState("asc");
     const [activities, setActivities] = useState([]);
@@ -69,7 +70,7 @@ const LoginActivity = () => {
             }
             try {
                 setLoading(true);
-                let endpoint = `${adminPanelBackendPath}/admin/GetLoginActivity`;
+                let endpoint = `${adminPanelBackendPath}/admin/GetLoginActivity/${EmployeeId}`;
 
                 let response = await fetch(endpoint, {
                     method: "GET",
@@ -78,17 +79,6 @@ const LoginActivity = () => {
                         "Content-Type": "application/json",
                     },
                 });
-
-                if (response.status === 404) {
-                    endpoint = `${adminPanelBackendPath}/General/admin/GetLoginActivity`;
-                    response = await fetch(endpoint, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    });
-                }
 
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate, response)) return;
@@ -115,7 +105,7 @@ const LoginActivity = () => {
         };
 
         fetchLoginActivity();
-    }, [navigate, logoutUser, token, adminPanelBackendPath, translations]);
+    }, [navigate, logoutUser, token, adminPanelBackendPath, translations, EmployeeId]);
 
     const sortActivities = (column) => {
         const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
