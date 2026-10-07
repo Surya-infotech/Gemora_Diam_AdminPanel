@@ -156,6 +156,9 @@ const GetItem = ({ searchValue }) => {
                                 <th onClick={() => sortItems("categoryname")}>
                                     {translations.Category || "Category"} {renderSortIcon("categoryname")}
                                 </th>
+                                <th onClick={() => sortItems("status")}>
+                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                </th>
                                 {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
@@ -187,6 +190,13 @@ const GetItem = ({ searchValue }) => {
                                                 {item.categoryname || "-"}
                                             </span>
                                         </td>
+                                        <td>
+                                            <span className={`status-pill ${(item.status || "Draft").toLowerCase()}`}>
+                                                {item.status === "Published"
+                                                    ? (translations.published || "Published")
+                                                    : (translations.draft || "Draft")}
+                                            </span>
+                                        </td>
                                         {showActionColumn && (
                                             <td>
                                                 {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
@@ -197,7 +207,7 @@ const GetItem = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={showActionColumn ? 3 : 2}>
+                                    <td colSpan={showActionColumn ? 4 : 3}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
