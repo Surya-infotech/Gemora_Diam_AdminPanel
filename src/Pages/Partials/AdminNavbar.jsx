@@ -179,7 +179,7 @@ const AdminNavbar = () => {
     return (<>
         <nav className={`navbar ${isCollapsed ? 'collapsed' : ''} ${isRtl ? 'rtl-navbar' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="logo">
-                <Link to="/Home/Dashboard" className='logoimage'>
+                <Link to={isEmployee ? "/Home/EmployeeDashboard" : "/Home/Dashboard"} className='logoimage'>
                     <img src={logoUrl} className="logo-img" alt={translations.logo} />
                 </Link>
                 <div className={`arrowdiv ${isCollapsed ? 'collapsed' : ''}`}>
@@ -216,7 +216,7 @@ const AdminNavbar = () => {
                 <div className={`submenu ${(expandedCategories.main && !isCollapsed) ? 'expanded' : ''}`}>
                     <div className="submenu-content">
                         <li>
-                            <NavLink to="/Home/Dashboard" className={navLinkClass('/Home/Dashboard')}>
+                            <NavLink to={isEmployee ? "/Home/EmployeeDashboard" : "/Home/Dashboard"} className={navLinkClass(isEmployee ? '/Home/EmployeeDashboard' : '/Home/Dashboard')}>
                                 <NavTooltip title={translations.Dashboard}>
                                     <LeaderboardIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>

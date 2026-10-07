@@ -505,5 +505,19 @@
     "permissionssavedsuccessfully": "Permissions updated successfully",
     "employeeoverview": "Employee Overview",
     "back": "Back",
-    "overview": "Overview"
+    "overview": "Overview",
+    "employeedashboard": "Employee Dashboard",
+    "goodmorning": "Good morning",
+    "goodafternoon": "Good afternoon",
+    "goodevening": "Good evening",
+    "personalinformation": "Personal Information",
+    "locationdetails": "Location & Address",
+    "quickactions": "Quick Workspace Shortcuts",
+    "manageitems": "Browse & manage items",
+    "manageprofile": "View & edit profile details",
+    "updatesecurity": "Update account password",
+    "viewlogins": "Check recent login sessions",
+    "notprovided": "Not specified",
+    "fullname": "Full Name",
+    "joineddate": "Joined Date"
 }

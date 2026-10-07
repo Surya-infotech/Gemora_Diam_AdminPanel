@@ -67,7 +67,7 @@ const HoriNavbar = () => {
 
     const quickLinks = useMemo(() => {
         const links = [
-            { to: "/Home/Dashboard", label: translations.Dashboard, Icon: LeaderboardIcon },
+            { to: isEmployee ? "/Home/EmployeeDashboard" : "/Home/Dashboard", label: translations.Dashboard, Icon: LeaderboardIcon },
         ];
         if (!isEmployee) {
             links.push({ to: "/System/Setting", label: translations.Setting, Icon: SettingsIcon });

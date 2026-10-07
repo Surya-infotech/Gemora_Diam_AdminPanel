@@ -116,7 +116,8 @@ const OwnerLogin = () => {
                 if (employeeId) {
                     localStorage.setItem('EmployeeID', employeeId);
                 }
-                navigate('/Home/Dashboard');
+                const isEmp = (userRole || '').trim().toLowerCase() === 'employee';
+                navigate(isEmp ? '/Home/EmployeeDashboard' : '/Home/Dashboard');
             }
             else {
                 logoutUser();
@@ -190,7 +191,8 @@ const OwnerLogin = () => {
                 } else {
                     localStorage.removeItem('EMPLOYEE_PERMISSIONS');
                 }
-                navigate('/Home/Dashboard');
+                const isEmp = (userRole || '').trim().toLowerCase() === 'employee';
+                navigate(isEmp ? '/Home/EmployeeDashboard' : '/Home/Dashboard');
             }
             else {
                 const errorMessages = {

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Area, AreaChart, Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from "../../Hooks/usePermissions";
 import { useAuth } from "../../Middleware/Auth";
 import "../../Scss/Home/Dashboard/dashboard.scss";
 import CheckToken from "../../utils/CheckToken";
@@ -56,6 +57,7 @@ const Dashboard = () => {
     const location = useLocation();
     const { logoutUser } = useAuth();
     const { translations, isRtl } = useLanguage();
+    const { isEmployee } = usePermissions();
     const { selectedFiscalYear } = useFiscalYear();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
@@ -65,6 +67,12 @@ const Dashboard = () => {
     const [alertMessage, setAlertMessage] = useState("");
     const [dashboardData, setDashboardData] = useState(sampleFallbackData);
     const [currencyDetails, setCurrencyDetails] = useState({ currencysymbol: '$', currencyposition: 'left' });
+
+    useEffect(() => {
+        if (isEmployee) {
+            navigate('/Home/EmployeeDashboard', { replace: true });
+        }
+    }, [isEmployee, navigate]);
 
     useEffect(() => {
         if (translations.Dashboard) document.title = translations.Dashboard;
@@ -109,6 +117,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        if (isEmployee) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         const fetchDashboardData = async () => {
             try {
@@ -261,6 +270,10 @@ const Dashboard = () => {
         setShowWarning(false);
         setWarningMessage("");
     };
+
+    if (isEmployee) {
+        return null;
+    }
 
     return (<>
         {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
