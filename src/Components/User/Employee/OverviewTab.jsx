@@ -79,18 +79,8 @@ const OverviewTab = ({ employeeData }) => {
                         <span className="detail-value">{employeeData.employeeid || employeeData._id || '-'}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.role}</span>
-                        <span className="detail-value">{role}</span>
-                    </div>
-                    <div className="detail-item">
                         <span className="detail-label">{translations.gender}</span>
                         <span className="detail-value">{employeeData.gender || '-'}</span>
-                    </div>
-                    <div className="detail-item">
-                        <span className="detail-label">{translations.status}</span>
-                        <span className={`detail-value ${employeeData.status ? 'active' : 'inactive'}`}>
-                            {employeeData.status ? (translations.active) : (translations.inactive)}
-                        </span>
                     </div>
                     {employeeData.address && (
                         <div className="detail-item">
