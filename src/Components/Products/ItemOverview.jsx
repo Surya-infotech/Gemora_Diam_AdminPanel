@@ -10,6 +10,7 @@ import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import "../../Scss/Products/itemoverview.scss";
 import ItemOverviewTab from './ItemOverviewTab';
 import ItemAttributesTab from './ItemAttributesTab';
+import ItemPriceTab from './ItemPriceTab';
 
 const ItemOverview = () => {
     const navigate = useNavigate();
@@ -82,6 +83,15 @@ const ItemOverview = () => {
         {
             title: translations.Attributes,
             content: <ItemAttributesTab itemData={itemData} />
+        },
+        {
+            title: translations.pricetab || translations.price || 'Price',
+            content: (
+                <ItemPriceTab
+                    itemData={itemData}
+                    onItemUpdated={(updated) => setItemData(prev => ({ ...prev, ...updated }))}
+                />
+            )
         }
     ];
 
