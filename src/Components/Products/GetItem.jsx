@@ -17,40 +17,43 @@ import { usePermissions } from "../../Hooks/usePermissions";
 import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
 
+const resolveItemImageSrc = (url, backendUrl) => {
+    if (!url || typeof url !== "string") return Placeholder;
+    const trimmed = url.trim();
+    if (!trimmed) return Placeholder;
+    if (
+        trimmed.startsWith("http://") ||
+        trimmed.startsWith("https://") ||
+        trimmed.startsWith("data:") ||
+        trimmed.startsWith("blob:")
+    ) {
+        return trimmed;
+    }
+    const cleanPath = trimmed.replace(/\\/g, "/");
+    const base = (backendUrl || "").replace(/\/+$/, "");
+    return cleanPath.startsWith("/") ? `${base}${cleanPath}` : `${base}/${cleanPath}`;
+};
+
 const ItemImage = ({ src, alt }) => {
-    const [loaded, setLoaded] = useState(false);
-    const [hasError, setHasError] = useState(false);
+    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+    const [imgSrc, setImgSrc] = useState(() => resolveItemImageSrc(src, adminPanelBackendPath));
 
     useEffect(() => {
-        setLoaded(false);
-        setHasError(false);
-    }, [src]);
-
-    if (!src || hasError) {
-        return (
-            <img
-                src={Placeholder}
-                alt={alt || "placeholder"}
-                className="item-thumbnail"
-            />
-        );
-    }
+        setImgSrc(resolveItemImageSrc(src, adminPanelBackendPath));
+    }, [src, adminPanelBackendPath]);
 
     return (
         <div className="item-thumbnail-wrapper">
-            {!loaded && (
-                <img
-                    src={Placeholder}
-                    alt="Loading..."
-                    className="item-thumbnail placeholder-loading"
-                />
-            )}
             <img
-                src={src}
+                src={imgSrc}
                 alt={alt || "item"}
-                className={`item-thumbnail ${!loaded ? "is-loading" : ""}`}
-                onLoad={() => setLoaded(true)}
-                onError={() => setHasError(true)}
+                className="item-thumbnail"
+                onError={() => {
+                    if (imgSrc !== Placeholder) {
+                        setImgSrc(Placeholder);
+                    }
+                }}
+                loading="lazy"
             />
         </div>
     );
