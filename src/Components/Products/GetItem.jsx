@@ -19,7 +19,7 @@ import HandleUnauthorized from "../../utils/HandleUnauthorized";
 const GetItem = ({ searchValue }) => {
     const navigate = useNavigate();
     const { translations } = useLanguage();
-    const { canEdit, canDelete } = usePermissions();
+    const { canEdit, canDelete, hasPermission } = usePermissions();
     const { logoutUser } = useAuth();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
@@ -108,6 +108,7 @@ const GetItem = ({ searchValue }) => {
     };
 
     const showActionColumn = canEdit('item') || canDelete('item');
+    const canViewOverview = hasPermission('itemOverview', 'view');
 
     const DeleteItem = async (targetId) => {
         setIsDeleting(true);
@@ -169,16 +170,16 @@ const GetItem = ({ searchValue }) => {
                                     <tr key={item._id || item.itemid}>
                                         <td className="item-name-col">
                                             <div
-                                                className="item-info-cell clickable"
-                                                onClick={() => handleItemNameClick(item._id || item.itemid)}
-                                                role="button"
-                                                tabIndex={0}
-                                                onKeyDown={(e) => {
+                                                className={`item-info-cell ${canViewOverview ? "clickable" : ""}`}
+                                                onClick={canViewOverview ? () => handleItemNameClick(item._id || item.itemid) : undefined}
+                                                role={canViewOverview ? "button" : undefined}
+                                                tabIndex={canViewOverview ? 0 : undefined}
+                                                onKeyDown={canViewOverview ? (e) => {
                                                     if (e.key === "Enter" || e.key === " ") {
                                                         e.preventDefault();
                                                         handleItemNameClick(item._id || item.itemid);
                                                     }
-                                                }}
+                                                } : undefined}
                                             >
                                                 <img
                                                     src={item.image || item.imageUrl || Placeholder}

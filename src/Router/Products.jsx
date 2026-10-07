@@ -24,7 +24,7 @@ const ProductsRouter = () => (
             </PermissionGuard>
         } />
         <Route path="/ItemOverview/:id" element={
-            <PermissionGuard pageId="item" action="view">
+            <PermissionGuard pageId="itemOverview" action="view">
                 <ItemOverview />
             </PermissionGuard>
         } />

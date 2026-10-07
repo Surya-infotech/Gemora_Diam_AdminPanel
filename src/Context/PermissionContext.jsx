@@ -64,7 +64,13 @@ export const PermissionProvider = ({ children }) => {
             if (!isEmployee) return true;
             if (!pageId) return true;
             const pagePerms = permissions[pageId];
-            if (!pagePerms) return false;
+            if (!pagePerms) {
+                // If itemOverview is not yet explicitly configured, fallback to item permission
+                if (pageId === "itemOverview" && permissions["item"]) {
+                    return Boolean(permissions["item"][actionKey]);
+                }
+                return false;
+            }
             return Boolean(pagePerms[actionKey]);
         },
         [isEmployee, permissions]
