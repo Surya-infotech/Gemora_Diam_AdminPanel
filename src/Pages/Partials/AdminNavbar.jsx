@@ -33,6 +33,7 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BadgeIcon from '@mui/icons-material/Badge';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -48,23 +49,18 @@ const AdminNavbar = () => {
     const isSupportActive =
         pathname.startsWith('/Support');
 
+    const isUserActive =
+        pathname.startsWith('/User');
+
     const isSystemActive =
-        pathname.startsWith('/System/Currency') ||
-        pathname.startsWith('/System/AddCurrency') ||
-        pathname.startsWith('/System/EditCurrency') ||
-        pathname.startsWith('/System/Taxes') ||
-        pathname.startsWith('/System/AddTax') ||
-        pathname.startsWith('/System/EditTax') ||
-        pathname.startsWith('/System/Employee') ||
-        pathname.startsWith('/System/AddEmployee') ||
-        pathname.startsWith('/System/EditEmployee') ||
-        pathname.startsWith('/System/Setting');
+        pathname.startsWith('/System');
 
     const [expandedCategories, setExpandedCategories] = useState({
         main: true,
         products: false,
         attributes: false,
         support: false,
+        user: false,
         system: false,
     });
 
@@ -73,6 +69,7 @@ const AdminNavbar = () => {
         if (path.startsWith('/Products')) return 'products';
         if (path.startsWith('/Attributes')) return 'attributes';
         if (path.startsWith('/Support')) return 'support';
+        if (path.startsWith('/User')) return 'user';
         if (path.startsWith('/System')) return 'system';
         return null;
     };
@@ -85,6 +82,7 @@ const AdminNavbar = () => {
                 products: activeCategory === 'products',
                 attributes: activeCategory === 'attributes',
                 support: activeCategory === 'support',
+                user: activeCategory === 'user',
                 system: activeCategory === 'system',
             });
         }
@@ -98,6 +96,7 @@ const AdminNavbar = () => {
                 products: categoryKey === 'products',
                 attributes: categoryKey === 'attributes',
                 support: categoryKey === 'support',
+                user: categoryKey === 'user',
                 system: categoryKey === 'system',
             });
         } else {
@@ -108,6 +107,7 @@ const AdminNavbar = () => {
                     products: categoryKey === 'products' ? nextState : false,
                     attributes: categoryKey === 'attributes' ? nextState : false,
                     support: categoryKey === 'support' ? nextState : false,
+                    user: categoryKey === 'user' ? nextState : false,
                     system: categoryKey === 'system' ? nextState : false,
                 };
             });
@@ -385,7 +385,34 @@ const AdminNavbar = () => {
                     </div>
                 </div>
 
-                {/* Category 4: System */}
+                {/* Category 5: User */}
+                <NavTooltip title={translations.User || "User"}>
+                    <div className={`category-trigger ${isUserActive ? 'active-category' : ''}`} onClick={() => toggleCategory('user')}>
+                        <div className="category-trigger-left">
+                            <ManageAccountsIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
+                            {!isCollapsed && <span className="category-title">{translations.User || "User"}</span>}
+                        </div>
+                        {!isCollapsed && (
+                            <span className="category-chevron">
+                                <CategoryChevron isExpanded={expandedCategories.user} />
+                            </span>
+                        )}
+                    </div>
+                </NavTooltip>
+                <div className={`submenu ${(expandedCategories.user && !isCollapsed) ? 'expanded' : ''}`}>
+                    <div className="submenu-content">
+                        <li>
+                            <NavLink to="/User/Employee" className={navLinkClass('/User/Employee')}>
+                                <NavTooltip title={translations.Employee || "Employee"}>
+                                    <BadgeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Employee || "Employee"}
+                            </NavLink>
+                        </li>
+                    </div>
+                </div>
+
+                {/* Category 6: System */}
                 <NavTooltip title={translations.System}>
                     <div className={`category-trigger ${isSystemActive ? 'active-category' : ''}`} onClick={() => toggleCategory('system')}>
                         <div className="category-trigger-left">
@@ -415,14 +442,6 @@ const AdminNavbar = () => {
                                     <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Taxes}
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/System/Employee" className={navLinkClass('/System/Employee')}>
-                                <NavTooltip title={translations.Employee || "Employee"}>
-                                    <BadgeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Employee || "Employee"}
                             </NavLink>
                         </li>
                         <li>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Employee/addemployee.scss";
+import "../../../Scss/User/Employee/addemployee.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -15,7 +15,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const AddEmployee = () => {
     const navigate = useNavigate();
-    const { translations } = useLanguage();
+    const { translations, isRtl } = useLanguage();
     const { logoutUser } = useAuth();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
@@ -91,7 +91,7 @@ const AddEmployee = () => {
         if (!CheckToken(token, logoutUser, navigate)) return;
 
         try {
-            const response = await fetch(`${adminPanelBackendPath}/System/AddEmployee`, {
+            const response = await fetch(`${adminPanelBackendPath}/User/AddEmployee`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const AddEmployee = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate(`/System/Employee`, {
+                navigate(`/User/Employee`, {
                     state: { message: translations.addemployeesuccessfull || "Employee added successfully" }
                 });
             } else {
@@ -124,12 +124,12 @@ const AddEmployee = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Employee`);
+    const handleCancel = () => navigate(`/User/Employee`);
 
     return (
         <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
-            <div className="AddEmployee-container">
+            <div className={`AddEmployee-container ${isRtl ? 'rtl-addemployee' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addemployee-container">
                     <h6 className="Addemployee-headingname">
                         {translations.addemployee || "Add Employee"}
@@ -251,11 +251,20 @@ const AddEmployee = () => {
                                 </div>
 
                                 <div className="button-group">
-                                    <button type="submit" className="btn btn-primary submit-btn">
-                                        {translations.save || "Save"}
-                                    </button>
-                                    <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary cancelbtn"
+                                        onClick={handleCancel}
+                                        disabled={isLoading}
+                                    >
                                         {translations.cancel || "Cancel"}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success submit-btn"
+                                        disabled={isLoading}
+                                    >
+                                        {translations.save || "Save"}
                                     </button>
                                 </div>
                             </form>

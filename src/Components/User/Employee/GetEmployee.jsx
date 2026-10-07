@@ -10,7 +10,7 @@ import DeleteModal from '../../../Pages/Custom/DeleteModal';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Employee/getemployee.scss";
+import "../../../Scss/User/Employee/getemployee.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
@@ -40,9 +40,9 @@ const GetEmployee = ({ searchValue = "" }) => {
         let isMounted = true;
         if (!CheckToken(token, logoutUser, navigate)) return;
 
-        const load = async () => {
+        const loadEmployees = async () => {
             try {
-                const response = await fetch(`${adminPanelBackendPath}/System/GetEmployees`, {
+                const response = await fetch(`${adminPanelBackendPath}/User/GetEmployees`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const GetEmployee = ({ searchValue = "" }) => {
             }
         };
 
-        load();
+        loadEmployees();
 
         return () => {
             isMounted = false;
@@ -130,7 +130,7 @@ const GetEmployee = ({ searchValue = "" }) => {
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
     const visibleEmployees = filteredEmployees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
-    const handleEditClick = (_id) => navigate(`/System/EditEmployee/${_id}`);
+    const handleEditClick = (_id) => navigate(`/User/EditEmployee/${_id}`);
 
     const handleDeleteClick = (employee) => {
         setIsModalOpen(true);
@@ -142,7 +142,7 @@ const GetEmployee = ({ searchValue = "" }) => {
         try {
             const updatedStatus = !employee.status;
             const empId = employee._id || employee.employeeid;
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateEmployeeStatus/${empId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/User/UpdateEmployeeStatus/${empId}`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -173,12 +173,11 @@ const GetEmployee = ({ searchValue = "" }) => {
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        if (!selectedEmployee) return;
-        const empId = selectedEmployee._id || selectedEmployee.employeeid;
+    const DeleteEmployee = async (employeeId) => {
+        if (!CheckToken(token, logoutUser, navigate)) return;
         try {
             setIsDeleting(true);
-            const response = await fetch(`${adminPanelBackendPath}/System/DeleteEmployee/${empId}`, {
+            const response = await fetch(`${adminPanelBackendPath}/User/DeleteEmployee/${employeeId}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -190,10 +189,10 @@ const GetEmployee = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setEmployees(prev => prev.filter(emp => emp._id !== selectedEmployee._id && emp.employeeid !== selectedEmployee.employeeid));
-                setSuccessMessage(translations.deleteemployeesuccessfull || "Employee Deleted Successfully");
+                setEmployees(prev => prev.filter(emp => emp._id !== employeeId && emp.employeeid !== employeeId));
                 setIsModalOpen(false);
                 setSelectedEmployee(null);
+                setSuccessMessage(translations.deleteemployeesuccessfull || "Employee Deleted Successfully");
             } else {
                 setWarningMessage(data.message || translations.servererror || "Server error");
                 setShowWarning(true);
@@ -203,6 +202,7 @@ const GetEmployee = ({ searchValue = "" }) => {
             setShowWarning(true);
         } finally {
             setIsDeleting(false);
+            setIsModalOpen(false);
         }
     };
 
@@ -216,20 +216,19 @@ const GetEmployee = ({ searchValue = "" }) => {
                     <table className="employeetable">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th onClick={() => sortEmployees("name")} className="tdclick">
+                                <th onClick={() => sortEmployees("name")}>
                                     {translations.name || "Name"} {renderSortIcon("name")}
                                 </th>
-                                <th onClick={() => sortEmployees("email")} className="tdclick">
+                                <th onClick={() => sortEmployees("email")}>
                                     {translations.Email || "Email"} {renderSortIcon("email")}
                                 </th>
-                                <th onClick={() => sortEmployees("phone")} className="tdclick">
+                                <th onClick={() => sortEmployees("phone")}>
                                     {translations.Phone || "Phone"} {renderSortIcon("phone")}
                                 </th>
-                                <th onClick={() => sortEmployees("employeetype")} className="tdclick">
+                                <th onClick={() => sortEmployees("employeetype")}>
                                     {translations.employeetype || "Employee Type"} {renderSortIcon("employeetype")}
                                 </th>
-                                <th onClick={() => sortEmployees("status")} className="tdclick">
+                                <th onClick={() => sortEmployees("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
                                 </th>
                                 <th>{translations.action || "Action"}</th>
@@ -237,13 +236,13 @@ const GetEmployee = ({ searchValue = "" }) => {
                         </thead>
                         <tbody>
                             {visibleEmployees.length > 0 ? (
-                                visibleEmployees.map((employee, index) => {
-                                    const serialNumber = (currentPage - 1) * pageSize + index + 1;
+                                visibleEmployees.map((employee) => {
                                     const employeeType = employee.employeetype || "Employee";
                                     return (
-                                        <tr key={employee._id || employee.employeeid || index}>
-                                            <td>{serialNumber}</td>
-                                            <td>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</td>
+                                        <tr key={employee._id || employee.employeeid}>
+                                            <td>
+                                                <strong>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</strong>
+                                            </td>
                                             <td>{employee.email}</td>
                                             <td>{employee.phone || "-"}</td>
                                             <td>
@@ -266,7 +265,7 @@ const GetEmployee = ({ searchValue = "" }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="6" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound || "No data found"}
                                     </td>
                                 </tr>
@@ -293,7 +292,7 @@ const GetEmployee = ({ searchValue = "" }) => {
                 <DeleteModal
                     open={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onDelete={handleDeleteConfirm}
+                    onDelete={() => DeleteEmployee(selectedEmployee._id || selectedEmployee.employeeid)}
                     name={`${selectedEmployee?.firstname || ''} ${selectedEmployee?.lastname || ''}`.trim()}
                     message={translations.Employee || "Employee"}
                     headingname={translations.deleteemployee || "Delete Employee"}

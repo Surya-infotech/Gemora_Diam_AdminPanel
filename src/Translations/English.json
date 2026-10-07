@@ -481,5 +481,10 @@
     "employeestatusactive": "Employee Status updated to Active",
     "employeestatusinactive": "Employee Status updated to Inactive",
     "employeenotfound": "Employee not found",
-    "emailalreadyexists": "Email Already Exists"
+    "emailalreadyexists": "Email Already Exists",
+    "UserManagement": "User",
+    "User": "User",
+    "Staff": "Staff",
+    "name": "Name",
+    "Name": "Name"
 }

@@ -5,7 +5,7 @@ import { useLanguage } from "../../../Context/LanguageContext";
 import { useAuth } from '../../../Middleware/Auth';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../../Pages/Custom/WarningModal';
-import "../../../Scss/System/Employee/addemployee.scss";
+import "../../../Scss/User/Employee/addemployee.scss";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 import Dropdown from '../../Dropdown/Dropdown';
@@ -16,7 +16,7 @@ const EditEmployee = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { logoutUser } = useAuth();
-    const { translations } = useLanguage();
+    const { translations, isRtl } = useLanguage();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenName = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenName);
@@ -54,7 +54,7 @@ const EditEmployee = () => {
         const fetchEmployeeDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`${adminPanelBackendPath}/System/EditEmployee/${id}`, {
+                const response = await fetch(`${adminPanelBackendPath}/User/EditEmployee/${id}`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -134,7 +134,7 @@ const EditEmployee = () => {
         if (!CheckToken(token, logoutUser, navigate)) return;
 
         try {
-            const response = await fetch(`${adminPanelBackendPath}/System/UpdateEmployee/${id}`, {
+            const response = await fetch(`${adminPanelBackendPath}/User/UpdateEmployee/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const EditEmployee = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                navigate(`/System/Employee`, {
+                navigate(`/User/Employee`, {
                     state: { message: translations.updateemployeesuccessfull || "Employee updated successfully" }
                 });
             } else {
@@ -175,12 +175,12 @@ const EditEmployee = () => {
         }
     };
 
-    const handleCancel = () => navigate(`/System/Employee`);
+    const handleCancel = () => navigate(`/User/Employee`);
 
     return (
         <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
-            <div className="AddEmployee-container">
+            <div className={`AddEmployee-container ${isRtl ? 'rtl-addemployee' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addemployee-container">
                     <h6 className="Addemployee-headingname">
                         {translations.editemployee || "Edit Employee"}
@@ -282,11 +282,20 @@ const EditEmployee = () => {
                                 </div>
 
                                 <div className="button-group">
-                                    <button type="submit" className="btn btn-primary submit-btn">
-                                        {translations.save || "Save"}
-                                    </button>
-                                    <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary cancelbtn"
+                                        onClick={handleCancel}
+                                        disabled={isLoading}
+                                    >
                                         {translations.cancel || "Cancel"}
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success submit-btn"
+                                        disabled={isLoading}
+                                    >
+                                        {translations.save || "Save"}
                                     </button>
                                 </div>
                             </form>
