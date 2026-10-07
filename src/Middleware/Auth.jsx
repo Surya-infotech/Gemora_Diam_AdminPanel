@@ -6,19 +6,26 @@ export const AuthProider = ({ children }) => {
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
 
     const [token, setToken] = useState(localStorage.getItem(tokenname));
+    const [role, setRole] = useState(localStorage.getItem("role") || "");
 
-    const storetoken = (serverToken) => {
+    const storetoken = (serverToken, userRole) => {
         localStorage.setItem(tokenname, serverToken);
         setToken(serverToken);
+        if (userRole) {
+            localStorage.setItem("role", userRole);
+            setRole(userRole);
+        }
     };
 
     const logoutUser = () => {
         setToken("");
+        setRole("");
         localStorage.removeItem(tokenname);
+        localStorage.removeItem("role");
     };
 
     return (
-        <AuthContext.Provider value={{ token, storetoken, logoutUser }}>
+        <AuthContext.Provider value={{ token, role, storetoken, logoutUser }}>
             {children}
         </AuthContext.Provider>
     );

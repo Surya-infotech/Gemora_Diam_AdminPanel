@@ -106,6 +106,11 @@ const OwnerLogin = () => {
             }
 
             if (response.ok) {
+                const data = await response.json();
+                const userRole = data.role || data.employee?.role || data.admin?.role;
+                if (userRole) {
+                    localStorage.setItem("role", userRole);
+                }
                 navigate('/Home/Dashboard');
             }
             else {
@@ -167,8 +172,10 @@ const OwnerLogin = () => {
 
             const data = await response.json();
             if (response.ok) {
-                const authToken = data.admin?.Token || data.token;
-                storetoken(authToken);
+                const authToken = data.employee?.Token || data.token;
+                const userRole = data.role || data.employee?.role || "Employee";
+                storetoken(authToken, userRole);
+                localStorage.setItem("role", userRole);
                 navigate('/Home/Dashboard');
             }
             else {
