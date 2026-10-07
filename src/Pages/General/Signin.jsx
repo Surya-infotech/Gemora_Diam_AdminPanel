@@ -112,6 +112,10 @@ const OwnerLogin = () => {
                 if (userRole) {
                     setEncryptedRole(userRole);
                 }
+                const employeeId = data.employee?._id;
+                if (employeeId) {
+                    localStorage.setItem('EmployeeID', employeeId);
+                }
                 navigate('/Home/Dashboard');
             }
             else {
@@ -175,8 +179,12 @@ const OwnerLogin = () => {
             if (response.ok) {
                 const authToken = data.employee?.Token || data.token;
                 const userRole = data.role || data.employee?.role || "Employee";
-                storetoken(authToken, userRole);
+                const employeeId = data.employee?._id;
+                storetoken(authToken, userRole, employeeId);
                 setEncryptedRole(userRole);
+                if (employeeId) {
+                    localStorage.setItem('EmployeeID', employeeId);
+                }
                 navigate('/Home/Dashboard');
             }
             else {
