@@ -33,10 +33,10 @@ const AddEmployee = () => {
         email: "",
         password: "",
         phone: "",
-        employeetype: "Employee"
+        role: "Employee"
     });
 
-    const employeeTypeOptions = [
+    const roleOptions = [
         { label: translations.Admin || "Admin", value: "Admin" },
         { label: translations.Employee || "Employee", value: "Employee" }
     ];
@@ -86,7 +86,7 @@ const AddEmployee = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.firstname.trim() || !formData.lastname.trim() || !formData.email.trim() || !formData.password || !formData.employeetype) {
+        if (!formData.firstname.trim() || !formData.lastname.trim() || !formData.email.trim() || !formData.password || !formData.role) {
             setWarningMessage(translations.allfieldrequired || "All fields are required");
             setShowWarning(true);
             return;
@@ -259,13 +259,13 @@ const AddEmployee = () => {
                                     </div>
                                     <div className="form-group">
                                         <Dropdown
-                                            label={<>{translations.employeetype || "Employee Type"} <span style={{ color: "red" }}>*</span></>}
-                                            options={employeeTypeOptions}
-                                            selectedValue={formData.employeetype}
-                                            onValueChange={(val) => setFormData(prev => ({ ...prev, employeetype: val }))}
+                                            label={<>{translations.role || "Role"} <span style={{ color: "red" }}>*</span></>}
+                                            options={roleOptions}
+                                            selectedValue={formData.role}
+                                            onValueChange={(val) => setFormData(prev => ({ ...prev, role: val }))}
                                             labelKey="label"
                                             valueKey="value"
-                                            placeholder={translations.selectemployeetype || "Select Employee Type"}
+                                            placeholder={translations.selectrole || "Select Role"}
                                             showSearch={false}
                                         />
                                     </div>

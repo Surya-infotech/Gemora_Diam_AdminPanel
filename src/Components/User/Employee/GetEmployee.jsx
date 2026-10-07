@@ -91,6 +91,9 @@ const GetEmployee = ({ searchValue = "" }) => {
             } else if (column === "name") {
                 valA = `${a.firstname || ''} ${a.lastname || ''}`.trim().toLowerCase();
                 valB = `${b.firstname || ''} ${b.lastname || ''}`.trim().toLowerCase();
+            } else if (column === "role") {
+                valA = (a.role || "").toString().toLowerCase();
+                valB = (b.role || "").toString().toLowerCase();
             } else {
                 valA = valA.toString().toLowerCase();
                 valB = valB.toString().toLowerCase();
@@ -122,6 +125,7 @@ const GetEmployee = ({ searchValue = "" }) => {
             (employee.lastname && employee.lastname.toLowerCase().includes(search)) ||
             (employee.email && employee.email.toLowerCase().includes(search)) ||
             (employee.phone && employee.phone.toLowerCase().includes(search)) ||
+            (employee.role && employee.role.toLowerCase().includes(search)) ||
             (employee.employeetype && employee.employeetype.toLowerCase().includes(search))
         );
     });
@@ -225,8 +229,8 @@ const GetEmployee = ({ searchValue = "" }) => {
                                 <th onClick={() => sortEmployees("phone")}>
                                     {translations.Phone || "Phone"} {renderSortIcon("phone")}
                                 </th>
-                                <th onClick={() => sortEmployees("employeetype")}>
-                                    {translations.employeetype || "Employee Type"} {renderSortIcon("employeetype")}
+                                <th onClick={() => sortEmployees("role")}>
+                                    {translations.role || "Role"} {renderSortIcon("role")}
                                 </th>
                                 <th onClick={() => sortEmployees("status")}>
                                     {translations.status || "Status"} {renderSortIcon("status")}
@@ -237,7 +241,7 @@ const GetEmployee = ({ searchValue = "" }) => {
                         <tbody>
                             {visibleEmployees.length > 0 ? (
                                 visibleEmployees.map((employee) => {
-                                    const employeeType = employee.employeetype || "Employee";
+                                    const role = employee.role || "Employee";
                                     return (
                                         <tr key={employee._id || employee.employeeid}>
                                             <td>
@@ -246,8 +250,8 @@ const GetEmployee = ({ searchValue = "" }) => {
                                             <td>{employee.email}</td>
                                             <td>{employee.phone || "-"}</td>
                                             <td>
-                                                <span className={`badge-role badge-${employeeType.toLowerCase()}`}>
-                                                    {employeeType}
+                                                <span className={`badge-role badge-${role.toLowerCase()}`}>
+                                                    {role}
                                                 </span>
                                             </td>
                                             <td>

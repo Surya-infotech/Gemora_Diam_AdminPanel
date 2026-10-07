@@ -32,10 +32,10 @@ const EditEmployee = () => {
         lastname: "",
         email: "",
         phone: "",
-        employeetype: "Employee"
+        role: "Employee"
     });
 
-    const employeeTypeOptions = [
+    const roleOptions = [
         { label: translations.Admin || "Admin", value: "Admin" },
         { label: translations.Employee || "Employee", value: "Employee" }
     ];
@@ -68,7 +68,7 @@ const EditEmployee = () => {
                         lastname: result.lastname || "",
                         email: result.email || "",
                         phone: result.phone || "",
-                        employeetype: result.employeetype || "Employee"
+                        role: result.role || "Employee"
                     });
                     setStatus(result.status !== undefined ? result.status : true);
                 } else {
@@ -129,7 +129,7 @@ const EditEmployee = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.firstname.trim() || !formData.lastname.trim() || !formData.email.trim() || !formData.employeetype) {
+        if (!formData.firstname.trim() || !formData.lastname.trim() || !formData.email.trim() || !formData.role) {
             setWarningMessage(translations.allfieldrequired || "All fields are required");
             setShowWarning(true);
             return;
@@ -166,7 +166,7 @@ const EditEmployee = () => {
                     lastname: formData.lastname.trim(),
                     email: formData.email.trim(),
                     phone: formData.phone,
-                    employeetype: formData.employeetype,
+                    role: formData.role,
                     status
                 }),
             });
@@ -266,13 +266,13 @@ const EditEmployee = () => {
                                     </div>
                                     <div className="form-group">
                                         <Dropdown
-                                            label={<>{translations.employeetype || "Employee Type"} <span style={{ color: "red" }}>*</span></>}
-                                            options={employeeTypeOptions}
-                                            selectedValue={formData.employeetype}
-                                            onValueChange={(val) => setFormData(prev => ({ ...prev, employeetype: val }))}
+                                            label={<>{translations.role || "Role"} <span style={{ color: "red" }}>*</span></>}
+                                            options={roleOptions}
+                                            selectedValue={formData.role}
+                                            onValueChange={(val) => setFormData(prev => ({ ...prev, role: val }))}
                                             labelKey="label"
                                             valueKey="value"
-                                            placeholder={translations.selectemployeetype || "Select Employee Type"}
+                                            placeholder={translations.selectrole || "Select Role"}
                                             showSearch={false}
                                         />
                                     </div>
