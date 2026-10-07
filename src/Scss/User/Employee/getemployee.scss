@@ -43,6 +43,9 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      cursor: pointer;
+      width: fit-content;
+      transition: opacity 0.15s ease;
 
       .employee-avatar {
         width: 38px;
@@ -52,12 +55,24 @@
         flex-shrink: 0;
         border: 1px solid var(--border-color, #e2e8f0);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: transform 0.15s ease;
       }
 
       strong {
         font-weight: 600;
         color: inherit;
         white-space: nowrap;
+        transition: color 0.15s ease;
+      }
+
+      &:hover {
+        strong {
+          color: var(--primary-color);
+        }
+
+        .employee-avatar {
+          transform: scale(1.05);
+        }
       }
     }
 

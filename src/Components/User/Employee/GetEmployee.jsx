@@ -136,6 +136,7 @@ const GetEmployee = ({ searchValue = "" }) => {
     const visibleEmployees = filteredEmployees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     const handleEditClick = (_id) => navigate(`/User/EditEmployee/${_id}`);
+    const handleEmployeeNameClick = (_id) => navigate(`/User/EmployeeOverview/${_id}`);
 
     const handleDeleteClick = (employee) => {
         setIsModalOpen(true);
@@ -246,7 +247,10 @@ const GetEmployee = ({ searchValue = "" }) => {
                                     return (
                                         <tr key={employee._id || employee.employeeid}>
                                             <td>
-                                                <div className="employee-name-container">
+                                                <div
+                                                    className="employee-name-container"
+                                                    onClick={() => handleEmployeeNameClick(employee._id || employee.employeeid)}
+                                                >
                                                     <img
                                                         src={employee.profileimage || profilePlaceholder}
                                                         alt={`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}
