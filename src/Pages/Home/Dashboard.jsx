@@ -100,12 +100,29 @@ const Dashboard = () => {
     }, [location, navigate]);
 
     const formatCurrency = (amount, details) => {
-        if (!details || Object.keys(details).length === 0) return `$${amount}`;
+        if (amount === undefined || amount === null) return "$0.00";
+        const num = parseFloat(amount || 0);
+        if (isNaN(num)) return amount;
 
-        const { decimal, thousandseparator, decimalseparator, currencysymbol, currencyposition } = details;
-        let formattedAmount = parseFloat(amount || 0).toFixed(decimal || 2);
-        formattedAmount = formattedAmount.replace(/\B(?=(\d{3})+(?!\d))/g, thousandseparator || ',');
-        if (decimalseparator && decimalseparator !== '.') formattedAmount = formattedAmount.replace('.', decimalseparator);
+        const {
+            decimal = 2,
+            thousandseparator = ',',
+            decimalseparator = '.',
+            currencysymbol = '$',
+            currencyposition = 'left'
+        } = details || {};
+
+        const decPlaces = decimal !== undefined && decimal !== null ? parseInt(decimal, 10) : 2;
+        let [intPart, decPart] = num.toFixed(decPlaces).split('.');
+        const sep = thousandseparator || ',';
+
+        // Proper Indian number system grouping: last 3 digits, then groups of 2 digits
+        const last3 = intPart.slice(-3);
+        const other = intPart.slice(0, -3);
+        const formattedInt = other !== '' ? other.replace(/\B(?=(\d{2})+(?!\d))/g, sep) + sep + last3 : last3;
+
+        const decSep = decimalseparator || '.';
+        const formattedAmount = decPlaces > 0 ? `${formattedInt}${decSep}${decPart}` : formattedInt;
 
         switch (currencyposition) {
             case "left": return `${currencysymbol || '$'}${formattedAmount}`;
@@ -119,6 +136,32 @@ const Dashboard = () => {
     useEffect(() => {
         if (isEmployee) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const fetchActiveCurrency = async () => {
+            try {
+                const miscRes = await fetch(`${adminPanelBackendPath}/System/GetMiscSetting`, {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                });
+                const miscData = await miscRes.json();
+                if (miscRes.ok && miscData?.currencyid) {
+                    const currRes = await fetch(`${adminPanelBackendPath}/System/GetCurrencies_statustrue`, {
+                        method: "GET",
+                        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+                    });
+                    const currData = await currRes.json();
+                    if (currRes.ok && Array.isArray(currData)) {
+                        const matched = currData.find(c => Number(c.currencyid) === Number(miscData.currencyid));
+                        if (matched) {
+                            setCurrencyDetails(matched);
+                        }
+                    }
+                }
+            } catch {
+                // Ignore fallback to defaults
+            }
+        };
+
         const fetchDashboardData = async () => {
             try {
                 const response = await fetch(`${adminPanelBackendPath}/Main/GetDashboard/${selectedFiscalYear || 'default'}`, {
@@ -135,6 +178,8 @@ const Dashboard = () => {
                     }));
                     if (data.currencyDetails || data.currency) {
                         setCurrencyDetails(data.currencyDetails || data.currency);
+                    } else {
+                        fetchActiveCurrency();
                     }
                 } else {
                     const errorMessages = {
@@ -142,10 +187,11 @@ const Dashboard = () => {
                     };
                     setWarningMessage(errorMessages[data.message] || data.message || translations.servererror);
                     setShowWarning(true);
+                    fetchActiveCurrency();
                 }
             } catch (err) {
                 console.error("Dashboard fetch notice:", err);
-                // Keep sample fallback data
+                fetchActiveCurrency();
             }
         };
 
@@ -310,7 +356,7 @@ const Dashboard = () => {
                     <ResponsiveContainer width="100%" height={350}>
                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                             <XAxis dataKey="month" className="chart-axis" interval={0} axisLine={false} tickLine={false} />
-                            <YAxis className="chart-axis" axisLine={false} tickLine={false} width={75} tickFormatter={(value) => formatCurrency(value, currencyDetails)} />
+                            <YAxis className="chart-axis" axisLine={false} tickLine={false} width={95} tickFormatter={(value) => formatCurrency(value, currencyDetails)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
                             <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.revenue} />

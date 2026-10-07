@@ -17,9 +17,12 @@ export const formatPriceWithCurrency = (price, currency) => {
         }
 
         if (thousandseparator) {
-            const parts = formattedPrice.split(decSep);
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandseparator);
-            formattedPrice = parts.join(decSep);
+            const sep = thousandseparator || ',';
+            const [intPart, decPart] = formattedPrice.split(decSep);
+            const last3 = intPart.slice(-3);
+            const other = intPart.slice(0, -3);
+            const formattedInt = other !== '' ? other.replace(/\B(?=(\d{2})+(?!\d))/g, sep) + sep + last3 : last3;
+            formattedPrice = decPart !== undefined ? `${formattedInt}${decSep}${decPart}` : formattedInt;
         }
 
         const symbol = currencysymbol || '$';
