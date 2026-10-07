@@ -555,5 +555,8 @@
   "duplicatestonesnotallowed": "Duplicate stones are not allowed for the same metal",
   "duplicatemetalstonecombinationnotallowed": "Duplicate metal and stone configurations are not allowed",
   "selectstonefirst": "Please select a stone",
-  "gemstone": "Stone"
+  "gemstone": "Stone",
+  "markaspublish": "Mark As Publish",
+  "markasdraft": "Mark As Draft",
+  "statusupdatedsuccessfully": "Item status updated successfully"
 }

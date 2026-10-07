@@ -78,7 +78,12 @@ const ItemOverview = () => {
     const tabs = [
         {
             title: translations.overview,
-            content: <ItemOverviewTab itemData={itemData} />
+            content: (
+                <ItemOverviewTab
+                    itemData={itemData}
+                    onItemUpdated={(updated) => setItemData(prev => ({ ...prev, ...updated }))}
+                />
+            )
         },
         {
             title: translations.Attributes,
