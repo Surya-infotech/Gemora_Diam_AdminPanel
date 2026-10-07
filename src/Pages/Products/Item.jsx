@@ -19,7 +19,6 @@ const Item = () => {
 
     useEffect(() => {
         if (translations.Item) document.title = translations.Item;
-        else document.title = "Item";
     }, [translations]);
 
     useEffect(() => {
