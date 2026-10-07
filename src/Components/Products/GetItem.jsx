@@ -4,7 +4,6 @@ import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
 import Placeholder from "../../assets/placeholder.png";
 import { useAuth } from "../../Middleware/Auth";
 import AlertMessage from "../../Pages/Custom/AlertMessage";
-import CustomSwitch from "../../Pages/Custom/CustomSwitch";
 import DeleteButton from "../../Pages/Custom/DeleteButton";
 import DeleteModal from "../../Pages/Custom/DeleteModal";
 import EditButton from "../../Pages/Custom/EditButton";
@@ -73,16 +72,8 @@ const GetItem = ({ searchValue }) => {
         setSortColumn(column);
         setSortDirection(direction);
         setItems([...items].sort((a, b) => {
-            let valA = a[column] ?? "";
-            let valB = b[column] ?? "";
-
-            if (column === "status") {
-                valA = a[column] ? 1 : 0;
-                valB = b[column] ? 1 : 0;
-            } else {
-                valA = valA.toString().toLowerCase();
-                valB = valB.toString().toLowerCase();
-            }
+            let valA = (a[column] ?? "").toString().toLowerCase();
+            let valB = (b[column] ?? "").toString().toLowerCase();
 
             if (valA < valB) return direction === "asc" ? -1 : 1;
             if (valA > valB) return direction === "asc" ? 1 : -1;
@@ -116,37 +107,6 @@ const GetItem = ({ searchValue }) => {
     };
 
     const showActionColumn = canEdit('item') || canDelete('item');
-
-    const handleStatusChange = async (item) => {
-        if (!canEdit('item')) return;
-        if (!CheckToken(token, logoutUser, navigate)) return;
-        try {
-            const updatedStatus = !item.status;
-            const targetId = item._id || item.itemid;
-            const response = await fetch(`${adminPanelBackendPath}/Products/UpdateItemStatus/${targetId}`, {
-                method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ status: updatedStatus }),
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-            if (response.ok) {
-                setItems(items.map(i => (i._id === item._id || i.itemid === item.itemid) ? { ...i, status: updatedStatus } : i));
-                setSuccessMessage(updatedStatus ? (translations.itemstatusactive || "Item Status updated to Active") : (translations.itemstatusinactive || "Item Status updated to Inactive"));
-            } else {
-                const errorMessages = {
-                    "Item not found": translations.itemnotfound || "Item not found",
-                    "Server error": translations.servererror
-                };
-                setWarningMessage(errorMessages[data.message] || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        }
-    };
 
     const DeleteItem = async (targetId) => {
         setIsDeleting(true);
@@ -196,9 +156,6 @@ const GetItem = ({ searchValue }) => {
                                 <th onClick={() => sortItems("categoryname")}>
                                     {translations.Category || "Category"} {renderSortIcon("categoryname")}
                                 </th>
-                                <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
-                                </th>
                                 {showActionColumn && <th>{translations.action || "Action"}</th>}
                             </tr>
                         </thead>
@@ -230,9 +187,6 @@ const GetItem = ({ searchValue }) => {
                                                 {item.categoryname || "-"}
                                             </span>
                                         </td>
-                                        <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('item')} />
-                                        </td>
                                         {showActionColumn && (
                                             <td>
                                                 {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
@@ -243,7 +197,7 @@ const GetItem = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={showActionColumn ? 4 : 3}>
+                                    <td colSpan={showActionColumn ? 3 : 2}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

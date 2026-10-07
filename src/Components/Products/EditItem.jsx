@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import Placeholder from '../../assets/placeholder.png';
 import { useAuth } from '../../Middleware/Auth';
-import CustomSwitch from '../../Pages/Custom/CustomSwitch';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
 import Dropdown from '../Dropdown/Dropdown';
@@ -49,7 +48,6 @@ const EditItem = () => {
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(Placeholder);
-    const [status, setStatus] = useState(true);
 
     useEffect(() => {
         if (translations.edititem) document.title = translations.edititem;
@@ -364,7 +362,6 @@ const EditItem = () => {
                         setSelectedBandColors([]);
                     }
                     setDescription(result.description || "");
-                    setStatus(Boolean(result.status));
                     if (result.image) {
                         setImagePreview(result.image);
                     } else {
@@ -472,7 +469,6 @@ const EditItem = () => {
             formData.append("stones", JSON.stringify(selectedStones));
             formData.append("styles", JSON.stringify(selectedStyles));
             formData.append("description", description.trim());
-            formData.append("status", status);
             if (imageFile) {
                 formData.append("image", imageFile);
             }
@@ -754,15 +750,6 @@ const EditItem = () => {
                                             onValueChange={(val) => setSelectedBandColors(val)}
                                             placeholder={translations.selectbandcolor || "Select Band Color"}
                                         />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{translations.status || "Status"}</label>
-                                        <div className="switch-container">
-                                            <CustomSwitch
-                                                checked={status}
-                                                onChange={(e) => setStatus(e.target.checked)}
-                                            />
-                                        </div>
                                     </div>
                                 </div>
 
