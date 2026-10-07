@@ -53,6 +53,7 @@ const HoriNavbar = () => {
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const token = localStorage.getItem(tokenname);
+    const EmployeeId = localStorage.getItem("EmployeeID");
     const [adminProfileImage, setAdminProfileImage] = useState(profilePlaceholder);
 
     const getFullscreenElement = () =>
@@ -157,17 +158,11 @@ const HoriNavbar = () => {
             if (!token) return;
             if (!CheckToken(token, logoutUser, navigate)) return;
             try {
-                let response = await fetch(`${adminPanelBackendPath}/admin/GetAdminDetails`, {
+                let endpoint = `${adminPanelBackendPath}/admin/GetAdminDetails/${EmployeeId}`;
+                let response = await fetch(endpoint, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
                 });
-
-                if (response.status === 404) {
-                    response = await fetch(`${adminPanelBackendPath}/General/admin/GetAdminDetails`, {
-                        method: "GET",
-                        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                    });
-                }
 
                 const data = await response.json();
                 if (HandleUnauthorized(data, logoutUser, navigate)) return;
@@ -184,7 +179,7 @@ const HoriNavbar = () => {
 
         window.addEventListener("adminProfileUpdated", fetchAdminProfileImage);
         return () => window.removeEventListener("adminProfileUpdated", fetchAdminProfileImage);
-    }, [adminPanelBackendPath, token, logoutUser, navigate]);
+    }, [adminPanelBackendPath, token, logoutUser, navigate, EmployeeId]);
 
     return (<>
         <nav className={`hori-navbar ${isRtl ? 'rtl-horinav' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
