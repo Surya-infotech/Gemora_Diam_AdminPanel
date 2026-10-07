@@ -17,48 +17,6 @@ import { usePermissions } from "../../Hooks/usePermissions";
 import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
 
-const resolveItemImageSrc = (url, backendUrl) => {
-    if (!url || typeof url !== "string") return Placeholder;
-    const trimmed = url.trim();
-    if (!trimmed) return Placeholder;
-    if (
-        trimmed.startsWith("http://") ||
-        trimmed.startsWith("https://") ||
-        trimmed.startsWith("data:") ||
-        trimmed.startsWith("blob:")
-    ) {
-        return trimmed;
-    }
-    const cleanPath = trimmed.replace(/\\/g, "/");
-    const base = (backendUrl || "").replace(/\/+$/, "");
-    return cleanPath.startsWith("/") ? `${base}${cleanPath}` : `${base}/${cleanPath}`;
-};
-
-const ItemImage = ({ src, alt }) => {
-    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-    const [imgSrc, setImgSrc] = useState(() => resolveItemImageSrc(src, adminPanelBackendPath));
-
-    useEffect(() => {
-        setImgSrc(resolveItemImageSrc(src, adminPanelBackendPath));
-    }, [src, adminPanelBackendPath]);
-
-    return (
-        <div className="item-thumbnail-wrapper">
-            <img
-                src={imgSrc}
-                alt={alt || "item"}
-                className="item-thumbnail"
-                onError={() => {
-                    if (imgSrc !== Placeholder) {
-                        setImgSrc(Placeholder);
-                    }
-                }}
-                loading="lazy"
-            />
-        </div>
-    );
-};
-
 const GetItem = ({ searchValue }) => {
     const navigate = useNavigate();
     const { translations } = useLanguage();
@@ -250,7 +208,17 @@ const GetItem = ({ searchValue }) => {
                                     <tr key={item._id || item.itemid}>
                                         <td className="item-name-col">
                                             <div className="item-info-cell">
-                                                <ItemImage src={item.image} alt={item.itemname} />
+                                                <img
+                                                    src={item.image || item.imageUrl || Placeholder}
+                                                    alt={item.itemname}
+                                                    className="item-thumbnail"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = Placeholder;
+                                                    }}
+                                                />
                                                 <div className="item-text-wrapper">
                                                     <strong className="item-name-text">{item.itemname}</strong>
                                                     {item.sku && <span className="item-sku-text">{item.sku}</span>}
