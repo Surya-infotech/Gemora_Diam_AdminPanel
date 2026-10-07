@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { CssBaseline, ThemeProvider, LinearProgress } from "@mui/material";
 import { muiTheme } from "./theme/muiTheme.js";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -79,6 +79,8 @@ const AppContent = () => {
         <Route path={`/Attributes/*`} element={<AttributesRouter />} />
         <Route path={`/Support/*`} element={<SupportRouter />} />
         <Route path={`/System/*`} element={<SystemRouter />} />
+        <Route path="/Employee" element={<Navigate to="/System/Employee" replace />} />
+        <Route path="/Employees" element={<Navigate to="/System/Employee" replace />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {!isLoginPage && <AdminFooter />}

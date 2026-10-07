@@ -32,6 +32,7 @@ import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import PolicyIcon from '@mui/icons-material/Policy';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -54,6 +55,9 @@ const AdminNavbar = () => {
         pathname.startsWith('/System/Taxes') ||
         pathname.startsWith('/System/AddTax') ||
         pathname.startsWith('/System/EditTax') ||
+        pathname.startsWith('/System/Employee') ||
+        pathname.startsWith('/System/AddEmployee') ||
+        pathname.startsWith('/System/EditEmployee') ||
         pathname.startsWith('/System/Setting');
 
     const [expandedCategories, setExpandedCategories] = useState({
@@ -411,6 +415,14 @@ const AdminNavbar = () => {
                                     <PercentIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Taxes}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/System/Employee" className={navLinkClass('/System/Employee')}>
+                                <NavTooltip title={translations.Employee || "Employee"}>
+                                    <BadgeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Employee || "Employee"}
                             </NavLink>
                         </li>
                         <li>

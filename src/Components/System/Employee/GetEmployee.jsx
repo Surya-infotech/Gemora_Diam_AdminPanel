@@ -1,0 +1,308 @@
+import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
+import EditButton from '../../../Pages/Custom/EditButton';
+import DeleteButton from '../../../Pages/Custom/DeleteButton';
+import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../../Middleware/Auth';
+import AlertMessage from '../../../Pages/Custom/AlertMessage';
+import DeleteModal from '../../../Pages/Custom/DeleteModal';
+import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
+import Pagination from '../../../Pages/Custom/Pagination';
+import WarningModal from '../../../Pages/Custom/WarningModal';
+import "../../../Scss/System/Employee/getemployee.scss";
+import { useLanguage } from "../../../Context/LanguageContext";
+import CheckToken from '../../../utils/CheckToken';
+import HandleUnauthorized from '../../../utils/HandleUnauthorized';
+
+const GetEmployee = ({ searchValue = "" }) => {
+    const { logoutUser } = useAuth();
+    const navigate = useNavigate();
+    const { translations } = useLanguage();
+    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+    const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
+    const token = localStorage.getItem(tokenname);
+
+    const [loading, setLoading] = useState(true);
+    const [warningMessage, setWarningMessage] = useState("");
+    const [showWarning, setShowWarning] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [sortColumn, setSortColumn] = useState(null);
+    const [sortDirection, setSortDirection] = useState("asc");
+    const [employees, setEmployees] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    useEffect(() => {
+        let isMounted = true;
+        if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const load = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/System/GetEmployees`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                });
+                const data = await response.json();
+                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (!isMounted) return;
+                if (response.ok) {
+                    setEmployees(data.employees || []);
+                } else {
+                    setWarningMessage(data.message || translations.servererror || "Server error");
+                    setShowWarning(true);
+                }
+            } catch {
+                if (isMounted) {
+                    setWarningMessage(translations.servererror || "Server error");
+                    setShowWarning(true);
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        load();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [adminPanelBackendPath, logoutUser, navigate, token, translations]);
+
+    const sortEmployees = (column) => {
+        const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
+        setSortColumn(column);
+        setSortDirection(direction);
+        setEmployees([...employees].sort((a, b) => {
+            let valA = a[column] ?? "";
+            let valB = b[column] ?? "";
+
+            if (column === "status") {
+                valA = a[column] ? 1 : 0;
+                valB = b[column] ? 1 : 0;
+            } else if (column === "name") {
+                valA = `${a.firstname || ''} ${a.lastname || ''}`.trim().toLowerCase();
+                valB = `${b.firstname || ''} ${b.lastname || ''}`.trim().toLowerCase();
+            } else {
+                valA = valA.toString().toLowerCase();
+                valB = valB.toString().toLowerCase();
+            }
+
+            if (valA < valB) return direction === "asc" ? -1 : 1;
+            if (valA > valB) return direction === "asc" ? 1 : -1;
+            return 0;
+        }));
+    };
+
+    const renderSortIcon = (column) => (
+        sortColumn !== column ? (
+            <UnfoldMore fontSize="small" />
+        ) : sortDirection === "asc" ? (
+            <ArrowUpward fontSize="small" />
+        ) : (
+            <ArrowDownward fontSize="small" />
+        )
+    );
+
+    const filteredEmployees = employees.filter((employee) => {
+        const search = (searchValue || "").toLowerCase().trim();
+        if (!search) return true;
+        const fullName = `${employee.firstname || ''} ${employee.lastname || ''}`.toLowerCase();
+        return (
+            fullName.includes(search) ||
+            (employee.firstname && employee.firstname.toLowerCase().includes(search)) ||
+            (employee.lastname && employee.lastname.toLowerCase().includes(search)) ||
+            (employee.email && employee.email.toLowerCase().includes(search)) ||
+            (employee.phone && employee.phone.toLowerCase().includes(search)) ||
+            (employee.employeetype && employee.employeetype.toLowerCase().includes(search))
+        );
+    });
+
+    const totalRecords = filteredEmployees.length;
+    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+    const visibleEmployees = filteredEmployees.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    const handleEditClick = (_id) => navigate(`/System/EditEmployee/${_id}`);
+
+    const handleDeleteClick = (employee) => {
+        setIsModalOpen(true);
+        setSelectedEmployee(employee);
+    };
+
+    const handleStatusChange = async (employee) => {
+        if (!CheckToken(token, logoutUser, navigate)) return;
+        try {
+            const updatedStatus = !employee.status;
+            const empId = employee._id || employee.employeeid;
+            const response = await fetch(`${adminPanelBackendPath}/System/UpdateEmployeeStatus/${empId}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ status: updatedStatus }),
+            });
+
+            const data = await response.json();
+            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
+            if (response.ok) {
+                setEmployees(prev =>
+                    prev.map(emp => (emp._id === employee._id || emp.employeeid === employee.employeeid ? { ...emp, status: updatedStatus } : emp))
+                );
+                setSuccessMessage(
+                    updatedStatus
+                        ? (translations.employeestatusactive || "Employee Status updated to Active")
+                        : (translations.employeestatusinactive || "Employee Status updated to Inactive")
+                );
+            } else {
+                setWarningMessage(data.message || translations.servererror || "Server error");
+                setShowWarning(true);
+            }
+        } catch {
+            setWarningMessage(translations.servererror || "Server error");
+            setShowWarning(true);
+        }
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!selectedEmployee) return;
+        const empId = selectedEmployee._id || selectedEmployee.employeeid;
+        try {
+            setIsDeleting(true);
+            const response = await fetch(`${adminPanelBackendPath}/System/DeleteEmployee/${empId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+            });
+
+            const data = await response.json();
+            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
+            if (response.ok) {
+                setEmployees(prev => prev.filter(emp => emp._id !== selectedEmployee._id && emp.employeeid !== selectedEmployee.employeeid));
+                setSuccessMessage(translations.deleteemployeesuccessfull || "Employee Deleted Successfully");
+                setIsModalOpen(false);
+                setSelectedEmployee(null);
+            } else {
+                setWarningMessage(data.message || translations.servererror || "Server error");
+                setShowWarning(true);
+            }
+        } catch {
+            setWarningMessage(translations.servererror || "Server error");
+            setShowWarning(true);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <>
+            {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
+            <div className="tablediv">
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <table className="employeetable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th onClick={() => sortEmployees("name")} className="tdclick">
+                                    {translations.name || "Name"} {renderSortIcon("name")}
+                                </th>
+                                <th onClick={() => sortEmployees("email")} className="tdclick">
+                                    {translations.Email || "Email"} {renderSortIcon("email")}
+                                </th>
+                                <th onClick={() => sortEmployees("phone")} className="tdclick">
+                                    {translations.Phone || "Phone"} {renderSortIcon("phone")}
+                                </th>
+                                <th onClick={() => sortEmployees("employeetype")} className="tdclick">
+                                    {translations.employeetype || "Employee Type"} {renderSortIcon("employeetype")}
+                                </th>
+                                <th onClick={() => sortEmployees("status")} className="tdclick">
+                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                </th>
+                                <th>{translations.action || "Action"}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {visibleEmployees.length > 0 ? (
+                                visibleEmployees.map((employee, index) => {
+                                    const serialNumber = (currentPage - 1) * pageSize + index + 1;
+                                    const employeeType = employee.employeetype || "Employee";
+                                    return (
+                                        <tr key={employee._id || employee.employeeid || index}>
+                                            <td>{serialNumber}</td>
+                                            <td>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</td>
+                                            <td>{employee.email}</td>
+                                            <td>{employee.phone || "-"}</td>
+                                            <td>
+                                                <span className={`badge-role badge-${employeeType.toLowerCase()}`}>
+                                                    {employeeType}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <CustomSwitch
+                                                    checked={employee.status}
+                                                    onChange={() => handleStatusChange(employee)}
+                                                />
+                                            </td>
+                                            <td>
+                                                <EditButton onClick={() => handleEditClick(employee._id || employee.employeeid)} />
+                                                <DeleteButton onClick={() => handleDeleteClick(employee)} />
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: "center", padding: "24px 0" }}>
+                                        {translations.nodatafound || "No data found"}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+            {!loading && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => setCurrentPage(page)}
+                    pageSizeOptions={[10, 15, 20, 50]}
+                    selectedPageSize={pageSize}
+                    onPageSizeChange={(size) => {
+                        setPageSize(size);
+                        setCurrentPage(1);
+                    }}
+                    totalRecords={totalRecords}
+                />
+            )}
+            {isModalOpen && (
+                <DeleteModal
+                    open={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onDelete={handleDeleteConfirm}
+                    name={`${selectedEmployee?.firstname || ''} ${selectedEmployee?.lastname || ''}`.trim()}
+                    message={translations.Employee || "Employee"}
+                    headingname={translations.deleteemployee || "Delete Employee"}
+                    isLoading={isDeleting}
+                />
+            )}
+            {successMessage && <AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />}
+        </>
+    );
+};
+
+export default GetEmployee;

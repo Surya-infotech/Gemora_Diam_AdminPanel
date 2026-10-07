@@ -8,6 +8,9 @@ import EditCurrency from "../Components/System/Currency/EditCurrency";
 import Tax from "../Pages/System/Tax";
 import AddTax from "../Components/System/Tax/AddTax";
 import EditTax from "../Components/System/Tax/EditTax";
+import Employee from "../Pages/System/Employee";
+import AddEmployee from "../Components/System/Employee/AddEmployee";
+import EditEmployee from "../Components/System/Employee/EditEmployee";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SystemRouter = () => (
@@ -21,6 +24,9 @@ const SystemRouter = () => (
         <Route path="/Taxes" element={<Tax />} />
         <Route path="/AddTax" element={<AddTax />} />
         <Route path="/EditTax/:id" element={<EditTax />} />
+        <Route path="/Employee" element={<Employee />} />
+        <Route path="/AddEmployee" element={<AddEmployee />} />
+        <Route path="/EditEmployee/:id" element={<EditEmployee />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );
