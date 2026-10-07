@@ -1,4 +1,5 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import EditButton from '../../../Pages/Custom/EditButton';
 import DeleteButton from '../../../Pages/Custom/DeleteButton';
 import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
@@ -260,7 +261,13 @@ const GetEmployee = ({ searchValue = "" }) => {
                                                             e.target.src = profilePlaceholder;
                                                         }}
                                                     />
-                                                    <strong>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</strong>
+                                                    <Tooltip
+                                                        title={translations.viewdetails || "View Details"}
+                                                        arrow
+                                                        placement="bottom"
+                                                    >
+                                                        <strong>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</strong>
+                                                    </Tooltip>
                                                 </div>
                                             </td>
                                             <td>{employee.email}</td>
