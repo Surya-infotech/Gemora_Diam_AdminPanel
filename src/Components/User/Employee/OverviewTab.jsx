@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import profilePlaceholder from '../../../assets/profile-placeholder.png';
@@ -6,14 +7,20 @@ import { useLanguage } from '../../../Context/LanguageContext';
 const OverviewTab = ({ employeeData }) => {
     const { translations } = useLanguage();
 
-    const formatDate = (dateString) => {
+    const formatDateTime = (dateString) => {
         if (!dateString) return '-';
+        const misc = employeeData?.miscSettings;
+        const timeZone = misc?.timeZone;
+        const dateFormat = misc?.dateFormat;
+        const timeFormat = misc?.timeFormat;
         try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const m = moment.tz(dateString, timeZone);
+            if (m.isValid()) {
+                return m.format(`${dateFormat} ${timeFormat}`);
+            }
+            return String(dateString);
         } catch {
-            return dateString;
+            return String(dateString);
         }
     };
 
@@ -111,12 +118,12 @@ const OverviewTab = ({ employeeData }) => {
                     )}
                     <div className="detail-item">
                         <span className="detail-label">{translations.createdat}</span>
-                        <span className="detail-value">{formatDate(employeeData.createdAt)}</span>
+                        <span className="detail-value">{formatDateTime(employeeData.createdAt)}</span>
                     </div>
                     {employeeData.updatedAt && (
                         <div className="detail-item">
                             <span className="detail-label">{translations.updatedat}</span>
-                            <span className="detail-value">{formatDate(employeeData.updatedAt)}</span>
+                            <span className="detail-value">{formatDateTime(employeeData.updatedAt)}</span>
                         </div>
                     )}
                 </div>
