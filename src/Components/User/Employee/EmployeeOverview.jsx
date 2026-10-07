@@ -9,6 +9,7 @@ import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 import "../../../Scss/User/Employee/employeeoverview.scss";
 import OverviewTab from './OverviewTab';
+import PermissionTab from './PermissionTab';
 
 const EmployeeOverview = () => {
     const navigate = useNavigate();
@@ -79,11 +80,25 @@ const EmployeeOverview = () => {
         navigate('/User/Employee');
     };
 
+    const isEmployee = (employeeData?.role || employeeData?.employeetype || '').trim().toLowerCase() === 'employee';
+
+    useEffect(() => {
+        if (!isEmployee && activeTab > 0) {
+            setActiveTab(0);
+        }
+    }, [isEmployee, activeTab]);
+
     const tabs = [
         {
             title: translations.overview || "Overview",
             content: <OverviewTab employeeData={employeeData} />
-        }
+        },
+        ...(isEmployee ? [
+            {
+                title: translations.permissions || "Permissions",
+                content: <PermissionTab employeeData={employeeData} />
+            }
+        ] : [])
     ];
 
     if (loading) {

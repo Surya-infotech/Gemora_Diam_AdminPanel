@@ -488,5 +488,22 @@
     "User": "User",
     "Staff": "Staff",
     "name": "Name",
-    "Name": "Name"
+    "Name": "Name",
+    "permissions": "Permissions",
+    "pagespermission": "Pages Permission",
+    "employeepermissiondesc": "Set customized page access and operational permissions for this employee.",
+    "reset": "Reset",
+    "savepermissions": "Save Permissions",
+    "allpages": "All Pages",
+    "grantall": "Grant All",
+    "revokeall": "Revoke All",
+    "pages": "Pages",
+    "view": "View",
+    "add": "Add",
+    "exportdata": "Export",
+    "toggleallpagepermissions": "Toggle all permissions for this page",
+    "permissionssavedsuccessfully": "Permissions updated successfully",
+    "employeeoverview": "Employee Overview",
+    "back": "Back",
+    "overview": "Overview"
 }
