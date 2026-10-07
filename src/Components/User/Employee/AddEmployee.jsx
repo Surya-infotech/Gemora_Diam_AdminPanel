@@ -54,21 +54,32 @@ const AddEmployee = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handlePhoneChange = (val) => {
-        setFormData(prev => ({ ...prev, phone: val || "" }));
-        if (!val || val.trim() === "") {
+    const handlePhoneChange = (value) => {
+        setFormData((prev) => ({ ...prev, phone: value || '' }));
+
+        if (!value || value.trim() === '') {
             setPhoneError("");
             return;
         }
+
         try {
-            const valid = isValidPhoneNumber(val);
-            if (!valid) {
+            const isValid = isValidPhoneNumber(value);
+
+            if (isValid) {
+                setPhoneError("");
+            } else {
+                if (value.length >= 10) {
+                    setPhoneError(translations.invalidphonenumber || "Invalid phone number");
+                } else {
+                    setPhoneError("");
+                }
+            }
+        } catch {
+            if (value.length >= 10) {
                 setPhoneError(translations.invalidphonenumber || "Invalid phone number");
             } else {
                 setPhoneError("");
             }
-        } catch {
-            setPhoneError(translations.invalidphonenumber || "Invalid phone number");
         }
     };
 
@@ -81,8 +92,18 @@ const AddEmployee = () => {
             return;
         }
 
-        if (formData.phone && !isValidPhoneNumber(formData.phone)) {
-            setWarningMessage(translations.invalidphonenumber || "Please enter a valid phone number");
+        let isPhoneValid = true;
+        if (formData.phone && formData.phone.trim() !== '') {
+            try {
+                isPhoneValid = isValidPhoneNumber(formData.phone);
+            } catch {
+                isPhoneValid = false;
+            }
+        }
+
+        if (formData.phone && formData.phone.trim() !== '' && !isPhoneValid) {
+            setPhoneError(translations.invalidphonenumber || "Invalid phone number");
+            setWarningMessage(translations.invalidphonenumber || "Invalid phone number");
             setShowWarning(true);
             return;
         }
@@ -222,14 +243,14 @@ const AddEmployee = () => {
 
                                 <div className="form-row">
                                     <div className="form-group phone-group">
-                                        <label>{translations.phonenumber || translations.Phone || "Phone Number"}</label>
+                                        <label>{translations.Phone || "Phone"}</label>
                                         <div className={`phone-input-wrapper ${phoneError ? 'has-phone-error' : ''}`}>
                                             <PhoneInput
                                                 international
                                                 defaultCountry="IN"
                                                 value={formData.phone}
                                                 onChange={handlePhoneChange}
-                                                placeholder={translations.enterphone || "Enter Phone Number"}
+                                                placeholder={translations.Phone || "Phone"}
                                             />
                                             {phoneError && (
                                                 <div className="phone-error-message">{phoneError}</div>

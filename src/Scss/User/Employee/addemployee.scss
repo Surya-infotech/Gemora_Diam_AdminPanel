@@ -29,8 +29,9 @@
                     @include form_mixin.form_label;
                 }
 
-                input:not([type="radio"]):not([type="checkbox"]) {
+                input:not([type="radio"]):not([type="checkbox"]):not(.PhoneInputInput) {
                     @include form_mixin.form_input;
+                    width: 100% !important;
                 }
 
                 .password-input-wrapper {
@@ -65,6 +66,7 @@
 
                 .phone-input-wrapper {
                     width: 100% !important;
+                    margin-bottom: 15px !important;
                     position: relative;
                     z-index: 1;
 
@@ -112,28 +114,106 @@
                                 width: 20px;
                                 height: 15px;
                                 flex-shrink: 0;
+                                margin: 0;
+                            }
+
+                            .PhoneInputCountrySelect {
+                                position: absolute !important;
+                                width: 100% !important;
+                                height: 100% !important;
+                                top: 0 !important;
+                                left: 0 !important;
+                                opacity: 0 !important;
+                                cursor: pointer !important;
+                                z-index: 3 !important;
+                                background: transparent !important;
+                                border: none !important;
+                            }
+
+                            .PhoneInputCountrySelectArrow {
+                                display: inline-block !important;
+                                color: var(--text-color);
+                                font-size: 10px;
+                                opacity: 0.6;
+                                transition: opacity 0.2s ease;
+                                flex-shrink: 0;
+                                margin: 0;
+                                pointer-events: none;
+                            }
+
+                            &:hover {
+                                background-color: transparent !important;
+
+                                .PhoneInputCountrySelectArrow {
+                                    opacity: 1;
+                                }
                             }
                         }
 
                         .PhoneInputInput {
                             flex: 1;
-                            min-width: 0;
-                            border: none !important;
-                            outline: none !important;
-                            background-color: transparent !important;
-                            color: var(--form-input-text) !important;
-                            font-size: 14px;
                             padding: 8px 12px;
-                            height: 42px;
+                            border: none !important;
+                            border-radius: 0 !important;
+                            font-size: 14px;
+                            line-height: 1.5;
+                            color: var(--text-color) !important;
+                            background-color: transparent !important;
+                            margin-bottom: 0px !important;
+                            outline: none !important;
+                            box-sizing: border-box;
 
                             &::placeholder {
-                                color: var(--text-color) !important;
+                                color: var(--text-color);
+                                opacity: 0.6;
+                            }
+
+                            &:focus {
+                                outline: none !important;
+                                box-shadow: none !important;
+                            }
+                        }
+
+                        &.PhoneInput--invalid {
+                            border-color: #dc3545 !important;
+
+                            .PhoneInputInput {
+                                color: #dc3545;
+                            }
+
+                            .PhoneInputCountry {
+                                border-right: none !important;
+                            }
+
+                            &:focus-within {
+                                box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
                             }
                         }
                     }
 
-                    &.has-phone-error .PhoneInput {
-                        border: 1px solid #dc3545 !important;
+                    &.has-phone-error {
+                        .PhoneInput {
+                            border-color: #dc3545 !important;
+
+                            .PhoneInputInput {
+                                color: #dc3545;
+                            }
+
+                            .PhoneInputCountry {
+                                border-right: none !important;
+                            }
+
+                            &:focus-within {
+                                box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+                            }
+                        }
+                    }
+
+                    input {
+                        margin-bottom: 0px !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        background-color: transparent !important;
                     }
                 }
             }
