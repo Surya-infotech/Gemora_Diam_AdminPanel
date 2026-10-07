@@ -22,6 +22,7 @@ import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import CheckToken from '../../utils/CheckToken';
 import { getBrowserAndDeviceDetails, getIpAndLocation } from '../../utils/deviceDetails';
+import { setEncryptedRole } from '../../utils/cryptoStorage';
 
 const OwnerLogin = () => {
     const [email, setEmail] = useState('');
@@ -109,7 +110,7 @@ const OwnerLogin = () => {
                 const data = await response.json();
                 const userRole = data.role || data.employee?.role || data.admin?.role;
                 if (userRole) {
-                    localStorage.setItem("role", userRole);
+                    setEncryptedRole(userRole);
                 }
                 navigate('/Home/Dashboard');
             }
@@ -175,7 +176,7 @@ const OwnerLogin = () => {
                 const authToken = data.employee?.Token || data.token;
                 const userRole = data.role || data.employee?.role || "Employee";
                 storetoken(authToken, userRole);
-                localStorage.setItem("role", userRole);
+                setEncryptedRole(userRole);
                 navigate('/Home/Dashboard');
             }
             else {

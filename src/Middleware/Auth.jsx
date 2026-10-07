@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { getDecryptedRole, setEncryptedRole } from "../utils/cryptoStorage";
 
 export const AuthContext = createContext();
 
@@ -6,13 +7,13 @@ export const AuthProider = ({ children }) => {
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
 
     const [token, setToken] = useState(localStorage.getItem(tokenname));
-    const [role, setRole] = useState(localStorage.getItem("role") || "");
+    const [role, setRole] = useState(() => getDecryptedRole());
 
     const storetoken = (serverToken, userRole) => {
         localStorage.setItem(tokenname, serverToken);
         setToken(serverToken);
         if (userRole) {
-            localStorage.setItem("role", userRole);
+            setEncryptedRole(userRole);
             setRole(userRole);
         }
     };
