@@ -14,6 +14,7 @@ import "../../../Scss/User/Employee/getemployee.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
+import profilePlaceholder from '../../../assets/profile-placeholder.png';
 
 const GetEmployee = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
@@ -245,7 +246,18 @@ const GetEmployee = ({ searchValue = "" }) => {
                                     return (
                                         <tr key={employee._id || employee.employeeid}>
                                             <td>
-                                                <strong>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</strong>
+                                                <div className="employee-name-container">
+                                                    <img
+                                                        src={employee.profileimage || profilePlaceholder}
+                                                        alt={`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}
+                                                        className="employee-avatar"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = profilePlaceholder;
+                                                        }}
+                                                    />
+                                                    <strong>{`${employee.firstname || ''} ${employee.lastname || ''}`.trim()}</strong>
+                                                </div>
                                             </td>
                                             <td>{employee.email}</td>
                                             <td>{employee.phone || "-"}</td>
