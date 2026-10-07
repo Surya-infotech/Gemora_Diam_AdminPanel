@@ -21,43 +21,43 @@ const ItemAttributesTab = ({ itemData }) => {
     const attributeSections = [
         {
             key: 'ringsizes',
-            label: translations.ringsize || 'Ring Size',
+            label: translations.ringsize,
             icon: <StraightenIcon className="section-icon" />,
             items: (itemData.ringsizes || []).map(r => r.ringsize).filter(Boolean)
         },
         {
             key: 'shapes',
-            label: translations.shape || 'Shape',
+            label: translations.shape,
             icon: <DiamondIcon className="section-icon" />,
             items: (itemData.shapes || []).map(s => s.shapename).filter(Boolean)
         },
         {
             key: 'clarities',
-            label: translations.clarity || 'Clarity',
+            label: translations.clarity,
             icon: <AutoAwesomeIcon className="section-icon" />,
             items: (itemData.clarities || []).map(c => c.clarityname).filter(Boolean)
         },
         {
             key: 'diamondcolors',
-            label: translations.diamondcolor || 'Diamond Color',
+            label: translations.diamondcolor,
             icon: <PaletteIcon className="section-icon" />,
             items: (itemData.diamondcolors || []).map(c => c.colorname).filter(Boolean)
         },
         {
             key: 'bandcolors',
-            label: translations.bandcolor || 'Band Color',
+            label: translations.bandcolor,
             icon: <PaletteIcon className="section-icon" />,
             items: (itemData.bandcolors || []).map(c => c.colorname).filter(Boolean)
         },
         {
             key: 'stones',
-            label: translations.stone || 'Stone',
+            label: translations.stone,
             icon: <TollIcon className="section-icon" />,
             items: (itemData.stones || []).map(s => s.stonename).filter(Boolean)
         },
         {
             key: 'styles',
-            label: translations.style || 'Style',
+            label: translations.style,
             icon: <StyleIcon className="section-icon" />,
             items: (itemData.styles || []).map(st => st.stylename).filter(Boolean)
         }
@@ -74,11 +74,11 @@ const ItemAttributesTab = ({ itemData }) => {
                         <div className="banner-title-row">
                             <h5 className="banner-title">{translations.Attributes}</h5>
                             <span className="attributes-count-chip">
-                                {attributeSections.filter(s => s.items.length > 0).length} / {attributeSections.length} Configured
+                                {attributeSections.filter(s => s.items.length > 0).length} / {attributeSections.length} {translations.configured}
                             </span>
                         </div>
                         <p className="banner-subtitle">
-                            Product specifications, diamond properties, and design variants
+                            {translations.attributessubtitle}
                         </p>
                     </div>
                 </div>

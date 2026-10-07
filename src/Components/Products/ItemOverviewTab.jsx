@@ -75,15 +75,15 @@ const ItemOverviewTab = ({ itemData, onItemUpdated }) => {
                 if (onItemUpdated && data.item) {
                     onItemUpdated(data.item);
                 }
-                setAlertMessage(data.message || translations.statusupdatedsuccessfully || 'Item status updated successfully');
+                setAlertMessage(data.message || translations.statusupdatedsuccessfully);
                 setAlertType('success');
             } else {
-                setAlertMessage(data.message || translations.servererror || 'Server error');
+                setAlertMessage(data.message || translations.servererror);
                 setAlertType('error');
             }
         } catch (err) {
             console.error('Update item status error:', err);
-            setAlertMessage(translations.servererror || 'Server error');
+            setAlertMessage(translations.servererror);
             setAlertType('error');
         } finally {
             setIsUpdatingStatus(false);
@@ -143,14 +143,14 @@ const ItemOverviewTab = ({ itemData, onItemUpdated }) => {
                             className={`publish-status-btn ${isPublished ? 'is-published' : 'is-draft'}`}
                             onClick={handleToggleStatus}
                             disabled={isUpdatingStatus}
-                            title={isPublished ? (translations.markasdraft || 'Mark As Draft') : (translations.markaspublish || 'Mark As Publish')}
+                            title={isPublished ? translations.markasdraft : translations.markaspublish}
                         >
                             {isUpdatingStatus ? (
-                                <span>{translations.saving || 'Updating...'}</span>
+                                <span>{translations.updating}</span>
                             ) : isPublished ? (
-                                <span>{translations.markasdraft || 'Mark As Draft'}</span>
+                                <span>{translations.markasdraft}</span>
                             ) : (
-                                <span>{translations.markaspublish || 'Mark As Publish'}</span>
+                                <span>{translations.markaspublish}</span>
                             )}
                         </button>
                     </div>
@@ -159,7 +159,7 @@ const ItemOverviewTab = ({ itemData, onItemUpdated }) => {
                 <div className="item-details-section">
                     <div className="details-grid">
                         <div className="detail-item">
-                            <span className="detail-label">{translations.Item} ID</span>
+                            <span className="detail-label">{translations.itemid}</span>
                             <span className="detail-value">{itemData.itemid || itemData._id || '-'}</span>
                         </div>
                         <div className="detail-item">

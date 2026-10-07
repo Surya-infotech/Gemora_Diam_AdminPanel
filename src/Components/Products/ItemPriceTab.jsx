@@ -814,7 +814,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
 
         const itemId = itemData?.itemid || itemData?._id;
         if (!itemId) {
-            setWarningMessage(translations.allfieldrequired || 'Item not found');
+            setWarningMessage(translations.itemnotfound);
             setShowWarning(true);
             return;
         }
@@ -825,14 +825,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                 r => !r.metalid || r.price === '' || isNaN(Number(r.price)) || Number(r.price) < 0
             );
             if (hasEmptyFields) {
-                setWarningMessage(translations.allfieldrequired || 'Please select metal and valid price for all rows');
+                setWarningMessage(translations.selectmetalandvalidprice);
                 setShowWarning(true);
                 return;
             }
 
             const selectedIds = metalWisePrices.map(r => Number(r.metalid)).filter(Boolean);
             if (new Set(selectedIds).size !== selectedIds.length) {
-                setWarningMessage(translations.duplicatemetalsnotallowed || 'Duplicate metals are not allowed');
+                setWarningMessage(translations.duplicatemetalsnotallowed);
                 setShowWarning(true);
                 return;
             }
@@ -842,21 +842,21 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
         if (priceType === 'metal_with_diamond_carat') {
             const hasEmptyGroupMetal = metalWithDiamondCaratPrices.some(g => !g.metalid);
             if (hasEmptyGroupMetal) {
-                setWarningMessage(translations.allfieldrequired || 'Please select a metal for each metal card');
+                setWarningMessage(translations.selectmetalforeachcard);
                 setShowWarning(true);
                 return;
             }
 
             const groupMetalIds = metalWithDiamondCaratPrices.map(g => Number(g.metalid)).filter(Boolean);
             if (new Set(groupMetalIds).size !== groupMetalIds.length) {
-                setWarningMessage(translations.duplicatemetalsnotallowed || 'Duplicate metals are not allowed');
+                setWarningMessage(translations.duplicatemetalsnotallowed);
                 setShowWarning(true);
                 return;
             }
 
             for (const group of metalWithDiamondCaratPrices) {
                 if (!group.caratPrices || group.caratPrices.length === 0) {
-                    setWarningMessage(translations.atleastonecaratrequired || 'At least one diamond carat price is required for each metal');
+                    setWarningMessage(translations.atleastonecaratrequired);
                     setShowWarning(true);
                     return;
                 }
@@ -865,14 +865,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0
                 );
                 if (hasEmptyCarat) {
-                    setWarningMessage(translations.allfieldrequired || 'Please select diamond carat and valid price for all rows');
+                    setWarningMessage(translations.selectdiamondcaratandvalidprice);
                     setShowWarning(true);
                     return;
                 }
 
                 const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
                 if (new Set(caratIds).size !== caratIds.length) {
-                    setWarningMessage(translations.duplicatecaratsnotallowed || 'Duplicate diamond carats are not allowed for the same metal');
+                    setWarningMessage(translations.duplicatecaratsnotallowed);
                     setShowWarning(true);
                     return;
                 }
@@ -883,21 +883,21 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
         if (priceType === 'metal_with_stone') {
             const hasEmptyGroupMetal = metalWithStonePrices.some(g => !g.metalid);
             if (hasEmptyGroupMetal) {
-                setWarningMessage(translations.allfieldrequired || 'Please select a metal for each metal card');
+                setWarningMessage(translations.selectmetalforeachcard);
                 setShowWarning(true);
                 return;
             }
 
             const groupMetalIds = metalWithStonePrices.map(g => Number(g.metalid)).filter(Boolean);
             if (new Set(groupMetalIds).size !== groupMetalIds.length) {
-                setWarningMessage(translations.duplicatemetalsnotallowed || 'Duplicate metals are not allowed');
+                setWarningMessage(translations.duplicatemetalsnotallowed);
                 setShowWarning(true);
                 return;
             }
 
             for (const group of metalWithStonePrices) {
                 if (!group.stonePrices || group.stonePrices.length === 0) {
-                    setWarningMessage(translations.atleastonestonerequired || 'At least one stone price is required for each metal');
+                    setWarningMessage(translations.atleastonestonerequired);
                     setShowWarning(true);
                     return;
                 }
@@ -906,14 +906,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     s => !s.stoneid || s.price === '' || isNaN(Number(s.price)) || Number(s.price) < 0
                 );
                 if (hasEmptyStone) {
-                    setWarningMessage(translations.allfieldrequired || 'Please select stone and valid price for all rows');
+                    setWarningMessage(translations.selectstoneandvalidprice);
                     setShowWarning(true);
                     return;
                 }
 
                 const stoneIds = group.stonePrices.map(s => Number(s.stoneid)).filter(Boolean);
                 if (new Set(stoneIds).size !== stoneIds.length) {
-                    setWarningMessage(translations.duplicatestonesnotallowed || 'Duplicate stones are not allowed for the same metal');
+                    setWarningMessage(translations.duplicatestonesnotallowed);
                     setShowWarning(true);
                     return;
                 }
@@ -924,7 +924,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
         if (priceType === 'metal_with_stone_diamond_carat') {
             const hasEmptyMetalOrStone = metalWithStoneDiamondCaratPrices.some(g => !g.metalid || !g.stoneid);
             if (hasEmptyMetalOrStone) {
-                setWarningMessage(translations.allfieldrequired || 'Please select both metal and stone for each configuration card');
+                setWarningMessage(translations.selectmetalandstoneforeachcard);
                 setShowWarning(true);
                 return;
             }
@@ -932,14 +932,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
             // Check for duplicate combination of (metalid + stoneid)
             const comboKeys = metalWithStoneDiamondCaratPrices.map(g => `${g.metalid}_${g.stoneid}`);
             if (new Set(comboKeys).size !== comboKeys.length) {
-                setWarningMessage(translations.duplicatemetalstonecombinationnotallowed || 'Duplicate metal and stone configurations are not allowed');
+                setWarningMessage(translations.duplicatemetalstonecombinationnotallowed);
                 setShowWarning(true);
                 return;
             }
 
             for (const group of metalWithStoneDiamondCaratPrices) {
                 if (!group.caratPrices || group.caratPrices.length === 0) {
-                    setWarningMessage(translations.atleastonecaratrequired || 'At least one diamond carat price is required for each configuration');
+                    setWarningMessage(translations.atleastonecaratrequiredforconfiguration);
                     setShowWarning(true);
                     return;
                 }
@@ -948,14 +948,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0
                 );
                 if (hasEmptyCarat) {
-                    setWarningMessage(translations.allfieldrequired || 'Please select diamond carat and valid price for all rows');
+                    setWarningMessage(translations.selectdiamondcaratandvalidprice);
                     setShowWarning(true);
                     return;
                 }
 
                 const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
                 if (new Set(caratIds).size !== caratIds.length) {
-                    setWarningMessage(translations.duplicatecaratsnotallowed || 'Duplicate diamond carats are not allowed for the same configuration');
+                    setWarningMessage(translations.duplicatecaratsnotallowedforconfiguration);
                     setShowWarning(true);
                     return;
                 }
@@ -1028,17 +1028,17 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setSuccessMessage(translations.priceupdatedsuccessfully || 'Price updated successfully');
+                setSuccessMessage(translations.priceupdatedsuccessfully);
                 if (onItemUpdated && data.item) {
                     onItemUpdated(data.item);
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch (err) {
             console.error('Update item price error:', err);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsSaving(false);
@@ -1056,15 +1056,15 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
     const getPriceTypeLabel = () => {
         switch (priceType) {
             case 'metal_wise':
-                return translations.metalwise || 'Metal wise';
+                return translations.metalwise;
             case 'metal_with_diamond_carat':
-                return translations.metalwithdiamondcarat || 'Metal with Diamond Carat';
+                return translations.metalwithdiamondcarat;
             case 'metal_with_stone':
-                return translations.metalwithstone || 'Metal with Stone';
+                return translations.metalwithstone;
             case 'metal_with_stone_diamond_carat':
-                return translations.metalwithstonediamondcarat || 'Metal with Stone & Diamond Carat';
+                return translations.metalwithstonediamondcarat;
             default:
-                return translations.metalwise || 'Metal wise';
+                return translations.metalwise;
         }
     };
 
@@ -1086,13 +1086,13 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         </div>
                         <div className="banner-info">
                             <div className="banner-title-row">
-                                <h5 className="banner-title">{translations.pricetab || 'Price Configuration'}</h5>
+                                <h5 className="banner-title">{translations.priceconfiguration}</h5>
                                 <span className="price-type-badge">
                                     {getPriceTypeLabel()}
                                 </span>
                             </div>
                             <p className="banner-subtitle">
-                                Configure pricing strategy for this product based on metal, gemstone, or diamond carat combinations
+                                {translations.priceconfigurationsubtitle}
                             </p>
                         </div>
                     </div>
@@ -1102,7 +1102,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     {/* Price Type Selector */}
                     <div className="price-type-selector-card">
                         <label className="section-label">
-                            {translations.pricetype || 'Price Type'} *
+                            {translations.pricetype} *
                         </label>
                         <div className="price-type-options-grid">
                             {/* Option 1: Metal wise */}
@@ -1123,10 +1123,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <PaymentsIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwise || 'Metal wise'}</span>
+                                        <span className="option-title">{translations.metalwise}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwisedesc || 'Set individual prices for each metal type'}
+                                        {translations.metalwisedesc}
                                     </p>
                                 </div>
                             </div>
@@ -1149,10 +1149,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <DiamondIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwithdiamondcarat || 'Metal with Diamond Carat'}</span>
+                                        <span className="option-title">{translations.metalwithdiamondcarat}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwithdiamondcaratdesc || 'Set prices based on metal and diamond carat combination'}
+                                        {translations.metalwithdiamondcaratdesc}
                                     </p>
                                 </div>
                             </div>
@@ -1175,10 +1175,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <TollIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwithstone || 'Metal with Stone'}</span>
+                                        <span className="option-title">{translations.metalwithstone}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwithstonedesc || 'Set prices based on metal and gemstone combination'}
+                                        {translations.metalwithstonedesc}
                                     </p>
                                 </div>
                             </div>
@@ -1201,10 +1201,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <LayersIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwithstonediamondcarat || 'Metal with Stone & Diamond Carat'}</span>
+                                        <span className="option-title">{translations.metalwithstonediamondcarat}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwithstonediamondcaratdesc || 'Set prices based on metal, stone, and diamond carat combination'}
+                                        {translations.metalwithstonediamondcaratdesc}
                                     </p>
                                 </div>
                             </div>
@@ -1218,14 +1218,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         <div className="recipe-items-container">
                             <div className="recipe-items-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwise || 'Metal wise Prices'} *
+                                    {translations.metalwiseprices} *
                                 </label>
                             </div>
 
                             <div className="recipe-items-table">
                                 <div className="table-header">
-                                    <div className="col-material">{translations.metal || 'Metal'} *</div>
-                                    <div className="col-quantity">{translations.price || 'Price'} *</div>
+                                    <div className="col-material">{translations.metal} *</div>
+                                    <div className="col-quantity">{translations.price} *</div>
                                     <div className="col-action"></div>
                                 </div>
 
@@ -1238,7 +1238,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 onValueChange={(val) => handleMetalWiseChange(idx, 'metalid', val)}
                                                 labelKey="displayLabel"
                                                 valueKey="metalid"
-                                                placeholder={translations.selectmetal || 'Select Metal'}
+                                                placeholder={translations.selectmetal}
                                             />
                                         </div>
                                         <div className="col-quantity">
@@ -1247,7 +1247,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 step="any"
                                                 min="0"
                                                 className="price-input"
-                                                placeholder={translations.priceplaceholder || 'Enter Price'}
+                                                placeholder={translations.priceplaceholder}
                                                 value={row.price}
                                                 onChange={(e) => handleMetalWiseChange(idx, 'price', e.target.value)}
                                                 required
@@ -1259,7 +1259,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                     type="button"
                                                     className="delete-row-btn"
                                                     onClick={() => handleRemoveMetalWiseRow(idx)}
-                                                    title={translations.delete || 'Delete'}
+                                                    title={translations.delete}
                                                 >
                                                     <DeleteIcon fontSize="small" />
                                                 </button>
@@ -1276,7 +1276,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     onClick={handleAddMetalWiseRow}
                                     disabled={formattedMetals.length > 0 && metalWisePrices.length >= formattedMetals.length}
                                 >
-                                    <AddIcon fontSize="small" /> {translations.addmetal || 'Add Metal'}
+                                    <AddIcon fontSize="small" /> {translations.addmetal}
                                 </button>
                             </div>
                         </div>
@@ -1289,7 +1289,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         <div className="addon-recipes-section">
                             <div className="addon-recipes-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwithdiamondcarat || 'Metal with Diamond Carat Prices'} *
+                                    {translations.metalwithdiamondcaratprices} *
                                 </label>
                             </div>
 
@@ -1298,7 +1298,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     <div className="addon-card-header">
                                         <div className="addon-selector-wrap">
                                             <label className="addon-field-label">
-                                                {translations.metal || 'Metal'} *
+                                                {translations.metal} *
                                             </label>
                                             <Dropdown
                                                 options={getMetalGroupOptionsForIndex(mIdx)}
@@ -1306,7 +1306,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 onValueChange={(val) => handleMetalGroupChange(mIdx, val)}
                                                 labelKey="displayLabel"
                                                 valueKey="metalid"
-                                                placeholder={translations.selectmetal || 'Select Metal'}
+                                                placeholder={translations.selectmetal}
                                             />
                                         </div>
                                         {metalWithDiamondCaratPrices.length > 1 && (
@@ -1314,7 +1314,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 type="button"
                                                 className="delete-card-btn"
                                                 onClick={() => handleRemoveMetalGroup(mIdx)}
-                                                title={translations.delete || 'Delete'}
+                                                title={translations.delete}
                                             >
                                                 <DeleteIcon fontSize="small" />
                                             </button>
@@ -1323,8 +1323,8 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
 
                                     <div className="recipe-items-table">
                                         <div className="table-header">
-                                            <div className="col-material">{translations.diamondcarat || 'Diamond Carat'} *</div>
-                                            <div className="col-quantity">{translations.price || 'Price'} *</div>
+                                            <div className="col-material">{translations.diamondcarat} *</div>
+                                            <div className="col-quantity">{translations.price} *</div>
                                             <div className="col-action"></div>
                                         </div>
 
@@ -1337,7 +1337,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         onValueChange={(val) => handleCaratChange(mIdx, cIdx, 'diamondsizeid', val)}
                                                         labelKey="displayLabel"
                                                         valueKey="diamondsizeid"
-                                                        placeholder={translations.selectdiamondcarat || 'Select Diamond Carat'}
+                                                        placeholder={translations.selectdiamondcarat}
                                                     />
                                                 </div>
                                                 <div className="col-quantity">
@@ -1346,7 +1346,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         step="any"
                                                         min="0"
                                                         className="price-input"
-                                                        placeholder={translations.priceplaceholder || 'Enter Price'}
+                                                        placeholder={translations.priceplaceholder}
                                                         value={cRow.price}
                                                         onChange={(e) => handleCaratChange(mIdx, cIdx, 'price', e.target.value)}
                                                         required
@@ -1358,7 +1358,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                             type="button"
                                                             className="delete-row-btn"
                                                             onClick={() => handleRemoveCaratRow(mIdx, cIdx)}
-                                                            title={translations.delete || 'Delete'}
+                                                            title={translations.delete}
                                                         >
                                                             <DeleteIcon fontSize="small" />
                                                         </button>
@@ -1375,7 +1375,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                             onClick={() => handleAddCaratRow(mIdx)}
                                             disabled={formattedDiamondSizes.length > 0 && metalGroup.caratPrices.length >= formattedDiamondSizes.length}
                                         >
-                                            <AddIcon fontSize="small" /> {translations.adddiamondcarat || 'Add Diamond Carat'}
+                                            <AddIcon fontSize="small" /> {translations.adddiamondcarat}
                                         </button>
                                     </div>
                                 </div>
@@ -1388,7 +1388,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     onClick={handleAddMetalGroup}
                                     disabled={formattedMetals.length > 0 && metalWithDiamondCaratPrices.length >= formattedMetals.length}
                                 >
-                                    <AddIcon fontSize="small" /> {translations.addmetal || 'Add Metal'}
+                                    <AddIcon fontSize="small" /> {translations.addmetal}
                                 </button>
                             </div>
                         </div>
@@ -1401,7 +1401,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         <div className="addon-recipes-section">
                             <div className="addon-recipes-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwithstone || 'Metal with Stone Prices'} *
+                                    {translations.metalwithstoneprices} *
                                 </label>
                             </div>
 
@@ -1410,7 +1410,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     <div className="addon-card-header">
                                         <div className="addon-selector-wrap">
                                             <label className="addon-field-label">
-                                                {translations.metal || 'Metal'} *
+                                                {translations.metal} *
                                             </label>
                                             <Dropdown
                                                 options={getMetalWithStoneGroupOptions(mIdx)}
@@ -1418,7 +1418,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 onValueChange={(val) => handleMetalWithStoneGroupChange(mIdx, val)}
                                                 labelKey="displayLabel"
                                                 valueKey="metalid"
-                                                placeholder={translations.selectmetal || 'Select Metal'}
+                                                placeholder={translations.selectmetal}
                                             />
                                         </div>
                                         {metalWithStonePrices.length > 1 && (
@@ -1426,7 +1426,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 type="button"
                                                 className="delete-card-btn"
                                                 onClick={() => handleRemoveMetalWithStoneGroup(mIdx)}
-                                                title={translations.delete || 'Delete'}
+                                                title={translations.delete}
                                             >
                                                 <DeleteIcon fontSize="small" />
                                             </button>
@@ -1435,8 +1435,8 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
 
                                     <div className="recipe-items-table">
                                         <div className="table-header">
-                                            <div className="col-material">{translations.gemstone || translations.stone || 'Stone'} *</div>
-                                            <div className="col-quantity">{translations.price || 'Price'} *</div>
+                                            <div className="col-material">{translations.gemstone} *</div>
+                                            <div className="col-quantity">{translations.price} *</div>
                                             <div className="col-action"></div>
                                         </div>
 
@@ -1449,7 +1449,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         onValueChange={(val) => handleStoneChange(mIdx, sIdx, 'stoneid', val)}
                                                         labelKey="displayLabel"
                                                         valueKey="stoneid"
-                                                        placeholder={translations.selectstone || 'Select Stone'}
+                                                        placeholder={translations.selectstone}
                                                     />
                                                 </div>
                                                 <div className="col-quantity">
@@ -1458,7 +1458,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         step="any"
                                                         min="0"
                                                         className="price-input"
-                                                        placeholder={translations.priceplaceholder || 'Enter Price'}
+                                                        placeholder={translations.priceplaceholder}
                                                         value={sRow.price}
                                                         onChange={(e) => handleStoneChange(mIdx, sIdx, 'price', e.target.value)}
                                                         required
@@ -1470,7 +1470,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                             type="button"
                                                             className="delete-row-btn"
                                                             onClick={() => handleRemoveStoneRow(mIdx, sIdx)}
-                                                            title={translations.delete || 'Delete'}
+                                                            title={translations.delete}
                                                         >
                                                             <DeleteIcon fontSize="small" />
                                                         </button>
@@ -1487,7 +1487,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                             onClick={() => handleAddStoneRow(mIdx)}
                                             disabled={availableStones.length > 0 && metalGroup.stonePrices.length >= availableStones.length}
                                         >
-                                            <AddIcon fontSize="small" /> {translations.addstone || 'Add Stone'}
+                                            <AddIcon fontSize="small" /> {translations.addstone}
                                         </button>
                                     </div>
                                 </div>
@@ -1500,7 +1500,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     onClick={handleAddMetalWithStoneGroup}
                                     disabled={formattedMetals.length > 0 && metalWithStonePrices.length >= formattedMetals.length}
                                 >
-                                    <AddIcon fontSize="small" /> {translations.addmetal || 'Add Metal'}
+                                    <AddIcon fontSize="small" /> {translations.addmetal}
                                 </button>
                             </div>
                         </div>
@@ -1513,7 +1513,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         <div className="addon-recipes-section">
                             <div className="addon-recipes-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwithstonediamondcarat || 'Metal with Stone & Diamond Carat Prices'} *
+                                    {translations.metalwithstonediamondcaratprices} *
                                 </label>
                             </div>
 
@@ -1523,7 +1523,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                         <div className="addon-selectors-row">
                                             <div className="addon-selector-wrap">
                                                 <label className="addon-field-label">
-                                                    {translations.metal || 'Metal'} *
+                                                    {translations.metal} *
                                                 </label>
                                                 <Dropdown
                                                     options={formattedMetals}
@@ -1531,12 +1531,12 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                     onValueChange={(val) => handleMetalWithStoneCaratGroupChange(mIdx, 'metalid', val)}
                                                     labelKey="displayLabel"
                                                     valueKey="metalid"
-                                                    placeholder={translations.selectmetal || 'Select Metal'}
+                                                    placeholder={translations.selectmetal}
                                                 />
                                             </div>
                                             <div className="addon-selector-wrap">
                                                 <label className="addon-field-label">
-                                                    {translations.gemstone || translations.stone || 'Stone'} *
+                                                    {translations.gemstone} *
                                                 </label>
                                                 <Dropdown
                                                     options={availableStones}
@@ -1544,7 +1544,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                     onValueChange={(val) => handleMetalWithStoneCaratGroupChange(mIdx, 'stoneid', val)}
                                                     labelKey="displayLabel"
                                                     valueKey="stoneid"
-                                                    placeholder={translations.selectstone || 'Select Stone'}
+                                                    placeholder={translations.selectstone}
                                                 />
                                             </div>
                                         </div>
@@ -1553,7 +1553,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                 type="button"
                                                 className="delete-card-btn"
                                                 onClick={() => handleRemoveMetalWithStoneCaratGroup(mIdx)}
-                                                title={translations.delete || 'Delete'}
+                                                title={translations.delete}
                                             >
                                                 <DeleteIcon fontSize="small" />
                                             </button>
@@ -1562,8 +1562,8 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
 
                                     <div className="recipe-items-table">
                                         <div className="table-header">
-                                            <div className="col-material">{translations.diamondcarat || 'Diamond Carat'} *</div>
-                                            <div className="col-quantity">{translations.price || 'Price'} *</div>
+                                            <div className="col-material">{translations.diamondcarat} *</div>
+                                            <div className="col-quantity">{translations.price} *</div>
                                             <div className="col-action"></div>
                                         </div>
 
@@ -1576,7 +1576,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         onValueChange={(val) => handleCaratChangeForMetalStone(mIdx, cIdx, 'diamondsizeid', val)}
                                                         labelKey="displayLabel"
                                                         valueKey="diamondsizeid"
-                                                        placeholder={translations.selectdiamondcarat || 'Select Diamond Carat'}
+                                                        placeholder={translations.selectdiamondcarat}
                                                     />
                                                 </div>
                                                 <div className="col-quantity">
@@ -1585,7 +1585,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                         step="any"
                                                         min="0"
                                                         className="price-input"
-                                                        placeholder={translations.priceplaceholder || 'Enter Price'}
+                                                        placeholder={translations.priceplaceholder}
                                                         value={cRow.price}
                                                         onChange={(e) => handleCaratChangeForMetalStone(mIdx, cIdx, 'price', e.target.value)}
                                                         required
@@ -1597,7 +1597,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                                             type="button"
                                                             className="delete-row-btn"
                                                             onClick={() => handleRemoveCaratRowForMetalStone(mIdx, cIdx)}
-                                                            title={translations.delete || 'Delete'}
+                                                            title={translations.delete}
                                                         >
                                                             <DeleteIcon fontSize="small" />
                                                         </button>
@@ -1614,7 +1614,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                             onClick={() => handleAddCaratRowForMetalStone(mIdx)}
                                             disabled={formattedDiamondSizes.length > 0 && group.caratPrices.length >= formattedDiamondSizes.length}
                                         >
-                                            <AddIcon fontSize="small" /> {translations.adddiamondcarat || 'Add Diamond Carat'}
+                                            <AddIcon fontSize="small" /> {translations.adddiamondcarat}
                                         </button>
                                     </div>
                                 </div>
@@ -1626,7 +1626,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     className="addon-btn"
                                     onClick={handleAddMetalWithStoneCaratGroup}
                                 >
-                                    <AddIcon fontSize="small" /> {translations.addmetalwithstone || 'Add Metal & Stone'}
+                                    <AddIcon fontSize="small" /> {translations.addmetalwithstone}
                                 </button>
                             </div>
                         </div>
@@ -1642,14 +1642,14 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                             onClick={handleReset}
                             disabled={isSaving}
                         >
-                            <RestartAltIcon fontSize="small" /> {translations.reset || 'Reset'}
+                            <RestartAltIcon fontSize="small" /> {translations.reset}
                         </button>
                         <button
                             type="submit"
                             className="btn btn-primary submit-btn"
                             disabled={isSaving}
                         >
-                            <SaveIcon fontSize="small" /> {isSaving ? (translations.saving || 'Saving...') : (translations.save || 'Save Price')}
+                            <SaveIcon fontSize="small" /> {isSaving ? translations.saving : translations.saveprice}
                         </button>
                     </div>
                 </form>

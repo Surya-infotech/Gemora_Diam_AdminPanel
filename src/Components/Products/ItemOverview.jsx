@@ -90,7 +90,7 @@ const ItemOverview = () => {
             content: <ItemAttributesTab itemData={itemData} />
         },
         {
-            title: translations.pricetab || translations.price || 'Price',
+            title: translations.pricetab,
             content: (
                 <ItemPriceTab
                     itemData={itemData}
