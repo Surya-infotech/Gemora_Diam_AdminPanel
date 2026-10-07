@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Attributes/SubCategory/subcategory.scss";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import GetSubCategory from '../../Components/Attributes/SubCategory/GetSubCategory';
@@ -11,6 +12,7 @@ const SubCategory = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
+    const { canAdd } = usePermissions();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
@@ -49,9 +51,11 @@ const SubCategory = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew || "Add New"}
-                        </button>
+                        {canAdd('subCategory') && (
+                            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                                {translations.addNew || "Add New"}
+                            </button>
+                        )}
                     </div>
                     <GetSubCategory searchValue={searchValue} />
                 </div>

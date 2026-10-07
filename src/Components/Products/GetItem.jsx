@@ -13,6 +13,7 @@ import Pagination from "../../Pages/Custom/Pagination";
 import WarningModal from "../../Pages/Custom/WarningModal";
 import "../../Scss/Products/getitem.scss";
 import { useLanguage } from "../../Context/LanguageContext";
+import { usePermissions } from "../../Hooks/usePermissions";
 import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
 
@@ -58,6 +59,7 @@ const ItemImage = ({ src, alt }) => {
 const GetItem = ({ searchValue }) => {
     const navigate = useNavigate();
     const { translations } = useLanguage();
+    const { canEdit, canDelete } = usePermissions();
     const { logoutUser } = useAuth();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
@@ -258,8 +260,8 @@ const GetItem = ({ searchValue }) => {
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
                                         </td>
                                         <td>
-                                            <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />
-                                            <DeleteButton onClick={() => handleDeleteClick(item)} />
+                                            {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
+                                            {canDelete('item') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
                                         </td>
                                     </tr>
                                 ))

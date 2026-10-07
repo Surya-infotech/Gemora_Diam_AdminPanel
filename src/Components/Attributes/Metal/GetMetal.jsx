@@ -12,6 +12,7 @@ import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import "../../../Scss/Attributes/Metal/getmetal.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
+import { usePermissions } from '../../../Hooks/usePermissions';
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
@@ -19,6 +20,7 @@ const GetMetal = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
     const navigate = useNavigate();
     const { translations } = useLanguage();
+    const { canEdit, canDelete } = usePermissions();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const [loading, setLoading] = useState(true);
@@ -207,8 +209,8 @@ const GetMetal = ({ searchValue = "" }) => {
                                             <CustomSwitch checked={metal.status} onChange={() => handleStatusChange(metal)} />
                                         </td>
                                         <td>
-                                            <EditButton onClick={() => handleEditClick(metal._id || metal.metalid)} />
-                                            <DeleteButton onClick={() => handleDeleteClick(metal)} />
+                                            {canEdit('metal') && <EditButton onClick={() => handleEditClick(metal._id || metal.metalid)} />}
+                                            {canDelete('metal') && <DeleteButton onClick={() => handleDeleteClick(metal)} />}
                                         </td>
                                     </tr>
                                 ))

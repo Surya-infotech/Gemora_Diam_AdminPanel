@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Attributes/Category/category.scss";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import GetCategory from '../../Components/Attributes/Category/GetCategory';
@@ -11,12 +12,14 @@ const Category = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
+    const { canAdd } = usePermissions();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
         if (translations.Category) document.title = translations.Category;
+        else document.title = "Category";
     }, [translations]);
 
     useEffect(() => {
@@ -48,9 +51,11 @@ const Category = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew}
-                        </button>
+                        {canAdd('category') && (
+                            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                                {translations.addNew}
+                            </button>
+                        )}
                     </div>
                     <GetCategory searchValue={searchValue} />
                 </div>

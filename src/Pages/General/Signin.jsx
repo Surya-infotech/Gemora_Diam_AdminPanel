@@ -185,6 +185,11 @@ const OwnerLogin = () => {
                 if (employeeId) {
                     localStorage.setItem('EmployeeID', employeeId);
                 }
+                if (data.employee?.permissions) {
+                    localStorage.setItem('EMPLOYEE_PERMISSIONS', JSON.stringify(data.employee.permissions));
+                } else {
+                    localStorage.removeItem('EMPLOYEE_PERMISSIONS');
+                }
                 navigate('/Home/Dashboard');
             }
             else {

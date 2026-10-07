@@ -31,6 +31,7 @@ export const AuthProider = ({ children }) => {
         localStorage.removeItem("selectedFiscalYear");
         localStorage.removeItem("role");
         localStorage.removeItem("EmployeeID");
+        localStorage.removeItem("EMPLOYEE_PERMISSIONS");
     };
 
     return (

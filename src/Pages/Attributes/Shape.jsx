@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Attributes/Shape/shape.scss";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import GetShape from '../../Components/Attributes/Shape/GetShape';
@@ -11,12 +12,14 @@ const Shape = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
+    const { canAdd } = usePermissions();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
         if (translations.Shape) document.title = translations.Shape;
+        else document.title = "Shape";
     }, [translations]);
 
     useEffect(() => {
@@ -48,9 +51,11 @@ const Shape = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew}
-                        </button>
+                        {canAdd('shape') && (
+                            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                                {translations.addNew}
+                            </button>
+                        )}
                     </div>
                     <GetShape searchValue={searchValue} />
                 </div>

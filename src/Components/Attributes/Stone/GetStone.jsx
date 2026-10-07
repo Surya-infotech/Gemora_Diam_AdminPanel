@@ -12,6 +12,7 @@ import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import "../../../Scss/Attributes/Stone/getstone.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
+import { usePermissions } from '../../../Hooks/usePermissions';
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
@@ -19,6 +20,7 @@ const GetStone = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
     const navigate = useNavigate();
     const { translations } = useLanguage();
+    const { canEdit, canDelete } = usePermissions();
     const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
     const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
     const [loading, setLoading] = useState(true);
@@ -203,8 +205,8 @@ const GetStone = ({ searchValue = "" }) => {
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
                                         </td>
                                         <td>
-                                            <EditButton onClick={() => handleEditClick(item._id || item.stoneid)} />
-                                            <DeleteButton onClick={() => handleDeleteClick(item)} />
+                                            {canEdit('stone') && <EditButton onClick={() => handleEditClick(item._id || item.stoneid)} />}
+                                            {canDelete('stone') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
                                         </td>
                                     </tr>
                                 ))

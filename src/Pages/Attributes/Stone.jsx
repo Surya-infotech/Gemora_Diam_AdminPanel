@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Attributes/Stone/stone.scss";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import GetStone from '../../Components/Attributes/Stone/GetStone';
@@ -11,12 +12,14 @@ const Stone = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
+    const { canAdd } = usePermissions();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
         if (translations.Stone) document.title = translations.Stone;
+        else document.title = "Stone";
     }, [translations]);
 
     useEffect(() => {
@@ -48,9 +51,11 @@ const Stone = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew}
-                        </button>
+                        {canAdd('stone') && (
+                            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                                {translations.addNew}
+                            </button>
+                        )}
                     </div>
                     <GetStone searchValue={searchValue} />
                 </div>

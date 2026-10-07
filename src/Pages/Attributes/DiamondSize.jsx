@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Attributes/DiamondSize/diamondsize.scss";
 import { useLanguage } from '../../Context/LanguageContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import GetDiamondSize from '../../Components/Attributes/DiamondSize/GetDiamondSize';
@@ -11,12 +12,14 @@ const DiamondSize = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
+    const { canAdd } = usePermissions();
     const [alertMessage, setAlertMessage] = useState("");
     const [warningMessage, setWarningMessage] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
         if (translations.DiamondSize) document.title = translations.DiamondSize;
+        else document.title = "Diamond Size";
     }, [translations]);
 
     useEffect(() => {
@@ -48,9 +51,11 @@ const DiamondSize = () => {
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
-                        <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew}
-                        </button>
+                        {canAdd('diamondSize') && (
+                            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                                {translations.addNew}
+                            </button>
+                        )}
                     </div>
                     <GetDiamondSize searchValue={searchValue} />
                 </div>

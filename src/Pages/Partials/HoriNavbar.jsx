@@ -32,10 +32,12 @@ import "../../Scss/Partials/horinavbar.scss";
 import profilePlaceholder from '../../assets/profile-placeholder.png';
 import Dropdown from '../../Components/Dropdown/Dropdown';
 import { useFiscalYear } from '../../Context/FiscalYearContext';
+import { usePermissions } from '../../Hooks/usePermissions';
 
 const HoriNavbar = () => {
     const navigate = useNavigate();
     const { logoutUser } = useAuth();
+    const { isEmployee } = usePermissions();
     const { fiscalYears, selectedFiscalYear, setSelectedFiscalYear } = useFiscalYear();
     const location = useLocation();
     const currentPath = location.pathname;
@@ -63,10 +65,15 @@ const HoriNavbar = () => {
 
     const sortedLanguages = getLanguageOptions();
 
-    const quickLinks = useMemo(() => [
-        { to: "/Home/Dashboard", label: translations.Dashboard, Icon: LeaderboardIcon },
-        { to: "/System/Setting", label: translations.Setting, Icon: SettingsIcon },
-    ], [translations]);
+    const quickLinks = useMemo(() => {
+        const links = [
+            { to: "/Home/Dashboard", label: translations.Dashboard, Icon: LeaderboardIcon },
+        ];
+        if (!isEmployee) {
+            links.push({ to: "/System/Setting", label: translations.Setting, Icon: SettingsIcon });
+        }
+        return links;
+    }, [translations, isEmployee]);
 
     const toggleDropdown = () => {
         setQuickMenuVisible(false);

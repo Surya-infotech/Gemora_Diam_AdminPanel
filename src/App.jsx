@@ -17,8 +17,10 @@ import ProductsRouter from "./Router/Products.jsx";
 import UserRouter from "./Router/User.jsx";
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import { FiscalYearProvider } from './Context/FiscalYearContext.jsx';
+import { PermissionProvider } from './Context/PermissionContext.jsx';
 import Logout from "./Pages/General/Logout.jsx";
 import PageNotFound from "./Pages/Partials/PageNotFound.jsx";
+import { AdminOnlyGuard } from "./Components/PermissionGuard.jsx";
 
 const AppContent = () => {
   const location = useLocation();
@@ -78,9 +80,9 @@ const AppContent = () => {
         <Route path={`/Home/*`} element={<MainRouter />} />
         <Route path={`/Products/*`} element={<ProductsRouter />} />
         <Route path={`/Attributes/*`} element={<AttributesRouter />} />
-        <Route path={`/Support/*`} element={<SupportRouter />} />
-        <Route path={`/User/*`} element={<UserRouter />} />
-        <Route path={`/System/*`} element={<SystemRouter />} />
+        <Route path={`/Support/*`} element={<AdminOnlyGuard><SupportRouter /></AdminOnlyGuard>} />
+        <Route path={`/User/*`} element={<AdminOnlyGuard><UserRouter /></AdminOnlyGuard>} />
+        <Route path={`/System/*`} element={<AdminOnlyGuard><SystemRouter /></AdminOnlyGuard>} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {!isLoginPage && <AdminFooter />}
@@ -94,9 +96,11 @@ const App = () => {
       <CssBaseline />
       <LanguageProvider>
         <FiscalYearProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
+          <PermissionProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </PermissionProvider>
         </FiscalYearProvider>
       </LanguageProvider>
     </ThemeProvider>

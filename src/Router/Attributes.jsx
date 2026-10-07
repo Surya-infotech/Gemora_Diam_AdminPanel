@@ -30,39 +30,50 @@ import SubCategory from "../Pages/Attributes/SubCategory";
 import AddSubCategory from "../Components/Attributes/SubCategory/AddSubCategory";
 import EditSubCategory from "../Components/Attributes/SubCategory/EditSubCategory";
 import PageNotFound from "../Pages/Partials/PageNotFound";
+import { PermissionGuard } from "../Components/PermissionGuard";
 
 const AttributesRouter = () => (
     <Routes>
-        <Route path="/Metal" element={<Metal />} />
-        <Route path="/AddMetal" element={<AddMetal />} />
-        <Route path="/EditMetal/:id" element={<EditMetal />} />
-        <Route path="/DiamondSize" element={<DiamondSize />} />
-        <Route path="/AddDiamondSize" element={<AddDiamondSize />} />
-        <Route path="/EditDiamondSize/:id" element={<EditDiamondSize />} />
-        <Route path="/RingSize" element={<RingSize />} />
-        <Route path="/AddRingSize" element={<AddRingSize />} />
-        <Route path="/EditRingSize/:id" element={<EditRingSize />} />
-        <Route path="/Shape" element={<Shape />} />
-        <Route path="/AddShape" element={<AddShape />} />
-        <Route path="/EditShape/:id" element={<EditShape />} />
-        <Route path="/Clarity" element={<Clarity />} />
-        <Route path="/AddClarity" element={<AddClarity />} />
-        <Route path="/EditClarity/:id" element={<EditClarity />} />
-        <Route path="/Color" element={<Color />} />
-        <Route path="/AddColor" element={<AddColor />} />
-        <Route path="/EditColor/:id" element={<EditColor />} />
-        <Route path="/Stone" element={<Stone />} />
-        <Route path="/AddStone" element={<AddStone />} />
-        <Route path="/EditStone/:id" element={<EditStone />} />
-        <Route path="/Style" element={<Style />} />
-        <Route path="/AddStyle" element={<AddStyle />} />
-        <Route path="/EditStyle/:id" element={<EditStyle />} />
-        <Route path="/Category" element={<Category />} />
-        <Route path="/AddCategory" element={<AddCategory />} />
-        <Route path="/EditCategory/:id" element={<EditCategory />} />
-        <Route path="/SubCategory" element={<SubCategory />} />
-        <Route path="/AddSubCategory" element={<AddSubCategory />} />
-        <Route path="/EditSubCategory/:id" element={<EditSubCategory />} />
+        <Route path="/Metal" element={<PermissionGuard pageId="metal" action="view"><Metal /></PermissionGuard>} />
+        <Route path="/AddMetal" element={<PermissionGuard pageId="metal" action="add"><AddMetal /></PermissionGuard>} />
+        <Route path="/EditMetal/:id" element={<PermissionGuard pageId="metal" action="edit"><EditMetal /></PermissionGuard>} />
+
+        <Route path="/DiamondSize" element={<PermissionGuard pageId="diamondSize" action="view"><DiamondSize /></PermissionGuard>} />
+        <Route path="/AddDiamondSize" element={<PermissionGuard pageId="diamondSize" action="add"><AddDiamondSize /></PermissionGuard>} />
+        <Route path="/EditDiamondSize/:id" element={<PermissionGuard pageId="diamondSize" action="edit"><EditDiamondSize /></PermissionGuard>} />
+
+        <Route path="/RingSize" element={<PermissionGuard pageId="ringSize" action="view"><RingSize /></PermissionGuard>} />
+        <Route path="/AddRingSize" element={<PermissionGuard pageId="ringSize" action="add"><AddRingSize /></PermissionGuard>} />
+        <Route path="/EditRingSize/:id" element={<PermissionGuard pageId="ringSize" action="edit"><EditRingSize /></PermissionGuard>} />
+
+        <Route path="/Shape" element={<PermissionGuard pageId="shape" action="view"><Shape /></PermissionGuard>} />
+        <Route path="/AddShape" element={<PermissionGuard pageId="shape" action="add"><AddShape /></PermissionGuard>} />
+        <Route path="/EditShape/:id" element={<PermissionGuard pageId="shape" action="edit"><EditShape /></PermissionGuard>} />
+
+        <Route path="/Clarity" element={<PermissionGuard pageId="clarity" action="view"><Clarity /></PermissionGuard>} />
+        <Route path="/AddClarity" element={<PermissionGuard pageId="clarity" action="add"><AddClarity /></PermissionGuard>} />
+        <Route path="/EditClarity/:id" element={<PermissionGuard pageId="clarity" action="edit"><EditClarity /></PermissionGuard>} />
+
+        <Route path="/Color" element={<PermissionGuard pageId="color" action="view"><Color /></PermissionGuard>} />
+        <Route path="/AddColor" element={<PermissionGuard pageId="color" action="add"><AddColor /></PermissionGuard>} />
+        <Route path="/EditColor/:id" element={<PermissionGuard pageId="color" action="edit"><EditColor /></PermissionGuard>} />
+
+        <Route path="/Stone" element={<PermissionGuard pageId="stone" action="view"><Stone /></PermissionGuard>} />
+        <Route path="/AddStone" element={<PermissionGuard pageId="stone" action="add"><AddStone /></PermissionGuard>} />
+        <Route path="/EditStone/:id" element={<PermissionGuard pageId="stone" action="edit"><EditStone /></PermissionGuard>} />
+
+        <Route path="/Style" element={<PermissionGuard pageId="style" action="view"><Style /></PermissionGuard>} />
+        <Route path="/AddStyle" element={<PermissionGuard pageId="style" action="add"><AddStyle /></PermissionGuard>} />
+        <Route path="/EditStyle/:id" element={<PermissionGuard pageId="style" action="edit"><EditStyle /></PermissionGuard>} />
+
+        <Route path="/Category" element={<PermissionGuard pageId="category" action="view"><Category /></PermissionGuard>} />
+        <Route path="/AddCategory" element={<PermissionGuard pageId="category" action="add"><AddCategory /></PermissionGuard>} />
+        <Route path="/EditCategory/:id" element={<PermissionGuard pageId="category" action="edit"><EditCategory /></PermissionGuard>} />
+
+        <Route path="/SubCategory" element={<PermissionGuard pageId="subCategory" action="view"><SubCategory /></PermissionGuard>} />
+        <Route path="/AddSubCategory" element={<PermissionGuard pageId="subCategory" action="add"><AddSubCategory /></PermissionGuard>} />
+        <Route path="/EditSubCategory/:id" element={<PermissionGuard pageId="subCategory" action="edit"><EditSubCategory /></PermissionGuard>} />
+
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );
