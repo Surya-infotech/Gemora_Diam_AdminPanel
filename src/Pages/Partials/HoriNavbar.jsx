@@ -226,32 +226,34 @@ const HoriNavbar = () => {
                         <FullscreenIcon style={{ fontSize: 22 }} aria-hidden />
                     )}
                 </button>
-                <div className="language-dropdown" onClick={toggleLanguageDropdown}>
-                    <button type="button">
-                        <Flag
-                            code={sortedLanguages.find(lang => lang.name === selectedLanguage)?.code}
-                            style={{ width: '20px' }}
-                            alt={selectedLanguage}
-                        />
-                        <span className="language-dropdown__name">{selectedLanguage.substring(0, 3)}</span>
-                    </button>
-                    {isLanguageDropdownVisible && (
-                        <div className="language-dropdown-menu">
-                            <ul>
-                                {sortedLanguages.map((language, index) => (
-                                    <li
-                                        key={index}
-                                        className={language.name === selectedLanguage ? 'selected' : ''}
-                                        onClick={() => handleLanguageSelect(language)}
-                                    >
-                                        <Flag code={language.code} style={{ width: '20px' }} alt={language.name} />
-                                        <span className="language-dropdown__name">{language.name}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
+                {sortedLanguages.length > 1 && (
+                    <div className="language-dropdown" onClick={toggleLanguageDropdown}>
+                        <button type="button">
+                            <Flag
+                                code={sortedLanguages.find(lang => lang.name === selectedLanguage)?.code}
+                                style={{ width: '20px' }}
+                                alt={selectedLanguage}
+                            />
+                            <span className="language-dropdown__name">{selectedLanguage.substring(0, 3)}</span>
+                        </button>
+                        {isLanguageDropdownVisible && (
+                            <div className="language-dropdown-menu">
+                                <ul>
+                                    {sortedLanguages.map((language, index) => (
+                                        <li
+                                            key={index}
+                                            className={language.name === selectedLanguage ? 'selected' : ''}
+                                            onClick={() => handleLanguageSelect(language)}
+                                        >
+                                            <Flag code={language.code} style={{ width: '20px' }} alt={language.name} />
+                                            <span className="language-dropdown__name">{language.name}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                )}
                 <div className="profile-section" onClick={toggleDropdown}>
                     <img
                         src={adminProfileImage}

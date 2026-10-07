@@ -215,34 +215,36 @@ const OwnerLogin = () => {
         {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
         {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
         <div className="full-page">
-            <div className="language-container">
-                <div className="language-dropdown" onClick={toggleLanguageDropdown}>
-                    <button type="button">
-                        <Flag
-                            code={languages.find(lang => lang.name === selectedLanguage)?.code}
-                            style={{ width: '20px' }}
-                            alt={selectedLanguage}
-                        />
-                        <span className="language-dropdown__name">{selectedLanguage.substring(0, 3)}</span>
-                    </button>
-                    {isLanguageDropdownVisible && (
-                        <div className="language-dropdown-menu">
-                            <ul>
-                                {languages.map((language, index) => (
-                                    <li
-                                        key={index}
-                                        className={language.name === selectedLanguage ? 'selected' : ''}
-                                        onClick={() => handleLanguageSelect(language)}
-                                    >
-                                        <Flag code={language.code} style={{ width: '20px' }} alt={language.name} />
-                                        <span className="language-dropdown__name">{language.name}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+            {languages.length > 1 && (
+                <div className="language-container">
+                    <div className="language-dropdown" onClick={toggleLanguageDropdown}>
+                        <button type="button">
+                            <Flag
+                                code={languages.find(lang => lang.name === selectedLanguage)?.code}
+                                style={{ width: '20px' }}
+                                alt={selectedLanguage}
+                            />
+                            <span className="language-dropdown__name">{selectedLanguage.substring(0, 3)}</span>
+                        </button>
+                        {isLanguageDropdownVisible && (
+                            <div className="language-dropdown-menu">
+                                <ul>
+                                    {languages.map((language, index) => (
+                                        <li
+                                            key={index}
+                                            className={language.name === selectedLanguage ? 'selected' : ''}
+                                            onClick={() => handleLanguageSelect(language)}
+                                        >
+                                            <Flag code={language.code} style={{ width: '20px' }} alt={language.name} />
+                                            <span className="language-dropdown__name">{language.name}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
             <div className="login-container">
                 <div className="logo-container">
                     <a href={HOME_URL} className="logo-button">
