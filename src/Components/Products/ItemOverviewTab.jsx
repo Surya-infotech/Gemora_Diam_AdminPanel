@@ -1,17 +1,24 @@
+import moment from 'moment-timezone';
 import Placeholder from '../../assets/placeholder.png';
 import { useLanguage } from '../../Context/LanguageContext';
 
 const ItemOverviewTab = ({ itemData }) => {
     const { translations } = useLanguage();
 
-    const formatDate = (dateString) => {
+    const formatDateTime = (dateString) => {
         if (!dateString) return '-';
+        const misc = itemData?.miscSettings;
+        const timeZone = misc?.timeZone;
+        const dateFormat = misc?.dateFormat;
+        const timeFormat = misc?.timeFormat;
         try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const m = moment.tz(dateString, timeZone);
+            if (m.isValid()) {
+                return m.format(`${dateFormat} ${timeFormat}`);
+            }
+            return String(dateString);
         } catch {
-            return dateString;
+            return String(dateString);
         }
     };
 
@@ -84,12 +91,12 @@ const ItemOverviewTab = ({ itemData }) => {
                     </div>
                     <div className="detail-item">
                         <span className="detail-label">{translations.createdat}</span>
-                        <span className="detail-value">{formatDate(itemData.createdAt)}</span>
+                        <span className="detail-value">{formatDateTime(itemData.createdAt)}</span>
                     </div>
                     {itemData.updatedAt && (
                         <div className="detail-item">
                             <span className="detail-label">{translations.updatedat}</span>
-                            <span className="detail-value">{formatDate(itemData.updatedAt)}</span>
+                            <span className="detail-value">{formatDateTime(itemData.updatedAt)}</span>
                         </div>
                     )}
                 </div>
