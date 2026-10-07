@@ -129,10 +129,10 @@ const GetSubCategory = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setSubCategories(subCategories.map(c => (c._id === item._id || c.subcategoryid === item.subcategoryid) ? { ...c, status: updatedStatus } : c));
-                setSuccessMessage(updatedStatus ? (translations.subcategorystatusactive || "Sub Category Status updated to Active") : (translations.subcategorystatusinactive || "Sub Category Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.subcategorystatusactive) : (translations.subcategorystatusinactive));
             } else {
                 const errorMessages = {
-                    "Sub Category not found": translations.subcategorynotfound || "Sub Category not found",
+                    "Sub Category not found": translations.subcategorynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetSubCategory = ({ searchValue = "" }) => {
             if (response.ok) {
                 setSubCategories(subCategories.filter(c => c._id !== targetId && c.subcategoryid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletesubcategorysuccessfull || "Sub Category Deleted Successfully");
+                setSuccessMessage(translations.deletesubcategorysuccessfull);
             } else {
                 const errorMessages = {
-                    "Sub Category not found": translations.subcategorynotfound || "Sub Category not found",
+                    "Sub Category not found": translations.subcategorynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,15 +187,15 @@ const GetSubCategory = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("subcategoryname")}>
-                                    {translations.subcategoryname || "Sub Category Name"} {renderSortIcon("subcategoryname")}
+                                    {translations.subcategoryname} {renderSortIcon("subcategoryname")}
                                 </th>
                                 <th onClick={() => sortItems("categoryname")}>
-                                    {translations.Category || translations.category || "Category"} {renderSortIcon("categoryname")}
+                                    {translations.Category || translations.category} {renderSortIcon("categoryname")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -254,8 +254,8 @@ const GetSubCategory = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.subcategoryid)}
                     name={`${selectedItem?.subcategoryname}`}
-                    message={translations.subcategory || "Sub Category"}
-                    headingname={translations.deletesubcategory || "Delete Sub Category"}
+                    message={translations.subcategory}
+                    headingname={translations.deletesubcategory}
                     isLoading={isDeleting}
                 />
             )}

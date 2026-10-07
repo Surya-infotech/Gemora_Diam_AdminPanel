@@ -57,11 +57,11 @@ const EmployeeDashboard = () => {
                 if (response.ok) {
                     setEmployeeData(data);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Server error");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
-                setWarningMessage(translations.servererror || "Server error");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setLoading(false);
@@ -77,8 +77,8 @@ const EmployeeDashboard = () => {
 
     useEffect(() => {
         const titleText = employeeFullName
-            ? `${employeeFullName} - ${translations.Dashboard || 'Dashboard'} | Gemora Diam`
-            : `${translations.Dashboard || 'Dashboard'} | Gemora Diam`;
+            ? `${employeeFullName} - ${translations.Dashboard} | Gemora Diam`
+            : `${translations.Dashboard} | Gemora Diam`;
         document.title = titleText;
     }, [translations, employeeFullName]);
 
@@ -95,9 +95,9 @@ const EmployeeDashboard = () => {
 
     const getGreeting = () => {
         const hour = new Date().getHours();
-        if (hour < 12) return translations.goodmorning || "Good morning";
-        if (hour < 18) return translations.goodafternoon || "Good afternoon";
-        return translations.goodevening || "Good evening";
+        if (hour < 12) return translations.goodmorning;
+        if (hour < 18) return translations.goodafternoon;
+        return translations.goodevening;
     };
 
     const todayDateString = new Date().toLocaleDateString('en-US', {
@@ -122,7 +122,7 @@ const EmployeeDashboard = () => {
                     {/* Header Row */}
                     <div className="dashboard-header-row">
                         <h6 className="dashboard-heading">
-                            {translations.Dashboard || 'Dashboard'}
+                            {translations.Dashboard}
                         </h6>
                         <div className="current-date-badge">
                             <CalendarMonth className="date-icon" />
@@ -174,7 +174,7 @@ const EmployeeDashboard = () => {
                         <div className="hero-right-actions">
                             <span className={`status-chip ${isActive ? 'active' : 'inactive'}`}>
                                 <span className="status-dot" />
-                                {isActive ? (translations.active || 'Active') : (translations.inactive || 'Inactive')}
+                                {isActive ? (translations.active) : (translations.inactive)}
                             </span>
                             <button
                                 type="button"
@@ -182,7 +182,7 @@ const EmployeeDashboard = () => {
                                 onClick={() => navigate('/Home/Profile')}
                             >
                                 <EditIcon fontSize="small" />
-                                <span>{translations.editprofile || 'Edit Profile'}</span>
+                                <span>{translations.editprofile}</span>
                             </button>
                         </div>
                     </div>
@@ -194,7 +194,7 @@ const EmployeeDashboard = () => {
                                 <WorkOutlined className="stat-icon" />
                             </div>
                             <div className="stat-meta">
-                                <span className="stat-label">{translations.role || 'Role'}</span>
+                                <span className="stat-label">{translations.role}</span>
                                 <span className="stat-value">{role}</span>
                             </div>
                         </div>
@@ -204,7 +204,7 @@ const EmployeeDashboard = () => {
                                 <PersonOutlined className="stat-icon" />
                             </div>
                             <div className="stat-meta">
-                                <span className="stat-label">{translations.gender || 'Gender'}</span>
+                                <span className="stat-label">{translations.gender}</span>
                                 <span className="stat-value">{employeeData?.gender || '-'}</span>
                             </div>
                         </div>
@@ -214,9 +214,9 @@ const EmployeeDashboard = () => {
                                 <VerifiedUser className="stat-icon" />
                             </div>
                             <div className="stat-meta">
-                                <span className="stat-label">{translations.status || 'Status'}</span>
+                                <span className="stat-label">{translations.status}</span>
                                 <span className="stat-value" style={{ color: isActive ? '#059669' : '#dc2626' }}>
-                                    {isActive ? (translations.active || 'Active') : (translations.inactive || 'Inactive')}
+                                    {isActive ? (translations.active) : (translations.inactive)}
                                 </span>
                             </div>
                         </div>
@@ -226,7 +226,7 @@ const EmployeeDashboard = () => {
                                 <CalendarMonth className="stat-icon" />
                             </div>
                             <div className="stat-meta">
-                                <span className="stat-label">{translations.createdat || 'Joined Date'}</span>
+                                <span className="stat-label">{translations.createdat}</span>
                                 <span className="stat-value">{formatDate(employeeData?.createdAt)}</span>
                             </div>
                         </div>
@@ -238,32 +238,32 @@ const EmployeeDashboard = () => {
                         <div className="info-panel-card">
                             <div className="panel-header">
                                 <LocationOn className="panel-header-icon" />
-                                <h5 className="panel-title">{translations.locationdetails || 'Location & Address'}</h5>
+                                <h5 className="panel-title">{translations.locationdetails}</h5>
                             </div>
                             <div className="panel-body">
                                 <div className="info-list">
                                     <div className="info-row">
-                                        <span className="info-key">{translations.address || 'Address'}</span>
+                                        <span className="info-key">{translations.address}</span>
                                         <span className={`info-val ${!employeeData?.address ? 'empty-val' : ''}`}>
-                                             {employeeData?.address || (translations.notprovided || 'Not specified')}
+                                             {employeeData?.address || (translations.notprovided)}
                                         </span>
                                     </div>
                                     <div className="info-row">
-                                        <span className="info-key">{translations.city || 'City'}</span>
+                                        <span className="info-key">{translations.city}</span>
                                         <span className={`info-val ${!employeeData?.cityname ? 'empty-val' : ''}`}>
-                                            {employeeData?.cityname || (translations.notprovided || 'Not specified')}
+                                            {employeeData?.cityname || (translations.notprovided)}
                                         </span>
                                     </div>
                                     <div className="info-row">
-                                        <span className="info-key">{translations.state || 'State'}</span>
+                                        <span className="info-key">{translations.state}</span>
                                         <span className={`info-val ${!employeeData?.statename ? 'empty-val' : ''}`}>
-                                            {employeeData?.statename || (translations.notprovided || 'Not specified')}
+                                            {employeeData?.statename || (translations.notprovided)}
                                         </span>
                                     </div>
                                     <div className="info-row">
-                                        <span className="info-key">{translations.country || 'Country'}</span>
+                                        <span className="info-key">{translations.country}</span>
                                         <span className={`info-val ${!employeeData?.countryname ? 'empty-val' : ''}`}>
-                                            {employeeData?.countryname || (translations.notprovided || 'Not specified')}
+                                            {employeeData?.countryname || (translations.notprovided)}
                                         </span>
                                     </div>
                                 </div>

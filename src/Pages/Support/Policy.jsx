@@ -38,7 +38,7 @@ const Policy = () => {
     return (
         <div className={`Policy-container ${isRtl ? 'rtl-policy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="policy-container">
-                <h6 className="policy-headingname">{translations.Policy || "Policy"}</h6>
+                <h6 className="policy-headingname">{translations.Policy}</h6>
                 <div className="policy-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

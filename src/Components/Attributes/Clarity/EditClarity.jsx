@@ -50,7 +50,7 @@ const EditClarity = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Clarity not found": translations.claritynotfound || "Clarity not found",
+                        "Clarity not found": translations.claritynotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditClarity = () => {
         e.preventDefault();
 
         if (!clarityName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditClarity = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Clarity", {
-                    state: { message: translations.updateclaritysuccessfull || "Clarity updated successfully" }
+                    state: { message: translations.updateclaritysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Clarity Already Exists": translations.clarityalreadyexists || "Clarity Already Exists",
-                    "Clarity not found": translations.claritynotfound || "Clarity not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Clarity Already Exists": translations.clarityalreadyexists,
+                    "Clarity not found": translations.claritynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -129,7 +129,7 @@ const EditClarity = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddClarity-container ${isRtl ? 'rtl-addclarity' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addclarity-container">
-                    <h6 className="Addclarity-headingname">{translations.editclarity || "Edit Clarity"}</h6>
+                    <h6 className="Addclarity-headingname">{translations.editclarity}</h6>
                     <div className="Addclarity-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditClarity = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="clarityname">
-                                            {translations.clarityname || "Clarity Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.clarityname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="clarityname"
                                             name="clarityname"
                                             autoComplete="off"
-                                            placeholder={translations.enterclarityname || "Enter Clarity Name"}
+                                            placeholder={translations.enterclarityname}
                                             required
                                             value={clarityName}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditClarity = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

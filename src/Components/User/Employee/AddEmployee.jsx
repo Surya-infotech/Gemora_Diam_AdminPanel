@@ -37,8 +37,8 @@ const AddEmployee = () => {
     });
 
     const roleOptions = [
-        { label: translations.Admin || "Admin", value: "Admin" },
-        { label: translations.Employee || "Employee", value: "Employee" }
+        { label: translations.Admin, value: "Admin" },
+        { label: translations.Employee, value: "Employee" }
     ];
 
     useEffect(() => {
@@ -69,14 +69,14 @@ const AddEmployee = () => {
                 setPhoneError("");
             } else {
                 if (value.length >= 10) {
-                    setPhoneError(translations.invalidphonenumber || "Invalid phone number");
+                    setPhoneError(translations.invalidphonenumber);
                 } else {
                     setPhoneError("");
                 }
             }
         } catch {
             if (value.length >= 10) {
-                setPhoneError(translations.invalidphonenumber || "Invalid phone number");
+                setPhoneError(translations.invalidphonenumber);
             } else {
                 setPhoneError("");
             }
@@ -87,7 +87,7 @@ const AddEmployee = () => {
         e.preventDefault();
 
         if (!formData.firstname.trim() || !formData.lastname.trim() || !formData.email.trim() || !formData.password || !formData.role) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,8 +102,8 @@ const AddEmployee = () => {
         }
 
         if (formData.phone && formData.phone.trim() !== '' && !isPhoneValid) {
-            setPhoneError(translations.invalidphonenumber || "Invalid phone number");
-            setWarningMessage(translations.invalidphonenumber || "Invalid phone number");
+            setPhoneError(translations.invalidphonenumber);
+            setWarningMessage(translations.invalidphonenumber);
             setShowWarning(true);
             return;
         }
@@ -126,19 +126,19 @@ const AddEmployee = () => {
 
             if (response.ok) {
                 navigate(`/User/Employee`, {
-                    state: { message: translations.addemployeesuccessfull || "Employee added successfully" }
+                    state: { message: translations.addemployeesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Email Already Exists": translations.emailalreadyexists || "Email Already Exists",
-                    "Server error": translations.servererror || "Server error"
+                    "All fields are required": translations.allfieldrequired,
+                    "Email Already Exists": translations.emailalreadyexists,
+                    "Server error": translations.servererror
                 };
-                setWarningMessage(errorMessages[result.message] || result.message || translations.servererror || "Server error");
+                setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsLoading(false);
@@ -153,7 +153,7 @@ const AddEmployee = () => {
             <div className={`AddEmployee-container ${isRtl ? 'rtl-addemployee' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addemployee-container">
                     <h6 className="Addemployee-headingname">
-                        {translations.addemployee || "Add Employee"}
+                        {translations.addemployee}
                     </h6>
                     <div className="Addemployee-form-container">
                         {isLoading ? (
@@ -163,14 +163,14 @@ const AddEmployee = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="firstname">
-                                            {translations.firstname || "First Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.firstname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="firstname"
                                             name="firstname"
                                             autoComplete="off"
-                                            placeholder={translations.enterfirstname || "Enter First Name"}
+                                            placeholder={translations.enterfirstname}
                                             autoFocus
                                             required
                                             value={formData.firstname}
@@ -180,14 +180,14 @@ const AddEmployee = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="lastname">
-                                            {translations.lastname || "Last Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.lastname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="lastname"
                                             name="lastname"
                                             autoComplete="off"
-                                            placeholder={translations.enterlastname || "Enter Last Name"}
+                                            placeholder={translations.enterlastname}
                                             required
                                             value={formData.lastname}
                                             onChange={handleInputChange}
@@ -199,14 +199,14 @@ const AddEmployee = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="email">
-                                            {translations.Email || "Email"} <span style={{ color: "red" }}>*</span>
+                                            {translations.Email} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="email"
                                             id="email"
                                             name="email"
                                             autoComplete="off"
-                                            placeholder={translations.enteremail || "Enter Email"}
+                                            placeholder={translations.enteremail}
                                             required
                                             value={formData.email}
                                             onChange={handleInputChange}
@@ -215,7 +215,7 @@ const AddEmployee = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password">
-                                            {translations.password || "Password"} <span style={{ color: "red" }}>*</span>
+                                            {translations.password} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <div className="password-input-wrapper">
                                             <input
@@ -223,7 +223,7 @@ const AddEmployee = () => {
                                                 id="password"
                                                 name="password"
                                                 autoComplete="new-password"
-                                                placeholder={translations.enterpassword || "Enter Password"}
+                                                placeholder={translations.enterpassword}
                                                 required
                                                 value={formData.password}
                                                 onChange={handleInputChange}
@@ -243,14 +243,14 @@ const AddEmployee = () => {
 
                                 <div className="form-row">
                                     <div className="form-group phone-group">
-                                        <label>{translations.Phone || "Phone"}</label>
+                                        <label>{translations.Phone}</label>
                                         <div className={`phone-input-wrapper ${phoneError ? 'has-phone-error' : ''}`}>
                                             <PhoneInput
                                                 international
                                                 defaultCountry="IN"
                                                 value={formData.phone}
                                                 onChange={handlePhoneChange}
-                                                placeholder={translations.Phone || "Phone"}
+                                                placeholder={translations.Phone}
                                             />
                                             {phoneError && (
                                                 <div className="phone-error-message">{phoneError}</div>
@@ -259,13 +259,13 @@ const AddEmployee = () => {
                                     </div>
                                     <div className="form-group">
                                         <Dropdown
-                                            label={<>{translations.role || "Role"} <span style={{ color: "red" }}>*</span></>}
+                                            label={<>{translations.role} <span style={{ color: "red" }}>*</span></>}
                                             options={roleOptions}
                                             selectedValue={formData.role}
                                             onValueChange={(val) => setFormData(prev => ({ ...prev, role: val }))}
                                             labelKey="label"
                                             valueKey="value"
-                                            placeholder={translations.selectrole || "Select Role"}
+                                            placeholder={translations.selectrole}
                                             showSearch={false}
                                         />
                                     </div>
@@ -278,14 +278,14 @@ const AddEmployee = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

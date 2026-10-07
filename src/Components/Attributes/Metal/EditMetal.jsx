@@ -52,7 +52,7 @@ const EditMetal = () => {
                     setStatus(result.status !== undefined ? Boolean(result.status) : false);
                 } else {
                     const errorMessages = {
-                        "Metal not found": translations.metalnotfound || "Metal not found",
+                        "Metal not found": translations.metalnotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -73,7 +73,7 @@ const EditMetal = () => {
         e.preventDefault();
 
         if (!metalName.trim() || !metalType.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -105,13 +105,13 @@ const EditMetal = () => {
 
             if (response.ok) {
                 navigate(`/Attributes/Metal`, {
-                    state: { message: translations.updatemetalsuccessfull || "Metal updated successfully" }
+                    state: { message: translations.updatemetalsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Metal Name Already Exists": translations.metalnamealreadyexists || "Metal Name Already Exists",
-                    "Metal not found": translations.metalnotfound || "Metal not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Metal Name Already Exists": translations.metalnamealreadyexists,
+                    "Metal not found": translations.metalnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -132,7 +132,7 @@ const EditMetal = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddMetal-container ${isRtl ? 'rtl-addmetal' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addmetal-container">
-                    <h6 className="Addmetal-headingname">{translations.editmetal || "Edit Metal"}</h6>
+                    <h6 className="Addmetal-headingname">{translations.editmetal}</h6>
                     <div className="Addmetal-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -141,14 +141,14 @@ const EditMetal = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="metalname">
-                                            {translations.metalname || "Metal Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.metalname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="metalname"
                                             name="metalname"
                                             autoComplete="off"
-                                            placeholder={translations.entermetalname || "Enter Metal Name"}
+                                            placeholder={translations.entermetalname}
                                             required
                                             value={metalName}
                                             onChange={(e) => {
@@ -160,14 +160,14 @@ const EditMetal = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="metaltype">
-                                            {translations.metaltype || "Metal Type"} <span style={{ color: "red" }}>*</span>
+                                            {translations.metaltype} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="metaltype"
                                             name="metaltype"
                                             autoComplete="off"
-                                            placeholder={translations.entermetaltype || "Enter Metal Type"}
+                                            placeholder={translations.entermetaltype}
                                             required
                                             value={metalType}
                                             onChange={(e) => {
@@ -181,7 +181,7 @@ const EditMetal = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

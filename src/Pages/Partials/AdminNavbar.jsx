@@ -46,16 +46,16 @@ const AdminNavbar = () => {
     const toggleNavbar = () => setIsCollapsed(prevState => !prevState);
 
     const attributeNavItems = [
-        { id: 'metal', label: translations.Metal || 'Metal', to: '/Attributes/Metal', Icon: DiamondIcon },
-        { id: 'diamondSize', label: translations.DiamondSize || 'Diamond Size', to: '/Attributes/DiamondSize', Icon: AutoAwesomeIcon },
-        { id: 'ringSize', label: translations.RingSize || 'Ring Size', to: '/Attributes/RingSize', Icon: RadioButtonUncheckedIcon },
-        { id: 'shape', label: translations.Shape || 'Shape', to: '/Attributes/Shape', Icon: InterestsIcon },
-        { id: 'clarity', label: translations.Clarity || 'Clarity', to: '/Attributes/Clarity', Icon: VisibilityIcon },
-        { id: 'color', label: translations.Color || 'Color', to: '/Attributes/Color', Icon: ColorLensIcon },
-        { id: 'stone', label: translations.Stone || 'Stone', to: '/Attributes/Stone', Icon: TokenIcon },
-        { id: 'style', label: translations.Style || 'Style', to: '/Attributes/Style', Icon: StyleIcon },
-        { id: 'category', label: translations.Category || 'Category', to: '/Attributes/Category', Icon: GridViewIcon },
-        { id: 'subCategory', label: translations.SubCategory || 'Sub Category', to: '/Attributes/SubCategory', Icon: AccountTreeIcon },
+        { id: 'metal', label: translations.Metal, to: '/Attributes/Metal', Icon: DiamondIcon },
+        { id: 'diamondSize', label: translations.DiamondSize, to: '/Attributes/DiamondSize', Icon: AutoAwesomeIcon },
+        { id: 'ringSize', label: translations.RingSize, to: '/Attributes/RingSize', Icon: RadioButtonUncheckedIcon },
+        { id: 'shape', label: translations.Shape, to: '/Attributes/Shape', Icon: InterestsIcon },
+        { id: 'clarity', label: translations.Clarity, to: '/Attributes/Clarity', Icon: VisibilityIcon },
+        { id: 'color', label: translations.Color, to: '/Attributes/Color', Icon: ColorLensIcon },
+        { id: 'stone', label: translations.Stone, to: '/Attributes/Stone', Icon: TokenIcon },
+        { id: 'style', label: translations.Style, to: '/Attributes/Style', Icon: StyleIcon },
+        { id: 'category', label: translations.Category, to: '/Attributes/Category', Icon: GridViewIcon },
+        { id: 'subCategory', label: translations.SubCategory, to: '/Attributes/SubCategory', Icon: AccountTreeIcon },
     ];
     const visibleAttributeItems = attributeNavItems.filter(item => canView(item.id));
     const showAttributes = visibleAttributeItems.length > 0;
@@ -229,11 +229,11 @@ const AdminNavbar = () => {
                 {/* Category 2: Products */}
                 {showProducts && (
                     <>
-                        <NavTooltip title={translations.Products || "Products"}>
+                        <NavTooltip title={translations.Products}>
                             <div className={`category-trigger ${isProductsActive ? 'active-category' : ''}`} onClick={() => toggleCategory('products')}>
                                 <div className="category-trigger-left">
                                     <Inventory2Icon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                                    {!isCollapsed && <span className="category-title">{translations.Products || "Products"}</span>}
+                                    {!isCollapsed && <span className="category-title">{translations.Products}</span>}
                                 </div>
                                 {!isCollapsed && (
                                     <span className="category-chevron">
@@ -246,10 +246,10 @@ const AdminNavbar = () => {
                             <div className="submenu-content">
                                 <li>
                                     <NavLink to="/Products/Item" className={navLinkClass('/Products/Item')}>
-                                        <NavTooltip title={translations.Item || "Item"}>
+                                        <NavTooltip title={translations.Item}>
                                             <LocalOfferIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Item || "Item"}
+                                        {translations.Item}
                                     </NavLink>
                                 </li>
                             </div>
@@ -260,11 +260,11 @@ const AdminNavbar = () => {
                 {/* Category 3: Attributes */}
                 {showAttributes && (
                     <>
-                        <NavTooltip title={translations.Attributes || "Attributes"}>
+                        <NavTooltip title={translations.Attributes}>
                             <div className={`category-trigger ${pathname.startsWith('/Attributes') ? 'active-category' : ''}`} onClick={() => toggleCategory('attributes')}>
                                 <div className="category-trigger-left">
                                     <CategoryIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                                    {!isCollapsed && <span className="category-title">{translations.Attributes || "Attributes"}</span>}
+                                    {!isCollapsed && <span className="category-title">{translations.Attributes}</span>}
                                 </div>
                                 {!isCollapsed && (
                                     <span className="category-chevron">
@@ -293,11 +293,11 @@ const AdminNavbar = () => {
                 {/* Category 4: Content & Support (Admin only) */}
                 {!isEmployee && (
                     <>
-                        <NavTooltip title={translations.contentsupport || "Content & Support"}>
+                        <NavTooltip title={translations.contentsupport}>
                             <div className={`category-trigger ${isSupportActive ? 'active-category' : ''}`} onClick={() => toggleCategory('support')}>
                                 <div className="category-trigger-left">
                                     <SupportAgentIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                                    {!isCollapsed && <span className="category-title">{translations.contentsupport || "Content & Support"}</span>}
+                                    {!isCollapsed && <span className="category-title">{translations.contentsupport}</span>}
                                 </div>
                                 {!isCollapsed && (
                                     <span className="category-chevron">
@@ -326,18 +326,18 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/Support/FAQ" className={navLinkClass('/Support/FAQ')}>
-                                        <NavTooltip title={translations.FAQ || "FAQ"}>
+                                        <NavTooltip title={translations.FAQ}>
                                             <LiveHelpIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.FAQ || "FAQ"}
+                                        {translations.FAQ}
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/Support/Policy" className={navLinkClass('/Support/Policy')}>
-                                        <NavTooltip title={translations.Policy || "Policy"}>
+                                        <NavTooltip title={translations.Policy}>
                                             <PolicyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Policy || "Policy"}
+                                        {translations.Policy}
                                     </NavLink>
                                 </li>
                             </div>
@@ -348,11 +348,11 @@ const AdminNavbar = () => {
                 {/* Category 5: User (Admin only) */}
                 {!isEmployee && (
                     <>
-                        <NavTooltip title={translations.User || "User"}>
+                        <NavTooltip title={translations.User}>
                             <div className={`category-trigger ${isUserActive ? 'active-category' : ''}`} onClick={() => toggleCategory('user')}>
                                 <div className="category-trigger-left">
                                     <ManageAccountsIcon className="category-icon" style={{ color: 'var(--primary-color)' }} />
-                                    {!isCollapsed && <span className="category-title">{translations.User || "User"}</span>}
+                                    {!isCollapsed && <span className="category-title">{translations.User}</span>}
                                 </div>
                                 {!isCollapsed && (
                                     <span className="category-chevron">
@@ -365,10 +365,10 @@ const AdminNavbar = () => {
                             <div className="submenu-content">
                                 <li>
                                     <NavLink to="/User/Employee" className={navLinkClass('/User/Employee')}>
-                                        <NavTooltip title={translations.Employee || "Employee"}>
+                                        <NavTooltip title={translations.Employee}>
                                             <BadgeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Employee || "Employee"}
+                                        {translations.Employee}
                                     </NavLink>
                                 </li>
                             </div>

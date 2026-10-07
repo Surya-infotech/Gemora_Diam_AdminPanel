@@ -129,10 +129,10 @@ const GetClarity = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setClarities(clarities.map(c => (c._id === item._id || c.clarityid === item.clarityid) ? { ...c, status: updatedStatus } : c));
-                setSuccessMessage(updatedStatus ? (translations.claritystatusactive || "Clarity Status updated to Active") : (translations.claritystatusinactive || "Clarity Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.claritystatusactive) : (translations.claritystatusinactive));
             } else {
                 const errorMessages = {
-                    "Clarity not found": translations.claritynotfound || "Clarity not found",
+                    "Clarity not found": translations.claritynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetClarity = ({ searchValue = "" }) => {
             if (response.ok) {
                 setClarities(clarities.filter(c => c._id !== targetId && c.clarityid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deleteclaritysuccessfull || "Clarity Deleted Successfully");
+                setSuccessMessage(translations.deleteclaritysuccessfull);
             } else {
                 const errorMessages = {
-                    "Clarity not found": translations.claritynotfound || "Clarity not found",
+                    "Clarity not found": translations.claritynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetClarity = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("clarityname")}>
-                                    {translations.clarityname || "Clarity Name"} {renderSortIcon("clarityname")}
+                                    {translations.clarityname} {renderSortIcon("clarityname")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetClarity = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.clarityid)}
                     name={`${selectedItem?.clarityname}`}
-                    message={translations.clarity || "Clarity"}
-                    headingname={translations.deleteclarity || "Delete Clarity"}
+                    message={translations.clarity}
+                    headingname={translations.deleteclarity}
                     isLoading={isDeleting}
                 />
             )}

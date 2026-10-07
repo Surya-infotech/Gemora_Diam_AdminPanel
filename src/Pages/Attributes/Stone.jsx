@@ -41,7 +41,7 @@ const Stone = () => {
     return (
         <div className={`Stone-container ${isRtl ? 'rtl-stone' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="stone-container">
-                <h6 className="stone-headingname">{translations.Stone || "Stone"}</h6>
+                <h6 className="stone-headingname">{translations.Stone}</h6>
                 <div className="stone-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

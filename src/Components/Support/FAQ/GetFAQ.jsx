@@ -124,10 +124,10 @@ const GetFAQ = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setFaqs(faqs.map(f => (f._id === item._id || f.faqid === item.faqid) ? { ...f, status: updatedStatus } : f));
-                setSuccessMessage(updatedStatus ? (translations.faqstatusactive || "FAQ Status updated to Active") : (translations.faqstatusinactive || "FAQ Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.faqstatusactive) : (translations.faqstatusinactive));
             } else {
                 const errorMessages = {
-                    "FAQ not found": translations.faqnotfound || "FAQ not found",
+                    "FAQ not found": translations.faqnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -155,10 +155,10 @@ const GetFAQ = ({ searchValue = "" }) => {
             if (response.ok) {
                 setFaqs(faqs.filter(f => f._id !== targetId && f.faqid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletefaqsuccessfull || "FAQ Deleted Successfully");
+                setSuccessMessage(translations.deletefaqsuccessfull);
             } else {
                 const errorMessages = {
-                    "FAQ not found": translations.faqnotfound || "FAQ not found",
+                    "FAQ not found": translations.faqnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -182,18 +182,18 @@ const GetFAQ = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th className="col-faqtype" onClick={() => sortItems("faqtype")}>
-                                    {translations.faqtype || "FAQ Type"} {renderSortIcon("faqtype")}
+                                    {translations.faqtype} {renderSortIcon("faqtype")}
                                 </th>
                                 <th className="col-question" onClick={() => sortItems("question")}>
-                                    {translations.question || "Question"} {renderSortIcon("question")}
+                                    {translations.question} {renderSortIcon("question")}
                                 </th>
                                 <th className="col-answer" onClick={() => sortItems("answer")}>
-                                    {translations.answer || "Answer"} {renderSortIcon("answer")}
+                                    {translations.answer} {renderSortIcon("answer")}
                                 </th>
                                 <th className="col-status" onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th className="col-action">{translations.action || "Action"}</th>
+                                <th className="col-action">{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -255,8 +255,8 @@ const GetFAQ = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.faqid)}
                     name={`${selectedItem?.question}`}
-                    message={translations.faq || "FAQ"}
-                    headingname={translations.deletefaq || "Delete FAQ"}
+                    message={translations.faq}
+                    headingname={translations.deletefaq}
                     isLoading={isDeleting}
                 />
             )}

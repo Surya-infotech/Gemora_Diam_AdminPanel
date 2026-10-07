@@ -29,7 +29,7 @@ const AddStyle = () => {
         e.preventDefault();
 
         if (!styleName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddStyle = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Style", {
-                    state: { message: translations.addstylesuccessfull || "Style added successfully" }
+                    state: { message: translations.addstylesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Style Already Exists": translations.stylealreadyexists || "Style Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Style Already Exists": translations.stylealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddStyle = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddStyle-container ${isRtl ? 'rtl-addstyle' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addstyle-container">
-                    <h6 className="Addstyle-headingname">{translations.addstyle || "Add Style"}</h6>
+                    <h6 className="Addstyle-headingname">{translations.addstyle}</h6>
                     <div className="Addstyle-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddStyle = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="stylename">
-                                            {translations.stylename || "Style Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.stylename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="stylename"
                                             name="stylename"
                                             autoComplete="off"
-                                            placeholder={translations.enterstylename || "Enter Style Name (e.g. Solitaire, Halo, Vintage)"}
+                                            placeholder={translations.enterstylename}
                                             autoFocus
                                             required
                                             value={styleName}

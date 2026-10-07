@@ -41,7 +41,7 @@ const Item = () => {
     return (
         <div className={`Item-container ${isRtl ? 'rtl-item' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="item-container">
-                <h6 className="item-headingname">{translations.Item || "Item"}</h6>
+                <h6 className="item-headingname">{translations.Item}</h6>
                 <div className="item-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

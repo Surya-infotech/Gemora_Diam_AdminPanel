@@ -129,10 +129,10 @@ const GetMetal = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setMetals(metals.map(m => (m._id === metal._id || m.metalid === metal.metalid) ? { ...m, status: updatedStatus } : m));
-                setSuccessMessage(updatedStatus ? (translations.metalstatusactive || "Metal Status updated to Active") : (translations.metalstatusinactive || "Metal Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.metalstatusactive) : (translations.metalstatusinactive));
             } else {
                 const errorMessages = {
-                    "Metal not found": translations.metalnotfound || "Metal not found",
+                    "Metal not found": translations.metalnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetMetal = ({ searchValue = "" }) => {
             if (response.ok) {
                 setMetals(metals.filter(m => m._id !== metalId && m.metalid !== metalId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletemetalsuccessfull || "Metal Deleted Successfully");
+                setSuccessMessage(translations.deletemetalsuccessfull);
             } else {
                 const errorMessages = {
-                    "Metal not found": translations.metalnotfound || "Metal not found",
+                    "Metal not found": translations.metalnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,15 +187,15 @@ const GetMetal = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortMetals("metalname")}>
-                                    {translations.metalname || "Metal Name"} {renderSortIcon("metalname")}
+                                    {translations.metalname} {renderSortIcon("metalname")}
                                 </th>
                                 <th onClick={() => sortMetals("metaltype")}>
-                                    {translations.metaltype || "Metal Type"} {renderSortIcon("metaltype")}
+                                    {translations.metaltype} {renderSortIcon("metaltype")}
                                 </th>
                                 <th onClick={() => sortMetals("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -250,8 +250,8 @@ const GetMetal = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteMetal(selectedMetal._id || selectedMetal.metalid)}
                     name={`${selectedMetal?.metalname}`}
-                    message={translations.metal || "Metal"}
-                    headingname={translations.deletemetal || "Delete Metal"}
+                    message={translations.metal}
+                    headingname={translations.deletemetal}
                     isLoading={isDeleting}
                 />
             )}

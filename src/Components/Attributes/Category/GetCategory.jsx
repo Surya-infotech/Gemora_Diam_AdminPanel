@@ -129,10 +129,10 @@ const GetCategory = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setCategories(categories.map(c => (c._id === item._id || c.categoryid === item.categoryid) ? { ...c, status: updatedStatus } : c));
-                setSuccessMessage(updatedStatus ? (translations.categorystatusactive || "Category Status updated to Active") : (translations.categorystatusinactive || "Category Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.categorystatusactive) : (translations.categorystatusinactive));
             } else {
                 const errorMessages = {
-                    "Category not found": translations.categorynotfound || "Category not found",
+                    "Category not found": translations.categorynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetCategory = ({ searchValue = "" }) => {
             if (response.ok) {
                 setCategories(categories.filter(c => c._id !== targetId && c.categoryid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletecategorysuccessfull || "Category Deleted Successfully");
+                setSuccessMessage(translations.deletecategorysuccessfull);
             } else {
                 const errorMessages = {
-                    "Category not found": translations.categorynotfound || "Category not found",
+                    "Category not found": translations.categorynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetCategory = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("categoryname")}>
-                                    {translations.categoryname || "Category Name"} {renderSortIcon("categoryname")}
+                                    {translations.categoryname} {renderSortIcon("categoryname")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetCategory = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.categoryid)}
                     name={`${selectedItem?.categoryname}`}
-                    message={translations.category || "Category"}
-                    headingname={translations.deletecategory || "Delete Category"}
+                    message={translations.category}
+                    headingname={translations.deletecategory}
                     isLoading={isDeleting}
                 />
             )}

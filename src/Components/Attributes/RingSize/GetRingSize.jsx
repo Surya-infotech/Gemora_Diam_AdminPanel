@@ -129,10 +129,10 @@ const GetRingSize = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setRingSizes(ringSizes.map(d => (d._id === item._id || d.ringsizeid === item.ringsizeid) ? { ...d, status: updatedStatus } : d));
-                setSuccessMessage(updatedStatus ? (translations.ringsizestatusactive || "Ring Size Status updated to Active") : (translations.ringsizestatusinactive || "Ring Size Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.ringsizestatusactive) : (translations.ringsizestatusinactive));
             } else {
                 const errorMessages = {
-                    "Ring Size not found": translations.ringsizenotfound || "Ring Size not found",
+                    "Ring Size not found": translations.ringsizenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetRingSize = ({ searchValue = "" }) => {
             if (response.ok) {
                 setRingSizes(ringSizes.filter(d => d._id !== targetId && d.ringsizeid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deleteringsizesuccessfull || "Ring Size Deleted Successfully");
+                setSuccessMessage(translations.deleteringsizesuccessfull);
             } else {
                 const errorMessages = {
-                    "Ring Size not found": translations.ringsizenotfound || "Ring Size not found",
+                    "Ring Size not found": translations.ringsizenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetRingSize = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("ringsize")}>
-                                    {translations.ringsize || "Ring Size"} {renderSortIcon("ringsize")}
+                                    {translations.ringsize} {renderSortIcon("ringsize")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetRingSize = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.ringsizeid)}
                     name={`${selectedItem?.ringsize}`}
-                    message={translations.ringsize || "Ring Size"}
-                    headingname={translations.deleteringsize || "Delete Ring Size"}
+                    message={translations.ringsize}
+                    headingname={translations.deleteringsize}
                     isLoading={isDeleting}
                 />
             )}

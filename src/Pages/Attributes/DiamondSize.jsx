@@ -41,7 +41,7 @@ const DiamondSize = () => {
     return (
         <div className={`DiamondSize-container ${isRtl ? 'rtl-diamondsize' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="diamondsize-container">
-                <h6 className="diamondsize-headingname">{translations.DiamondSize || "Diamond Size"}</h6>
+                <h6 className="diamondsize-headingname">{translations.DiamondSize}</h6>
                 <div className="diamondsize-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

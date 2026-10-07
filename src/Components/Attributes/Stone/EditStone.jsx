@@ -50,7 +50,7 @@ const EditStone = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Stone not found": translations.stonenotfound || "Stone not found",
+                        "Stone not found": translations.stonenotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditStone = () => {
         e.preventDefault();
 
         if (!stoneName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditStone = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Stone", {
-                    state: { message: translations.updatestonesuccessfull || "Stone updated successfully" }
+                    state: { message: translations.updatestonesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Stone Already Exists": translations.stonealreadyexists || "Stone Already Exists",
-                    "Stone not found": translations.stonenotfound || "Stone not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Stone Already Exists": translations.stonealreadyexists,
+                    "Stone not found": translations.stonenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -129,7 +129,7 @@ const EditStone = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddStone-container ${isRtl ? 'rtl-addstone' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addstone-container">
-                    <h6 className="Addstone-headingname">{translations.editstone || "Edit Stone"}</h6>
+                    <h6 className="Addstone-headingname">{translations.editstone}</h6>
                     <div className="Addstone-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditStone = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="stonename">
-                                            {translations.stonename || "Stone Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.stonename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="stonename"
                                             name="stonename"
                                             autoComplete="off"
-                                            placeholder={translations.enterstonename || "Enter Stone Name"}
+                                            placeholder={translations.enterstonename}
                                             required
                                             value={stoneName}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditStone = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

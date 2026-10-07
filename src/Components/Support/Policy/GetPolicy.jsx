@@ -132,10 +132,10 @@ const GetPolicy = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setPolicies(policies.map(p => (p._id === item._id || p.policyid === item.policyid) ? { ...p, status: updatedStatus } : p));
-                setSuccessMessage(updatedStatus ? (translations.policystatusactive || "Policy Status updated to Active") : (translations.policystatusinactive || "Policy Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.policystatusactive) : (translations.policystatusinactive));
             } else {
                 const errorMessages = {
-                    "Policy not found": translations.policynotfound || "Policy not found",
+                    "Policy not found": translations.policynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -163,10 +163,10 @@ const GetPolicy = ({ searchValue = "" }) => {
             if (response.ok) {
                 setPolicies(policies.filter(p => p._id !== targetId && p.policyid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletepolicysuccessfull || "Policy Deleted Successfully");
+                setSuccessMessage(translations.deletepolicysuccessfull);
             } else {
                 const errorMessages = {
-                    "Policy not found": translations.policynotfound || "Policy not found",
+                    "Policy not found": translations.policynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -190,12 +190,12 @@ const GetPolicy = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("policyname")}>
-                                    {translations.policyname || "Policy Name"} {renderSortIcon("policyname")}
+                                    {translations.policyname} {renderSortIcon("policyname")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th>{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -247,8 +247,8 @@ const GetPolicy = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.policyid)}
                     name={`${selectedItem?.policyname}`}
-                    message={translations.policy || "Policy"}
-                    headingname={translations.deletepolicy || "Delete Policy"}
+                    message={translations.policy}
+                    headingname={translations.deletepolicy}
                     isLoading={isDeleting}
                 />
             )}

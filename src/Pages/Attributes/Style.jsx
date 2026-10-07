@@ -41,7 +41,7 @@ const Style = () => {
     return (
         <div className={`Style-container ${isRtl ? 'rtl-style' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="style-container">
-                <h6 className="style-headingname">{translations.Style || "Style"}</h6>
+                <h6 className="style-headingname">{translations.Style}</h6>
                 <div className="style-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

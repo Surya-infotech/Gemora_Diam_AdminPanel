@@ -29,7 +29,7 @@ const AddShape = () => {
         e.preventDefault();
 
         if (!shapeName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddShape = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Shape", {
-                    state: { message: translations.addshapesuccessfull || "Shape added successfully" }
+                    state: { message: translations.addshapesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Shape Already Exists": translations.shapealreadyexists || "Shape Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Shape Already Exists": translations.shapealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddShape = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddShape-container ${isRtl ? 'rtl-addshape' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addshape-container">
-                    <h6 className="Addshape-headingname">{translations.addshape || "Add Shape"}</h6>
+                    <h6 className="Addshape-headingname">{translations.addshape}</h6>
                     <div className="Addshape-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddShape = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="shapename">
-                                            {translations.shapename || "Shape Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.shapename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="shapename"
                                             name="shapename"
                                             autoComplete="off"
-                                            placeholder={translations.entershapename || "Enter Shape Name (e.g. Round, Princess, Oval)"}
+                                            placeholder={translations.entershapename}
                                             autoFocus
                                             required
                                             value={shapeName}

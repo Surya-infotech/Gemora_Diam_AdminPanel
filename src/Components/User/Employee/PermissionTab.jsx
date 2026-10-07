@@ -55,8 +55,8 @@ const PermissionTab = ({ employeeData }) => {
         // 1. Products Module
         {
             id: 'item',
-            name: translations.Item || 'Item',
-            category: translations.Products || 'Products',
+            name: translations.Item,
+            category: translations.Products,
             categoryKey: 'products',
             icon: LocalOfferIcon,
             hiddenActions: []
@@ -65,80 +65,80 @@ const PermissionTab = ({ employeeData }) => {
         // 3. Attributes Module
         {
             id: 'metal',
-            name: translations.Metal || 'Metal',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Metal,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: DiamondIcon,
             hiddenActions: []
         },
         {
             id: 'diamondSize',
-            name: translations.DiamondSize || 'Diamond Size',
-            category: translations.Attributes || 'Attributes',
+            name: translations.DiamondSize,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: AutoAwesomeIcon,
             hiddenActions: []
         },
         {
             id: 'ringSize',
-            name: translations.RingSize || 'Ring Size',
-            category: translations.Attributes || 'Attributes',
+            name: translations.RingSize,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: RadioButtonUncheckedIcon,
             hiddenActions: []
         },
         {
             id: 'shape',
-            name: translations.Shape || 'Shape',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Shape,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: InterestsIcon,
             hiddenActions: []
         },
         {
             id: 'clarity',
-            name: translations.Clarity || 'Clarity',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Clarity,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: VisibilityIcon,
             hiddenActions: []
         },
         {
             id: 'color',
-            name: translations.Color || 'Color',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Color,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: ColorLensIcon,
             hiddenActions: []
         },
         {
             id: 'stone',
-            name: translations.Stone || 'Stone',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Stone,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: TokenIcon,
             hiddenActions: []
         },
         {
             id: 'style',
-            name: translations.Style || 'Style',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Style,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: StyleIcon,
             hiddenActions: []
         },
         {
             id: 'category',
-            name: translations.Category || 'Category',
-            category: translations.Attributes || 'Attributes',
+            name: translations.Category,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: GridViewIcon,
             hiddenActions: []
         },
         {
             id: 'subCategory',
-            name: translations.SubCategory || 'Sub Category',
-            category: translations.Attributes || 'Attributes',
+            name: translations.SubCategory,
+            category: translations.Attributes,
             categoryKey: 'attributes',
             icon: AccountTreeIcon,
             hiddenActions: []
@@ -146,9 +146,9 @@ const PermissionTab = ({ employeeData }) => {
     ], [translations]);
 
     const categories = useMemo(() => [
-        { id: 'all', label: translations.allpages || 'All Pages' },
-        { id: 'products', label: translations.Products || 'Products' },
-        { id: 'attributes', label: translations.Attributes || 'Attributes' }
+        { id: 'all', label: translations.allpages },
+        { id: 'products', label: translations.Products },
+        { id: 'attributes', label: translations.Attributes }
     ], [translations]);
 
     // Build default permissions matrix (all applicable set to true)
@@ -348,13 +348,13 @@ const PermissionTab = ({ employeeData }) => {
             if (response.ok) {
                 setPermissionsState(sanitizedPermissions);
                 setInitialPermissions(JSON.parse(JSON.stringify(sanitizedPermissions)));
-                setAlertMessage(translations.permissionssavedsuccessfully || 'Permissions updated successfully');
+                setAlertMessage(translations.permissionssavedsuccessfully);
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setSaving(false);
@@ -383,14 +383,14 @@ const PermissionTab = ({ employeeData }) => {
                         </div>
                         <div className="banner-info">
                             <div className="banner-title-row">
-                                <h5 className="banner-title">{translations.pagespermission || 'Pages Permission'}</h5>
+                                <h5 className="banner-title">{translations.pagespermission}</h5>
                                 <span className="role-chip">
                                     <BadgeIcon className="role-chip-icon" />
-                                    {translations.Employee || 'Employee'}
+                                    {translations.Employee}
                                 </span>
                             </div>
                             <p className="banner-subtitle">
-                                {translations.employeepermissiondesc || 'Set customized page access and operational permissions for this employee.'}
+                                {translations.employeepermissiondesc}
                             </p>
                         </div>
                     </div>
@@ -405,7 +405,7 @@ const PermissionTab = ({ employeeData }) => {
                                 disabled={saving}
                             >
                                 <RestartAltIcon className="btn-icon" />
-                                {translations.reset || 'Reset'}
+                                {translations.reset}
                             </button>
                         )}
                         <button
@@ -419,7 +419,7 @@ const PermissionTab = ({ employeeData }) => {
                             ) : (
                                 <SaveIcon className="btn-icon" />
                             )}
-                            <span>{translations.savepermissions || 'Save Permissions'}</span>
+                            <span>{translations.savepermissions}</span>
                         </button>
                     </div>
                 </div>
@@ -445,19 +445,19 @@ const PermissionTab = ({ employeeData }) => {
                                 type="button"
                                 className="bulk-action-btn grant-btn"
                                 onClick={handleGrantAll}
-                                title={translations.grantall || 'Grant All'}
+                                title={translations.grantall}
                             >
                                 <DoneAllIcon className="btn-icon" />
-                                <span>{translations.grantall || 'Grant All'}</span>
+                                <span>{translations.grantall}</span>
                             </button>
                             <button
                                 type="button"
                                 className="bulk-action-btn revoke-btn"
                                 onClick={handleRevokeAll}
-                                title={translations.revokeall || 'Revoke All'}
+                                title={translations.revokeall}
                             >
                                 <RemoveDoneIcon className="btn-icon" />
-                                <span>{translations.revokeall || 'Revoke All'}</span>
+                                <span>{translations.revokeall}</span>
                             </button>
                         </div>
                     </div>
@@ -470,12 +470,12 @@ const PermissionTab = ({ employeeData }) => {
                             <table className="permission-table">
                                 <thead>
                                     <tr>
-                                        <th className="th-page">{translations.pages || 'Pages'}</th>
-                                        <th className="th-category">{translations.category || 'Category'}</th>
-                                        <th className="th-action text-center">{translations.view || 'View'}</th>
-                                        <th className="th-action text-center">{translations.add || 'Add'}</th>
-                                        <th className="th-action text-center">{translations.edit || 'Edit'}</th>
-                                        <th className="th-action text-center">{translations.delete || 'Delete'}</th>
+                                        <th className="th-page">{translations.pages}</th>
+                                        <th className="th-category">{translations.category}</th>
+                                        <th className="th-action text-center">{translations.view}</th>
+                                        <th className="th-action text-center">{translations.add}</th>
+                                        <th className="th-action text-center">{translations.edit}</th>
+                                        <th className="th-action text-center">{translations.delete}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -499,7 +499,7 @@ const PermissionTab = ({ employeeData }) => {
                                                             type="button"
                                                             className={`row-toggle-pill ${isRowAllChecked(page) ? 'all-on' : 'some-off'}`}
                                                             onClick={() => handleRowToggle(page)}
-                                                            title={translations.toggleallpagepermissions || 'Toggle all permissions for this page'}
+                                                            title={translations.toggleallpagepermissions}
                                                         >
                                                             {isRowAllChecked(page) ? (
                                                                 <CheckCircleIcon className="pill-check-icon" />
@@ -570,7 +570,7 @@ const PermissionTab = ({ employeeData }) => {
                         </div>
                     ) : (
                         <div className="no-data-message">
-                            <p>{translations.norecordfound || 'No record found'}</p>
+                            <p>{translations.norecordfound}</p>
                         </div>
                     )}
                 </div>

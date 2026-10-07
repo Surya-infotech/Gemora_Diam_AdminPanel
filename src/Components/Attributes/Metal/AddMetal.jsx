@@ -30,7 +30,7 @@ const AddMetal = () => {
         e.preventDefault();
 
         if (!metalName.trim() || !metalType.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -62,12 +62,12 @@ const AddMetal = () => {
 
             if (response.ok) {
                 navigate(`/Attributes/Metal`, {
-                    state: { message: translations.addmetalsuccessfull || "Metal added successfully" }
+                    state: { message: translations.addmetalsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Metal Name Already Exists": translations.metalnamealreadyexists || "Metal Name Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Metal Name Already Exists": translations.metalnamealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -88,7 +88,7 @@ const AddMetal = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddMetal-container ${isRtl ? 'rtl-addmetal' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addmetal-container">
-                    <h6 className="Addmetal-headingname">{translations.addmetal || "Add Metal"}</h6>
+                    <h6 className="Addmetal-headingname">{translations.addmetal}</h6>
                     <div className="Addmetal-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -97,14 +97,14 @@ const AddMetal = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="metalname">
-                                            {translations.metalname || "Metal Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.metalname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="metalname"
                                             name="metalname"
                                             autoComplete="off"
-                                            placeholder={translations.entermetalname || "Enter Metal Name"}
+                                            placeholder={translations.entermetalname}
                                             autoFocus
                                             required
                                             value={metalName}
@@ -117,14 +117,14 @@ const AddMetal = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="metaltype">
-                                            {translations.metaltype || "Metal Type"} <span style={{ color: "red" }}>*</span>
+                                            {translations.metaltype} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="metaltype"
                                             name="metaltype"
                                             autoComplete="off"
-                                            placeholder={translations.entermetaltype || "Enter Metal Type"}
+                                            placeholder={translations.entermetaltype}
                                             required
                                             value={metalType}
                                             onChange={(e) => {

@@ -129,10 +129,10 @@ const GetColor = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setColors(colors.map(c => (c._id === item._id || c.colorid === item.colorid) ? { ...c, status: updatedStatus } : c));
-                setSuccessMessage(updatedStatus ? (translations.colorstatusactive || "Color Status updated to Active") : (translations.colorstatusinactive || "Color Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.colorstatusactive) : (translations.colorstatusinactive));
             } else {
                 const errorMessages = {
-                    "Color not found": translations.colornotfound || "Color not found",
+                    "Color not found": translations.colornotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetColor = ({ searchValue = "" }) => {
             if (response.ok) {
                 setColors(colors.filter(c => c._id !== targetId && c.colorid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletecolorsuccessfull || "Color Deleted Successfully");
+                setSuccessMessage(translations.deletecolorsuccessfull);
             } else {
                 const errorMessages = {
-                    "Color not found": translations.colornotfound || "Color not found",
+                    "Color not found": translations.colornotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,15 +187,15 @@ const GetColor = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("colorname")}>
-                                    {translations.colorname || "Color Name"} {renderSortIcon("colorname")}
+                                    {translations.colorname} {renderSortIcon("colorname")}
                                 </th>
                                 <th onClick={() => sortItems("colortype")}>
-                                    {translations.colortype || "Color Type"} {renderSortIcon("colortype")}
+                                    {translations.colortype} {renderSortIcon("colortype")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -254,8 +254,8 @@ const GetColor = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.colorid)}
                     name={`${selectedItem?.colorname}`}
-                    message={translations.color || "Color"}
-                    headingname={translations.deletecolor || "Delete Color"}
+                    message={translations.color}
+                    headingname={translations.deletecolor}
                     isLoading={isDeleting}
                 />
             )}

@@ -29,7 +29,7 @@ const AddRingSize = () => {
         e.preventDefault();
 
         if (!ringSize.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddRingSize = () => {
 
             if (response.ok) {
                 navigate("/Attributes/RingSize", {
-                    state: { message: translations.addringsizesuccessfull || "Ring Size added successfully" }
+                    state: { message: translations.addringsizesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Ring Size Already Exists": translations.ringsizealreadyexists || "Ring Size Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Ring Size Already Exists": translations.ringsizealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddRingSize = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddRingSize-container ${isRtl ? 'rtl-addringsize' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addringsize-container">
-                    <h6 className="Addringsize-headingname">{translations.addringsize || "Add Ring Size"}</h6>
+                    <h6 className="Addringsize-headingname">{translations.addringsize}</h6>
                     <div className="Addringsize-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddRingSize = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="ringsize">
-                                            {translations.ringsize || "Ring Size"} <span style={{ color: "red" }}>*</span>
+                                            {translations.ringsize} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="ringsize"
                                             name="ringsize"
                                             autoComplete="off"
-                                            placeholder={translations.enterringsize || "Enter Ring Size (e.g. 5, 6, 7)"}
+                                            placeholder={translations.enterringsize}
                                             autoFocus
                                             required
                                             value={ringSize}

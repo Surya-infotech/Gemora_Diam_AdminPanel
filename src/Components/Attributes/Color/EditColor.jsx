@@ -59,7 +59,7 @@ const EditColor = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Color not found": translations.colornotfound || "Color not found",
+                        "Color not found": translations.colornotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -80,13 +80,13 @@ const EditColor = () => {
         e.preventDefault();
 
         if (!colorName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Color Name is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!colorType) {
-            setWarningMessage(translations.colortyperequired || "Please select a Color Type");
+            setWarningMessage(translations.colortyperequired);
             setShowWarning(true);
             return;
         }
@@ -118,14 +118,14 @@ const EditColor = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Color", {
-                    state: { message: translations.updatecolorsuccessfull || "Color updated successfully" }
+                    state: { message: translations.updatecolorsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Color with this type already exists": translations.coloralreadyexists || "Color with this type already exists",
-                    "Color Type must be either Diamond or Band": translations.colortypeinvalid || "Color Type must be either Diamond or Band",
-                    "Color not found": translations.colornotfound || "Color not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Color with this type already exists": translations.coloralreadyexists,
+                    "Color Type must be either Diamond or Band": translations.colortypeinvalid,
+                    "Color not found": translations.colornotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -146,7 +146,7 @@ const EditColor = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddColor-container ${isRtl ? 'rtl-addcolor' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcolor-container">
-                    <h6 className="Addcolor-headingname">{translations.editcolor || "Edit Color"}</h6>
+                    <h6 className="Addcolor-headingname">{translations.editcolor}</h6>
                     <div className="Addcolor-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -155,14 +155,14 @@ const EditColor = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="colorname">
-                                            {translations.colorname || "Color Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.colorname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="colorname"
                                             name="colorname"
                                             autoComplete="off"
-                                            placeholder={translations.entercolorname || "Enter Color Name"}
+                                            placeholder={translations.entercolorname}
                                             autoFocus
                                             required
                                             value={colorName}
@@ -176,7 +176,7 @@ const EditColor = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.colortype || "Color Type"} <span style={{ color: "red" }}>*</span>
+                                            {translations.colortype} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Dropdown
                                             options={colorTypeOptions}
@@ -184,7 +184,7 @@ const EditColor = () => {
                                             valueKey="value"
                                             selectedValue={colorType}
                                             onValueChange={(val) => setColorType(val)}
-                                            placeholder={translations.selectcolortype || "Select Color Type"}
+                                            placeholder={translations.selectcolortype}
                                             showSearch={false}
                                         />
                                     </div>
@@ -192,7 +192,7 @@ const EditColor = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>{translations.status || "Status"}</label>
+                                        <label>{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}
@@ -209,14 +209,14 @@ const EditColor = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

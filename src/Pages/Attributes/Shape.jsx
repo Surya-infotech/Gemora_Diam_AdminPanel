@@ -41,7 +41,7 @@ const Shape = () => {
     return (
         <div className={`Shape-container ${isRtl ? 'rtl-shape' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="shape-container">
-                <h6 className="shape-headingname">{translations.Shape || "Shape"}</h6>
+                <h6 className="shape-headingname">{translations.Shape}</h6>
                 <div className="shape-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

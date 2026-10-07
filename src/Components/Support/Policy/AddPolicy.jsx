@@ -31,7 +31,7 @@ const AddPolicy = () => {
         e.preventDefault();
 
         if (!policyName.trim() || !description.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -62,12 +62,12 @@ const AddPolicy = () => {
 
             if (response.ok) {
                 navigate("/Support/Policy", {
-                    state: { message: translations.addpolicysuccessfull || "Policy added successfully" }
+                    state: { message: translations.addpolicysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Policy Already Exists": translations.policyalreadyexists || "Policy Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Policy Already Exists": translations.policyalreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -88,7 +88,7 @@ const AddPolicy = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddPolicy-container ${isRtl ? 'rtl-addpolicy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addpolicy-container">
-                    <h6 className="Addpolicy-headingname">{translations.addpolicy || "Add Policy"}</h6>
+                    <h6 className="Addpolicy-headingname">{translations.addpolicy}</h6>
                     <div className="Addpolicy-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -97,14 +97,14 @@ const AddPolicy = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="policyname">
-                                            {translations.policyname || "Policy Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.policyname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="policyname"
                                             name="policyname"
                                             autoComplete="off"
-                                            placeholder={translations.enterpolicyname || "Enter Policy Name"}
+                                            placeholder={translations.enterpolicyname}
                                             autoFocus
                                             required
                                             value={policyName}
@@ -120,12 +120,12 @@ const AddPolicy = () => {
                                 <div className="form-row full-width">
                                     <div className="form-group">
                                         <label htmlFor="description">
-                                            {translations.policydescription || translations.description || "Policy Description"} <span style={{ color: "red" }}>*</span>
+                                            {translations.policydescription || translations.description} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <RichTextEditor
                                             value={description}
                                             onChange={(val) => setDescription(val)}
-                                            placeholder={translations.enterpolicydescription || "Enter Policy Description"}
+                                            placeholder={translations.enterpolicydescription}
                                         />
                                     </div>
                                 </div>

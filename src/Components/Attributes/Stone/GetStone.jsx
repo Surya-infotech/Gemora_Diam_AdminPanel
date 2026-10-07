@@ -129,10 +129,10 @@ const GetStone = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setStones(stones.map(s => (s._id === item._id || s.stoneid === item.stoneid) ? { ...s, status: updatedStatus } : s));
-                setSuccessMessage(updatedStatus ? (translations.stonestatusactive || "Stone Status updated to Active") : (translations.stonestatusinactive || "Stone Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.stonestatusactive) : (translations.stonestatusinactive));
             } else {
                 const errorMessages = {
-                    "Stone not found": translations.stonenotfound || "Stone not found",
+                    "Stone not found": translations.stonenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetStone = ({ searchValue = "" }) => {
             if (response.ok) {
                 setStones(stones.filter(s => s._id !== targetId && s.stoneid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletestonesuccessfull || "Stone Deleted Successfully");
+                setSuccessMessage(translations.deletestonesuccessfull);
             } else {
                 const errorMessages = {
-                    "Stone not found": translations.stonenotfound || "Stone not found",
+                    "Stone not found": translations.stonenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetStone = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("stonename")}>
-                                    {translations.stonename || "Stone Name"} {renderSortIcon("stonename")}
+                                    {translations.stonename} {renderSortIcon("stonename")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetStone = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.stoneid)}
                     name={`${selectedItem?.stonename}`}
-                    message={translations.stone || "Stone"}
-                    headingname={translations.deletestone || "Delete Stone"}
+                    message={translations.stone}
+                    headingname={translations.deletestone}
                     isLoading={isDeleting}
                 />
             )}

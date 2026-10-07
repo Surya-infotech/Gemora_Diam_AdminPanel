@@ -124,10 +124,10 @@ const GetItem = ({ searchValue }) => {
             if (response.ok) {
                 setItems(items.filter(i => i._id !== targetId && i.itemid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deleteitemsuccessfull || "Item Deleted Successfully");
+                setSuccessMessage(translations.deleteitemsuccessfull);
             } else {
                 const errorMessages = {
-                    "Item not found": translations.itemnotfound || "Item not found",
+                    "Item not found": translations.itemnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -151,15 +151,15 @@ const GetItem = ({ searchValue }) => {
                         <thead>
                             <tr>
                                 <th className="item-name-col" onClick={() => sortItems("itemname")}>
-                                    {translations.itemname || "Item Name"} {renderSortIcon("itemname")}
+                                    {translations.itemname} {renderSortIcon("itemname")}
                                 </th>
                                 <th onClick={() => sortItems("categoryname")}>
-                                    {translations.Category || "Category"} {renderSortIcon("categoryname")}
+                                    {translations.Category} {renderSortIcon("categoryname")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -193,8 +193,8 @@ const GetItem = ({ searchValue }) => {
                                         <td>
                                             <span className={`status-pill ${(item.status || "Draft").toLowerCase()}`}>
                                                 {item.status === "Published"
-                                                    ? (translations.published || "Published")
-                                                    : (translations.draft || "Draft")}
+                                                    ? (translations.published)
+                                                    : (translations.draft)}
                                             </span>
                                         </td>
                                         {showActionColumn && (
@@ -236,8 +236,8 @@ const GetItem = ({ searchValue }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.itemid)}
                     name={`${selectedItem?.itemname}`}
-                    message={translations.Item || "Item"}
-                    headingname={translations.deleteitem || "Delete Item"}
+                    message={translations.Item}
+                    headingname={translations.deleteitem}
                     isLoading={isDeleting}
                 />
             )}

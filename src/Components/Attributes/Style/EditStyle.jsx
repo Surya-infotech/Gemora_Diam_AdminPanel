@@ -50,7 +50,7 @@ const EditStyle = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Style not found": translations.stylenotfound || "Style not found",
+                        "Style not found": translations.stylenotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditStyle = () => {
         e.preventDefault();
 
         if (!styleName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditStyle = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Style", {
-                    state: { message: translations.updatestylesuccessfull || "Style updated successfully" }
+                    state: { message: translations.updatestylesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Style Already Exists": translations.stylealreadyexists || "Style Already Exists",
-                    "Style not found": translations.stylenotfound || "Style not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Style Already Exists": translations.stylealreadyexists,
+                    "Style not found": translations.stylenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -129,7 +129,7 @@ const EditStyle = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddStyle-container ${isRtl ? 'rtl-addstyle' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addstyle-container">
-                    <h6 className="Addstyle-headingname">{translations.editstyle || "Edit Style"}</h6>
+                    <h6 className="Addstyle-headingname">{translations.editstyle}</h6>
                     <div className="Addstyle-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditStyle = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="stylename">
-                                            {translations.stylename || "Style Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.stylename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="stylename"
                                             name="stylename"
                                             autoComplete="off"
-                                            placeholder={translations.enterstylename || "Enter Style Name"}
+                                            placeholder={translations.enterstylename}
                                             required
                                             value={styleName}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditStyle = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

@@ -129,10 +129,10 @@ const GetShape = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setShapes(shapes.map(s => (s._id === item._id || s.shapeid === item.shapeid) ? { ...s, status: updatedStatus } : s));
-                setSuccessMessage(updatedStatus ? (translations.shapestatusactive || "Shape Status updated to Active") : (translations.shapestatusinactive || "Shape Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.shapestatusactive) : (translations.shapestatusinactive));
             } else {
                 const errorMessages = {
-                    "Shape not found": translations.shapenotfound || "Shape not found",
+                    "Shape not found": translations.shapenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetShape = ({ searchValue = "" }) => {
             if (response.ok) {
                 setShapes(shapes.filter(s => s._id !== targetId && s.shapeid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deleteshapesuccessfull || "Shape Deleted Successfully");
+                setSuccessMessage(translations.deleteshapesuccessfull);
             } else {
                 const errorMessages = {
-                    "Shape not found": translations.shapenotfound || "Shape not found",
+                    "Shape not found": translations.shapenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetShape = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("shapename")}>
-                                    {translations.shapename || "Shape Name"} {renderSortIcon("shapename")}
+                                    {translations.shapename} {renderSortIcon("shapename")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetShape = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.shapeid)}
                     name={`${selectedItem?.shapename}`}
-                    message={translations.shape || "Shape"}
-                    headingname={translations.deleteshape || "Delete Shape"}
+                    message={translations.shape}
+                    headingname={translations.deleteshape}
                     isLoading={isDeleting}
                 />
             )}

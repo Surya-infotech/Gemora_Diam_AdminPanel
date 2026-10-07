@@ -41,7 +41,7 @@ const Clarity = () => {
     return (
         <div className={`Clarity-container ${isRtl ? 'rtl-clarity' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="clarity-container">
-                <h6 className="clarity-headingname">{translations.Clarity || "Clarity"}</h6>
+                <h6 className="clarity-headingname">{translations.Clarity}</h6>
                 <div className="clarity-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

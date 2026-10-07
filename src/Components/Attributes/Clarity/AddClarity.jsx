@@ -29,7 +29,7 @@ const AddClarity = () => {
         e.preventDefault();
 
         if (!clarityName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddClarity = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Clarity", {
-                    state: { message: translations.addclaritysuccessfull || "Clarity added successfully" }
+                    state: { message: translations.addclaritysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Clarity Already Exists": translations.clarityalreadyexists || "Clarity Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Clarity Already Exists": translations.clarityalreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddClarity = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddClarity-container ${isRtl ? 'rtl-addclarity' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addclarity-container">
-                    <h6 className="Addclarity-headingname">{translations.addclarity || "Add Clarity"}</h6>
+                    <h6 className="Addclarity-headingname">{translations.addclarity}</h6>
                     <div className="Addclarity-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddClarity = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="clarityname">
-                                            {translations.clarityname || "Clarity Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.clarityname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="clarityname"
                                             name="clarityname"
                                             autoComplete="off"
-                                            placeholder={translations.enterclarityname || "Enter Clarity Name (e.g. VVS1, VS2, SI1)"}
+                                            placeholder={translations.enterclarityname}
                                             autoFocus
                                             required
                                             value={clarityName}

@@ -29,7 +29,7 @@ const AddDiamondSize = () => {
         e.preventDefault();
 
         if (!diamondSize.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddDiamondSize = () => {
 
             if (response.ok) {
                 navigate(`/Attributes/DiamondSize`, {
-                    state: { message: translations.adddiamondsizesuccessfull || "Diamond Size added successfully" }
+                    state: { message: translations.adddiamondsizesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Diamond Size Already Exists": translations.diamondsizealreadyexists || "Diamond Size Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Diamond Size Already Exists": translations.diamondsizealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -85,7 +85,7 @@ const AddDiamondSize = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddDiamondSize-container ${isRtl ? 'rtl-adddiamondsize' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Adddiamondsize-container">
-                    <h6 className="Adddiamondsize-headingname">{translations.adddiamondsize || "Add Diamond Size"}</h6>
+                    <h6 className="Adddiamondsize-headingname">{translations.adddiamondsize}</h6>
                     <div className="Adddiamondsize-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddDiamondSize = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="diamondsize">
-                                            {translations.diamondsize || "Diamond Size"} <span style={{ color: "red" }}>*</span>
+                                            {translations.diamondsize} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="diamondsize"
                                             name="diamondsize"
                                             autoComplete="off"
-                                            placeholder={translations.enterdiamondsize || "Enter Diamond Size (e.g. 1.00 CT, 2.00 CT)"}
+                                            placeholder={translations.enterdiamondsize}
                                             autoFocus
                                             required
                                             value={diamondSize}

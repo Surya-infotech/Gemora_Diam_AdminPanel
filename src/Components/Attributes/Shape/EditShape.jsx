@@ -50,7 +50,7 @@ const EditShape = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Shape not found": translations.shapenotfound || "Shape not found",
+                        "Shape not found": translations.shapenotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditShape = () => {
         e.preventDefault();
 
         if (!shapeName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditShape = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Shape", {
-                    state: { message: translations.updateshapesuccessfull || "Shape updated successfully" }
+                    state: { message: translations.updateshapesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Shape Already Exists": translations.shapealreadyexists || "Shape Already Exists",
-                    "Shape not found": translations.shapenotfound || "Shape not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Shape Already Exists": translations.shapealreadyexists,
+                    "Shape not found": translations.shapenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -129,7 +129,7 @@ const EditShape = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddShape-container ${isRtl ? 'rtl-addshape' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addshape-container">
-                    <h6 className="Addshape-headingname">{translations.editshape || "Edit Shape"}</h6>
+                    <h6 className="Addshape-headingname">{translations.editshape}</h6>
                     <div className="Addshape-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditShape = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="shapename">
-                                            {translations.shapename || "Shape Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.shapename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="shapename"
                                             name="shapename"
                                             autoComplete="off"
-                                            placeholder={translations.entershapename || "Enter Shape Name"}
+                                            placeholder={translations.entershapename}
                                             required
                                             value={shapeName}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditShape = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

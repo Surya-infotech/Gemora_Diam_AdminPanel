@@ -50,7 +50,7 @@ const EditDiamondSize = () => {
                     setStatus(result.status !== undefined ? Boolean(result.status) : false);
                 } else {
                     const errorMessages = {
-                        "Diamond Size not found": translations.diamondsizenotfound || "Diamond Size not found",
+                        "Diamond Size not found": translations.diamondsizenotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditDiamondSize = () => {
         e.preventDefault();
 
         if (!diamondSize.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditDiamondSize = () => {
 
             if (response.ok) {
                 navigate(`/Attributes/DiamondSize`, {
-                    state: { message: translations.updatediamondsizesuccessfull || "Diamond Size updated successfully" }
+                    state: { message: translations.updatediamondsizesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Diamond Size Already Exists": translations.diamondsizealreadyexists || "Diamond Size Already Exists",
-                    "Diamond Size not found": translations.diamondsizenotfound || "Diamond Size not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Diamond Size Already Exists": translations.diamondsizealreadyexists,
+                    "Diamond Size not found": translations.diamondsizenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -129,7 +129,7 @@ const EditDiamondSize = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddDiamondSize-container ${isRtl ? 'rtl-adddiamondsize' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Adddiamondsize-container">
-                    <h6 className="Adddiamondsize-headingname">{translations.editdiamondsize || "Edit Diamond Size"}</h6>
+                    <h6 className="Adddiamondsize-headingname">{translations.editdiamondsize}</h6>
                     <div className="Adddiamondsize-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditDiamondSize = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="diamondsize">
-                                            {translations.diamondsize || "Diamond Size"} <span style={{ color: "red" }}>*</span>
+                                            {translations.diamondsize} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="diamondsize"
                                             name="diamondsize"
                                             autoComplete="off"
-                                            placeholder={translations.enterdiamondsize || "Enter Diamond Size"}
+                                            placeholder={translations.enterdiamondsize}
                                             required
                                             value={diamondSize}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditDiamondSize = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

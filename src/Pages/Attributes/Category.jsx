@@ -41,7 +41,7 @@ const Category = () => {
     return (
         <div className={`Category-container ${isRtl ? 'rtl-category' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="category-container">
-                <h6 className="category-headingname">{translations.Category || "Category"}</h6>
+                <h6 className="category-headingname">{translations.Category}</h6>
                 <div className="category-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

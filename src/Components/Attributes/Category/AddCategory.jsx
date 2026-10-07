@@ -29,7 +29,7 @@ const AddCategory = () => {
         e.preventDefault();
 
         if (!categoryName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddCategory = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Category", {
-                    state: { message: translations.addcategorysuccessfull || "Category added successfully" }
+                    state: { message: translations.addcategorysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Category Already Exists": translations.categoryalreadyexists || "Category Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Category Already Exists": translations.categoryalreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddCategory = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddCategory-container ${isRtl ? 'rtl-addcategory' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcategory-container">
-                    <h6 className="Addcategory-headingname">{translations.addcategory || "Add Category"}</h6>
+                    <h6 className="Addcategory-headingname">{translations.addcategory}</h6>
                     <div className="Addcategory-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddCategory = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="categoryname">
-                                            {translations.categoryname || "Category Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.categoryname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="categoryname"
                                             name="categoryname"
                                             autoComplete="off"
-                                            placeholder={translations.entercategoryname || "Enter Category Name"}
+                                            placeholder={translations.entercategoryname}
                                             autoFocus
                                             required
                                             value={categoryName}

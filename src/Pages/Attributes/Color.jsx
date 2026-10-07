@@ -41,19 +41,19 @@ const Color = () => {
     return (
         <div className={`Color-container ${isRtl ? 'rtl-color' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="color-container">
-                <h6 className="color-headingname">{translations.Color || "Color"}</h6>
+                <h6 className="color-headingname">{translations.Color}</h6>
                 <div className="color-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="color-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                         {canAdd('color') && (
                             <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                                {translations.addNew || "Add New"}
+                                {translations.addNew}
                             </button>
                         )}
                     </div>

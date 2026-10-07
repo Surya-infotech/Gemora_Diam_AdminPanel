@@ -41,7 +41,7 @@ const RingSize = () => {
     return (
         <div className={`RingSize-container ${isRtl ? 'rtl-ringsize' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="ringsize-container">
-                <h6 className="ringsize-headingname">{translations.RingSize || "Ring Size"}</h6>
+                <h6 className="ringsize-headingname">{translations.RingSize}</h6>
                 <div className="ringsize-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

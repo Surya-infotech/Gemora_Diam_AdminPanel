@@ -28,9 +28,9 @@ const EditFAQ = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const faqTypeOptions = [
-        { value: "Shipping policy", label: translations.shippingpolicy || "Shipping policy" },
-        { value: "Returns and exchanges", label: translations.returnsandexchanges || "Returns and exchanges" },
-        { value: "Frequently asked questions", label: translations.frequentlyaskedquestions || "Frequently asked questions" }
+        { value: "Shipping policy", label: translations.shippingpolicy },
+        { value: "Returns and exchanges", label: translations.returnsandexchanges },
+        { value: "Frequently asked questions", label: translations.frequentlyaskedquestions }
     ];
 
     useEffect(() => {
@@ -61,7 +61,7 @@ const EditFAQ = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "FAQ not found": translations.faqnotfound || "FAQ not found",
+                        "FAQ not found": translations.faqnotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -82,7 +82,7 @@ const EditFAQ = () => {
         e.preventDefault();
 
         if (!faqType || !question.trim() || !answer.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -115,13 +115,13 @@ const EditFAQ = () => {
 
             if (response.ok) {
                 navigate("/Support/FAQ", {
-                    state: { message: translations.updatefaqsuccessfull || "FAQ updated successfully" }
+                    state: { message: translations.updatefaqsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "FAQ Already Exists": translations.faqalreadyexists || "FAQ with this question already exists",
-                    "FAQ not found": translations.faqnotfound || "FAQ not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "FAQ Already Exists": translations.faqalreadyexists,
+                    "FAQ not found": translations.faqnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -142,7 +142,7 @@ const EditFAQ = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddFAQ-container ${isRtl ? 'rtl-addfaq' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addfaq-container">
-                    <h6 className="Addfaq-headingname">{translations.editfaq || "Edit FAQ"}</h6>
+                    <h6 className="Addfaq-headingname">{translations.editfaq}</h6>
                     <div className="Addfaq-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -151,18 +151,18 @@ const EditFAQ = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <Dropdown
-                                            label={<>{translations.faqtype || "FAQ Type"} <span style={{ color: "red" }}>*</span></>}
+                                            label={<>{translations.faqtype} <span style={{ color: "red" }}>*</span></>}
                                             options={faqTypeOptions}
                                             selectedValue={faqType}
                                             onValueChange={(val) => setFaqType(val)}
                                             labelKey="label"
                                             valueKey="value"
-                                            placeholder={translations.selectfaqtype || "Select FAQ Type"}
+                                            placeholder={translations.selectfaqtype}
                                             showSearch={false}
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}
@@ -175,14 +175,14 @@ const EditFAQ = () => {
                                 <div className="form-row full-width">
                                     <div className="form-group">
                                         <label htmlFor="question">
-                                            {translations.question || "Question"} <span style={{ color: "red" }}>*</span>
+                                            {translations.question} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="question"
                                             name="question"
                                             autoComplete="off"
-                                            placeholder={translations.enterquestion || "Enter Question"}
+                                            placeholder={translations.enterquestion}
                                             required
                                             value={question}
                                             onChange={(e) => {
@@ -197,14 +197,14 @@ const EditFAQ = () => {
                                 <div className="form-row full-width">
                                     <div className="form-group">
                                         <label htmlFor="answer">
-                                            {translations.answer || "Answer"} <span style={{ color: "red" }}>*</span>
+                                            {translations.answer} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <textarea
                                             id="answer"
                                             name="answer"
                                             rows="5"
                                             autoComplete="off"
-                                            placeholder={translations.enteranswer || "Enter Answer"}
+                                            placeholder={translations.enteranswer}
                                             required
                                             value={answer}
                                             onChange={(e) => {

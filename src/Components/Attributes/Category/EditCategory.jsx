@@ -50,7 +50,7 @@ const EditCategory = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Category not found": translations.categorynotfound || "Category not found",
+                        "Category not found": translations.categorynotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -71,7 +71,7 @@ const EditCategory = () => {
         e.preventDefault();
 
         if (!categoryName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -102,13 +102,13 @@ const EditCategory = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Category", {
-                    state: { message: translations.updatecategorysuccessfull || "Category updated successfully" }
+                    state: { message: translations.updatecategorysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Category Already Exists": translations.categoryalreadyexists || "Category Already Exists",
-                    "Category not found": translations.categorynotfound || "Category not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Category Already Exists": translations.categoryalreadyexists,
+                    "Category not found": translations.categorynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -129,7 +129,7 @@ const EditCategory = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddCategory-container ${isRtl ? 'rtl-addcategory' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcategory-container">
-                    <h6 className="Addcategory-headingname">{translations.editcategory || "Edit Category"}</h6>
+                    <h6 className="Addcategory-headingname">{translations.editcategory}</h6>
                     <div className="Addcategory-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -138,14 +138,14 @@ const EditCategory = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="categoryname">
-                                            {translations.categoryname || "Category Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.categoryname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="categoryname"
                                             name="categoryname"
                                             autoComplete="off"
-                                            placeholder={translations.entercategoryname || "Enter Category Name"}
+                                            placeholder={translations.entercategoryname}
                                             required
                                             value={categoryName}
                                             onChange={(e) => {
@@ -156,7 +156,7 @@ const EditCategory = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}

@@ -129,10 +129,10 @@ const GetStyle = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setStyles(styles.map(s => (s._id === item._id || s.styleid === item.styleid) ? { ...s, status: updatedStatus } : s));
-                setSuccessMessage(updatedStatus ? (translations.stylestatusactive || "Style Status updated to Active") : (translations.stylestatusinactive || "Style Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.stylestatusactive) : (translations.stylestatusinactive));
             } else {
                 const errorMessages = {
-                    "Style not found": translations.stylenotfound || "Style not found",
+                    "Style not found": translations.stylenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetStyle = ({ searchValue = "" }) => {
             if (response.ok) {
                 setStyles(styles.filter(s => s._id !== targetId && s.styleid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletestylesuccessfull || "Style Deleted Successfully");
+                setSuccessMessage(translations.deletestylesuccessfull);
             } else {
                 const errorMessages = {
-                    "Style not found": translations.stylenotfound || "Style not found",
+                    "Style not found": translations.stylenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetStyle = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("stylename")}>
-                                    {translations.stylename || "Style Name"} {renderSortIcon("stylename")}
+                                    {translations.stylename} {renderSortIcon("stylename")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetStyle = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.styleid)}
                     name={`${selectedItem?.stylename}`}
-                    message={translations.style || "Style"}
-                    headingname={translations.deletestyle || "Delete Style"}
+                    message={translations.style}
+                    headingname={translations.deletestyle}
                     isLoading={isDeleting}
                 />
             )}

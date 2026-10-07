@@ -369,7 +369,7 @@ const EditItem = () => {
                     }
                 } else {
                     const errorMessages = {
-                        "Item not found": translations.itemnotfound || "Item not found",
+                        "Item not found": translations.itemnotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -399,7 +399,7 @@ const EditItem = () => {
             const fileExtension = file.name.split('.').pop().toLowerCase();
 
             if (!allowedExtensions.includes(fileExtension)) {
-                setWarningMessage(translations.invalidfileextension || "Only JPG, JPEG, and PNG images are allowed.");
+                setWarningMessage(translations.invalidfileextension);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -407,7 +407,7 @@ const EditItem = () => {
 
             const maxSize = 10 * 1024 * 1024;
             if (file.size > maxSize) {
-                setWarningMessage(translations.filesizetoolarge || "Image size exceeds the 10MB limit.");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -422,25 +422,25 @@ const EditItem = () => {
         e.preventDefault();
 
         if (!sku.trim()) {
-            setWarningMessage(translations.skurequired || "SKU is required");
+            setWarningMessage(translations.skurequired);
             setShowWarning(true);
             return;
         }
 
         if (!itemName.trim()) {
-            setWarningMessage(translations.itemnamerequired || "Item Name is required");
+            setWarningMessage(translations.itemnamerequired);
             setShowWarning(true);
             return;
         }
 
         if (!selectedCategory) {
-            setWarningMessage(translations.categoryrequired || "Please select a Category");
+            setWarningMessage(translations.categoryrequired);
             setShowWarning(true);
             return;
         }
 
         if (!imageFile && (!imagePreview || imagePreview === Placeholder)) {
-            setWarningMessage(translations.imagerequired || "Image is required");
+            setWarningMessage(translations.imagerequired);
             setShowWarning(true);
             return;
         }
@@ -486,17 +486,17 @@ const EditItem = () => {
 
             if (response.ok) {
                 navigate("/Products/Item", {
-                    state: { message: translations.updateitemsuccessfull || "Item updated successfully" }
+                    state: { message: translations.updateitemsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "SKU is required": translations.skurequired || "SKU is required",
-                    "SKU Already Exists": translations.skualreadyexists || "SKU Already Exists",
-                    "Item Name is required": translations.itemnamerequired || "Item Name is required",
-                    "Category is required": translations.categoryrequired || "Category is required",
-                    "Image is required": translations.imagerequired || "Image is required",
-                    "Item Already Exists": translations.itemalreadyexists || "Item with this name already exists",
-                    "Item not found": translations.itemnotfound || "Item not found",
+                    "SKU is required": translations.skurequired,
+                    "SKU Already Exists": translations.skualreadyexists,
+                    "Item Name is required": translations.itemnamerequired,
+                    "Category is required": translations.categoryrequired,
+                    "Image is required": translations.imagerequired,
+                    "Item Already Exists": translations.itemalreadyexists,
+                    "Item not found": translations.itemnotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -517,7 +517,7 @@ const EditItem = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddItem-container ${isRtl ? 'rtl-additem' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Additem-container">
-                    <h6 className="Additem-headingname">{translations.edititem || "Edit Item"}</h6>
+                    <h6 className="Additem-headingname">{translations.edititem}</h6>
                     <div className="Additem-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -527,14 +527,14 @@ const EditItem = () => {
                                     <div className="formdiv">
                                         <div className="form-group">
                                             <label htmlFor="sku">
-                                                {translations.sku || "SKU"} <span style={{ color: "red" }}>*</span>
+                                                {translations.sku} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <input
                                                 type="text"
                                                 id="sku"
                                                 name="sku"
                                                 autoComplete="off"
-                                                placeholder={translations.entersku || "Enter SKU"}
+                                                placeholder={translations.entersku}
                                                 autoFocus
                                                 required
                                                 value={sku}
@@ -548,14 +548,14 @@ const EditItem = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="itemname">
-                                                {translations.itemname || "Item Name"} <span style={{ color: "red" }}>*</span>
+                                                {translations.itemname} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <input
                                                 type="text"
                                                 id="itemname"
                                                 name="itemname"
                                                 autoComplete="off"
-                                                placeholder={translations.enteritemname || "Enter Item Name"}
+                                                placeholder={translations.enteritemname}
                                                 required
                                                 value={itemName}
                                                 onChange={(e) => {
@@ -568,13 +568,13 @@ const EditItem = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="description">
-                                                {translations.description || "Description"}
+                                                {translations.description}
                                             </label>
                                             <textarea
                                                 id="description"
                                                 name="description"
                                                 rows="1"
-                                                placeholder={translations.enterdescription || "Enter Description"}
+                                                placeholder={translations.enterdescription}
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
                                             />
@@ -587,7 +587,7 @@ const EditItem = () => {
                                                     <div className="image-preview-container">
                                                         <img
                                                             src={imagePreview}
-                                                            alt={translations.itempreview || "Item Preview"}
+                                                            alt={translations.itempreview}
                                                             className="image-preview"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
@@ -601,7 +601,7 @@ const EditItem = () => {
                                                     className="btn btn-primary upload-btn"
                                                     onClick={handleUploadClick}
                                                 >
-                                                    {translations.upload || "Upload"}
+                                                    {translations.upload}
                                                 </button>
                                                 <input
                                                     type="file"
@@ -620,7 +620,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.Category || "Category"} <span style={{ color: "red" }}>*</span>
+                                            {translations.Category} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Dropdown
                                             options={categories}
@@ -631,12 +631,12 @@ const EditItem = () => {
                                                 setSelectedCategory(val);
                                                 setSelectedSubCategory(null);
                                             }}
-                                            placeholder={translations.selectcategory || "Select Category"}
+                                            placeholder={translations.selectcategory}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.SubCategory || translations.subcategory || "Sub Category"}
+                                            {translations.SubCategory || translations.subcategory}
                                         </label>
                                         <Dropdown
                                             options={filteredSubCategories}
@@ -644,7 +644,7 @@ const EditItem = () => {
                                             valueKey="subcategoryid"
                                             selectedValue={selectedSubCategory}
                                             onValueChange={(val) => setSelectedSubCategory(val)}
-                                            placeholder={translations.selectsubcategory || "Select Sub Category"}
+                                            placeholder={translations.selectsubcategory}
                                             disabled={!selectedCategory || filteredSubCategories.length === 0}
                                         />
                                     </div>
@@ -653,7 +653,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.RingSize || translations.ringsize || "Ring Size"}
+                                            {translations.RingSize || translations.ringsize}
                                         </label>
                                         <MultiDropdown
                                             options={ringSizeOptions}
@@ -661,12 +661,12 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedRingSizes}
                                             onValueChange={(val) => setSelectedRingSizes(val)}
-                                            placeholder={translations.selectringsize || "Select Ring Size"}
+                                            placeholder={translations.selectringsize}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.Shape || translations.shape || "Shape"}
+                                            {translations.Shape || translations.shape}
                                         </label>
                                         <MultiDropdown
                                             options={shapeOptions}
@@ -674,7 +674,7 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedShapes}
                                             onValueChange={(val) => setSelectedShapes(val)}
-                                            placeholder={translations.selectshape || "Select Shape"}
+                                            placeholder={translations.selectshape}
                                         />
                                     </div>
                                 </div>
@@ -682,7 +682,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.Clarity || translations.clarity || "Clarity"}
+                                            {translations.Clarity || translations.clarity}
                                         </label>
                                         <MultiDropdown
                                             options={clarityOptions}
@@ -690,12 +690,12 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedClarities}
                                             onValueChange={(val) => setSelectedClarities(val)}
-                                            placeholder={translations.selectclarity || "Select Clarity"}
+                                            placeholder={translations.selectclarity}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.Stone || translations.stone || "Stone"}
+                                            {translations.Stone || translations.stone}
                                         </label>
                                         <MultiDropdown
                                             options={stoneOptions}
@@ -703,7 +703,7 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedStones}
                                             onValueChange={(val) => setSelectedStones(val)}
-                                            placeholder={translations.selectstone || "Select Stone"}
+                                            placeholder={translations.selectstone}
                                         />
                                     </div>
                                 </div>
@@ -711,7 +711,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.Style || translations.style || "Style"}
+                                            {translations.Style || translations.style}
                                         </label>
                                         <MultiDropdown
                                             options={styleOptions}
@@ -719,12 +719,12 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedStyles}
                                             onValueChange={(val) => setSelectedStyles(val)}
-                                            placeholder={translations.selectstyle || "Select Style"}
+                                            placeholder={translations.selectstyle}
                                         />
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.DiamondColor || translations.diamondcolor || "Diamond Color"}
+                                            {translations.DiamondColor || translations.diamondcolor}
                                         </label>
                                         <MultiDropdown
                                             options={diamondColorOptions}
@@ -732,7 +732,7 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedDiamondColors}
                                             onValueChange={(val) => setSelectedDiamondColors(val)}
-                                            placeholder={translations.selectdiamondcolor || "Select Diamond Color"}
+                                            placeholder={translations.selectdiamondcolor}
                                         />
                                     </div>
                                 </div>
@@ -740,7 +740,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.BandColor || translations.bandcolor || "Band Color"}
+                                            {translations.BandColor || translations.bandcolor}
                                         </label>
                                         <MultiDropdown
                                             options={bandColorOptions}
@@ -748,7 +748,7 @@ const EditItem = () => {
                                             valueKey="value"
                                             selectedValue={selectedBandColors}
                                             onValueChange={(val) => setSelectedBandColors(val)}
-                                            placeholder={translations.selectbandcolor || "Select Band Color"}
+                                            placeholder={translations.selectbandcolor}
                                         />
                                     </div>
                                 </div>
@@ -760,14 +760,14 @@ const EditItem = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-primary submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

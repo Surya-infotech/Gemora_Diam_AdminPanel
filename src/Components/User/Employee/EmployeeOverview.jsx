@@ -50,11 +50,11 @@ const EmployeeOverview = () => {
                 if (response.ok) {
                     setEmployeeData(data);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Server error");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
-                setWarningMessage(translations.servererror || "Server error");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setLoading(false);
@@ -70,8 +70,8 @@ const EmployeeOverview = () => {
 
     useEffect(() => {
         const titleText = employeeFullName
-            ? `${employeeFullName} - ${translations.employeeoverview || 'Employee Overview'} | Gemora Diam`
-            : `${translations.employeeoverview || 'Employee Overview'} | Gemora Diam`;
+            ? `${employeeFullName} - ${translations.employeeoverview} | Gemora Diam`
+            : `${translations.employeeoverview} | Gemora Diam`;
         document.title = titleText;
     }, [translations, employeeFullName]);
 
@@ -89,12 +89,12 @@ const EmployeeOverview = () => {
 
     const tabs = [
         {
-            title: translations.overview || "Overview",
+            title: translations.overview,
             content: <OverviewTab employeeData={employeeData} />
         },
         ...(isEmployee ? [
             {
-                title: translations.permissions || "Permissions",
+                title: translations.permissions,
                 content: <PermissionTab employeeData={employeeData} />
             }
         ] : [])
@@ -112,7 +112,7 @@ const EmployeeOverview = () => {
                     <div className="employeeoverview-header">
                         <div className="employeeoverview-header__titles">
                             <h6 className="employeeoverview-headingname">
-                                {employeeFullName ? `${employeeFullName} - ` : ''}{translations.employeeoverview || 'Employee Overview'}
+                                {employeeFullName ? `${employeeFullName} - ` : ''}{translations.employeeoverview}
                             </h6>
                         </div>
                         <button
@@ -121,12 +121,12 @@ const EmployeeOverview = () => {
                             onClick={handleBackClick}
                         >
                             <ArrowBackIcon className="employeeoverview-back-icon" aria-hidden />
-                            {translations.back || 'Back'}
+                            {translations.back}
                         </button>
                     </div>
 
                     <div className="tabs-container">
-                        <div className="horizontal-tabs" role="tablist" aria-label={translations.employeeoverview || 'Employee Overview'}>
+                        <div className="horizontal-tabs" role="tablist" aria-label={translations.employeeoverview}>
                             {tabs.map((tab, index) => (
                                 <button
                                     key={index}

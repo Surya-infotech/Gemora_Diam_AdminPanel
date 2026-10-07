@@ -41,19 +41,19 @@ const SubCategory = () => {
     return (
         <div className={`SubCategory-container ${isRtl ? 'rtl-subcategory' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="subcategory-container">
-                <h6 className="subcategory-headingname">{translations.SubCategory || "Sub Category"}</h6>
+                <h6 className="subcategory-headingname">{translations.SubCategory}</h6>
                 <div className="subcategory-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="subcategory-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                         {canAdd('subCategory') && (
                             <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                                {translations.addNew || "Add New"}
+                                {translations.addNew}
                             </button>
                         )}
                     </div>

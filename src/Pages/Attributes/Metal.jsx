@@ -40,7 +40,7 @@ const Metal = () => {
     return (
         <div className={`Metal-container ${isRtl ? 'rtl-metal' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="metal-container">
-                <h6 className="metal-headingname">{translations.Metal || "Metal"}</h6>
+                <h6 className="metal-headingname">{translations.Metal}</h6>
                 <div className="metal-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

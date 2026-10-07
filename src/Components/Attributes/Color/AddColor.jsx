@@ -37,13 +37,13 @@ const AddColor = () => {
         e.preventDefault();
 
         if (!colorName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Color Name is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!colorType) {
-            setWarningMessage(translations.colortyperequired || "Please select a Color Type");
+            setWarningMessage(translations.colortyperequired);
             setShowWarning(true);
             return;
         }
@@ -74,13 +74,13 @@ const AddColor = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Color", {
-                    state: { message: translations.addcolorsuccessfull || "Color added successfully" }
+                    state: { message: translations.addcolorsuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Color with this type already exists": translations.coloralreadyexists || "Color with this type already exists",
-                    "Color Type must be either Diamond or Band": translations.colortypeinvalid || "Color Type must be either Diamond or Band",
+                    "All fields are required": translations.allfieldrequired,
+                    "Color with this type already exists": translations.coloralreadyexists,
+                    "Color Type must be either Diamond or Band": translations.colortypeinvalid,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -101,7 +101,7 @@ const AddColor = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddColor-container ${isRtl ? 'rtl-addcolor' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcolor-container">
-                    <h6 className="Addcolor-headingname">{translations.addcolor || "Add Color"}</h6>
+                    <h6 className="Addcolor-headingname">{translations.addcolor}</h6>
                     <div className="Addcolor-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -110,14 +110,14 @@ const AddColor = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="colorname">
-                                            {translations.colorname || "Color Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.colorname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="colorname"
                                             name="colorname"
                                             autoComplete="off"
-                                            placeholder={translations.entercolorname || "Enter Color Name"}
+                                            placeholder={translations.entercolorname}
                                             autoFocus
                                             required
                                             value={colorName}
@@ -131,7 +131,7 @@ const AddColor = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.colortype || "Color Type"} <span style={{ color: "red" }}>*</span>
+                                            {translations.colortype} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Dropdown
                                             options={colorTypeOptions}
@@ -139,7 +139,7 @@ const AddColor = () => {
                                             valueKey="value"
                                             selectedValue={colorType}
                                             onValueChange={(val) => setColorType(val)}
-                                            placeholder={translations.selectcolortype || "Select Color Type"}
+                                            placeholder={translations.selectcolortype}
                                             showSearch={false}
                                         />
                                     </div>
@@ -152,14 +152,14 @@ const AddColor = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

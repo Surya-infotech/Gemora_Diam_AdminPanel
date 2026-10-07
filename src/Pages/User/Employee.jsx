@@ -17,7 +17,7 @@ const Employee = () => {
 
     useEffect(() => {
         if (translations.Employee || translations.Employees) {
-            document.title = translations.Employee || translations.Employees || "Employee";
+            document.title = translations.Employee || translations.Employees;
         }
     }, [translations]);
 
@@ -32,18 +32,18 @@ const Employee = () => {
     return (
         <div className={`Employee-container ${isRtl ? 'rtl-employee' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="employee-container">
-                <h6 className="employee-headingname">{translations.Employee || "Employee"}</h6>
+                <h6 className="employee-headingname">{translations.Employee}</h6>
                 <div className="employee-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="employee-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                         <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew || "Add New"}
+                            {translations.addNew}
                         </button>
                     </div>
                     <GetEmployee searchValue={searchValue} />

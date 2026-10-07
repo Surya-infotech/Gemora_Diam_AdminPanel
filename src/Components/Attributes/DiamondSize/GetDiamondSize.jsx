@@ -129,10 +129,10 @@ const GetDiamondSize = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setDiamondSizes(diamondSizes.map(d => (d._id === item._id || d.diamondsizeid === item.diamondsizeid) ? { ...d, status: updatedStatus } : d));
-                setSuccessMessage(updatedStatus ? (translations.diamondsizestatusactive || "Diamond Size Status updated to Active") : (translations.diamondsizestatusinactive || "Diamond Size Status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? (translations.diamondsizestatusactive) : (translations.diamondsizestatusinactive));
             } else {
                 const errorMessages = {
-                    "Diamond Size not found": translations.diamondsizenotfound || "Diamond Size not found",
+                    "Diamond Size not found": translations.diamondsizenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[data.message] || translations.servererror);
@@ -160,10 +160,10 @@ const GetDiamondSize = ({ searchValue = "" }) => {
             if (response.ok) {
                 setDiamondSizes(diamondSizes.filter(d => d._id !== targetId && d.diamondsizeid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletediamondsizesuccessfull || "Diamond Size Deleted Successfully");
+                setSuccessMessage(translations.deletediamondsizesuccessfull);
             } else {
                 const errorMessages = {
-                    "Diamond Size not found": translations.diamondsizenotfound || "Diamond Size not found",
+                    "Diamond Size not found": translations.diamondsizenotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -187,12 +187,12 @@ const GetDiamondSize = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("diamondsize")}>
-                                    {translations.diamondsize || "Diamond Size"} {renderSortIcon("diamondsize")}
+                                    {translations.diamondsize} {renderSortIcon("diamondsize")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action || "Action"}</th>}
+                                {showActionColumn && <th>{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -246,8 +246,8 @@ const GetDiamondSize = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteItem(selectedItem._id || selectedItem.diamondsizeid)}
                     name={`${selectedItem?.diamondsize}`}
-                    message={translations.diamondsize || "Diamond Size"}
-                    headingname={translations.deletediamondsize || "Delete Diamond Size"}
+                    message={translations.diamondsize}
+                    headingname={translations.deletediamondsize}
                     isLoading={isDeleting}
                 />
             )}

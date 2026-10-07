@@ -56,12 +56,12 @@ const GetEmployee = ({ searchValue = "" }) => {
                 if (response.ok) {
                     setEmployees(data.employees || []);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Server error");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
                 if (isMounted) {
-                    setWarningMessage(translations.servererror || "Server error");
+                    setWarningMessage(translations.servererror);
                     setShowWarning(true);
                 }
             } finally {
@@ -166,15 +166,15 @@ const GetEmployee = ({ searchValue = "" }) => {
                 );
                 setSuccessMessage(
                     updatedStatus
-                        ? (translations.employeestatusactive || "Employee Status updated to Active")
-                        : (translations.employeestatusinactive || "Employee Status updated to Inactive")
+                        ? (translations.employeestatusactive)
+                        : (translations.employeestatusinactive)
                 );
             } else {
-                setWarningMessage(data.message || translations.servererror || "Server error");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         }
     };
@@ -198,13 +198,13 @@ const GetEmployee = ({ searchValue = "" }) => {
                 setEmployees(prev => prev.filter(emp => emp._id !== employeeId && emp.employeeid !== employeeId));
                 setIsModalOpen(false);
                 setSelectedEmployee(null);
-                setSuccessMessage(translations.deleteemployeesuccessfull || "Employee Deleted Successfully");
+                setSuccessMessage(translations.deleteemployeesuccessfull);
             } else {
-                setWarningMessage(data.message || translations.servererror || "Server error");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsDeleting(false);
@@ -223,21 +223,21 @@ const GetEmployee = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortEmployees("name")}>
-                                    {translations.name || "Name"} {renderSortIcon("name")}
+                                    {translations.name} {renderSortIcon("name")}
                                 </th>
                                 <th onClick={() => sortEmployees("email")}>
-                                    {translations.Email || "Email"} {renderSortIcon("email")}
+                                    {translations.Email} {renderSortIcon("email")}
                                 </th>
                                 <th onClick={() => sortEmployees("phone")}>
-                                    {translations.Phone || "Phone"} {renderSortIcon("phone")}
+                                    {translations.Phone} {renderSortIcon("phone")}
                                 </th>
                                 <th onClick={() => sortEmployees("role")}>
-                                    {translations.role || "Role"} {renderSortIcon("role")}
+                                    {translations.role} {renderSortIcon("role")}
                                 </th>
                                 <th onClick={() => sortEmployees("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th>{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -286,7 +286,7 @@ const GetEmployee = ({ searchValue = "" }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="6" style={{ textAlign: "center", padding: "24px 0" }}>
-                                        {translations.nodatafound || "No data found"}
+                                        {translations.nodatafound}
                                     </td>
                                 </tr>
                             )}
@@ -314,8 +314,8 @@ const GetEmployee = ({ searchValue = "" }) => {
                     onClose={() => setIsModalOpen(false)}
                     onDelete={() => DeleteEmployee(selectedEmployee._id || selectedEmployee.employeeid)}
                     name={`${selectedEmployee?.firstname || ''} ${selectedEmployee?.lastname || ''}`.trim()}
-                    message={translations.Employee || "Employee"}
-                    headingname={translations.deleteemployee || "Delete Employee"}
+                    message={translations.Employee}
+                    headingname={translations.deleteemployee}
                     isLoading={isDeleting}
                 />
             )}

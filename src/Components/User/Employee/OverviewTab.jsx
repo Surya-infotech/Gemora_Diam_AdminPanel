@@ -20,7 +20,7 @@ const OverviewTab = ({ employeeData }) => {
     if (!employeeData) {
         return (
             <div className="no-data-message">
-                <p>{translations.nodatafound || "No data found"}</p>
+                <p>{translations.nodatafound}</p>
             </div>
         );
     }
@@ -61,61 +61,61 @@ const OverviewTab = ({ employeeData }) => {
                     </div>
                 </div>
                 <span className={`status-badge ${employeeData.status ? 'active' : 'inactive'}`}>
-                    {employeeData.status ? (translations.active || 'Active') : (translations.inactive || 'Inactive')}
+                    {employeeData.status ? (translations.active) : (translations.inactive)}
                 </span>
             </div>
 
             <div className="employee-details-section">
                 <div className="details-grid">
                     <div className="detail-item">
-                        <span className="detail-label">{translations.employeeid || 'Employee ID'}</span>
+                        <span className="detail-label">{translations.employeeid}</span>
                         <span className="detail-value">{employeeData.employeeid || employeeData._id || '-'}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.role || 'Role'}</span>
+                        <span className="detail-label">{translations.role}</span>
                         <span className="detail-value">{role}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.gender || 'Gender'}</span>
+                        <span className="detail-label">{translations.gender}</span>
                         <span className="detail-value">{employeeData.gender || '-'}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.status || 'Status'}</span>
+                        <span className="detail-label">{translations.status}</span>
                         <span className={`detail-value ${employeeData.status ? 'active' : 'inactive'}`}>
-                            {employeeData.status ? (translations.active || 'Active') : (translations.inactive || 'Inactive')}
+                            {employeeData.status ? (translations.active) : (translations.inactive)}
                         </span>
                     </div>
                     {employeeData.address && (
                         <div className="detail-item">
-                            <span className="detail-label">{translations.address || 'Address'}</span>
+                            <span className="detail-label">{translations.address}</span>
                             <span className="detail-value">{employeeData.address}</span>
                         </div>
                     )}
                     {employeeData.cityname && (
                         <div className="detail-item">
-                            <span className="detail-label">{translations.city || 'City'}</span>
+                            <span className="detail-label">{translations.city}</span>
                             <span className="detail-value">{employeeData.cityname}</span>
                         </div>
                     )}
                     {employeeData.statename && (
                         <div className="detail-item">
-                            <span className="detail-label">{translations.state || 'State'}</span>
+                            <span className="detail-label">{translations.state}</span>
                             <span className="detail-value">{employeeData.statename}</span>
                         </div>
                     )}
                     {employeeData.countryname && (
                         <div className="detail-item">
-                            <span className="detail-label">{translations.country || 'Country'}</span>
+                            <span className="detail-label">{translations.country}</span>
                             <span className="detail-value">{employeeData.countryname}</span>
                         </div>
                     )}
                     <div className="detail-item">
-                        <span className="detail-label">{translations.createdat || 'Created At'}</span>
+                        <span className="detail-label">{translations.createdat}</span>
                         <span className="detail-value">{formatDate(employeeData.createdAt)}</span>
                     </div>
                     {employeeData.updatedAt && (
                         <div className="detail-item">
-                            <span className="detail-label">{translations.updatedat || 'Updated At'}</span>
+                            <span className="detail-label">{translations.updatedat}</span>
                             <span className="detail-value">{formatDate(employeeData.updatedAt)}</span>
                         </div>
                     )}

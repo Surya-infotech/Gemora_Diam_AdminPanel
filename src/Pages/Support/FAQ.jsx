@@ -38,7 +38,7 @@ const FAQ = () => {
     return (
         <div className={`FAQ-container ${isRtl ? 'rtl-faq' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="faq-container">
-                <h6 className="faq-headingname">{translations.FAQ || "FAQ"}</h6>
+                <h6 className="faq-headingname">{translations.FAQ}</h6>
                 <div className="faq-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

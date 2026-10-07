@@ -42,12 +42,12 @@ const Pagination = ({
     const startRecord = totalRecords === 0 ? 0 : (currentPage - 1) * activePageSize + 1;
     const endRecord = totalRecords === 0 ? 0 : Math.min(currentPage * activePageSize, totalRecords);
 
-    const showingText = translations.showing || "Showing";
-    const toText = translations.to || "to";
-    const ofText = translations.of || "of";
-    const entriesText = translations.entries || "entries";
-    const previousText = translations.previous || "Previous";
-    const nextText = translations.next || "Next";
+    const showingText = translations.showing;
+    const toText = translations.to;
+    const ofText = translations.of;
+    const entriesText = translations.entries;
+    const previousText = translations.previous;
+    const nextText = translations.next;
 
     return (
         <div className={`d-flex justify-content-between align-items-center paginationdiv ${isRtl ? 'rtl-pagination' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
@@ -72,7 +72,7 @@ const Pagination = ({
             </div>
 
             {/* Pagination controls */}
-            <nav aria-label={translations.pagenavigation || "Page navigation"}>
+            <nav aria-label={translations.pagenavigation}>
                 <ul className="pagination justify-content-end">
                     <li className={`page-item ${currentPage <= 1 ? 'disabled' : ''}`}>
                         <button

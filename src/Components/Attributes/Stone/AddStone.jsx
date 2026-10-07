@@ -29,7 +29,7 @@ const AddStone = () => {
         e.preventDefault();
 
         if (!stoneName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -59,12 +59,12 @@ const AddStone = () => {
 
             if (response.ok) {
                 navigate("/Attributes/Stone", {
-                    state: { message: translations.addstonesuccessfull || "Stone added successfully" }
+                    state: { message: translations.addstonesuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Stone Already Exists": translations.stonealreadyexists || "Stone Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Stone Already Exists": translations.stonealreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -85,7 +85,7 @@ const AddStone = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddStone-container ${isRtl ? 'rtl-addstone' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addstone-container">
-                    <h6 className="Addstone-headingname">{translations.addstone || "Add Stone"}</h6>
+                    <h6 className="Addstone-headingname">{translations.addstone}</h6>
                     <div className="Addstone-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -94,14 +94,14 @@ const AddStone = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="stonename">
-                                            {translations.stonename || "Stone Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.stonename} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="stonename"
                                             name="stonename"
                                             autoComplete="off"
-                                            placeholder={translations.enterstonename || "Enter Stone Name (e.g. Diamond, Moissanite)"}
+                                            placeholder={translations.enterstonename}
                                             autoFocus
                                             required
                                             value={stoneName}

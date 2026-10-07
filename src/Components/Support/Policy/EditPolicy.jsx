@@ -53,7 +53,7 @@ const EditPolicy = () => {
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
-                        "Policy not found": translations.policynotfound || "Policy not found",
+                        "Policy not found": translations.policynotfound,
                         "Server error": translations.servererror
                     };
                     setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -74,7 +74,7 @@ const EditPolicy = () => {
         e.preventDefault();
 
         if (!policyName.trim() || !description.trim()) {
-            setWarningMessage(translations.allfieldrequired || "All fields are required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -106,13 +106,13 @@ const EditPolicy = () => {
 
             if (response.ok) {
                 navigate("/Support/Policy", {
-                    state: { message: translations.updatepolicysuccessfull || "Policy updated successfully" }
+                    state: { message: translations.updatepolicysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Policy Already Exists": translations.policyalreadyexists || "Policy Already Exists",
-                    "Policy not found": translations.policynotfound || "Policy not found",
+                    "All fields are required": translations.allfieldrequired,
+                    "Policy Already Exists": translations.policyalreadyexists,
+                    "Policy not found": translations.policynotfound,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -133,7 +133,7 @@ const EditPolicy = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddPolicy-container ${isRtl ? 'rtl-addpolicy' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addpolicy-container">
-                    <h6 className="Addpolicy-headingname">{translations.editpolicy || "Edit Policy"}</h6>
+                    <h6 className="Addpolicy-headingname">{translations.editpolicy}</h6>
                     <div className="Addpolicy-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -142,14 +142,14 @@ const EditPolicy = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="policyname">
-                                            {translations.policyname || "Policy Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.policyname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="policyname"
                                             name="policyname"
                                             autoComplete="off"
-                                            placeholder={translations.enterpolicyname || "Enter Policy Name"}
+                                            placeholder={translations.enterpolicyname}
                                             required
                                             value={policyName}
                                             onChange={(e) => {
@@ -160,7 +160,7 @@ const EditPolicy = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="status">{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}
@@ -173,12 +173,12 @@ const EditPolicy = () => {
                                 <div className="form-row full-width">
                                     <div className="form-group">
                                         <label htmlFor="description">
-                                            {translations.policydescription || translations.description || "Policy Description"} <span style={{ color: "red" }}>*</span>
+                                            {translations.policydescription || translations.description} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <RichTextEditor
                                             value={description}
                                             onChange={(val) => setDescription(val)}
-                                            placeholder={translations.enterpolicydescription || "Enter Policy Description"}
+                                            placeholder={translations.enterpolicydescription}
                                         />
                                     </div>
                                 </div>

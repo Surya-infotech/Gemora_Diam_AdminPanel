@@ -53,13 +53,13 @@ const AddSubCategory = () => {
         e.preventDefault();
 
         if (!subCategoryName.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Sub Category Name is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!selectedCategory) {
-            setWarningMessage(translations.categoryrequired || "Please select a Category");
+            setWarningMessage(translations.categoryrequired);
             setShowWarning(true);
             return;
         }
@@ -90,13 +90,13 @@ const AddSubCategory = () => {
 
             if (response.ok) {
                 navigate("/Attributes/SubCategory", {
-                    state: { message: translations.addsubcategorysuccessfull || "Sub Category added successfully" }
+                    state: { message: translations.addsubcategorysuccessfull }
                 });
             } else {
                 const errorMessages = {
-                    "All fields are required": translations.allfieldrequired || "All fields are required",
-                    "Category not found": translations.categorynotfound || "Category not found",
-                    "Sub Category Already Exists": translations.subcategoryalreadyexists || "Sub Category Already Exists",
+                    "All fields are required": translations.allfieldrequired,
+                    "Category not found": translations.categorynotfound,
+                    "Sub Category Already Exists": translations.subcategoryalreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);
@@ -117,7 +117,7 @@ const AddSubCategory = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddSubCategory-container ${isRtl ? 'rtl-addsubcategory' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addsubcategory-container">
-                    <h6 className="Addsubcategory-headingname">{translations.addsubcategory || "Add Sub Category"}</h6>
+                    <h6 className="Addsubcategory-headingname">{translations.addsubcategory}</h6>
                     <div className="Addsubcategory-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -126,14 +126,14 @@ const AddSubCategory = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="subcategoryname">
-                                            {translations.subcategoryname || "Sub Category Name"} <span style={{ color: "red" }}>*</span>
+                                            {translations.subcategoryname} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <input
                                             type="text"
                                             id="subcategoryname"
                                             name="subcategoryname"
                                             autoComplete="off"
-                                            placeholder={translations.entersubcategoryname || "Enter Sub Category Name"}
+                                            placeholder={translations.entersubcategoryname}
                                             autoFocus
                                             required
                                             value={subCategoryName}
@@ -147,7 +147,7 @@ const AddSubCategory = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.Category || translations.category || "Category"} <span style={{ color: "red" }}>*</span>
+                                            {translations.Category || translations.category} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Dropdown
                                             options={categories}
@@ -155,7 +155,7 @@ const AddSubCategory = () => {
                                             valueKey="categoryid"
                                             selectedValue={selectedCategory}
                                             onValueChange={(val) => setSelectedCategory(val)}
-                                            placeholder={translations.selectcategory || "Select Category"}
+                                            placeholder={translations.selectcategory}
                                         />
                                     </div>
                                 </div>
@@ -167,14 +167,14 @@ const AddSubCategory = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>
