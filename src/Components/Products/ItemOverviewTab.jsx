@@ -44,9 +44,7 @@ const ItemOverviewTab = ({ itemData }) => {
                 <div className="item-title-section">
                     <h4 className="item-name-title">{itemName}</h4>
                     {itemData.sku && (
-                        <p className="item-sku-title">
-                            <span className="sku-label">{translations.sku}:</span> {itemData.sku}
-                        </p>
+                        <p className="item-sku-title">{itemData.sku}</p>
                     )}
                     <div className="item-meta-tags">
                         {itemData.categoryname && (
@@ -73,10 +71,6 @@ const ItemOverviewTab = ({ itemData }) => {
                         <span className="detail-value">{itemData.itemid || itemData._id || '-'}</span>
                     </div>
                     <div className="detail-item">
-                        <span className="detail-label">{translations.itemname}</span>
-                        <span className="detail-value">{itemName}</span>
-                    </div>
-                    <div className="detail-item">
                         <span className="detail-label">{translations.sku}</span>
                         <span className="detail-value">{itemData.sku || '-'}</span>
                     </div>
@@ -87,12 +81,6 @@ const ItemOverviewTab = ({ itemData }) => {
                     <div className="detail-item">
                         <span className="detail-label">{translations.subcategory}</span>
                         <span className="detail-value">{itemData.subcategoryname || '-'}</span>
-                    </div>
-                    <div className="detail-item">
-                        <span className="detail-label">{translations.status}</span>
-                        <span className={`detail-value status-text ${isPublished ? 'published' : 'draft'}`}>
-                            {isPublished ? translations.published : translations.draft}
-                        </span>
                     </div>
                     <div className="detail-item">
                         <span className="detail-label">{translations.createdat}</span>
