@@ -157,7 +157,7 @@ const GetItem = ({ searchValue }) => {
                                     {translations.itemname} {renderSortIcon("itemname")}
                                 </th>
                                 <th onClick={() => sortItems("sku")}>
-                                    {translations.sku || "SKU"} {renderSortIcon("sku")}
+                                    {translations.sku} {renderSortIcon("sku")}
                                 </th>
                                 <th onClick={() => sortItems("categoryname")}>
                                     {translations.Category} {renderSortIcon("categoryname")}
@@ -197,7 +197,7 @@ const GetItem = ({ searchValue }) => {
                                                     }}
                                                 />
                                                 <Tooltip
-                                                    title={canViewOverview ? (translations.viewdetails || "View Details") : ""}
+                                                    title={canViewOverview ? translations.viewdetails : ""}
                                                     arrow
                                                     placement="bottom"
                                                     disableHoverListener={!canViewOverview}

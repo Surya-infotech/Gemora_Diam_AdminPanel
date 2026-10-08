@@ -512,7 +512,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     }
                 } else {
                     if (group.price === '' || isNaN(Number(group.price)) || Number(group.price) < 0) {
-                        setWarningMessage(translations.enterfixedpriceforstone || translations.selectstoneandvalidprice);
+                        setWarningMessage(translations.enterfixedpriceforstone);
                         setShowWarning(true);
                         return;
                     }
@@ -824,7 +824,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                     {/* Stone Pricing Mode Toggle */}
                                     <div className="stone-pricing-mode-bar">
                                         <span className="mode-bar-label">
-                                            {translations.pricingoption || "Stone Pricing Type"}:
+                                            {translations.pricingoption}:
                                         </span>
                                         <div className="stone-pricing-segmented">
                                             <button
@@ -834,7 +834,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                             >
                                                 <span className="segmented-radio-circle" />
                                                 <span className="segmented-text">
-                                                    {translations.fixedprice || "Fixed Price"}
+                                                    {translations.fixedprice}
                                                 </span>
                                             </button>
                                             <button
@@ -844,7 +844,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                             >
                                                 <span className="segmented-radio-circle" />
                                                 <span className="segmented-text">
-                                                    {translations.metalwithstonediamondcarat || "Metal with Stone & Diamond Carat"}
+                                                    {translations.metalwithstonediamondcarat}
                                                 </span>
                                             </button>
                                         </div>

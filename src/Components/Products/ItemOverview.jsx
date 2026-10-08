@@ -83,7 +83,7 @@ const ItemOverview = () => {
     const tabs = [
         { title: translations.overview },
         { title: translations.Attributes },
-        { title: translations.gallery || "Gallery" },
+        { title: translations.gallery },
         { title: translations.pricetab }
     ];
 

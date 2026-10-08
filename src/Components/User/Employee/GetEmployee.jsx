@@ -262,7 +262,7 @@ const GetEmployee = ({ searchValue = "" }) => {
                                                         }}
                                                     />
                                                     <Tooltip
-                                                        title={translations.viewdetails || "View Details"}
+                                                        title={translations.viewdetails}
                                                         arrow
                                                         placement="bottom"
                                                     >

@@ -103,14 +103,14 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     });
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
                 setGalleryImages([]);
                 setGalleryVideos([]);
             }
         } catch (error) {
             console.error('Error fetching gallery data:', error);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessagetranslations.servererror;
             setShowWarning(true);
             setGalleryImages([]);
             setGalleryVideos([]);
@@ -151,7 +151,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         if (files.length === 0) return;
 
         if (files.length > 10) {
-            setWarningMessage(translations.maximages || 'Maximum 10 images allowed at a time');
+            setWarningMessagetranslations.maximages;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -159,7 +159,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const totalAfterSelection = selectedImages.length + files.length;
         if (totalAfterSelection > 10) {
-            setWarningMessage(translations.maximagestotal || 'Maximum 10 images allowed in total');
+            setWarningMessagetranslations.maximagestotal;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -176,14 +176,14 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         const oversizedFiles = files.filter(file => file.size > maxSize);
 
         if (invalidTypeFiles.length > 0) {
-            setWarningMessage(translations.invalidfileextension || 'Invalid file format. Please upload jpg, jpeg, png, gif, or webp images.');
+            setWarningMessagetranslations.invalidfileextension;
             setShowWarning(true);
             e.target.value = '';
             return;
         }
 
         if (oversizedFiles.length > 0) {
-            setWarningMessage(translations.filesizetoolarge || 'File size exceeds the 10MB limit.');
+            setWarningMessagetranslations.filesizetoolarge;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -212,7 +212,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
     const handleSaveImages = async () => {
         if (selectedImages.length === 0) {
-            setWarningMessage(translations.pleaseselectimages || 'Please select images to upload');
+            setWarningMessagetranslations.pleaseselectimages;
             setShowWarning(true);
             return;
         }
@@ -238,7 +238,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setAlertMessage(data.message || translations.imagesuploadedsuccessfully || 'Gallery images uploaded successfully');
+                setAlertMessage(data.message || translations.imagesuploadedsuccessfully);
                 setAlertType('success');
 
                 selectedImages.forEach(img => {
@@ -254,12 +254,12 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     onItemUpdatedRef.current({ galleryimages: updatedImages });
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch (error) {
             console.error('Error saving gallery images:', error);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessagetranslations.servererror;
             setShowWarning(true);
         } finally {
             setUploading(false);
@@ -289,7 +289,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setAlertMessage(data.message || translations.imagedeletedsuccessfully || 'Gallery image deleted successfully');
+                setAlertMessage(data.message || translations.imagedeletedsuccessfully);
                 setAlertType('success');
 
                 const updatedImages = data.galleryimages || galleryImages.filter(img => (img._id || img.id) !== imageToDelete);
@@ -298,12 +298,12 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     onItemUpdatedRef.current({ galleryimages: updatedImages });
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch (error) {
             console.error('Error deleting gallery image:', error);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessagetranslations.servererror;
             setShowWarning(true);
         } finally {
             setIsDeleting(false);
@@ -324,7 +324,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         if (files.length === 0) return;
 
         if (files.length > 10) {
-            setWarningMessage(translations.maxvideos || 'You can select up to 10 videos at a time.');
+            setWarningMessagetranslations.maxvideos;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -332,7 +332,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const totalAfterSelection = selectedVideos.length + files.length;
         if (totalAfterSelection > 10) {
-            setWarningMessage(translations.maxvideostotal || 'Maximum 10 videos allowed in total.');
+            setWarningMessagetranslations.maxvideostotal;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -347,7 +347,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         });
 
         if (invalidTypeFiles.length > 0) {
-            setWarningMessage(translations.invalidvideoextension || 'Invalid video format. Please upload MP4, WebM, MOV, or MKV videos.');
+            setWarningMessagetranslations.invalidvideoextension;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -355,7 +355,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const oversizedFiles = files.filter(file => file.size > maxSize);
         if (oversizedFiles.length > 0) {
-            setWarningMessage(translations.videofilesizetoolarge || 'One or more video files exceed the 100MB limit.');
+            setWarningMessagetranslations.videofilesizetoolarge;
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -393,7 +393,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
     const handleSaveVideos = async () => {
         if (selectedVideos.length === 0) {
-            setWarningMessage(translations.pleaseselectvideo || 'Please select at least one video to upload.');
+            setWarningMessagetranslations.pleaseselectvideo;
             setShowWarning(true);
             return;
         }
@@ -419,7 +419,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setAlertMessage(data.message || translations.videosuploadedsuccessfully || 'Videos uploaded successfully');
+                setAlertMessage(data.message || translations.videosuploadedsuccessfully);
                 setAlertType('success');
 
                 selectedVideos.forEach(v => {
@@ -439,12 +439,12 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     });
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch (error) {
             console.error('Error saving item videos:', error);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessagetranslations.servererror;
             setShowWarning(true);
         } finally {
             setVideoUploading(false);
@@ -475,7 +475,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setAlertMessage(data.message || translations.videodeletedsuccessfully || 'Video deleted successfully');
+                setAlertMessage(data.message || translations.videodeletedsuccessfully);
                 setAlertType('success');
 
                 const updatedVideos = data.galleryvideos || galleryVideos.filter(
@@ -490,12 +490,12 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     });
                 }
             } else {
-                setWarningMessage(data.message || translations.servererror || 'Server error');
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch (error) {
             console.error('Error deleting item video:', error);
-            setWarningMessage(translations.servererror || 'Server error');
+            setWarningMessagetranslations.servererror;
             setShowWarning(true);
         } finally {
             setVideoDeleting(false);
@@ -530,16 +530,16 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     setImageToDelete(null);
                 }}
                 onDelete={handleConfirmDeleteImage}
-                headingname={translations.deleteimage || 'Delete Image'}
-                customMessage={translations.deleteimagemessage || 'Are you sure you want to delete this gallery image?'}
+                headingname={translations.deleteimage}
+                customMessage={translations.deleteimagemessage}
                 isLoading={isDeleting}
             />
             <DeleteModal
                 open={deleteVideoModalOpen}
                 onClose={() => setDeleteVideoModalOpen(false)}
                 onDelete={handleConfirmDeleteVideo}
-                headingname={translations.deletevideo || 'Delete Video'}
-                customMessage={translations.deletevideomessage || 'Are you sure you want to delete this video?'}
+                headingname={translations.deletevideo}
+                customMessage={translations.deletevideomessage}
                 isLoading={videoDeleting}
             />
 
@@ -555,13 +555,13 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                 className="btn upload-gallery-btn"
                                 onClick={handleUploadClick}
                                 disabled={uploading || selectedImages.length >= 10}
-                                title={selectedImages.length >= 10 ? (translations.maximagesreached || 'Maximum 10 images reached') : ''}
+                                title={selectedImages.length >= 10 ? translations.maximagesreached : ''}
                             >
                                 <UploadIcon className="upload-icon" />
                                 <span>
                                     {selectedImages.length >= 10
-                                        ? (translations.maxreached || 'Max Reached')
-                                        : (translations.selectimages || 'Select Images')}
+                                        ? translations.maxreached
+                                        : translations.selectimages}
                                 </span>
                             </button>
                         )}
@@ -573,7 +573,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                 disabled={uploading}
                             >
                                 <SaveIcon className="save-icon" />
-                                <span>{uploading ? (translations.uploading || 'Uploading...') : (translations.save || 'Save')}</span>
+                                <span>{uploading ? translations.uploading : translations.save}</span>
                             </button>
                         )}
                         <input
@@ -602,7 +602,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                     className="remove-image-btn"
                                     onClick={() => handleRemoveSelectedImage(imageObj.id)}
                                     type="button"
-                                    title={translations.remove || 'Remove'}
+                                    title={translations.remove}
                                 >
                                     ×
                                 </button>
@@ -631,7 +631,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                             onClick={() => handleOpenDeleteModal(imageId)}
                                             type="button"
                                             disabled={uploading || isDeleting}
-                                            title={translations.deleteimage || 'Delete Image'}
+                                            title={translations.deleteimage}
                                         >
                                             <DeleteIcon className="delete-icon" />
                                         </button>
@@ -643,7 +643,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                 ) : (
                     <div className="no-gallery-message">
                         <CollectionsIcon className="empty-gallery-icon" />
-                        <p>{translations.nogalleryimagesfound || 'No gallery images found'}</p>
+                        <p>{translations.nogalleryimagesfound}</p>
                     </div>
                 )}
 
@@ -658,7 +658,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                             <span className="video-icon-badge">
                                 <VideocamIcon />
                             </span>
-                            <h5>{translations.itemvideos || 'Item Videos'}</h5>
+                            <h5>{translations.itemvideos}</h5>
                             <span className="video-hint">MP4, WebM, MOV • Max 100MB</span>
                         </div>
                         <div className="video-header-actions">
@@ -668,13 +668,13 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                     className="btn upload-video-btn"
                                     onClick={handleVideoUploadClick}
                                     disabled={videoUploading || selectedVideos.length >= 10}
-                                    title={selectedVideos.length >= 10 ? (translations.maxreached || 'Max Reached') : ''}
+                                    title={selectedVideos.length >= 10 ? translations.maxreached : ''}
                                 >
                                     <UploadIcon />
                                     <span>
                                         {selectedVideos.length >= 10
-                                            ? (translations.maxreached || 'Max Reached')
-                                            : (translations.selectvideos || 'Select Videos')}
+                                            ? translations.maxreached
+                                            : translations.selectvideos}
                                     </span>
                                 </button>
                             )}
@@ -687,7 +687,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                         disabled={videoUploading}
                                     >
                                         <CloseIcon />
-                                        <span>{translations.cancel || 'Cancel'}</span>
+                                        <span>{translations.cancel}</span>
                                     </button>
                                     <button
                                         type="button"
@@ -698,8 +698,8 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                         <SaveIcon />
                                         <span>
                                             {videoUploading
-                                                ? (translations.uploading || 'Uploading...')
-                                                : (translations.savevideos || 'Save Videos')}
+                                                ? translations.uploading
+                                                : translations.savevideos}
                                         </span>
                                     </button>
                                 </>
@@ -761,7 +761,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                                     className="delete-video-btn"
                                                     onClick={() => handleOpenDeleteVideoModal(videoItem)}
                                                     disabled={videoUploading || videoDeleting}
-                                                    title={translations.deletevideo || 'Delete Video'}
+                                                    title={translations.deletevideo}
                                                 >
                                                     <DeleteIcon className="delete-icon" />
                                                 </button>
@@ -789,7 +789,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                         /* Empty State Card */
                         <div className="empty-video-card">
                             <MovieCreationOutlinedIcon className="empty-video-icon" />
-                            <h6 className="empty-video-title">{translations.novideofound || 'No videos uploaded for this item yet'}</h6>
+                            <h6 className="empty-video-title">{translations.novideofound}</h6>
                             <p className="empty-video-desc">
                                 Upload multiple videos to showcase the jewelry or diamond from every angle
                             </p>
@@ -801,7 +801,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                     disabled={videoUploading}
                                 >
                                     <VideocamIcon />
-                                    <span>{translations.selectvideos || 'Select Videos'}</span>
+                                    <span>{translations.selectvideos}</span>
                                 </button>
                             )}
                         </div>

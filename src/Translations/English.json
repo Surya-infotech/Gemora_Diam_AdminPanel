@@ -572,6 +572,13 @@
   "priceconfigurationsubtitle": "Configure pricing strategy for this product based on metal, gemstone, or diamond carat combinations",
   "metalwiseprices": "Metal wise Prices",
   "metalwithstonediamondcaratprices": "Metal with Stone & Diamond Carat Prices",
+  "pricingoption": "Stone Pricing Type",
+  "fixedprice": "Fixed Price",
+  "fixedpricehint": "Set the single price for this metal and gemstone combination",
+  "enterfixedpriceforstone": "Please enter a valid price for the selected stone",
+  "selectstoneandvalidprice": "Please enter a valid price for the selected stone",
+  "saveprice": "Save Price",
+  "uploading": "Uploading...",
   "itemvideo": "Item Video",
   "itemvideos": "Item Videos",
   "video": "Video",
@@ -593,10 +600,5 @@
   "novideofound": "No videos uploaded for this item yet",
   "deletevideomessage": "Are you sure you want to delete this video?",
   "pleaseselectvideo": "Please select at least one video to upload.",
-  "saveprice": "Save Price",
-  "viewdetails": "View Details",
-  "pricingoption": "Stone Pricing Type",
-  "fixedprice": "Fixed Price",
-  "fixedpricehint": "Set the single price for this metal and gemstone combination",
-  "enterfixedpriceforstone": "Please enter a valid price for the selected stone"
+  "viewdetails": "View Details"
 }
