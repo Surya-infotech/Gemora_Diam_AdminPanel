@@ -1,0 +1,104 @@
+@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
+
+.tablediv {
+  @include table_mixin.main_table;
+
+  .bannertable {
+    @include table_mixin.table;
+
+    thead {
+      th {
+        @include table_mixin.table_thead;
+        color: #ffffff !important;
+
+        svg {
+          color: #ffffff !important;
+          vertical-align: middle;
+        }
+      }
+
+      td {
+        @include table_mixin.table_td;
+      }
+    }
+
+    tbody {
+      tr {
+        @include table_mixin.table_tr;
+      }
+
+      td {
+        @include table_mixin.table_td;
+      }
+    }
+
+    .tdclick {
+      @include table_mixin.table_tdclick;
+    }
+
+    .edit-icon {
+      @include table_mixin.edit_icon;
+    }
+
+    .delete-icon {
+      @include table_mixin.delete_icon;
+    }
+
+    .banner-thumbnail {
+      width: 60px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      background-color: #f1f3f5;
+      border: 1px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-block;
+      vertical-align: middle;
+
+      &:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    .banner-tag-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+      color: var(--primary-color);
+      border: 1px solid color-mix(in srgb, var(--primary-color) 25%, transparent);
+    }
+
+    .banner-heading-text {
+      font-weight: 600;
+      color: var(--text-color, #222);
+      line-height: 1.35;
+
+      .banner-accent {
+        display: block;
+        font-style: italic;
+        font-size: 12px;
+        color: #777;
+        margin-top: 2px;
+      }
+    }
+
+    .banner-desc-text {
+      color: var(--text-color, #666);
+      font-size: 12px;
+      line-height: 1.4;
+      max-width: 260px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 auto;
+    }
+  }
+}

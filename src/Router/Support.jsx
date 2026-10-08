@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+﻿import { Route, Routes } from "react-router-dom";
 import ContactUs from "../Pages/Support/ContactUs";
 import Subscribers from "../Pages/Support/Subscribers";
 import FAQ from "../Pages/Support/FAQ";
@@ -7,6 +7,9 @@ import EditFAQ from "../Components/Support/FAQ/EditFAQ";
 import Policy from "../Pages/Support/Policy";
 import AddPolicy from "../Components/Support/Policy/AddPolicy";
 import EditPolicy from "../Components/Support/Policy/EditPolicy";
+import Banner from "../Pages/Support/Banner";
+import AddBanner from "../Components/Support/Banner/AddBanner";
+import EditBanner from "../Components/Support/Banner/EditBanner";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SupportRouter = () => (
@@ -19,6 +22,9 @@ const SupportRouter = () => (
         <Route path="/Policy" element={<Policy />} />
         <Route path="/AddPolicy" element={<AddPolicy />} />
         <Route path="/EditPolicy/:id" element={<EditPolicy />} />
+        <Route path="/Banner" element={<Banner />} />
+        <Route path="/AddBanner" element={<AddBanner />} />
+        <Route path="/EditBanner/:id" element={<EditBanner />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

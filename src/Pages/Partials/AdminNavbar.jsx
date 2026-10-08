@@ -35,6 +35,7 @@ import Inventory2Icon from '@mui/icons-material/Inventory2';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -338,6 +339,14 @@ const AdminNavbar = () => {
                                             <PolicyIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.Policy}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/Support/Banner" className={navLinkClass('/Support/Banner')}>
+                                        <NavTooltip title={translations.Banner || "Home Banners"}>
+                                            <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.Banner || "Home Banners"}
                                     </NavLink>
                                 </li>
                             </div>
