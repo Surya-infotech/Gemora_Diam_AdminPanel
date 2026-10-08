@@ -69,6 +69,8 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
             metaltype: '',
             stoneid: '',
             stonename: '',
+            hasCarat: true,
+            price: '',
             caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }]
         }
     ]);
@@ -190,6 +192,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         metaltype: msg.metaltype || '',
                         stoneid: msg.stoneid ? Number(msg.stoneid) : '',
                         stonename: msg.stonename || '',
+                        hasCarat: msg.hasCarat !== undefined
+                            ? Boolean(msg.hasCarat)
+                            : (msg.stonePricingType === 'fixed' ? false : (Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price))),
+                        price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
                         caratPrices: Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0
                             ? msg.caratPrices.map(cp => ({
                                 diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
@@ -201,7 +207,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                 );
             } else {
                 setMetalWithStoneDiamondCaratPrices([
-                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
+                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
                 ]);
             }
         }
@@ -597,6 +603,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     const found = availableStones.find(s => Number(s.stoneid) === numId);
                     updated.stoneid = numId || '';
                     updated.stonename = found ? found.stonename || found.displayLabel : '';
+                } else if (field === 'hasCarat') {
+                    updated.hasCarat = Boolean(value);
+                } else if (field === 'price') {
+                    updated.price = value;
                 }
 
                 return updated;
@@ -613,6 +623,8 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                 metaltype: '',
                 stoneid: '',
                 stonename: '',
+                hasCarat: true,
+                price: '',
                 caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }]
             }
         ]);
@@ -774,6 +786,10 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     metaltype: msg.metaltype || '',
                     stoneid: msg.stoneid ? Number(msg.stoneid) : '',
                     stonename: msg.stonename || '',
+                    hasCarat: msg.hasCarat !== undefined
+                        ? Boolean(msg.hasCarat)
+                        : (msg.stonePricingType === 'fixed' ? false : (Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price))),
+                    price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
                     caratPrices: msg.caratPrices?.length
                         ? msg.caratPrices.map(cp => ({
                             diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
@@ -784,7 +800,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                 })));
             } else {
                 setMetalWithStoneDiamondCaratPrices([
-                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
+                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
                 ]);
             }
         } else {
@@ -797,7 +813,7 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                 { metalid: '', metalname: '', metaltype: '', stonePrices: [{ stoneid: '', stonename: '', price: '' }] }
             ]);
             setMetalWithStoneDiamondCaratPrices([
-                { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
+                { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
             ]);
         }
         setSuccessMessage('');
@@ -938,26 +954,34 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
             }
 
             for (const group of metalWithStoneDiamondCaratPrices) {
-                if (!group.caratPrices || group.caratPrices.length === 0) {
-                    setWarningMessage(translations.atleastonecaratrequiredforconfiguration);
-                    setShowWarning(true);
-                    return;
-                }
+                if (group.hasCarat) {
+                    if (!group.caratPrices || group.caratPrices.length === 0) {
+                        setWarningMessage(translations.atleastonecaratrequiredforconfiguration);
+                        setShowWarning(true);
+                        return;
+                    }
 
-                const hasEmptyCarat = group.caratPrices.some(
-                    c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0
-                );
-                if (hasEmptyCarat) {
-                    setWarningMessage(translations.selectdiamondcaratandvalidprice);
-                    setShowWarning(true);
-                    return;
-                }
+                    const hasEmptyCarat = group.caratPrices.some(
+                        c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0
+                    );
+                    if (hasEmptyCarat) {
+                        setWarningMessage(translations.selectdiamondcaratandvalidprice);
+                        setShowWarning(true);
+                        return;
+                    }
 
-                const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
-                if (new Set(caratIds).size !== caratIds.length) {
-                    setWarningMessage(translations.duplicatecaratsnotallowedforconfiguration);
-                    setShowWarning(true);
-                    return;
+                    const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
+                    if (new Set(caratIds).size !== caratIds.length) {
+                        setWarningMessage(translations.duplicatecaratsnotallowedforconfiguration);
+                        setShowWarning(true);
+                        return;
+                    }
+                } else {
+                    if (group.price === '' || isNaN(Number(group.price)) || Number(group.price) < 0) {
+                        setWarningMessage(translations.enterfixedpriceforstone || translations.selectstoneandvalidprice);
+                        setShowWarning(true);
+                        return;
+                    }
                 }
             }
         }
@@ -1005,11 +1029,16 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     metaltype: g.metaltype,
                     stoneid: Number(g.stoneid),
                     stonename: g.stonename,
-                    caratPrices: g.caratPrices.map(c => ({
-                        diamondsizeid: Number(c.diamondsizeid),
-                        diamondsize: c.diamondsize,
-                        price: Number(c.price)
-                    }))
+                    hasCarat: Boolean(g.hasCarat),
+                    stonePricingType: g.hasCarat ? 'carat' : 'fixed',
+                    price: !g.hasCarat && g.price !== '' ? Number(g.price) : null,
+                    caratPrices: g.hasCarat
+                        ? g.caratPrices.map(c => ({
+                            diamondsizeid: Number(c.diamondsizeid),
+                            diamondsize: c.diamondsize,
+                            price: Number(c.price)
+                        }))
+                        : []
                 }))
                 : []
         };
@@ -1560,63 +1589,116 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                                         )}
                                     </div>
 
-                                    <div className="recipe-items-table">
-                                        <div className="table-header">
-                                            <div className="col-material">{translations.diamondcarat} *</div>
-                                            <div className="col-quantity">{translations.price} *</div>
-                                            <div className="col-action"></div>
+                                    {/* Stone Pricing Mode Toggle */}
+                                    <div className="stone-pricing-mode-bar">
+                                        <span className="mode-bar-label">
+                                            {translations.pricingoption || "Stone Pricing Type"}:
+                                        </span>
+                                        <div className="stone-pricing-segmented">
+                                            <button
+                                                type="button"
+                                                className={`segmented-option ${!group.hasCarat ? 'active' : ''}`}
+                                                onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', false)}
+                                            >
+                                                <span className="segmented-radio-circle" />
+                                                <span className="segmented-text">
+                                                    {translations.fixedprice || "Fixed Price"}
+                                                </span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`segmented-option ${group.hasCarat ? 'active' : ''}`}
+                                                onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', true)}
+                                            >
+                                                <span className="segmented-radio-circle" />
+                                                <span className="segmented-text">
+                                                    {translations.metalwithstonediamondcarat || "Metal with Stone & Diamond Carat"}
+                                                </span>
+                                            </button>
                                         </div>
+                                    </div>
 
-                                        {group.caratPrices.map((cRow, cIdx) => (
-                                            <div key={cIdx} className="table-row">
-                                                <div className="col-material">
-                                                    <Dropdown
-                                                        options={getCaratOptionsForMetalStoneIndex(mIdx, cIdx)}
-                                                        selectedValue={cRow.diamondsizeid}
-                                                        onValueChange={(val) => handleCaratChangeForMetalStone(mIdx, cIdx, 'diamondsizeid', val)}
-                                                        labelKey="displayLabel"
-                                                        valueKey="diamondsizeid"
-                                                        placeholder={translations.selectdiamondcarat}
-                                                    />
-                                                </div>
-                                                <div className="col-quantity">
+                                    {!group.hasCarat ? (
+                                        <div className="recipe-items-table">
+                                            <div className="table-header">
+                                                <div className="col-quantity" style={{ flex: 1 }}>{translations.price} *</div>
+                                            </div>
+                                            <div className="table-row">
+                                                <div className="col-quantity" style={{ flex: 1 }}>
                                                     <input
                                                         type="number"
                                                         step="any"
                                                         min="0"
                                                         className="price-input"
                                                         placeholder={translations.priceplaceholder}
-                                                        value={cRow.price}
-                                                        onChange={(e) => handleCaratChangeForMetalStone(mIdx, cIdx, 'price', e.target.value)}
+                                                        value={group.price}
+                                                        onChange={(e) => handleMetalWithStoneCaratGroupChange(mIdx, 'price', e.target.value)}
                                                         required
                                                     />
                                                 </div>
-                                                <div className="col-action">
-                                                    {group.caratPrices.length > 1 && (
-                                                        <button
-                                                            type="button"
-                                                            className="delete-row-btn"
-                                                            onClick={() => handleRemoveCaratRowForMetalStone(mIdx, cIdx)}
-                                                            title={translations.delete}
-                                                        >
-                                                            <DeleteIcon fontSize="small" />
-                                                        </button>
-                                                    )}
-                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="recipe-items-table">
+                                                <div className="table-header">
+                                                    <div className="col-material">{translations.diamondcarat} *</div>
+                                                    <div className="col-quantity">{translations.price} *</div>
+                                                    <div className="col-action"></div>
+                                                </div>
 
-                                    <div className="table-actions-bar">
-                                        <button
-                                            type="button"
-                                            className="add-ingredient-inline-btn"
-                                            onClick={() => handleAddCaratRowForMetalStone(mIdx)}
-                                            disabled={formattedDiamondSizes.length > 0 && group.caratPrices.length >= formattedDiamondSizes.length}
-                                        >
-                                            <AddIcon fontSize="small" /> {translations.adddiamondcarat}
-                                        </button>
-                                    </div>
+                                                {group.caratPrices.map((cRow, cIdx) => (
+                                                    <div key={cIdx} className="table-row">
+                                                        <div className="col-material">
+                                                            <Dropdown
+                                                                options={getCaratOptionsForMetalStoneIndex(mIdx, cIdx)}
+                                                                selectedValue={cRow.diamondsizeid}
+                                                                onValueChange={(val) => handleCaratChangeForMetalStone(mIdx, cIdx, 'diamondsizeid', val)}
+                                                                labelKey="displayLabel"
+                                                                valueKey="diamondsizeid"
+                                                                placeholder={translations.selectdiamondcarat}
+                                                            />
+                                                        </div>
+                                                        <div className="col-quantity">
+                                                            <input
+                                                                type="number"
+                                                                step="any"
+                                                                min="0"
+                                                                className="price-input"
+                                                                placeholder={translations.priceplaceholder}
+                                                                value={cRow.price}
+                                                                onChange={(e) => handleCaratChangeForMetalStone(mIdx, cIdx, 'price', e.target.value)}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="col-action">
+                                                            {group.caratPrices.length > 1 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="delete-row-btn"
+                                                                    onClick={() => handleRemoveCaratRowForMetalStone(mIdx, cIdx)}
+                                                                    title={translations.delete}
+                                                                >
+                                                                    <DeleteIcon fontSize="small" />
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="table-actions-bar">
+                                                <button
+                                                    type="button"
+                                                    className="add-ingredient-inline-btn"
+                                                    onClick={() => handleAddCaratRowForMetalStone(mIdx)}
+                                                    disabled={formattedDiamondSizes.length > 0 && group.caratPrices.length >= formattedDiamondSizes.length}
+                                                >
+                                                    <AddIcon fontSize="small" /> {translations.adddiamondcarat}
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             ))}
 
