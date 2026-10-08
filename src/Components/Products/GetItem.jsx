@@ -156,6 +156,9 @@ const GetItem = ({ searchValue }) => {
                                 <th className="item-name-col" onClick={() => sortItems("itemname")}>
                                     {translations.itemname} {renderSortIcon("itemname")}
                                 </th>
+                                <th onClick={() => sortItems("sku")}>
+                                    {translations.sku || "SKU"} {renderSortIcon("sku")}
+                                </th>
                                 <th onClick={() => sortItems("categoryname")}>
                                     {translations.Category} {renderSortIcon("categoryname")}
                                 </th>
@@ -201,10 +204,14 @@ const GetItem = ({ searchValue }) => {
                                                 >
                                                     <div className="item-text-wrapper">
                                                         <strong className="item-name-text">{item.itemname}</strong>
-                                                        {item.sku && <span className="item-sku-text">{item.sku}</span>}
                                                     </div>
                                                 </Tooltip>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <span className="sku-badge">
+                                                {item.sku || "-"}
+                                            </span>
                                         </td>
                                         <td>
                                             <span className="category-badge">
@@ -228,7 +235,7 @@ const GetItem = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={showActionColumn ? 4 : 3}>
+                                    <td colSpan={showActionColumn ? 5 : 4}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
