@@ -428,12 +428,6 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
         } else {
             setPriceType('metal_wise');
             setMetalWisePrices([{ metalid: '', metalname: '', metaltype: '', price: '' }]);
-            setMetalWithDiamondCaratPrices([
-                { metalid: '', metalname: '', metaltype: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
-            ]);
-            setMetalWithStonePrices([
-                { metalid: '', metalname: '', metaltype: '', stonePrices: [{ stoneid: '', stonename: '', price: '' }] }
-            ]);
             setMetalWithStoneDiamondCaratPrices([
                 { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
             ]);
