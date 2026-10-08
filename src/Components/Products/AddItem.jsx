@@ -23,6 +23,7 @@ const AddItem = () => {
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const MAX_DESCRIPTION_LENGTH = 3500;
 
     const [sku, setSku] = useState("");
     const [itemName, setItemName] = useState("");
@@ -453,8 +454,18 @@ const AddItem = () => {
                                                 rows="1"
                                                 placeholder={translations.enterdescription}
                                                 value={description}
-                                                onChange={(e) => setDescription(e.target.value)}
+                                                maxLength={MAX_DESCRIPTION_LENGTH}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value.length === 1 && value === " ") return;
+                                                    if (value.length <= MAX_DESCRIPTION_LENGTH) {
+                                                        setDescription(value);
+                                                    }
+                                                }}
                                             />
+                                            <div className={`description-counter ${(description || "").length >= MAX_DESCRIPTION_LENGTH ? 'max-reached' : ''}`}>
+                                                {(description || "").length}/{MAX_DESCRIPTION_LENGTH}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="imagediv">
