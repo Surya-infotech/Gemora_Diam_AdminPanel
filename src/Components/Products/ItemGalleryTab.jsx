@@ -110,7 +110,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             }
         } catch (error) {
             console.error('Error fetching gallery data:', error);
-            setWarningMessagetranslations.servererror;
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
             setGalleryImages([]);
             setGalleryVideos([]);
@@ -151,7 +151,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         if (files.length === 0) return;
 
         if (files.length > 10) {
-            setWarningMessagetranslations.maximages;
+            setWarningMessage(translations.maximages);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -159,7 +159,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const totalAfterSelection = selectedImages.length + files.length;
         if (totalAfterSelection > 10) {
-            setWarningMessagetranslations.maximagestotal;
+            setWarningMessage(translations.maximagestotal);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -176,14 +176,14 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         const oversizedFiles = files.filter(file => file.size > maxSize);
 
         if (invalidTypeFiles.length > 0) {
-            setWarningMessagetranslations.invalidfileextension;
+            setWarningMessage(translations.invalidfileextension);
             setShowWarning(true);
             e.target.value = '';
             return;
         }
 
         if (oversizedFiles.length > 0) {
-            setWarningMessagetranslations.filesizetoolarge;
+            setWarningMessage(translations.filesizetoolarge);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -212,7 +212,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
     const handleSaveImages = async () => {
         if (selectedImages.length === 0) {
-            setWarningMessagetranslations.pleaseselectimages;
+            setWarningMessage(translations.pleaseselectimages);
             setShowWarning(true);
             return;
         }
@@ -259,7 +259,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             }
         } catch (error) {
             console.error('Error saving gallery images:', error);
-            setWarningMessagetranslations.servererror;
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setUploading(false);
@@ -303,7 +303,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             }
         } catch (error) {
             console.error('Error deleting gallery image:', error);
-            setWarningMessagetranslations.servererror;
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsDeleting(false);
@@ -324,7 +324,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         if (files.length === 0) return;
 
         if (files.length > 10) {
-            setWarningMessagetranslations.maxvideos;
+            setWarningMessage(translations.maxvideos);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -332,7 +332,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const totalAfterSelection = selectedVideos.length + files.length;
         if (totalAfterSelection > 10) {
-            setWarningMessagetranslations.maxvideostotal;
+            setWarningMessage(translations.maxvideostotal);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -347,7 +347,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
         });
 
         if (invalidTypeFiles.length > 0) {
-            setWarningMessagetranslations.invalidvideoextension;
+            setWarningMessage(translations.invalidvideoextension);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -355,7 +355,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
         const oversizedFiles = files.filter(file => file.size > maxSize);
         if (oversizedFiles.length > 0) {
-            setWarningMessagetranslations.videofilesizetoolarge;
+            setWarningMessage(translations.videofilesizetoolarge);
             setShowWarning(true);
             e.target.value = '';
             return;
@@ -393,7 +393,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
 
     const handleSaveVideos = async () => {
         if (selectedVideos.length === 0) {
-            setWarningMessagetranslations.pleaseselectvideo;
+            setWarningMessage(translations.pleaseselectvideo);
             setShowWarning(true);
             return;
         }
@@ -444,7 +444,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             }
         } catch (error) {
             console.error('Error saving item videos:', error);
-            setWarningMessagetranslations.servererror;
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setVideoUploading(false);
@@ -495,7 +495,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             }
         } catch (error) {
             console.error('Error deleting item video:', error);
-            setWarningMessagetranslations.servererror;
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setVideoDeleting(false);
