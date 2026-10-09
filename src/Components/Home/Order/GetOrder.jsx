@@ -255,11 +255,7 @@ const GetOrder = ({ searchValue = "" }) => {
                                                         {getInitials(order.customername)}
                                                     </div>
                                                     <div className="customer-text">
-                                                        <strong
-                                                            style={{ cursor: "pointer" }}
-                                                            onClick={() => handleViewDetails(order)}
-                                                            title={translations.viewdetails || "View Details"}
-                                                        >
+                                                        <strong>
                                                             {order.customername || "Guest Customer"}
                                                         </strong>
                                                         {order.customeremail && (
