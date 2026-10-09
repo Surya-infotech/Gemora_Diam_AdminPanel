@@ -13,22 +13,8 @@ import Pagination from "../../../Pages/Custom/Pagination";
 import WarningModal from "../../../Pages/Custom/WarningModal";
 import AlertMessage from "../../../Pages/Custom/AlertMessage";
 import { formatPriceWithCurrency } from "../../../utils/CurrencyFormatter";
+import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import "../../../Scss/Home/Order/getorder.scss";
-
-const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    try {
-        const d = new Date(dateString);
-        if (isNaN(d.getTime())) return dateString;
-        return d.toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    } catch {
-        return dateString;
-    }
-};
 
 const getInitials = (name) => {
     if (!name) return "C";
@@ -49,6 +35,7 @@ const GetOrder = ({ searchValue = "" }) => {
 
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState([]);
+    const [miscSettings, setMiscSettings] = useState(null);
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -85,6 +72,9 @@ const GetOrder = ({ searchValue = "" }) => {
 
                 if (response.ok) {
                     setOrders(data.orders || []);
+                    if (data.miscSettings) {
+                        setMiscSettings(data.miscSettings);
+                    }
                 } else {
                     setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
@@ -107,6 +97,35 @@ const GetOrder = ({ searchValue = "" }) => {
             isMounted = false;
         };
     }, [adminPanelBackendPath, logoutUser, navigate, selectedFiscalYear, token, translations]);
+
+    // Fetch misc settings for date and time formatting
+    useEffect(() => {
+        let isMounted = true;
+        if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const fetchMiscSettings = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/System/GetMiscSetting`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+                const data = await response.json();
+                if (isMounted && response.ok && data) {
+                    setMiscSettings(data);
+                }
+            } catch {
+                // Ignore fallback to defaults
+            }
+        };
+
+        fetchMiscSettings();
+        return () => {
+            isMounted = false;
+        };
+    }, [adminPanelBackendPath, logoutUser, navigate, token]);
 
     const handleSort = (column) => {
         const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
@@ -138,6 +157,7 @@ const GetOrder = ({ searchValue = "" }) => {
                 const payStatus = (order.paymentstatus || "").toLowerCase();
                 const payMethod = (order.paymentmethod || "").toLowerCase();
                 const itemNames = (order.items || []).map(i => (i.itemname || "").toLowerCase()).join(" ");
+                const formattedDate = formatDateTime(order.createdAt, miscSettings).toLowerCase();
 
                 return (
                     orderNum.includes(search) ||
@@ -147,7 +167,8 @@ const GetOrder = ({ searchValue = "" }) => {
                     status.includes(search) ||
                     payStatus.includes(search) ||
                     payMethod.includes(search) ||
-                    itemNames.includes(search)
+                    itemNames.includes(search) ||
+                    formattedDate.includes(search)
                 );
             });
         }
@@ -317,8 +338,8 @@ const GetOrder = ({ searchValue = "" }) => {
 
                                             {/* Date */}
                                             <td>
-                                                <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)" }}>
-                                                    {formatDate(order.createdAt)}
+                                                <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)", whiteSpace: "nowrap" }}>
+                                                    {formatDateTime(order.createdAt, miscSettings)}
                                                 </span>
                                             </td>
 

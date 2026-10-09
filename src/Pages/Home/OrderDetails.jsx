@@ -14,24 +14,8 @@ import LoadingSpinner from '../Custom/LoadingSpinner';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import { formatPriceWithCurrency } from '../../utils/CurrencyFormatter';
+import { formatDateTime } from '../../utils/dateTimeFormatter';
 import '../../Scss/Home/Order/orderdetails.scss';
-
-const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    try {
-        const d = new Date(dateString);
-        if (isNaN(d.getTime())) return dateString;
-        return d.toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    } catch {
-        return dateString;
-    }
-};
 
 const ORDER_STATUS_OPTIONS = [
     'Confirmed',
@@ -52,6 +36,7 @@ const OrderDetails = () => {
     const token = localStorage.getItem(tokenname);
 
     const [order, setOrder] = useState(location.state?.order || null);
+    const [miscSettings, setMiscSettings] = useState(null);
     const [loading, setLoading] = useState(!location.state?.order);
     const [alertMessage, setAlertMessage] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
@@ -105,6 +90,34 @@ const OrderDetails = () => {
             isMounted = false;
         };
     }, [adminPanelBackendPath, id, logoutUser, navigate, token, translations]);
+
+    useEffect(() => {
+        let isMounted = true;
+        if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const fetchMiscSettings = async () => {
+            try {
+                const response = await fetch(`${adminPanelBackendPath}/System/GetMiscSetting`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (isMounted && response.ok && data) {
+                    setMiscSettings(data);
+                }
+            } catch {
+                // Ignore fallback to defaults
+            }
+        };
+
+        fetchMiscSettings();
+        return () => {
+            isMounted = false;
+        };
+    }, [adminPanelBackendPath, logoutUser, navigate, token]);
 
     const handleStatusChange = async (newStatus) => {
         if (!order) return;
@@ -234,7 +247,7 @@ const OrderDetails = () => {
                                 </div>
                                 <div className="info-row">
                                     <span className="info-label">Placed On:</span>
-                                    <span className="info-val">{formatDate(order.createdAt)}</span>
+                                    <span className="info-val">{formatDateTime(order.createdAt, miscSettings)}</span>
                                 </div>
                                 <div className="info-row">
                                     <span className="info-label">Total Items:</span>
