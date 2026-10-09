@@ -235,7 +235,6 @@ const OrderDetails = () => {
 
                     <div className="orderdetails-header-actions">
                         <div className="status-change-box">
-                            <label>{translations.status || 'Status'}:</label>
                             <select
                                 className={`status-select-header ${statusClass}`}
                                 value={order.orderstatus || 'Confirmed'}
@@ -274,10 +273,6 @@ const OrderDetails = () => {
                                     <span className="info-val">#{orderNumberDisplay}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Fiscal Year ID:</span>
-                                    <span className="info-val">{order.fiscalyearid || '-'}</span>
-                                </div>
-                                <div className="info-row">
                                     <span className="info-label">Placed On:</span>
                                     <span className="info-val">{formatDate(order.createdAt)}</span>
                                 </div>
@@ -307,12 +302,6 @@ const OrderDetails = () => {
                                     <span className="info-label">Phone:</span>
                                     <span className="info-val">{order.customerphone || '-'}</span>
                                 </div>
-                                {order.customerid && (
-                                    <div className="info-row">
-                                        <span className="info-label">Customer ID:</span>
-                                        <span className="info-val">#{order.customerid}</span>
-                                    </div>
-                                )}
                             </div>
                         </div>
 
