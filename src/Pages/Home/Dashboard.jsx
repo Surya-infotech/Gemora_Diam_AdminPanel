@@ -228,7 +228,7 @@ const Dashboard = () => {
     const cardData = [
         {
             name: translations.totalorders || "Total Orders",
-            count: dashboardData.totalOrdersCount ?? (dashboardData.allOrdersCount ?? 0),
+            count: dashboardData.totalOrdersCount ?? 0,
             difference: kpiDifferences.ordersDifference,
             icon: <ShoppingBag className="card-icon" />,
             onClick: () => navigate('/Home/Order'),
@@ -237,7 +237,7 @@ const Dashboard = () => {
         },
         {
             name: translations.totalrevenue || "Total Revenue",
-            count: formatCurrency(dashboardData.totalRevenue ?? (dashboardData.totalPriceSum ?? 0), currencyDetails),
+            count: formatCurrency(dashboardData.totalRevenue ?? 0, currencyDetails),
             difference: kpiDifferences.revenueDifference,
             icon: <Payments className="card-icon" />,
             onClick: () => navigate('/Home/Order'),
@@ -255,7 +255,7 @@ const Dashboard = () => {
         },
         {
             name: translations.totalcustomers || "Total Customers",
-            count: dashboardData.totalCustomersCount ?? (dashboardData.totalOwnerCount ?? 0),
+            count: dashboardData.totalCustomersCount ?? 0,
             difference: kpiDifferences.customersDifference,
             icon: <Groups className="card-icon" />,
             onClick: () => navigate('/User/Customer'),
