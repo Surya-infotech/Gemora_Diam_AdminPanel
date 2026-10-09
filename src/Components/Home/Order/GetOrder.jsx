@@ -1,6 +1,5 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
 import ViewButton from "../../../Pages/Custom/ViewButton";
-import DeleteButton from "../../../Pages/Custom/DeleteButton";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Middleware/Auth";
@@ -12,7 +11,6 @@ import LoadingSpinner from "../../../Pages/Custom/LoadingSpinner";
 import Pagination from "../../../Pages/Custom/Pagination";
 import WarningModal from "../../../Pages/Custom/WarningModal";
 import AlertMessage from "../../../Pages/Custom/AlertMessage";
-import DeleteModal from "../../../Pages/Custom/DeleteModal";
 import { formatPriceWithCurrency } from "../../../utils/CurrencyFormatter";
 import "../../../Scss/Home/Order/getorder.scss";
 
@@ -62,10 +60,6 @@ const GetOrder = ({ searchValue = "" }) => {
         const orderKey = order._id || order.orderid;
         navigate(`/Home/OrderDetails/${orderKey}`, { state: { order } });
     };
-
-    // Delete Modal
-    const [orderToDelete, setOrderToDelete] = useState(null);
-    const [isDeleting, setIsDeleting] = useState(false);
 
     // Fetch orders based on selectedFiscalYear
     useEffect(() => {
@@ -192,41 +186,6 @@ const GetOrder = ({ searchValue = "" }) => {
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
-
-    // Delete Order Handler
-    const handleDeleteOrder = async () => {
-        if (!orderToDelete) return;
-        if (!CheckToken(token, logoutUser, navigate)) return;
-
-        const targetId = orderToDelete._id || orderToDelete.orderid;
-        try {
-            setIsDeleting(true);
-            const response = await fetch(`${adminPanelBackendPath}/Customer/DeleteOrder/${targetId}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-
-            if (response.ok) {
-                setOrders((prev) => prev.filter((o) => o._id !== orderToDelete._id && o.orderid !== orderToDelete.orderid));
-                setOrderToDelete(null);
-                setSuccessMessage(translations.deleteordersuccessfull || "Order deleted successfully");
-            } else {
-                setWarningMessage(data.message || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
 
     return (
         <>
@@ -371,9 +330,6 @@ const GetOrder = ({ searchValue = "" }) => {
                                                     <ViewButton
                                                         onClick={() => handleViewDetails(order)}
                                                     />
-                                                    <DeleteButton
-                                                        onClick={() => setOrderToDelete(order)}
-                                                    />
                                                 </div>
                                             </td>
                                         </tr>
@@ -404,19 +360,6 @@ const GetOrder = ({ searchValue = "" }) => {
                         setCurrentPage(1);
                     }}
                     totalRecords={totalRecords}
-                />
-            )}
-
-            {/* Delete Modal Confirmation */}
-            {orderToDelete && (
-                <DeleteModal
-                    open={Boolean(orderToDelete)}
-                    onClose={() => setOrderToDelete(null)}
-                    onDelete={handleDeleteOrder}
-                    name={`#${orderToDelete.ordernumber || orderToDelete.orderid}`}
-                    message={`(Total: ${formatPriceWithCurrency(orderToDelete.total, orderToDelete.currencydetails)})`}
-                    headingname={translations.deleteorder || "Delete Order"}
-                    isLoading={isDeleting}
                 />
             )}
         </>
