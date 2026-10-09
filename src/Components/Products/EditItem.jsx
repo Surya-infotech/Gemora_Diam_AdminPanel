@@ -32,8 +32,6 @@ const EditItem = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [subCategories, setSubCategories] = useState([]);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
-    const [ringSizes, setRingSizes] = useState([]);
-    const [selectedRingSizes, setSelectedRingSizes] = useState([]);
     const [shapes, setShapes] = useState([]);
     const [selectedShapes, setSelectedShapes] = useState([]);
     const [clarities, setClarities] = useState([]);
@@ -97,33 +95,6 @@ const EditItem = () => {
     const filteredSubCategories = selectedCategory != null
         ? subCategories.filter(sc => Number(sc.categoryid) === Number(selectedCategory))
         : [];
-
-    // Fetch active ring sizes for dropdown
-    useEffect(() => {
-        const fetchRingSizes = async () => {
-            try {
-                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveRingSizes`, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-                const data = await response.json();
-                if (response.ok && Array.isArray(data)) {
-                    setRingSizes(data);
-                }
-            } catch (err) {
-                console.error("Error loading ring sizes:", err);
-            }
-        };
-
-        fetchRingSizes();
-    }, [adminPanelBackendPath]);
-
-    const ringSizeOptions = ringSizes.map(r => ({
-        ringsizeid: r.ringsizeid,
-        ringsize: r.ringsize,
-        label: r.ringsize,
-        value: r.ringsizeid
-    }));
 
     // Fetch active shapes for dropdown
     useEffect(() => {
@@ -291,16 +262,6 @@ const EditItem = () => {
                     setItemName(result.itemname || "");
                     setSelectedCategory(result.categoryid != null ? result.categoryid : null);
                     setSelectedSubCategory(result.subcategoryid != null ? result.subcategoryid : null);
-                    if (result.ringsizes && Array.isArray(result.ringsizes)) {
-                        setSelectedRingSizes(result.ringsizes.map(r => ({
-                            ringsizeid: r.ringsizeid,
-                            ringsize: r.ringsize,
-                            label: r.ringsize,
-                            value: r.ringsizeid
-                        })));
-                    } else {
-                        setSelectedRingSizes([]);
-                    }
                     if (result.shapes && Array.isArray(result.shapes)) {
                         setSelectedShapes(result.shapes.map(s => ({
                             shapeid: s.shapeid,
@@ -451,12 +412,6 @@ const EditItem = () => {
             return;
         }
 
-        if (!selectedRingSizes || selectedRingSizes.length === 0) {
-            setWarningMessage(translations.ringsizerequired);
-            setShowWarning(true);
-            return;
-        }
-
         if (!selectedShapes || selectedShapes.length === 0) {
             setWarningMessage(translations.shaperequired);
             setShowWarning(true);
@@ -515,7 +470,6 @@ const EditItem = () => {
             } else {
                 formData.append("subcategoryid", "");
             }
-            formData.append("ringsizes", JSON.stringify(selectedRingSizes));
             formData.append("shapes", JSON.stringify(selectedShapes));
             formData.append("clarities", JSON.stringify(selectedClarities));
             formData.append("diamondcolors", JSON.stringify(selectedDiamondColors));
@@ -564,7 +518,6 @@ const EditItem = () => {
                     "Description is required": translations.descriptionrequired || "Description is required",
                     "Category is required": translations.categoryrequired || "Category is required",
                     "Sub Category is required": translations.subcategoryrequired || "Sub Category is required",
-                    "Ring Size is required": translations.ringsizerequired || "Ring Size is required",
                     "Shape is required": translations.shaperequired || "Shape is required",
                     "Clarity is required": translations.clarityrequired || "Clarity is required",
                     "Stone is required": translations.stonerequired || "Stone is required",
@@ -740,19 +693,6 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.RingSize || translations.ringsize} <span style={{ color: "red" }}>*</span>
-                                        </label>
-                                        <MultiDropdown
-                                            options={ringSizeOptions}
-                                            labelKey="label"
-                                            valueKey="value"
-                                            selectedValue={selectedRingSizes}
-                                            onValueChange={(val) => setSelectedRingSizes(val)}
-                                            placeholder={translations.selectringsize}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
                                             {translations.Shape || translations.shape} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
@@ -764,9 +704,6 @@ const EditItem = () => {
                                             placeholder={translations.selectshape}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Clarity || translations.clarity} <span style={{ color: "red" }}>*</span>
@@ -780,6 +717,9 @@ const EditItem = () => {
                                             placeholder={translations.selectclarity}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Stone || translations.stone} <span style={{ color: "red" }}>*</span>
@@ -793,9 +733,6 @@ const EditItem = () => {
                                             placeholder={translations.selectstone}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.Style || translations.style} <span style={{ color: "red" }}>*</span>
@@ -809,6 +746,9 @@ const EditItem = () => {
                                             placeholder={translations.selectstyle}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.DiamondColor || translations.diamondcolor} <span style={{ color: "red" }}>*</span>
@@ -822,9 +762,6 @@ const EditItem = () => {
                                             placeholder={translations.selectdiamondcolor}
                                         />
                                     </div>
-                                </div>
-
-                                <div className="form-row">
                                     <div className="form-group">
                                         <label>
                                             {translations.BandColor || translations.bandcolor} <span style={{ color: "red" }}>*</span>

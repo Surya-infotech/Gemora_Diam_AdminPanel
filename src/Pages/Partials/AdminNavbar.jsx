@@ -50,7 +50,6 @@ const AdminNavbar = () => {
     const attributeNavItems = [
         { id: 'metal', label: translations.Metal, to: '/Attributes/Metal', Icon: DiamondIcon },
         { id: 'diamondSize', label: translations.DiamondSize, to: '/Attributes/DiamondSize', Icon: AutoAwesomeIcon },
-        { id: 'ringSize', label: translations.RingSize, to: '/Attributes/RingSize', Icon: RadioButtonUncheckedIcon },
         { id: 'shape', label: translations.Shape, to: '/Attributes/Shape', Icon: InterestsIcon },
         { id: 'clarity', label: translations.Clarity, to: '/Attributes/Clarity', Icon: VisibilityIcon },
         { id: 'color', label: translations.Color, to: '/Attributes/Color', Icon: ColorLensIcon },

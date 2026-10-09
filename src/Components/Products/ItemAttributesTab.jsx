@@ -1,5 +1,4 @@
 import DiamondIcon from '@mui/icons-material/Diamond';
-import StraightenIcon from '@mui/icons-material/Straighten';
 import CategoryIcon from '@mui/icons-material/Category';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -19,12 +18,6 @@ const ItemAttributesTab = ({ itemData }) => {
     }
 
     const attributeSections = [
-        {
-            key: 'ringsizes',
-            label: translations.ringsize,
-            icon: <StraightenIcon className="section-icon" />,
-            items: (itemData.ringsizes || []).map(r => r.ringsize).filter(Boolean)
-        },
         {
             key: 'shapes',
             label: translations.shape,

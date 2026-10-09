@@ -10,7 +10,6 @@ const NAV_ACTIVE_PREFIXES = {
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
     '/Attributes/DiamondSize': ['/Attributes/DiamondSize', '/Attributes/AddDiamondSize', '/Attributes/EditDiamondSize'],
-    '/Attributes/RingSize': ['/Attributes/RingSize', '/Attributes/AddRingSize', '/Attributes/EditRingSize'],
     '/Attributes/Shape': ['/Attributes/Shape', '/Attributes/AddShape', '/Attributes/EditShape'],
     '/Attributes/Clarity': ['/Attributes/Clarity', '/Attributes/AddClarity', '/Attributes/EditClarity'],
     '/Attributes/Color': ['/Attributes/Color', '/Attributes/AddColor', '/Attributes/EditColor'],

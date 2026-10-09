@@ -5,9 +5,6 @@ import EditMetal from "../Components/Attributes/Metal/EditMetal";
 import DiamondSize from "../Pages/Attributes/DiamondSize";
 import AddDiamondSize from "../Components/Attributes/DiamondSize/AddDiamondSize";
 import EditDiamondSize from "../Components/Attributes/DiamondSize/EditDiamondSize";
-import RingSize from "../Pages/Attributes/RingSize";
-import AddRingSize from "../Components/Attributes/RingSize/AddRingSize";
-import EditRingSize from "../Components/Attributes/RingSize/EditRingSize";
 import Shape from "../Pages/Attributes/Shape";
 import AddShape from "../Components/Attributes/Shape/AddShape";
 import EditShape from "../Components/Attributes/Shape/EditShape";
@@ -41,10 +38,6 @@ const AttributesRouter = () => (
         <Route path="/DiamondSize" element={<PermissionGuard pageId="diamondSize" action="view"><DiamondSize /></PermissionGuard>} />
         <Route path="/AddDiamondSize" element={<PermissionGuard pageId="diamondSize" action="add"><AddDiamondSize /></PermissionGuard>} />
         <Route path="/EditDiamondSize/:id" element={<PermissionGuard pageId="diamondSize" action="edit"><EditDiamondSize /></PermissionGuard>} />
-
-        <Route path="/RingSize" element={<PermissionGuard pageId="ringSize" action="view"><RingSize /></PermissionGuard>} />
-        <Route path="/AddRingSize" element={<PermissionGuard pageId="ringSize" action="add"><AddRingSize /></PermissionGuard>} />
-        <Route path="/EditRingSize/:id" element={<PermissionGuard pageId="ringSize" action="edit"><EditRingSize /></PermissionGuard>} />
 
         <Route path="/Shape" element={<PermissionGuard pageId="shape" action="view"><Shape /></PermissionGuard>} />
         <Route path="/AddShape" element={<PermissionGuard pageId="shape" action="add"><AddShape /></PermissionGuard>} />

@@ -89,14 +89,6 @@ const PermissionTab = ({ employeeData }) => {
             hiddenActions: []
         },
         {
-            id: 'ringSize',
-            name: translations.RingSize,
-            category: translations.Attributes,
-            categoryKey: 'attributes',
-            icon: RadioButtonUncheckedIcon,
-            hiddenActions: []
-        },
-        {
             id: 'shape',
             name: translations.Shape,
             category: translations.Attributes,
