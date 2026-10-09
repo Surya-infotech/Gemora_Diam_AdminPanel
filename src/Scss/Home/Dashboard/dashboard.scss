@@ -458,100 +458,7 @@
                 }
             }
 
-            .owners-list,
-            .businesses-list {
-                display: grid;
-                grid-template-columns: 1fr;
-                max-height: 350px;
-                overflow-y: auto;
-                padding-right: 10px;
 
-                &::-webkit-scrollbar {
-                    width: 8px;
-                }
-
-                &::-webkit-scrollbar-track {
-                    background: color-mix(in srgb, var(--secondary-color) 25%, transparent);
-                    border-radius: 10px;
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    background: color-mix(in srgb, var(--primary-color) 35%, transparent);
-                    border-radius: 10px;
-                }
-
-                &::-webkit-scrollbar-thumb:hover {
-                    background: color-mix(in srgb, var(--primary-color) 55%, transparent);
-                }
-
-                .owner-item-card,
-                .business-item-card {
-                    margin-left: 1%;
-                    margin-right: 1%;
-                    width: 98%;
-                    margin-bottom: 8px !important;
-                    background-color: #ffffff !important;
-                    color: var(--text-color) !important;
-                    border: 1px solid rgba(0, 0, 0, 0.06);
-                    border-radius: 12px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-                    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
-                    cursor: pointer;
-
-                    &:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
-                    }
-
-                    .owner-content,
-                    .business-content {
-                        padding: 14px 16px;
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-
-                        .owner-image,
-                        .business-image {
-                            flex-shrink: 0;
-
-                            .owner-avatar,
-                            .business-avatar {
-                                width: 44px;
-                                height: 44px;
-                                border-radius: 50%;
-                                object-fit: cover;
-                                border: 2px solid var(--border-color);
-                            }
-                        }
-
-                        .owner-details,
-                        .business-details {
-                            flex: 1;
-                            min-width: 0;
-
-                            .owner-name,
-                            .business-name {
-                                font-weight: 600;
-                                color: var(--text-color);
-                                margin-bottom: 2px;
-                                font-size: 14px;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                            }
-
-                            .owner-email,
-                            .business-email {
-                                color: var(--muted-text);
-                                font-size: 12px;
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                            }
-                        }
-                    }
-                }
-            }
 
             .no-data-message {
                 text-align: center;
@@ -600,29 +507,7 @@
             }
         }
 
-        .recently-added-container {
-            .section-title {
-                margin-left: 0 !important;
-                margin-right: 12px !important;
-                text-align: right;
-            }
 
-            .owners-list,
-            .businesses-list {
-                padding-right: 0 !important;
-                padding-left: 10px !important;
-
-                .owner-item-card,
-                .business-item-card {
-                    text-align: right;
-
-                    .owner-content,
-                    .business-content {
-                        flex-direction: row;
-                    }
-                }
-            }
-        }
     }
 }
 

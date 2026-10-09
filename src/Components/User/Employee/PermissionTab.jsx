@@ -11,7 +11,6 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PreviewIcon from '@mui/icons-material/Preview';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
