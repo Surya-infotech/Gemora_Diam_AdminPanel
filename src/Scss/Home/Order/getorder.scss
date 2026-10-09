@@ -145,44 +145,33 @@
             white-space: nowrap;
         }
 
-        .payment-info-cell {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            align-items: center;
+        .payment-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            white-space: nowrap;
 
-            .payment-method-text {
-                font-size: 12px;
-                color: var(--text-secondary, #64748b);
-                font-weight: 500;
+            &.paid {
+                background-color: #dcfce7;
+                color: #15803d;
             }
 
-            .payment-badge {
-                padding: 2px 8px;
-                border-radius: 12px;
-                font-size: 11px;
-                font-weight: 600;
-                display: inline-block;
+            &.pending {
+                background-color: #fef9c3;
+                color: #a16207;
+            }
 
-                &.paid {
-                    background-color: #dcfce7;
-                    color: #15803d;
-                }
+            &.failed {
+                background-color: #fee2e2;
+                color: #b91c1c;
+            }
 
-                &.pending {
-                    background-color: #fef9c3;
-                    color: #a16207;
-                }
-
-                &.failed {
-                    background-color: #fee2e2;
-                    color: #b91c1c;
-                }
-
-                &.refunded {
-                    background-color: #ede9fe;
-                    color: #6d28d9;
-                }
+            &.refunded {
+                background-color: #ede9fe;
+                color: #6d28d9;
             }
         }
 
