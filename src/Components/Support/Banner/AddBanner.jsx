@@ -29,7 +29,7 @@ const AddBanner = () => {
     const [secondaryButtonText, setSecondaryButtonText] = useState("");
     const [secondaryButtonLink, setSecondaryButtonLink] = useState("");
     const [order, setOrder] = useState("");
-    const [status, setStatus] = useState(true);
+    const status = true;
     const [imageFile, setImageFile] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
     const [imagePreview, setImagePreview] = useState(Placeholder);
