@@ -546,7 +546,7 @@ const OrderDetails = () => {
         <div class="brand-header">
             <div>
                 <div class="brand-title">${escapeHtml(brandName)}</div>
-                <div class="brand-subtitle">Haute Joaillerie Atelier • Official Invoice</div>
+                <div class="brand-subtitle">Official Invoice</div>
             </div>
             <div class="invoice-badge-box">
                 <div class="invoice-type">Tax Invoice</div>
@@ -560,7 +560,7 @@ const OrderDetails = () => {
                 <div class="meta-value">${escapeHtml(invoiceDate)}</div>
             </div>
             <div class="meta-item">
-                <div class="meta-label">Order Ref</div>
+                <div class="meta-label">Order Number</div>
                 <div class="meta-value">#${escapeHtml(orderNumberDisplay)}</div>
             </div>
             <div class="meta-item">
@@ -584,7 +584,7 @@ const OrderDetails = () => {
 
             <div class="party-card">
                 <h6>Issued By</h6>
-                <div class="party-name">${escapeHtml(brandName)} Atelier</div>
+                <div class="party-name">${escapeHtml(brandName)}</div>
                 ${brandEmail ? `<div class="party-line">Email: ${escapeHtml(brandEmail)}</div>` : ''}
                 ${brandPhone ? `<div class="party-line">Phone: ${escapeHtml(brandPhone)}</div>` : ''}
                 ${brandAddress ? `<div class="party-line" style="margin-top: 6px;">${escapeHtml(brandAddress)}</div>` : ''}
@@ -595,7 +595,7 @@ const OrderDetails = () => {
         <table class="items-table">
             <thead>
                 <tr>
-                    <th style="text-align: left;">Item &amp; Atelier Specifications</th>
+                    <th style="text-align: left;">Product Details</th>
                     <th style="text-align: center; width: 80px;">Qty</th>
                     <th style="text-align: right; width: 140px;">Unit Rate</th>
                     <th style="text-align: right; width: 140px;">Amount</th>
@@ -621,11 +621,11 @@ const OrderDetails = () => {
 
         <div class="invoice-footer-section">
             ${invoiceNotes ? `
-                <div class="notes-heading">Atelier Notes &amp; Terms</div>
+                <div class="notes-heading">Notes</div>
                 <div class="notes-content">${escapeHtml(invoiceNotes)}</div>
             ` : ''}
             <div class="guarantee-box">
-                Ethically Sourced • GIA / IGI Certified Lab-Grown Diamonds • Lifetime Atelier Craftsmanship Guarantee
+                Ethically Sourced • Certified Lab-Grown Diamonds • Lifetime Craftsmanship Guarantee
             </div>
         </div>
     </div>
