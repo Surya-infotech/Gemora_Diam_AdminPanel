@@ -1,4 +1,5 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 import ViewButton from "../../../Pages/Custom/ViewButton";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -238,14 +239,15 @@ const GetOrder = ({ searchValue = "" }) => {
                                         <tr key={orderKey}>
                                             {/* Order Number */}
                                             <td>
-                                                <span
-                                                    className="order-number-badge"
-                                                    style={{ cursor: "pointer" }}
-                                                    onClick={() => handleViewDetails(order)}
-                                                    title={translations.viewdetails || "View Details"}
-                                                >
-                                                    #{order.ordernumber != null ? order.ordernumber : order.orderid}
-                                                </span>
+                                                <Tooltip title={translations.viewdetails || translations.View || "View Details"} arrow>
+                                                    <span
+                                                        className="order-number-badge"
+                                                        style={{ cursor: "pointer" }}
+                                                        onClick={() => handleViewDetails(order)}
+                                                    >
+                                                        #{order.ordernumber != null ? order.ordernumber : order.orderid}
+                                                    </span>
+                                                </Tooltip>
                                             </td>
 
                                             {/* Customer */}
