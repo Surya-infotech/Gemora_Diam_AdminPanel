@@ -15,11 +15,9 @@ const Customer = () => {
     const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
     const [searchValue, setSearchValue] = useState("");
 
-    const pageTitle = translations.Customer;
-
     useEffect(() => {
-        if (pageTitle) document.title = pageTitle;
-    }, [pageTitle]);
+        if (translations.Customer) document.title = translations.Customer;
+    }, [translations]);
 
     useEffect(() => {
         if (location.state?.message || location.state?.warning) {
@@ -30,7 +28,7 @@ const Customer = () => {
     return (
         <div className={`Customer-container ${isRtl ? 'rtl-customer' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="customer-container">
-                <h6 className="customer-headingname">{pageTitle}</h6>
+                <h6 className="customer-headingname">{translations.Customer}</h6>
                 <div className="customer-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}

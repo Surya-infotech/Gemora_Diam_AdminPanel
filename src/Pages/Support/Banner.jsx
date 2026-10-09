@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Support/Banner/banner.scss";
 import { useLanguage } from '../../Context/LanguageContext';
@@ -16,9 +16,7 @@ const Banner = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.Banner) {
-            document.title = translations.Banner;
-        }
+        if (translations.Banner) document.title = translations.Banner;
     }, [translations]);
 
     useEffect(() => {
