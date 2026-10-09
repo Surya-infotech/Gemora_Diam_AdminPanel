@@ -156,16 +156,16 @@ const GetItem = ({ searchValue }) => {
                                 <th className="item-name-col" onClick={() => sortItems("itemname")}>
                                     {translations.itemname} {renderSortIcon("itemname")}
                                 </th>
-                                <th onClick={() => sortItems("sku")}>
+                                <th className="item-sku-col" onClick={() => sortItems("sku")}>
                                     {translations.sku} {renderSortIcon("sku")}
                                 </th>
-                                <th onClick={() => sortItems("categoryname")}>
+                                <th className="item-cat-col" onClick={() => sortItems("categoryname")}>
                                     {translations.Category} {renderSortIcon("categoryname")}
                                 </th>
-                                <th onClick={() => sortItems("status")}>
+                                <th className="item-status-col" onClick={() => sortItems("status")}>
                                     {translations.status} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action}</th>}
+                                {showActionColumn && <th className="item-action-col">{translations.action}</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -197,28 +197,41 @@ const GetItem = ({ searchValue }) => {
                                                     }}
                                                 />
                                                 <Tooltip
-                                                    title={canViewOverview ? translations.viewdetails : ""}
+                                                    title={
+                                                        item.itemname ? (
+                                                            <div style={{ textAlign: "center", padding: "2px 4px", maxWidth: "280px" }}>
+                                                                <div style={{ fontWeight: 600, fontSize: "12.5px", lineHeight: "1.35", wordBreak: "break-word" }}>
+                                                                    {item.itemname}
+                                                                </div>
+                                                                {canViewOverview && (
+                                                                    <div style={{ fontSize: "11px", opacity: 0.85, marginTop: "4px" }}>
+                                                                        {translations.viewdetails}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ) : ""
+                                                    }
                                                     arrow
-                                                    placement="bottom"
-                                                    disableHoverListener={!canViewOverview}
+                                                    placement="top"
+                                                    disableHoverListener={!item.itemname}
                                                 >
                                                     <div className="item-text-wrapper">
-                                                        <strong className="item-name-text">{item.itemname}</strong>
+                                                        <strong className="item-name-text">{item.itemname || "-"}</strong>
                                                     </div>
                                                 </Tooltip>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td className="item-sku-col">
                                             <span className="sku-badge">
                                                 {item.sku || "-"}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td className="item-cat-col">
                                             <span className="category-badge">
                                                 {item.categoryname || "-"}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td className="item-status-col">
                                             <span className={`status-pill ${(item.status || "Draft").toLowerCase()}`}>
                                                 {item.status === "Published"
                                                     ? (translations.published)
@@ -226,7 +239,7 @@ const GetItem = ({ searchValue }) => {
                                             </span>
                                         </td>
                                         {showActionColumn && (
-                                            <td>
+                                            <td className="item-action-col">
                                                 {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
                                                 {canDelete('item') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
                                             </td>
