@@ -49,7 +49,7 @@ const GetCustomer = ({ searchValue = "" }) => {
     const [successMessage, setSuccessMessage] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [sortColumn, setSortColumn] = useState("customerid");
+    const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState("asc");
     const [customers, setCustomers] = useState([]);
     const [updatingStatusId, setUpdatingStatusId] = useState(null);
@@ -132,6 +132,8 @@ const GetCustomer = ({ searchValue = "" }) => {
             });
         }
 
+        if (!sortColumn) return filtered;
+
         return [...filtered].sort((a, b) => {
             let valA = a[sortColumn] ?? "";
             let valB = b[sortColumn] ?? "";
@@ -139,10 +141,6 @@ const GetCustomer = ({ searchValue = "" }) => {
             if (sortColumn === "status") {
                 valA = a.status ? 1 : 0;
                 valB = b.status ? 1 : 0;
-            } else if (sortColumn === "customerid") {
-                valA = Number(a.customerid) || 0;
-                valB = Number(b.customerid) || 0;
-                return sortDirection === "asc" ? valA - valB : valB - valA;
             } else if (sortColumn === "createdAt") {
                 const timeA = new Date(a.createdAt || 0).getTime();
                 const timeB = new Date(b.createdAt || 0).getTime();
@@ -216,9 +214,6 @@ const GetCustomer = ({ searchValue = "" }) => {
                     <table className="customertable">
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort("customerid")} style={{ cursor: "pointer", width: "90px" }}>
-                                    {translations.customerid} {renderSortIcon("customerid")}
-                                </th>
                                 <th onClick={() => handleSort("fullname")} style={{ cursor: "pointer" }}>
                                     {translations.Customer} {renderSortIcon("fullname")}
                                 </th>
@@ -243,11 +238,6 @@ const GetCustomer = ({ searchValue = "" }) => {
                                     const hasImage = Boolean(customer.profileimage);
                                     return (
                                         <tr key={customerKey}>
-                                            <td>
-                                                <span className="customer-id-badge">
-                                                    #{customer.customerid != null ? customer.customerid : "-"}
-                                                </span>
-                                            </td>
                                             <td>
                                                 <div className="customer-name-container">
                                                     {hasImage ? (
@@ -289,7 +279,7 @@ const GetCustomer = ({ searchValue = "" }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: "center", padding: "28px 0" }}>
+                                    <td colSpan="5" style={{ textAlign: "center", padding: "28px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
