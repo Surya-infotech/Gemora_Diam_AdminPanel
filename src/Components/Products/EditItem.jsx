@@ -433,8 +433,62 @@ const EditItem = () => {
             return;
         }
 
+        if (!description.trim()) {
+            setWarningMessage(translations.descriptionrequired || "Description is required");
+            setShowWarning(true);
+            return;
+        }
+
         if (!selectedCategory) {
             setWarningMessage(translations.categoryrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedSubCategory) {
+            setWarningMessage(translations.subcategoryrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedRingSizes || selectedRingSizes.length === 0) {
+            setWarningMessage(translations.ringsizerequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedShapes || selectedShapes.length === 0) {
+            setWarningMessage(translations.shaperequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedClarities || selectedClarities.length === 0) {
+            setWarningMessage(translations.clarityrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedStones || selectedStones.length === 0) {
+            setWarningMessage(translations.stonerequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedStyles || selectedStyles.length === 0) {
+            setWarningMessage(translations.stylerequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedDiamondColors || selectedDiamondColors.length === 0) {
+            setWarningMessage(translations.diamondcolorrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (!selectedBandColors || selectedBandColors.length === 0) {
+            setWarningMessage(translations.bandcolorrequired);
             setShowWarning(true);
             return;
         }
@@ -504,12 +558,21 @@ const EditItem = () => {
                 });
             } else {
                 const errorMessages = {
-                    "SKU is required": translations.skurequired,
-                    "SKU Already Exists": translations.skualreadyexists,
-                    "Item Name is required": translations.itemnamerequired,
-                    "Category is required": translations.categoryrequired,
-                    "Image is required": translations.imagerequired,
-                    "Item Already Exists": translations.itemalreadyexists,
+                    "SKU is required": translations.skurequired || "SKU is required",
+                    "SKU Already Exists": translations.skualreadyexists || "SKU Already Exists",
+                    "Item Name is required": translations.itemnamerequired || "Item Name is required",
+                    "Description is required": translations.descriptionrequired || "Description is required",
+                    "Category is required": translations.categoryrequired || "Category is required",
+                    "Sub Category is required": translations.subcategoryrequired || "Sub Category is required",
+                    "Ring Size is required": translations.ringsizerequired || "Ring Size is required",
+                    "Shape is required": translations.shaperequired || "Shape is required",
+                    "Clarity is required": translations.clarityrequired || "Clarity is required",
+                    "Stone is required": translations.stonerequired || "Stone is required",
+                    "Style is required": translations.stylerequired || "Style is required",
+                    "Diamond Color is required": translations.diamondcolorrequired || "Diamond Color is required",
+                    "Band Color is required": translations.bandcolorrequired || "Band Color is required",
+                    "Image is required": translations.imagerequired || "Image is required",
+                    "Item Already Exists": translations.itemalreadyexists || "Item Already Exists",
                     "Item not found": translations.itemnotfound,
                     "Server error": translations.servererror
                 };
@@ -582,7 +645,7 @@ const EditItem = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="description">
-                                                {translations.description}
+                                                {translations.description} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <textarea
                                                 id="description"
@@ -660,7 +723,7 @@ const EditItem = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.SubCategory || translations.subcategory}
+                                            {translations.SubCategory || translations.subcategory} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <Dropdown
                                             options={filteredSubCategories}
@@ -677,7 +740,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.RingSize || translations.ringsize}
+                                            {translations.RingSize || translations.ringsize} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={ringSizeOptions}
@@ -690,7 +753,7 @@ const EditItem = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.Shape || translations.shape}
+                                            {translations.Shape || translations.shape} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={shapeOptions}
@@ -706,7 +769,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.Clarity || translations.clarity}
+                                            {translations.Clarity || translations.clarity} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={clarityOptions}
@@ -719,7 +782,7 @@ const EditItem = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.Stone || translations.stone}
+                                            {translations.Stone || translations.stone} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={stoneOptions}
@@ -735,7 +798,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.Style || translations.style}
+                                            {translations.Style || translations.style} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={styleOptions}
@@ -748,7 +811,7 @@ const EditItem = () => {
                                     </div>
                                     <div className="form-group">
                                         <label>
-                                            {translations.DiamondColor || translations.diamondcolor}
+                                            {translations.DiamondColor || translations.diamondcolor} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={diamondColorOptions}
@@ -764,7 +827,7 @@ const EditItem = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label>
-                                            {translations.BandColor || translations.bandcolor}
+                                            {translations.BandColor || translations.bandcolor} <span style={{ color: "red" }}>*</span>
                                         </label>
                                         <MultiDropdown
                                             options={bandColorOptions}
