@@ -38,13 +38,6 @@ const getInitials = (name) => {
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
-const ORDER_STATUS_OPTIONS = [
-    "Confirmed",
-    "Processing",
-    "Shipped",
-    "Delivered",
-    "Cancelled"
-];
 
 const GetOrder = ({ searchValue = "" }) => {
     const { logoutUser } = useAuth();
@@ -199,39 +192,6 @@ const GetOrder = ({ searchValue = "" }) => {
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
-
-    // Update Order Status Handler
-    const handleStatusChange = async (order, newStatus) => {
-        if (!CheckToken(token, logoutUser, navigate)) return;
-        const targetId = order._id || order.orderid;
-
-        try {
-            const response = await fetch(`${adminPanelBackendPath}/Customer/UpdateOrderStatus/${targetId}`, {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ orderstatus: newStatus })
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-
-            if (response.ok) {
-                setOrders((prev) =>
-                    prev.map((o) => (o._id === order._id || o.orderid === order.orderid ? { ...o, orderstatus: newStatus } : o))
-                );
-                setSuccessMessage(translations.updateordersuccessfull || "Order status updated successfully");
-            } else {
-                setWarningMessage(data.message || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        }
-    };
 
     // Delete Order Handler
     const handleDeleteOrder = async () => {
@@ -399,19 +359,11 @@ const GetOrder = ({ searchValue = "" }) => {
                                                 </div>
                                             </td>
 
-                                            {/* Order Status Select */}
+                                            {/* Order Status */}
                                             <td>
-                                                <select
-                                                    className={`status-select ${currentStatusClass}`}
-                                                    value={order.orderstatus || "Confirmed"}
-                                                    onChange={(e) => handleStatusChange(order, e.target.value)}
-                                                >
-                                                    {ORDER_STATUS_OPTIONS.map((st) => (
-                                                        <option key={st} value={st}>
-                                                            {st}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                <span className={`order-status-badge ${currentStatusClass}`}>
+                                                    {order.orderstatus || "Confirmed"}
+                                                </span>
                                             </td>
 
                                             {/* Date */}
