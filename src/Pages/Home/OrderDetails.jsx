@@ -16,6 +16,8 @@ import WarningModal from '../Custom/WarningModal';
 import { formatPriceWithCurrency } from '../../utils/CurrencyFormatter';
 import { formatDateTime } from '../../utils/dateTimeFormatter';
 import { fetchInvoiceSettings } from '../../utils/invoiceSettingUtils';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import '../../Scss/Home/Order/orderdetails.scss';
 
 const ORDER_STATUS_OPTIONS = [
@@ -41,6 +43,7 @@ const OrderDetails = () => {
     const [invoiceSettings, setInvoiceSettings] = useState(null);
     const [generalSettings, setGeneralSettings] = useState(null);
     const [loading, setLoading] = useState(!location.state?.order);
+    const [downloadingInvoice, setDownloadingInvoice] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
     const [showWarning, setShowWarning] = useState(false);
@@ -191,466 +194,245 @@ const OrderDetails = () => {
             .replace(/'/g, '&#039;');
     };
 
-    const handleDownloadInvoice = () => {
-        if (!order) return;
+    const handleDownloadInvoice = async () => {
+        if (!order || downloadingInvoice) return;
+        setDownloadingInvoice(true);
 
-        const orderNumberDisplay = order.ordernumber != null ? order.ordernumber : (order.orderid || id);
-        const prefix = invoiceSettings?.invoicePrefix || 'INV-';
-        const invoiceNumber = `${prefix}${orderNumberDisplay}`;
-        const invoiceDate = formatDateTime(order.createdAt, miscSettings) || new Date().toLocaleDateString();
+        try {
+            const orderNumberDisplay = order.ordernumber != null ? order.ordernumber : (order.orderid || id);
+            const prefix = invoiceSettings?.invoicePrefix || 'INV-';
+            const invoiceNumber = `${prefix}${orderNumberDisplay}`;
+            const invoiceDate = formatDateTime(order.createdAt, miscSettings) || new Date().toLocaleDateString();
 
-        const brandName = generalSettings?.softwarename || 'Gemora Diam';
-        const brandEmail = generalSettings?.email || '';
-        const brandPhone = generalSettings?.phone || '';
-        const brandAddressParts = [
-            generalSettings?.address,
-            generalSettings?.cityname,
-            generalSettings?.statename,
-            generalSettings?.countryname,
-            generalSettings?.postalcode
-        ].filter(Boolean);
-        const brandAddress = brandAddressParts.join(', ');
+            const brandName = generalSettings?.softwarename || 'Gemora Diam';
+            const brandEmail = generalSettings?.email || '';
+            const brandPhone = generalSettings?.phone || '';
+            const brandAddressParts = [
+                generalSettings?.address,
+                generalSettings?.cityname,
+                generalSettings?.statename,
+                generalSettings?.countryname,
+                generalSettings?.postalcode
+            ].filter(Boolean);
+            const brandAddress = brandAddressParts.join(', ');
 
-        const customerName = order.customername || 'Valued Customer';
-        const customerEmail = order.customeremail || '';
-        const customerPhone = order.customerphone || '';
+            const customerName = order.customername || 'Valued Customer';
+            const customerEmail = order.customeremail || '';
+            const customerPhone = order.customerphone || '';
 
-        const shippingAddr = order.shippingaddress;
-        const shippingAddressParts = shippingAddr
-            ? [
-                shippingAddr.title ? `<strong>${escapeHtml(shippingAddr.title)}</strong>` : '',
-                shippingAddr.address,
-                shippingAddr.cityname,
-                shippingAddr.statename,
-                shippingAddr.countryname,
-                shippingAddr.pincode ? `PIN: ${shippingAddr.pincode}` : ''
-            ].filter(Boolean).join('<br>')
-            : '';
+            const shippingAddr = order.shippingaddress;
+            const shippingAddressParts = shippingAddr
+                ? [
+                    shippingAddr.title ? `<strong>${escapeHtml(shippingAddr.title)}</strong>` : '',
+                    shippingAddr.address,
+                    shippingAddr.cityname,
+                    shippingAddr.statename,
+                    shippingAddr.countryname,
+                    shippingAddr.pincode ? `PIN: ${shippingAddr.pincode}` : ''
+                ].filter(Boolean).join('<br>')
+                : '';
 
-        const items = order.items || [];
-        const itemRows = items.map((item, idx) => {
-            const specs = [
-                item.metalname && `Metal: ${item.metalname}`,
-                item.diamondsize && `Diamond: ${item.diamondsize}`,
-                item.shapename && `Shape: ${item.shapename}`,
-                item.clarityname && `Clarity: ${item.clarityname}`,
-                item.stonename && `Stone: ${item.stonename}`,
-                item.size && `Size: ${item.size}`,
-                item.diamondcolor && `Color: ${item.diamondcolor}`,
-                item.bandcolor && `Band: ${item.bandcolor}`
-            ].filter(Boolean).join(' • ');
+            const items = order.items || [];
+            const itemRows = items.map((item, idx) => {
+                const specs = [
+                    item.metalname && `Metal: ${item.metalname}`,
+                    item.diamondsize && `Diamond: ${item.diamondsize}`,
+                    item.shapename && `Shape: ${item.shapename}`,
+                    item.clarityname && `Clarity: ${item.clarityname}`,
+                    item.stonename && `Stone: ${item.stonename}`,
+                    item.size && `Size: ${item.size}`,
+                    item.diamondcolor && `Color: ${item.diamondcolor}`,
+                    item.bandcolor && `Band: ${item.bandcolor}`
+                ].filter(Boolean).join(' • ');
 
-            const unitPriceStr = formatPriceWithCurrency(item.price, order.currencydetails);
-            const totalPriceStr = formatPriceWithCurrency(item.totalprice || (item.price * (item.qty || 1)), order.currencydetails);
-            const qty = item.qty || 1;
+                const unitPriceStr = formatPriceWithCurrency(item.price, order.currencydetails);
+                const totalPriceStr = formatPriceWithCurrency(item.totalprice || (item.price * (item.qty || 1)), order.currencydetails);
+                const qty = item.qty || 1;
 
-            return `
-                <tr>
-                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; vertical-align: top;">
-                        <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; margin-bottom: 4px;">
-                            ${idx + 1}. ${escapeHtml(item.itemname || 'Fine Jewelry Piece')}
+                return `
+                    <tr>
+                        <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; vertical-align: top;">
+                            <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; margin-bottom: 4px;">
+                                ${idx + 1}. ${escapeHtml(item.itemname || 'Fine Jewelry Piece')}
+                            </div>
+                            ${specs ? `<div style="font-size: 11.5px; color: #64748b; line-height: 1.5; margin-bottom: 4px;">${escapeHtml(specs)}</div>` : ''}
+                            ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">Special Note: ${escapeHtml(item.specialinstruction)}</div>` : ''}
+                        </td>
+                        <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; text-align: center; vertical-align: top; font-weight: 600; font-size: 13.5px; color: #334155;">
+                            ${qty}
+                        </td>
+                        <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-size: 13.5px; color: #334155; white-space: nowrap;">
+                            ${escapeHtml(unitPriceStr)}
+                        </td>
+                        <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-weight: 700; font-size: 13.5px; color: #0f172a; white-space: nowrap;">
+                            ${escapeHtml(totalPriceStr)}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            const subtotalStr = formatPriceWithCurrency(order.subtotal, order.currencydetails);
+            const grandTotalStr = formatPriceWithCurrency(order.total, order.currencydetails);
+            const invoiceNotes = invoiceSettings?.notes || 'Thank you for choosing Gemora Diam. Each gemstone is ethically crafted, graded, and authenticated.';
+
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.width = '794px';
+            container.style.backgroundColor = '#ffffff';
+            container.style.zIndex = '-9999';
+
+            container.innerHTML = `
+                <div style="font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #1e293b; padding: 36px 40px; width: 794px; box-sizing: border-box;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 18px; border-bottom: 2px solid #0f172a; margin-bottom: 22px;">
+                        <div>
+                            <div style="font-size: 26px; font-weight: 700; color: #044e39; letter-spacing: 0.05em; text-transform: uppercase;">
+                                ${escapeHtml(brandName)}
+                            </div>
+                            <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-top: 4px;">
+                                Official Invoice
+                            </div>
                         </div>
-                        ${specs ? `<div style="font-size: 11.5px; color: #64748b; line-height: 1.5; margin-bottom: 4px;">${escapeHtml(specs)}</div>` : ''}
-                        ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">Special Note: ${escapeHtml(item.specialinstruction)}</div>` : ''}
-                    </td>
-                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: center; vertical-align: top; font-weight: 600; font-size: 13.5px; color: #334155;">
-                        ${qty}
-                    </td>
-                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-size: 13.5px; color: #334155; white-space: nowrap;">
-                        ${escapeHtml(unitPriceStr)}
-                    </td>
-                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-weight: 700; font-size: 13.5px; color: #0f172a; white-space: nowrap;">
-                        ${escapeHtml(totalPriceStr)}
-                    </td>
-                </tr>
+                        <div style="text-align: right;">
+                            <div style="font-size: 20px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                                Tax Invoice
+                            </div>
+                            <div style="font-size: 14px; font-weight: 700; color: #10b981; font-family: monospace; margin-top: 2px;">
+                                ${escapeHtml(invoiceNumber)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 18px; margin-bottom: 22px;">
+                        <div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Invoice Date</div>
+                            <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">${escapeHtml(invoiceDate)}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Order Number</div>
+                            <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">#${escapeHtml(orderNumberDisplay)}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Order Status</div>
+                            <div style="margin-top: 2px;">
+                                <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #dcfce7; color: #15803d;">
+                                    ${escapeHtml(order.orderstatus || 'Delivered')}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Payment Status</div>
+                            <div style="margin-top: 2px;">
+                                <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #dcfce7; color: #15803d;">
+                                    ${escapeHtml(order.paymentstatus || 'Paid')}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 18px; margin-bottom: 22px;">
+                        <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #ffffff;">
+                            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #044e39; font-weight: 700; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9;">
+                                Billed &amp; Delivered To
+                            </div>
+                            <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">${escapeHtml(customerName)}</div>
+                            ${customerEmail ? `<div style="font-size: 12px; color: #475569;">Email: ${escapeHtml(customerEmail)}</div>` : ''}
+                            ${customerPhone ? `<div style="font-size: 12px; color: #475569;">Phone: ${escapeHtml(customerPhone)}</div>` : ''}
+                            ${shippingAddressParts ? `<div style="font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.4;">${shippingAddressParts}</div>` : ''}
+                        </div>
+
+                        <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #ffffff;">
+                            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #044e39; font-weight: 700; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9;">
+                                Issued By
+                            </div>
+                            <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">${escapeHtml(brandName)}</div>
+                            ${brandEmail ? `<div style="font-size: 12px; color: #475569;">Email: ${escapeHtml(brandEmail)}</div>` : ''}
+                            ${brandPhone ? `<div style="font-size: 12px; color: #475569;">Phone: ${escapeHtml(brandPhone)}</div>` : ''}
+                            ${brandAddress ? `<div style="font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.4;">${escapeHtml(brandAddress)}</div>` : ''}
+                            <div style="font-size: 12px; color: #475569; margin-top: 6px;"><strong>Payment Method:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
+                        </div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 22px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                        <thead>
+                            <tr style="background: #f1f5f9;">
+                                <th style="text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Product Details</th>
+                                <th style="text-align: center; width: 70px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Qty</th>
+                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Unit Rate</th>
+                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemRows}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 22px;">
+                        <div style="width: 280px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px;">
+                                <span>Subtotal:</span>
+                                <span>${escapeHtml(subtotalStr)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #0f172a; border-top: 2px solid #0f172a; padding-top: 8px; margin-top: 6px;">
+                                <span>Grand Total:</span>
+                                <span>${escapeHtml(grandTotalStr)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px dashed #cbd5e1; padding-top: 16px;">
+                        ${invoiceNotes ? `
+                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Notes</div>
+                            <div style="font-size: 12px; color: #475569; line-height: 1.5; margin-bottom: 12px;">${escapeHtml(invoiceNotes)}</div>
+                        ` : ''}
+                        <div style="text-align: center; padding: 10px; background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 6px; font-size: 11px; color: #78716c;">
+                            Ethically Sourced • Certified Lab-Grown Diamonds • Lifetime Craftsmanship Guarantee
+                        </div>
+                    </div>
+                </div>
             `;
-        }).join('');
 
-        const subtotalStr = formatPriceWithCurrency(order.subtotal, order.currencydetails);
-        const grandTotalStr = formatPriceWithCurrency(order.total, order.currencydetails);
-        const invoiceNotes = invoiceSettings?.notes || 'Thank you for choosing Gemora Diam. Each gemstone is ethically crafted, graded, and authenticated.';
+            document.body.appendChild(container);
 
-        const invoiceHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice ${escapeHtml(invoiceNumber)} - ${escapeHtml(brandName)}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-            line-height: 1.5;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-        .action-bar {
-            background: #0f172a;
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-        .action-btn {
-            background: #10b981;
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-        .action-btn:hover { background: #059669; }
-        .close-btn {
-            background: transparent;
-            color: #94a3b8;
-            border: 1px solid #475569;
-            padding: 7px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .close-btn:hover { color: #fff; border-color: #cbd5e1; }
-        .invoice-wrapper {
-            max-width: 860px;
-            margin: 24px auto;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 40px 48px;
-            box-shadow: 0 4px 20px -2px rgba(0,0,0,0.06);
-        }
-        .brand-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 24px;
-            border-bottom: 2px solid #0f172a;
-            margin-bottom: 28px;
-        }
-        .brand-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: #044e39;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            line-height: 1.2;
-        }
-        .brand-subtitle {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: #b4833e;
-            margin-top: 4px;
-        }
-        .invoice-badge-box {
-            text-align: right;
-        }
-        .invoice-type {
-            font-size: 22px;
-            font-weight: 800;
-            color: #0f172a;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-        .invoice-id {
-            font-size: 15px;
-            font-weight: 700;
-            color: #10b981;
-            font-family: monospace;
-            margin-top: 2px;
-        }
-        .meta-strip {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 28px;
-            gap: 12px;
-        }
-        .meta-item .meta-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: #64748b;
-            letter-spacing: 0.05em;
-        }
-        .meta-item .meta-value {
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-top: 2px;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .status-delivered { background: #dcfce7; color: #15803d; }
-        .status-paid { background: #dcfce7; color: #15803d; }
+            const canvas = await html2canvas(container, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                windowWidth: 794
+            });
 
-        .parties-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            margin-bottom: 32px;
-        }
-        .party-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px 18px;
-        }
-        .party-card h6 {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #044e39;
-            font-weight: 700;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .party-name { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-        .party-line { font-size: 12.5px; color: #475569; line-height: 1.5; }
+            document.body.removeChild(container);
 
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 24px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .items-table th {
-            background: #f1f5f9;
-            color: #334155;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 12px 16px;
-            border-bottom: 2px solid #cbd5e1;
-        }
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-        .summary-wrap {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 28px;
-        }
-        .summary-card {
-            width: 320px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px 20px;
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 13px;
-            color: #475569;
-        }
-        .summary-row.total-row {
-            border-top: 2px solid #0f172a;
-            margin-top: 8px;
-            padding-top: 10px;
-            font-size: 16px;
-            font-weight: 800;
-            color: #0f172a;
-        }
+            let heightLeft = imgHeight;
+            let position = 0;
 
-        .invoice-footer-section {
-            border-top: 1px dashed #cbd5e1;
-            padding-top: 20px;
-            margin-top: 24px;
-        }
-        .notes-heading {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #64748b;
-            letter-spacing: 0.06em;
-            margin-bottom: 4px;
-        }
-        .notes-content {
-            font-size: 12px;
-            color: #475569;
-            line-height: 1.6;
-        }
-        .guarantee-box {
-            margin-top: 16px;
-            text-align: center;
-            padding: 12px;
-            background: #fafaf9;
-            border: 1px solid #e7e5e4;
-            border-radius: 6px;
-            font-size: 11px;
-            color: #78716c;
-            letter-spacing: 0.04em;
-        }
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+            heightLeft -= pdfHeight;
 
-        @media print {
-            .no-print { display: none !important; }
-            body { background: #fff !important; }
-            .invoice-wrapper {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-                max-width: 100% !important;
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
+                heightLeft -= pdfHeight;
             }
-            @page {
-                size: A4 portrait;
-                margin: 14mm 16mm;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="action-bar no-print">
-        <div style="font-weight: 600; font-size: 14px;">Gemora Diam — Official Invoice Preview</div>
-        <div style="display: flex; gap: 10px;">
-            <button class="action-btn" onclick="window.print()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
-                Print / Save as PDF
-            </button>
-            <button class="close-btn" onclick="window.close()">Close</button>
-        </div>
-    </div>
 
-    <div class="invoice-wrapper">
-        <div class="brand-header">
-            <div>
-                <div class="brand-title">${escapeHtml(brandName)}</div>
-                <div class="brand-subtitle">Official Invoice</div>
-            </div>
-            <div class="invoice-badge-box">
-                <div class="invoice-type">Tax Invoice</div>
-                <div class="invoice-id">${escapeHtml(invoiceNumber)}</div>
-            </div>
-        </div>
-
-        <div class="meta-strip">
-            <div class="meta-item">
-                <div class="meta-label">Invoice Date</div>
-                <div class="meta-value">${escapeHtml(invoiceDate)}</div>
-            </div>
-            <div class="meta-item">
-                <div class="meta-label">Order Number</div>
-                <div class="meta-value">#${escapeHtml(orderNumberDisplay)}</div>
-            </div>
-            <div class="meta-item">
-                <div class="meta-label">Order Status</div>
-                <div class="meta-value"><span class="status-badge status-delivered">${escapeHtml(order.orderstatus || 'Delivered')}</span></div>
-            </div>
-            <div class="meta-item">
-                <div class="meta-label">Payment Status</div>
-                <div class="meta-value"><span class="status-badge status-paid">${escapeHtml(order.paymentstatus || 'Paid')}</span></div>
-            </div>
-        </div>
-
-        <div class="parties-grid">
-            <div class="party-card">
-                <h6>Billed &amp; Delivered To</h6>
-                <div class="party-name">${escapeHtml(customerName)}</div>
-                ${customerEmail ? `<div class="party-line">Email: ${escapeHtml(customerEmail)}</div>` : ''}
-                ${customerPhone ? `<div class="party-line">Phone: ${escapeHtml(customerPhone)}</div>` : ''}
-                ${shippingAddressParts ? `<div class="party-line" style="margin-top: 6px;">${shippingAddressParts}</div>` : ''}
-            </div>
-
-            <div class="party-card">
-                <h6>Issued By</h6>
-                <div class="party-name">${escapeHtml(brandName)}</div>
-                ${brandEmail ? `<div class="party-line">Email: ${escapeHtml(brandEmail)}</div>` : ''}
-                ${brandPhone ? `<div class="party-line">Phone: ${escapeHtml(brandPhone)}</div>` : ''}
-                ${brandAddress ? `<div class="party-line" style="margin-top: 6px;">${escapeHtml(brandAddress)}</div>` : ''}
-                <div class="party-line" style="margin-top: 6px;"><strong>Payment Method:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
-            </div>
-        </div>
-
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th style="text-align: left;">Product Details</th>
-                    <th style="text-align: center; width: 80px;">Qty</th>
-                    <th style="text-align: right; width: 140px;">Unit Rate</th>
-                    <th style="text-align: right; width: 140px;">Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${itemRows}
-            </tbody>
-        </table>
-
-        <div class="summary-wrap">
-            <div class="summary-card">
-                <div class="summary-row">
-                    <span>Subtotal:</span>
-                    <span>${escapeHtml(subtotalStr)}</span>
-                </div>
-                <div class="summary-row total-row">
-                    <span>Grand Total:</span>
-                    <span>${escapeHtml(grandTotalStr)}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="invoice-footer-section">
-            ${invoiceNotes ? `
-                <div class="notes-heading">Notes</div>
-                <div class="notes-content">${escapeHtml(invoiceNotes)}</div>
-            ` : ''}
-            <div class="guarantee-box">
-                Ethically Sourced • Certified Lab-Grown Diamonds • Lifetime Craftsmanship Guarantee
-            </div>
-        </div>
-    </div>
-</body>
-</html>`;
-
-        const printWin = window.open('', '_blank');
-        if (!printWin) {
-            setWarningMessage('Please allow popups to download and print the order invoice.');
+            const safeFilename = `Invoice-${String(invoiceNumber).replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`;
+            pdf.save(safeFilename);
+            setAlertMessage(translations.invoicedownloaded || 'Invoice PDF downloaded successfully');
+        } catch {
+            setWarningMessage(translations.invoicedownloadfailed || 'Failed to download invoice PDF. Please try again.');
             setShowWarning(true);
-            return;
+        } finally {
+            setDownloadingInvoice(false);
         }
-
-        printWin.document.open();
-        printWin.document.write(invoiceHtml);
-        printWin.document.close();
-        printWin.focus();
-
-        setTimeout(() => {
-            try {
-                printWin.print();
-            } catch {
-                // User can still use top print button in the opened window
-            }
-        }, 450);
     };
 
     if (loading) {
@@ -730,10 +512,24 @@ const OrderDetails = () => {
                                 type="button"
                                 className="invoice-btn"
                                 onClick={handleDownloadInvoice}
+                                disabled={downloadingInvoice}
                                 title={translations.downloadinvoice || 'Download Invoice'}
                             >
-                                <PictureAsPdfIcon style={{ fontSize: 17 }} />
-                                <span>{translations.invoice || 'Invoice'}</span>
+                                {downloadingInvoice ? (
+                                    <span
+                                        className="spinner-border spinner-border-sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                        style={{ width: 14, height: 14, borderWidth: 2 }}
+                                    />
+                                ) : (
+                                    <PictureAsPdfIcon style={{ fontSize: 17 }} />
+                                )}
+                                <span>
+                                    {downloadingInvoice
+                                        ? (translations.downloading || 'Downloading...')
+                                        : (translations.invoice || 'Invoice')}
+                                </span>
                             </button>
                         )}
                     </div>

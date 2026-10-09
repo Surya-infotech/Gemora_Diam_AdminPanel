@@ -142,15 +142,22 @@
                         color: #ffffff;
                     }
 
-                    &:hover {
+                    &:hover:not(:disabled) {
                         background: #059669;
                         border-color: #047857;
                         transform: translateY(-1px);
                         box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.35);
                     }
 
-                    &:active {
+                    &:active:not(:disabled) {
                         transform: translateY(0);
+                    }
+
+                    &:disabled {
+                        opacity: 0.7;
+                        cursor: not-allowed;
+                        transform: none;
+                        box-shadow: none;
                     }
                 }
             }
