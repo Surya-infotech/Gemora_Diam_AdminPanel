@@ -286,7 +286,7 @@ const AddItem = () => {
         }
 
         if (!description.trim()) {
-            setWarningMessage(translations.descriptionrequired || "Description is required");
+            setWarningMessage(translations.descriptionrequired);
             setShowWarning(true);
             return;
         }
@@ -379,7 +379,7 @@ const AddItem = () => {
             });
 
             if (response.status === 413) {
-                setWarningMessage(translations.filesizetoolarge || "File size is too large.");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 return;
             }
@@ -401,20 +401,20 @@ const AddItem = () => {
                 });
             } else {
                 const errorMessages = {
-                    "SKU is required": translations.skurequired || "SKU is required",
-                    "SKU Already Exists": translations.skualreadyexists || "SKU Already Exists",
-                    "Item Name is required": translations.itemnamerequired || "Item Name is required",
-                    "Description is required": translations.descriptionrequired || "Description is required",
-                    "Category is required": translations.categoryrequired || "Category is required",
-                    "Sub Category is required": translations.subcategoryrequired || "Sub Category is required",
-                    "Shape is required": translations.shaperequired || "Shape is required",
-                    "Clarity is required": translations.clarityrequired || "Clarity is required",
-                    "Stone is required": translations.stonerequired || "Stone is required",
-                    "Style is required": translations.stylerequired || "Style is required",
-                    "Diamond Color is required": translations.diamondcolorrequired || "Diamond Color is required",
-                    "Band Color is required": translations.bandcolorrequired || "Band Color is required",
-                    "Image is required": translations.imagerequired || "Image is required",
-                    "Item Already Exists": translations.itemalreadyexists || "Item Already Exists",
+                    "SKU is required": translations.skurequired,
+                    "SKU Already Exists": translations.skualreadyexists,
+                    "Item Name is required": translations.itemnamerequired,
+                    "Description is required": translations.descriptionrequired,
+                    "Category is required": translations.categoryrequired,
+                    "Sub Category is required": translations.subcategoryrequired,
+                    "Shape is required": translations.shaperequired,
+                    "Clarity is required": translations.clarityrequired,
+                    "Stone is required": translations.stonerequired,
+                    "Style is required": translations.stylerequired,
+                    "Diamond Color is required": translations.diamondcolorrequired,
+                    "Band Color is required": translations.bandcolorrequired,
+                    "Image is required": translations.imagerequired,
+                    "Item Already Exists": translations.itemalreadyexists,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || result.message || translations.servererror);

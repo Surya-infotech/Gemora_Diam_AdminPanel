@@ -51,7 +51,7 @@ const OrderDetails = () => {
 
     useEffect(() => {
         const orderNum = order?.ordernumber != null ? order.ordernumber : (order?.orderid || id);
-        document.title = `${translations.orderdetails || 'Order Details'} #${orderNum}`;
+        document.title = `${translations.orderdetails} #${orderNum}`;
     }, [order, id, translations]);
 
     useEffect(() => {
@@ -173,7 +173,7 @@ const OrderDetails = () => {
 
             if (response.ok) {
                 setOrder((prev) => ({ ...prev, orderstatus: newStatus }));
-                setAlertMessage(translations.updateordersuccessfull || 'Order status updated successfully');
+                setAlertMessage(translations.updateordersuccessfull);
             } else {
                 setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
@@ -216,7 +216,7 @@ const OrderDetails = () => {
             ].filter(Boolean);
             const brandAddress = brandAddressParts.join(', ');
 
-            const customerName = order.customername || 'Valued Customer';
+            const customerName = order.customername || translations.valuedclient;
             const customerEmail = order.customeremail || '';
             const customerPhone = order.customerphone || '';
 
@@ -256,7 +256,7 @@ const OrderDetails = () => {
                                 ${idx + 1}. ${escapeHtml(item.itemname || 'Fine Jewelry Piece')}
                             </div>
                             ${specs ? `<div style="font-size: 11.5px; color: #64748b; line-height: 1.5; margin-bottom: 4px;">${escapeHtml(specs)}</div>` : ''}
-                            ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">Special Note: ${escapeHtml(item.specialinstruction)}</div>` : ''}
+                            ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">${escapeHtml(translations.instruction)}: ${escapeHtml(item.specialinstruction)}</div>` : ''}
                         </td>
                         <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; text-align: center; vertical-align: top; font-weight: 600; font-size: 13.5px; color: #334155;">
                             ${qty}
@@ -291,12 +291,12 @@ const OrderDetails = () => {
                                 ${escapeHtml(brandName)}
                             </div>
                             <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-top: 4px;">
-                                Official Invoice
+                                ${escapeHtml(translations.officialinvoice)}
                             </div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 20px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                                Tax Invoice
+                                ${escapeHtml(translations.taxinvoice)}
                             </div>
                             <div style="font-size: 14px; font-weight: 700; color: #10b981; font-family: monospace; margin-top: 2px;">
                                 ${escapeHtml(invoiceNumber)}
@@ -306,15 +306,15 @@ const OrderDetails = () => {
 
                     <div style="display: flex; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 18px; margin-bottom: 22px;">
                         <div>
-                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Invoice Date</div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">${escapeHtml(translations.invoicedate)}</div>
                             <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">${escapeHtml(invoiceDate)}</div>
                         </div>
                         <div>
-                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Order Number</div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">${escapeHtml(translations.ordernumber)}</div>
                             <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">#${escapeHtml(orderNumberDisplay)}</div>
                         </div>
                         <div>
-                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Order Status</div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">${escapeHtml(translations.orderstatus)}</div>
                             <div style="margin-top: 2px;">
                                 <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #dcfce7; color: #15803d;">
                                     ${escapeHtml(order.orderstatus || 'Delivered')}
@@ -322,7 +322,7 @@ const OrderDetails = () => {
                             </div>
                         </div>
                         <div>
-                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">Payment Status</div>
+                            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: #64748b;">${escapeHtml(translations.paymentstatus)}</div>
                             <div style="margin-top: 2px;">
                                 <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; background: #dcfce7; color: #15803d;">
                                     ${escapeHtml(order.paymentstatus || 'Paid')}
@@ -334,33 +334,33 @@ const OrderDetails = () => {
                     <div style="display: flex; gap: 18px; margin-bottom: 22px;">
                         <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #ffffff;">
                             <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #044e39; font-weight: 700; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9;">
-                                Billed &amp; Delivered To
+                                ${escapeHtml(translations.billedanddeliveredto)}
                             </div>
                             <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">${escapeHtml(customerName)}</div>
-                            ${customerEmail ? `<div style="font-size: 12px; color: #475569;">Email: ${escapeHtml(customerEmail)}</div>` : ''}
-                            ${customerPhone ? `<div style="font-size: 12px; color: #475569;">Phone: ${escapeHtml(customerPhone)}</div>` : ''}
+                            ${customerEmail ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.email)}: ${escapeHtml(customerEmail)}</div>` : ''}
+                            ${customerPhone ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.phone)}: ${escapeHtml(customerPhone)}</div>` : ''}
                             ${shippingAddressParts ? `<div style="font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.4;">${shippingAddressParts}</div>` : ''}
                         </div>
 
                         <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; background: #ffffff;">
                             <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #044e39; font-weight: 700; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9;">
-                                Issued By
+                                ${escapeHtml(translations.issuedby)}
                             </div>
                             <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px;">${escapeHtml(brandName)}</div>
-                            ${brandEmail ? `<div style="font-size: 12px; color: #475569;">Email: ${escapeHtml(brandEmail)}</div>` : ''}
-                            ${brandPhone ? `<div style="font-size: 12px; color: #475569;">Phone: ${escapeHtml(brandPhone)}</div>` : ''}
+                            ${brandEmail ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.email)}: ${escapeHtml(brandEmail)}</div>` : ''}
+                            ${brandPhone ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.phone)}: ${escapeHtml(brandPhone)}</div>` : ''}
                             ${brandAddress ? `<div style="font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.4;">${escapeHtml(brandAddress)}</div>` : ''}
-                            <div style="font-size: 12px; color: #475569; margin-top: 6px;"><strong>Payment Method:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
+                            <div style="font-size: 12px; color: #475569; margin-top: 6px;"><strong>${escapeHtml(translations.paymentmethod)}:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
                         </div>
                     </div>
 
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 22px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
                         <thead>
                             <tr style="background: #f1f5f9;">
-                                <th style="text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Product Details</th>
-                                <th style="text-align: center; width: 70px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Qty</th>
-                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Unit Rate</th>
-                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">Amount</th>
+                                <th style="text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">${escapeHtml(translations.productdetails)}</th>
+                                <th style="text-align: center; width: 70px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">${escapeHtml(translations.quantity)}</th>
+                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">${escapeHtml(translations.unitrate)}</th>
+                                <th style="text-align: right; width: 120px; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155; border-bottom: 2px solid #cbd5e1;">${escapeHtml(translations.amount)}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -371,11 +371,11 @@ const OrderDetails = () => {
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 22px;">
                         <div style="width: 280px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px;">
                             <div style="display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px;">
-                                <span>Subtotal:</span>
+                                <span>${escapeHtml(translations.subtotal)}:</span>
                                 <span>${escapeHtml(subtotalStr)}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #0f172a; border-top: 2px solid #0f172a; padding-top: 8px; margin-top: 6px;">
-                                <span>Grand Total:</span>
+                                <span>${escapeHtml(translations.grandtotal)}:</span>
                                 <span>${escapeHtml(grandTotalStr)}</span>
                             </div>
                         </div>
@@ -383,7 +383,7 @@ const OrderDetails = () => {
 
                     <div style="border-top: 1px dashed #cbd5e1; padding-top: 16px;">
                         ${invoiceNotes ? `
-                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Notes</div>
+                            <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">${escapeHtml(translations.notes || translations.invoicenotes)}</div>
                             <div style="font-size: 12px; color: #475569; line-height: 1.5; margin-bottom: 12px;">${escapeHtml(invoiceNotes)}</div>
                         ` : ''}
                         <div style="text-align: center; padding: 10px; background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 6px; font-size: 11px; color: #78716c;">
@@ -426,9 +426,9 @@ const OrderDetails = () => {
 
             const safeFilename = `Invoice-${String(invoiceNumber).replace(/[^a-zA-Z0-9_-]/g, '_')}.pdf`;
             pdf.save(safeFilename);
-            setAlertMessage(translations.invoicedownloaded || 'Invoice PDF downloaded successfully');
+            setAlertMessage(translations.invoicedownloaded);
         } catch {
-            setWarningMessage(translations.invoicedownloadfailed || 'Failed to download invoice PDF. Please try again.');
+            setWarningMessage(translations.invoicedownloadfailed);
             setShowWarning(true);
         } finally {
             setDownloadingInvoice(false);
@@ -451,9 +451,9 @@ const OrderDetails = () => {
                 <div className="orderdetails-container">
                     {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
                     <div style={{ textAlign: 'center', padding: '60px 0' }}>
-                        <h5>Order Not Found</h5>
+                        <h5>{translations.ordernotfound}</h5>
                         <button type="button" className="btn btn-secondary mt-3" onClick={() => navigate('/Home/Order')}>
-                            Back to Orders
+                            {translations.backtoorders}
                         </button>
                     </div>
                 </div>
@@ -482,12 +482,12 @@ const OrderDetails = () => {
                             type="button"
                             className="orderdetails-back-btn"
                             onClick={() => navigate('/Home/Order')}
-                            title={translations.back || 'Back to Orders'}
+                            title={translations.backtoorders}
                         >
                             <ArrowBackIcon style={{ fontSize: 20 }} />
                         </button>
                         <h5 className="orderdetails-heading">
-                            <span>{translations.orderdetails || 'Order Details'}</span>
+                            <span>{translations.orderdetails}</span>
                             <span className="order-badge-highlight">#{orderNumberDisplay}</span>
                         </h5>
                     </div>
@@ -513,7 +513,7 @@ const OrderDetails = () => {
                                 className="invoice-btn"
                                 onClick={handleDownloadInvoice}
                                 disabled={downloadingInvoice}
-                                title={translations.downloadinvoice || 'Download Invoice'}
+                                title={translations.downloadinvoice}
                             >
                                 {downloadingInvoice ? (
                                     <span
@@ -527,8 +527,8 @@ const OrderDetails = () => {
                                 )}
                                 <span>
                                     {downloadingInvoice
-                                        ? (translations.downloading || 'Downloading...')
-                                        : (translations.invoice || 'Invoice')}
+                                        ? translations.downloading
+                                        : translations.invoice}
                                 </span>
                             </button>
                         )}
@@ -543,19 +543,19 @@ const OrderDetails = () => {
                         <div className="info-card">
                             <div className="info-card-header">
                                 <ReceiptLongIcon className="card-icon" />
-                                <h6>Order Info</h6>
+                                <h6>{translations.orderinfo}</h6>
                             </div>
                             <div className="info-card-body">
                                 <div className="info-row">
-                                    <span className="info-label">Order Number:</span>
+                                    <span className="info-label">{translations.ordernumber}:</span>
                                     <span className="info-val">#{orderNumberDisplay}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Placed On:</span>
+                                    <span className="info-label">{translations.placedon}:</span>
                                     <span className="info-val">{formatDateTime(order.createdAt, miscSettings)}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Total Items:</span>
+                                    <span className="info-label">{translations.totalitems}:</span>
                                     <span className="info-val">{totalItemsCount}</span>
                                 </div>
                             </div>
@@ -565,19 +565,19 @@ const OrderDetails = () => {
                         <div className="info-card">
                             <div className="info-card-header">
                                 <PersonIcon className="card-icon" />
-                                <h6>{translations.customerdetails || 'Customer Details'}</h6>
+                                <h6>{translations.customerdetails}</h6>
                             </div>
                             <div className="info-card-body">
                                 <div className="info-row">
-                                    <span className="info-label">Name:</span>
-                                    <span className="info-val">{order.customername || 'Guest Customer'}</span>
+                                    <span className="info-label">{translations.name}:</span>
+                                    <span className="info-val">{order.customername || translations.guestcustomer}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Email:</span>
+                                    <span className="info-label">{translations.email}:</span>
                                     <span className="info-val">{order.customeremail || '-'}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Phone:</span>
+                                    <span className="info-label">{translations.phone}:</span>
                                     <span className="info-val">{order.customerphone || '-'}</span>
                                 </div>
                             </div>
@@ -587,12 +587,12 @@ const OrderDetails = () => {
                         <div className="info-card">
                             <div className="info-card-header">
                                 <LocalShippingIcon className="card-icon" />
-                                <h6>{translations.shippingaddress || 'Shipping Address'}</h6>
+                                <h6>{translations.shippingaddress}</h6>
                             </div>
                             <div className="info-card-body">
                                 {order.shippingaddress ? (
                                     <>
-                                        <div style={{ fontWeight: 600 }}>{order.shippingaddress.title || 'Address'}</div>
+                                        <div style={{ fontWeight: 600 }}>{order.shippingaddress.title || translations.address}</div>
                                         <div>{order.shippingaddress.address}</div>
                                         <div>
                                             {[
@@ -604,7 +604,7 @@ const OrderDetails = () => {
                                         <div>{order.shippingaddress.countryname}</div>
                                     </>
                                 ) : (
-                                    <div>No shipping address recorded</div>
+                                    <div>{translations.noshippingaddress}</div>
                                 )}
                             </div>
                         </div>
@@ -613,21 +613,21 @@ const OrderDetails = () => {
                         <div className="info-card">
                             <div className="info-card-header">
                                 <PaymentIcon className="card-icon" />
-                                <h6>{translations.paymentmethod || 'Payment Details'}</h6>
+                                <h6>{translations.paymentdetails}</h6>
                             </div>
                             <div className="info-card-body">
                                 <div className="info-row">
-                                    <span className="info-label">Method:</span>
+                                    <span className="info-label">{translations.method}:</span>
                                     <span className="info-val">{order.paymentmethod || 'Prepaid'}</span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Payment Status:</span>
+                                    <span className="info-label">{translations.paymentstatus}:</span>
                                     <span className={`badge-pill ${paymentStatusClass}`}>
                                         {order.paymentstatus || 'Paid'}
                                     </span>
                                 </div>
                                 <div className="info-row">
-                                    <span className="info-label">Currency:</span>
+                                    <span className="info-label">{translations.currency}:</span>
                                     <span className="info-val">
                                         {order.currencydetails?.currency || order.currency || 'INR'} ({order.currencydetails?.currencysymbol || '₹'})
                                     </span>
@@ -639,7 +639,7 @@ const OrderDetails = () => {
                     {/* Ordered Items Table Card */}
                     <div className="items-card">
                         <div className="items-card-title">
-                            <span>{translations.itemdetails || 'Ordered Items'}</span>
+                            <span>{translations.itemdetails}</span>
                             <span className="items-count-badge">
                                 {order.items?.length || 0} {order.items?.length === 1 ? 'type' : 'types'} • {totalItemsCount} total
                             </span>
@@ -649,10 +649,10 @@ const OrderDetails = () => {
                             <table className="items-table">
                                 <thead>
                                     <tr>
-                                        <th>Product</th>
-                                        <th style={{ textAlign: 'center' }}>{translations.quantity || 'Qty'}</th>
-                                        <th style={{ textAlign: 'right' }}>{translations.unitprice || 'Unit Price'}</th>
-                                        <th style={{ textAlign: 'right' }}>{translations.totalprice || 'Total Price'}</th>
+                                        <th>{translations.product}</th>
+                                        <th style={{ textAlign: 'center' }}>{translations.quantity}</th>
+                                        <th style={{ textAlign: 'right' }}>{translations.unitprice}</th>
+                                        <th style={{ textAlign: 'right' }}>{translations.totalprice}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -680,7 +680,7 @@ const OrderDetails = () => {
                                                             {specs && <div className="specs-row">{specs}</div>}
                                                             {item.specialinstruction && (
                                                                 <div className="instruction-row">
-                                                                    Instruction: {item.specialinstruction}
+                                                                    {translations.instruction}: {item.specialinstruction}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -709,11 +709,11 @@ const OrderDetails = () => {
                         <div className="order-financial-breakdown">
                             <div className="breakdown-box">
                                 <div className="breakdown-row">
-                                    <span>{translations.subtotal || 'Subtotal'}:</span>
+                                    <span>{translations.subtotal}:</span>
                                     <span>{formatPriceWithCurrency(order.subtotal, order.currencydetails)}</span>
                                 </div>
                                 <div className="breakdown-row grand-total">
-                                    <span>{translations.total || 'Grand Total'}:</span>
+                                    <span>{translations.grandtotal}:</span>
                                     <span>{formatPriceWithCurrency(order.total, order.currencydetails)}</span>
                                 </div>
                             </div>

@@ -222,28 +222,28 @@ const GetOrder = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => handleSort("ordernumber")} style={{ cursor: "pointer", width: "95px" }}>
-                                    {translations.orderno || "Order No."} {renderSortIcon("ordernumber")}
+                                    {translations.orderno} {renderSortIcon("ordernumber")}
                                 </th>
                                 <th onClick={() => handleSort("customername")} style={{ cursor: "pointer" }}>
-                                    {translations.Customer || "Customer"} {renderSortIcon("customername")}
+                                    {translations.Customer} {renderSortIcon("customername")}
                                 </th>
                                 <th>
-                                    {translations.items || "Items"}
+                                    {translations.items}
                                 </th>
                                 <th onClick={() => handleSort("total")} style={{ cursor: "pointer" }}>
-                                    {translations.totalamount || "Total Amount"} {renderSortIcon("total")}
+                                    {translations.totalamount} {renderSortIcon("total")}
                                 </th>
                                 <th onClick={() => handleSort("paymentstatus")} style={{ cursor: "pointer" }}>
-                                    {translations.paymentstatus || "Payment"} {renderSortIcon("paymentstatus")}
+                                    {translations.paymentstatus} {renderSortIcon("paymentstatus")}
                                 </th>
                                 <th onClick={() => handleSort("orderstatus")} style={{ cursor: "pointer", width: "130px" }}>
-                                    {translations.orderstatus || "Order Status"} {renderSortIcon("orderstatus")}
+                                    {translations.orderstatus} {renderSortIcon("orderstatus")}
                                 </th>
                                 <th onClick={() => handleSort("createdAt")} style={{ cursor: "pointer" }}>
-                                    {translations.orderdate || "Date"} {renderSortIcon("createdAt")}
+                                    {translations.orderdate} {renderSortIcon("createdAt")}
                                 </th>
                                 <th style={{ textAlign: "center", width: "120px" }}>
-                                    {translations.action || "Action"}
+                                    {translations.action}
                                 </th>
                             </tr>
                         </thead>
@@ -260,7 +260,7 @@ const GetOrder = ({ searchValue = "" }) => {
                                         <tr key={orderKey}>
                                             {/* Order Number */}
                                             <td>
-                                                <Tooltip title={translations.viewdetails || translations.View || "View Details"} arrow>
+                                                <Tooltip title={translations.viewdetails || translations.View} arrow>
                                                     <span
                                                         className="order-number-badge"
                                                         style={{ cursor: "pointer" }}
@@ -279,7 +279,7 @@ const GetOrder = ({ searchValue = "" }) => {
                                                     </div>
                                                     <div className="customer-text">
                                                         <strong>
-                                                            {order.customername || "Guest Customer"}
+                                                            {order.customername || translations.guestcustomer}
                                                         </strong>
                                                         {order.customeremail && (
                                                             <span className="customer-subtext">{order.customeremail}</span>
@@ -357,7 +357,7 @@ const GetOrder = ({ searchValue = "" }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
-                                        {translations.noordersfound || "No orders found"}
+                                        {translations.noordersfound}
                                     </td>
                                 </tr>
                             )}

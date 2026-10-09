@@ -7,13 +7,13 @@ const ViewButton = React.forwardRef(({ onClick, disabled = false, size = "small"
     const { translations } = useLanguage();
 
     return (
-        <Tooltip title={translations.viewdetails || translations.View || 'View Details'} arrow>
+        <Tooltip title={translations.viewdetails || translations.View} arrow>
             <span ref={ref} {...props}>
                 <IconButton
                     size={size}
                     onClick={onClick}
                     disabled={disabled}
-                    aria-label={translations.viewdetails || translations.View || 'View Details'}
+                    aria-label={translations.viewdetails || translations.View}
                     className="view-icon"
                 >
                     <ViewIcon fontSize="small" />

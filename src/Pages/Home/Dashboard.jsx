@@ -227,7 +227,7 @@ const Dashboard = () => {
     // 4 Key Performance Indicators matching Gemora Diam Fine Jewelry Store
     const cardData = [
         {
-            name: translations.totalorders || "Total Orders",
+            name: translations.totalorders,
             count: dashboardData.totalOrdersCount ?? 0,
             difference: kpiDifferences.ordersDifference,
             icon: <ShoppingBag className="card-icon" />,
@@ -236,7 +236,7 @@ const Dashboard = () => {
             variant: "highlight",
         },
         {
-            name: translations.totalrevenue || "Total Revenue",
+            name: translations.totalrevenue,
             count: formatCurrency(dashboardData.totalRevenue ?? 0, currencyDetails),
             difference: kpiDifferences.revenueDifference,
             icon: <Payments className="card-icon" />,
@@ -245,7 +245,7 @@ const Dashboard = () => {
             variant: "revenue",
         },
         {
-            name: translations.totalproducts || "Jewelry Items",
+            name: translations.totalproducts,
             count: dashboardData.totalProductsCount ?? 0,
             difference: kpiDifferences.productsDifference,
             icon: <Diamond className="card-icon" />,
@@ -254,7 +254,7 @@ const Dashboard = () => {
             variant: "income",
         },
         {
-            name: translations.totalcustomers || "Total Customers",
+            name: translations.totalcustomers,
             count: dashboardData.totalCustomersCount ?? 0,
             difference: kpiDifferences.customersDifference,
             icon: <Groups className="card-icon" />,
@@ -265,18 +265,18 @@ const Dashboard = () => {
     ];
 
     const monthNames = [
-        translations.Jan || "Jan",
-        translations.Feb || "Feb",
-        translations.Mar || "Mar",
-        translations.Apr || "Apr",
-        translations.May || "May",
-        translations.Jun || "Jun",
-        translations.Jul || "Jul",
-        translations.Aug || "Aug",
-        translations.Sep || "Sep",
-        translations.Oct || "Oct",
-        translations.Nov || "Nov",
-        translations.Dec || "Dec"
+        translations.Jan,
+        translations.Feb,
+        translations.Mar,
+        translations.Apr,
+        translations.May,
+        translations.Jun,
+        translations.Jul,
+        translations.Aug,
+        translations.Sep,
+        translations.Oct,
+        translations.Nov,
+        translations.Dec
     ];
 
     const initialChartData = monthNames.map((month) => ({ month, Revenue: 0, Orders: 0 }));
@@ -298,7 +298,7 @@ const Dashboard = () => {
                     <p className="label">{`${label}`}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="tooltip-data">
-                            {`${entry.dataKey === "Revenue" ? (translations.monthlyrevenue || "Revenue") : (translations.orders || "Orders")}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
+                            {`${entry.dataKey === "Revenue" ? translations.monthlyrevenue : translations.orders}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
                         </p>
                     ))}
                 </div>
@@ -351,7 +351,7 @@ const Dashboard = () => {
             <div className="dashboard-row row-1">
                 <div className="chart-container monthly-revenue-chart">
                     <Typography variant="h6" className="chart-title">
-                        {translations.monthlyrevenue || "Monthly Revenue"}
+                        {translations.monthlyrevenue}
                     </Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -359,7 +359,7 @@ const Dashboard = () => {
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={95} tickFormatter={(value) => formatCurrency(value, currencyDetails)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.monthlyrevenue || "Revenue"} />
+                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.monthlyrevenue} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -367,10 +367,10 @@ const Dashboard = () => {
                 <div className="recently-added-container">
                     <div className="section-header-wrap">
                         <Typography variant="h6" className="section-title">
-                            {translations.recentorders || "Recent Orders"}
+                            {translations.recentorders}
                         </Typography>
                         <button className="view-all-btn" onClick={() => navigate('/Home/Order')}>
-                            {translations.viewall || "View All"} <ArrowForward />
+                            {translations.viewall} <ArrowForward />
                         </button>
                     </div>
                     {recentOrders.length > 0 ? (
@@ -392,7 +392,7 @@ const Dashboard = () => {
                                                     #ORD-{order.ordernumber || order.orderid}
                                                 </div>
                                                 <div className="order-customer">
-                                                    {order.customername || order.customeremail || "Valued Client"}
+                                                    {order.customername || order.customeremail || translations.valuedclient}
                                                 </div>
                                                 <div className="order-date">
                                                     {formatDisplayDate(order.createdAt)}
@@ -414,7 +414,7 @@ const Dashboard = () => {
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentorders || "No recent orders found"}
+                                {translations.notfoundrecentorders}
                             </Typography>
                         </div>
                     )}
@@ -425,10 +425,10 @@ const Dashboard = () => {
                 <div className="recently-added-container">
                     <div className="section-header-wrap">
                         <Typography variant="h6" className="section-title">
-                            {translations.recentcustomers || "Recent Clients"}
+                            {translations.recentcustomers}
                         </Typography>
                         <button className="view-all-btn" onClick={() => navigate('/User/Customer')}>
-                            {translations.viewall || "View All"} <ArrowForward />
+                            {translations.viewall} <ArrowForward />
                         </button>
                     </div>
                     {recentCustomers.length > 0 ? (
@@ -445,7 +445,7 @@ const Dashboard = () => {
                                         </div>
                                         <div className="client-info">
                                             <div className="client-name">
-                                                {cust.fullname || "Client"}
+                                                {cust.fullname || translations.client}
                                             </div>
                                             <div className="client-email">
                                                 {cust.email || ""}
@@ -462,7 +462,7 @@ const Dashboard = () => {
                                             {formatDisplayDate(cust.createdAt)}
                                         </div>
                                         <span className="client-status-badge">
-                                            Active
+                                            {translations.active}
                                         </span>
                                     </div>
                                 </div>
@@ -471,7 +471,7 @@ const Dashboard = () => {
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentcustomers || "No recent clients found"}
+                                {translations.notfoundrecentcustomers}
                             </Typography>
                         </div>
                     )}
@@ -479,7 +479,7 @@ const Dashboard = () => {
 
                 <div className="chart-container monthly-order-chart">
                     <Typography variant="h6" className="chart-title">
-                        {translations.monthlyorders || "Monthly Orders"}
+                        {translations.monthlyorders}
                     </Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <BarChart data={chartData} barSize={22} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -487,7 +487,7 @@ const Dashboard = () => {
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={65} allowDecimals={false} tickFormatter={(value) => Math.round(value)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.orders || "Orders"} radius={[10, 10, 10, 10]} isAnimationActive={false} />
+                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.orders} radius={[10, 10, 10, 10]} isAnimationActive={false} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

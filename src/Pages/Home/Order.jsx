@@ -28,13 +28,13 @@ const Order = () => {
     return (
         <div className={`Order-container ${isRtl ? 'rtl-order' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="order-container">
-                <h6 className="order-headingname">{translations.Order || "Order"}</h6>
+                <h6 className="order-headingname">{translations.Order}</h6>
                 <div className="order-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="order-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />

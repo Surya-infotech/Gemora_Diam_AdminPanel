@@ -235,7 +235,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             });
 
             if (response.status === 413) {
-                setAlertMessage(translations.filesizetoolarge || "File size too large.");
+                setAlertMessage(translations.filesizetoolarge);
                 setAlertType('error');
                 return;
             }
@@ -244,7 +244,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             try {
                 data = await response.json();
             } catch {
-                setAlertMessage(translations.servererror || "Server error occurred");
+                setAlertMessage(translations.servererror);
                 setAlertType('error');
                 return;
             }
@@ -430,7 +430,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             });
 
             if (response.status === 413) {
-                setAlertMessage(translations.videofilesizetoolarge || "Video file size exceeds limit.");
+                setAlertMessage(translations.videofilesizetoolarge);
                 setAlertType('error');
                 return;
             }
@@ -439,7 +439,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
             try {
                 data = await response.json();
             } catch {
-                setAlertMessage(translations.servererror || "Server error occurred");
+                setAlertMessage(translations.servererror);
                 setAlertType('error');
                 return;
             }
