@@ -11,8 +11,8 @@ const Banner = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { translations, isRtl } = useLanguage();
-    const [alertMessage, setAlertMessage] = useState("");
-    const [warningMessage, setWarningMessage] = useState("");
+    const [alertMessage, setAlertMessage] = useState(location.state?.message || "");
+    const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
@@ -20,16 +20,8 @@ const Banner = () => {
     }, [translations]);
 
     useEffect(() => {
-        if (location.state && location.state.message) {
-            setAlertMessage(location.state.message);
-            navigate(location.pathname, { replace: true });
-        }
-    }, [location, navigate]);
-
-    useEffect(() => {
-        if (location.state && location.state.warning) {
-            setWarningMessage(location.state.warning);
-            navigate(location.pathname, { replace: true });
+        if (location.state?.message || location.state?.warning) {
+            navigate(location.pathname, { replace: true, state: {} });
         }
     }, [location, navigate]);
 
