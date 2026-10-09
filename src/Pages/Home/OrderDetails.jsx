@@ -13,8 +13,6 @@ import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import LoadingSpinner from '../Custom/LoadingSpinner';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
-import DeleteModal from '../Custom/DeleteModal';
-import DeleteButton from '../Custom/DeleteButton';
 import { formatPriceWithCurrency } from '../../utils/CurrencyFormatter';
 import '../../Scss/Home/Order/orderdetails.scss';
 
@@ -58,8 +56,7 @@ const OrderDetails = () => {
     const [alertMessage, setAlertMessage] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
     const [showWarning, setShowWarning] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+
 
     useEffect(() => {
         const orderNum = order?.ordernumber != null ? order.ordernumber : (order?.orderid || id);
@@ -140,41 +137,6 @@ const OrderDetails = () => {
         }
     };
 
-    const handleDeleteOrder = async () => {
-        if (!order) return;
-        if (!CheckToken(token, logoutUser, navigate)) return;
-        const targetId = order._id || order.orderid || id;
-
-        try {
-            setIsDeleting(true);
-            const response = await fetch(`${adminPanelBackendPath}/Customer/DeleteOrder/${targetId}`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-
-            if (response.ok) {
-                navigate('/Home/Order', {
-                    replace: true,
-                    state: { message: translations.deleteordersuccessfull || 'Order deleted successfully' }
-                });
-            } else {
-                setWarningMessage(data.message || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
     const handlePrint = () => {
         window.print();
     };
@@ -252,8 +214,6 @@ const OrderDetails = () => {
                             <PrintIcon style={{ fontSize: 17 }} />
                             <span>Print</span>
                         </button>
-
-                        <DeleteButton onClick={() => setIsDeleteModalOpen(true)} />
                     </div>
                 </div>
 
@@ -444,18 +404,6 @@ const OrderDetails = () => {
                 </div>
             </div>
 
-            {/* Delete Modal */}
-            {isDeleteModalOpen && (
-                <DeleteModal
-                    open={isDeleteModalOpen}
-                    onClose={() => setIsDeleteModalOpen(false)}
-                    onDelete={handleDeleteOrder}
-                    name={`Order #${orderNumberDisplay}`}
-                    message={`(Total: ${formatPriceWithCurrency(order.total, order.currencydetails)})`}
-                    headingname={translations.deleteorder || 'Delete Order'}
-                    isLoading={isDeleting}
-                />
-            )}
         </div>
     );
 };
