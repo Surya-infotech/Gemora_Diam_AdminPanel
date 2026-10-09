@@ -122,23 +122,35 @@
                     }
                 }
 
-                .print-btn {
+                .invoice-btn {
                     display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    padding: 7px 14px;
+                    gap: 7px;
+                    padding: 7px 16px;
                     border-radius: 6px;
                     font-size: 13px;
                     font-weight: 600;
-                    background: #ffffff;
-                    border: 1px solid var(--border-color, #e2e8f0);
-                    color: #334155;
+                    background: #10b981;
+                    border: 1px solid #059669;
+                    color: #ffffff;
                     cursor: pointer;
+                    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.25);
                     transition: all 0.2s ease;
 
+                    svg {
+                        font-size: 17px;
+                        color: #ffffff;
+                    }
+
                     &:hover {
-                        background-color: #f8fafc;
-                        border-color: #cbd5e1;
+                        background: #059669;
+                        border-color: #047857;
+                        transform: translateY(-1px);
+                        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.35);
+                    }
+
+                    &:active {
+                        transform: translateY(0);
                     }
                 }
             }

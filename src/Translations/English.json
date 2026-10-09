@@ -653,5 +653,7 @@
   "recentcustomers": "Recent Clients",
   "notfoundrecentcustomers": "No recent clients found",
   "monthlyorders": "Monthly Orders",
-  "viewall": "View All"
+  "viewall": "View All",
+  "invoice": "Invoice",
+  "downloadinvoice": "Download Invoice"
 }

@@ -1,5 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import PrintIcon from '@mui/icons-material/Print';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -15,6 +15,7 @@ import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import { formatPriceWithCurrency } from '../../utils/CurrencyFormatter';
 import { formatDateTime } from '../../utils/dateTimeFormatter';
+import { fetchInvoiceSettings } from '../../utils/invoiceSettingUtils';
 import '../../Scss/Home/Order/orderdetails.scss';
 
 const ORDER_STATUS_OPTIONS = [
@@ -37,6 +38,8 @@ const OrderDetails = () => {
 
     const [order, setOrder] = useState(location.state?.order || null);
     const [miscSettings, setMiscSettings] = useState(null);
+    const [invoiceSettings, setInvoiceSettings] = useState(null);
+    const [generalSettings, setGeneralSettings] = useState(null);
     const [loading, setLoading] = useState(!location.state?.order);
     const [alertMessage, setAlertMessage] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
@@ -113,7 +116,35 @@ const OrderDetails = () => {
             }
         };
 
+        const fetchExtraSettings = async () => {
+            try {
+                const inv = await fetchInvoiceSettings(adminPanelBackendPath);
+                if (isMounted && inv) {
+                    setInvoiceSettings(inv);
+                }
+            } catch {
+                // Ignore fallback
+            }
+
+            try {
+                const genRes = await fetch(`${adminPanelBackendPath}/System/GetGeneralSetting`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (isMounted && genRes.ok) {
+                    const genData = await genRes.json();
+                    setGeneralSettings(genData);
+                }
+            } catch {
+                // Ignore fallback
+            }
+        };
+
         fetchMiscSettings();
+        fetchExtraSettings();
         return () => {
             isMounted = false;
         };
@@ -150,8 +181,476 @@ const OrderDetails = () => {
         }
     };
 
-    const handlePrint = () => {
-        window.print();
+    const escapeHtml = (text) => {
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
+    const handleDownloadInvoice = () => {
+        if (!order) return;
+
+        const orderNumberDisplay = order.ordernumber != null ? order.ordernumber : (order.orderid || id);
+        const prefix = invoiceSettings?.invoicePrefix || 'INV-';
+        const invoiceNumber = `${prefix}${orderNumberDisplay}`;
+        const invoiceDate = formatDateTime(order.createdAt, miscSettings) || new Date().toLocaleDateString();
+
+        const brandName = generalSettings?.softwarename || 'Gemora Diam';
+        const brandEmail = generalSettings?.email || '';
+        const brandPhone = generalSettings?.phone || '';
+        const brandAddressParts = [
+            generalSettings?.address,
+            generalSettings?.cityname,
+            generalSettings?.statename,
+            generalSettings?.countryname,
+            generalSettings?.postalcode
+        ].filter(Boolean);
+        const brandAddress = brandAddressParts.join(', ');
+
+        const customerName = order.customername || 'Valued Customer';
+        const customerEmail = order.customeremail || '';
+        const customerPhone = order.customerphone || '';
+
+        const shippingAddr = order.shippingaddress;
+        const shippingAddressParts = shippingAddr
+            ? [
+                shippingAddr.title ? `<strong>${escapeHtml(shippingAddr.title)}</strong>` : '',
+                shippingAddr.address,
+                shippingAddr.cityname,
+                shippingAddr.statename,
+                shippingAddr.countryname,
+                shippingAddr.pincode ? `PIN: ${shippingAddr.pincode}` : ''
+            ].filter(Boolean).join('<br>')
+            : '';
+
+        const items = order.items || [];
+        const itemRows = items.map((item, idx) => {
+            const specs = [
+                item.metalname && `Metal: ${item.metalname}`,
+                item.diamondsize && `Diamond: ${item.diamondsize}`,
+                item.shapename && `Shape: ${item.shapename}`,
+                item.clarityname && `Clarity: ${item.clarityname}`,
+                item.stonename && `Stone: ${item.stonename}`,
+                item.size && `Size: ${item.size}`,
+                item.diamondcolor && `Color: ${item.diamondcolor}`,
+                item.bandcolor && `Band: ${item.bandcolor}`
+            ].filter(Boolean).join(' • ');
+
+            const unitPriceStr = formatPriceWithCurrency(item.price, order.currencydetails);
+            const totalPriceStr = formatPriceWithCurrency(item.totalprice || (item.price * (item.qty || 1)), order.currencydetails);
+            const qty = item.qty || 1;
+
+            return `
+                <tr>
+                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; vertical-align: top;">
+                        <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; margin-bottom: 4px;">
+                            ${idx + 1}. ${escapeHtml(item.itemname || 'Fine Jewelry Piece')}
+                        </div>
+                        ${specs ? `<div style="font-size: 11.5px; color: #64748b; line-height: 1.5; margin-bottom: 4px;">${escapeHtml(specs)}</div>` : ''}
+                        ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">Special Note: ${escapeHtml(item.specialinstruction)}</div>` : ''}
+                    </td>
+                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: center; vertical-align: top; font-weight: 600; font-size: 13.5px; color: #334155;">
+                        ${qty}
+                    </td>
+                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-size: 13.5px; color: #334155; white-space: nowrap;">
+                        ${escapeHtml(unitPriceStr)}
+                    </td>
+                    <td style="padding: 14px 16px; border-bottom: 1px solid #eef2f6; text-align: right; vertical-align: top; font-weight: 700; font-size: 13.5px; color: #0f172a; white-space: nowrap;">
+                        ${escapeHtml(totalPriceStr)}
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        const subtotalStr = formatPriceWithCurrency(order.subtotal, order.currencydetails);
+        const grandTotalStr = formatPriceWithCurrency(order.total, order.currencydetails);
+        const invoiceNotes = invoiceSettings?.notes || 'Thank you for choosing Gemora Diam. Each gemstone is ethically crafted, graded, and authenticated.';
+
+        const invoiceHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice ${escapeHtml(invoiceNumber)} - ${escapeHtml(brandName)}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .action-bar {
+            background: #0f172a;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .action-btn {
+            background: #10b981;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .action-btn:hover { background: #059669; }
+        .close-btn {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #475569;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #fff; border-color: #cbd5e1; }
+        .invoice-wrapper {
+            max-width: 860px;
+            margin: 24px auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 40px 48px;
+            box-shadow: 0 4px 20px -2px rgba(0,0,0,0.06);
+        }
+        .brand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 24px;
+            border-bottom: 2px solid #0f172a;
+            margin-bottom: 28px;
+        }
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #044e39;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+        .brand-subtitle {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #b4833e;
+            margin-top: 4px;
+        }
+        .invoice-badge-box {
+            text-align: right;
+        }
+        .invoice-type {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .invoice-id {
+            font-size: 15px;
+            font-weight: 700;
+            color: #10b981;
+            font-family: monospace;
+            margin-top: 2px;
+        }
+        .meta-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 28px;
+            gap: 12px;
+        }
+        .meta-item .meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.05em;
+        }
+        .meta-item .meta-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 2px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-delivered { background: #dcfce7; color: #15803d; }
+        .status-paid { background: #dcfce7; color: #15803d; }
+
+        .parties-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+        .party-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        .party-card h6 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #044e39;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .party-name { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+        .party-line { font-size: 12.5px; color: #475569; line-height: 1.5; }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .items-table th {
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 12px 16px;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .summary-wrap {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 28px;
+        }
+        .summary-card {
+            width: 320px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+            color: #475569;
+        }
+        .summary-row.total-row {
+            border-top: 2px solid #0f172a;
+            margin-top: 8px;
+            padding-top: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .invoice-footer-section {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 20px;
+            margin-top: 24px;
+        }
+        .notes-heading {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.06em;
+            margin-bottom: 4px;
+        }
+        .notes-content {
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.6;
+        }
+        .guarantee-box {
+            margin-top: 16px;
+            text-align: center;
+            padding: 12px;
+            background: #fafaf9;
+            border: 1px solid #e7e5e4;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #78716c;
+            letter-spacing: 0.04em;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff !important; }
+            .invoice-wrapper {
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                max-width: 100% !important;
+            }
+            @page {
+                size: A4 portrait;
+                margin: 14mm 16mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="action-bar no-print">
+        <div style="font-weight: 600; font-size: 14px;">Gemora Diam — Official Invoice Preview</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="action-btn" onclick="window.print()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                Print / Save as PDF
+            </button>
+            <button class="close-btn" onclick="window.close()">Close</button>
+        </div>
+    </div>
+
+    <div class="invoice-wrapper">
+        <div class="brand-header">
+            <div>
+                <div class="brand-title">${escapeHtml(brandName)}</div>
+                <div class="brand-subtitle">Haute Joaillerie Atelier • Official Invoice</div>
+            </div>
+            <div class="invoice-badge-box">
+                <div class="invoice-type">Tax Invoice</div>
+                <div class="invoice-id">${escapeHtml(invoiceNumber)}</div>
+            </div>
+        </div>
+
+        <div class="meta-strip">
+            <div class="meta-item">
+                <div class="meta-label">Invoice Date</div>
+                <div class="meta-value">${escapeHtml(invoiceDate)}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Order Ref</div>
+                <div class="meta-value">#${escapeHtml(orderNumberDisplay)}</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Order Status</div>
+                <div class="meta-value"><span class="status-badge status-delivered">${escapeHtml(order.orderstatus || 'Delivered')}</span></div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Payment Status</div>
+                <div class="meta-value"><span class="status-badge status-paid">${escapeHtml(order.paymentstatus || 'Paid')}</span></div>
+            </div>
+        </div>
+
+        <div class="parties-grid">
+            <div class="party-card">
+                <h6>Billed &amp; Delivered To</h6>
+                <div class="party-name">${escapeHtml(customerName)}</div>
+                ${customerEmail ? `<div class="party-line">Email: ${escapeHtml(customerEmail)}</div>` : ''}
+                ${customerPhone ? `<div class="party-line">Phone: ${escapeHtml(customerPhone)}</div>` : ''}
+                ${shippingAddressParts ? `<div class="party-line" style="margin-top: 6px;">${shippingAddressParts}</div>` : ''}
+            </div>
+
+            <div class="party-card">
+                <h6>Issued By</h6>
+                <div class="party-name">${escapeHtml(brandName)} Atelier</div>
+                ${brandEmail ? `<div class="party-line">Email: ${escapeHtml(brandEmail)}</div>` : ''}
+                ${brandPhone ? `<div class="party-line">Phone: ${escapeHtml(brandPhone)}</div>` : ''}
+                ${brandAddress ? `<div class="party-line" style="margin-top: 6px;">${escapeHtml(brandAddress)}</div>` : ''}
+                <div class="party-line" style="margin-top: 6px;"><strong>Payment Method:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Item &amp; Atelier Specifications</th>
+                    <th style="text-align: center; width: 80px;">Qty</th>
+                    <th style="text-align: right; width: 140px;">Unit Rate</th>
+                    <th style="text-align: right; width: 140px;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${itemRows}
+            </tbody>
+        </table>
+
+        <div class="summary-wrap">
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>${escapeHtml(subtotalStr)}</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Grand Total:</span>
+                    <span>${escapeHtml(grandTotalStr)}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="invoice-footer-section">
+            ${invoiceNotes ? `
+                <div class="notes-heading">Atelier Notes &amp; Terms</div>
+                <div class="notes-content">${escapeHtml(invoiceNotes)}</div>
+            ` : ''}
+            <div class="guarantee-box">
+                Ethically Sourced • GIA / IGI Certified Lab-Grown Diamonds • Lifetime Atelier Craftsmanship Guarantee
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+        const printWin = window.open('', '_blank');
+        if (!printWin) {
+            setWarningMessage('Please allow popups to download and print the order invoice.');
+            setShowWarning(true);
+            return;
+        }
+
+        printWin.document.open();
+        printWin.document.write(invoiceHtml);
+        printWin.document.close();
+        printWin.focus();
+
+        setTimeout(() => {
+            try {
+                printWin.print();
+            } catch {
+                // User can still use top print button in the opened window
+            }
+        }, 450);
     };
 
     if (loading) {
@@ -184,6 +683,9 @@ const OrderDetails = () => {
     const statusClass = (order.orderstatus || 'Confirmed').toLowerCase();
     const paymentStatusClass = (order.paymentstatus || 'Paid').toLowerCase();
     const totalItemsCount = order.totalitems || (order.items || []).reduce((acc, i) => acc + (i.qty || 1), 0);
+    const isDelivered = String(order.orderstatus || '').trim().toLowerCase() === 'delivered';
+    const isPaid = String(order.paymentstatus || '').trim().toLowerCase() === 'paid';
+    const canDownloadInvoice = isDelivered && isPaid;
 
     return (
         <div className={`OrderDetails-container ${isRtl ? 'rtl-orderdetails' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
@@ -223,10 +725,17 @@ const OrderDetails = () => {
                             </select>
                         </div>
 
-                        <button type="button" className="print-btn" onClick={handlePrint} title="Print Order">
-                            <PrintIcon style={{ fontSize: 17 }} />
-                            <span>Print</span>
-                        </button>
+                        {canDownloadInvoice && (
+                            <button
+                                type="button"
+                                className="invoice-btn"
+                                onClick={handleDownloadInvoice}
+                                title={translations.downloadinvoice || 'Download Invoice'}
+                            >
+                                <PictureAsPdfIcon style={{ fontSize: 17 }} />
+                                <span>{translations.invoice || 'Invoice'}</span>
+                            </button>
+                        )}
                     </div>
                 </div>
 
