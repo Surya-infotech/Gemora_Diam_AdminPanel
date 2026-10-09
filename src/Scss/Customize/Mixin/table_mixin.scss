@@ -314,7 +314,8 @@
                 @include table_td;
 
                 &:has(.edit-icon),
-                &:has(.delete-icon) {
+                &:has(.delete-icon),
+                &:has(.view-icon) {
                     white-space: nowrap;
 
                     span {
@@ -329,6 +330,10 @@
         }
 
         .edit-icon {
+            @include edit_icon;
+        }
+
+        .view-icon {
             @include edit_icon;
         }
 

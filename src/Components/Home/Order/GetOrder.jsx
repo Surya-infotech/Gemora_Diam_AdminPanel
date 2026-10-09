@@ -1,5 +1,5 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+import ViewButton from "../../../Pages/Custom/ViewButton";
 import DeleteButton from "../../../Pages/Custom/DeleteButton";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -424,15 +424,9 @@ const GetOrder = ({ searchValue = "" }) => {
                                             {/* Action Buttons */}
                                             <td>
                                                 <div className="action-cell">
-                                                    <button
-                                                        type="button"
-                                                        className="view-details-btn"
+                                                    <ViewButton
                                                         onClick={() => handleViewDetails(order)}
-                                                        title={translations.viewdetails || "View Details"}
-                                                    >
-                                                        <VisibilityIcon style={{ fontSize: 16 }} />
-                                                        {translations.viewdetails || "View Details"}
-                                                    </button>
+                                                    />
                                                     <DeleteButton
                                                         onClick={() => setOrderToDelete(order)}
                                                     />

@@ -237,27 +237,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-
-            .view-details-btn {
-                background: none;
-                border: 1px solid var(--border-color, #e2e8f0);
-                padding: 6px 10px;
-                border-radius: 6px;
-                cursor: pointer;
-                color: var(--primary-color);
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-                font-size: 12px;
-                font-weight: 600;
-                transition: all 0.2s ease;
-
-                &:hover {
-                    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
-                    border-color: var(--primary-color);
-                }
-            }
+            gap: 6px;
 
             .delete-btn-icon {
                 background: none;
@@ -278,4 +258,3 @@
         }
     }
 }
-
