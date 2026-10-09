@@ -36,6 +36,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -378,6 +379,14 @@ const AdminNavbar = () => {
                                             <BadgeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.Employee}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/User/Customer" className={navLinkClass('/User/Customer')}>
+                                        <NavTooltip title={translations.Customer || "Customer"}>
+                                            <PeopleAltIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.Customer || "Customer"}
                                     </NavLink>
                                 </li>
                             </div>

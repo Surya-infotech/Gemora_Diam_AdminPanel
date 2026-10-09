@@ -1,0 +1,29 @@
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+
+.Customer-container {
+    @include mixin.main_page;
+
+    .customer-container {
+        @include mixin.page;
+
+        .customer-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .customer-form-container {
+            @include mixin.page_size;
+
+            .customer-header {
+                @include mixin.page_header;
+            }
+        }
+    }
+}
+
+.alert {
+    @include mixin.alert;
+}

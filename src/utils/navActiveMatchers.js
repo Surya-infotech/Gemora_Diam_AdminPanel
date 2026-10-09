@@ -23,6 +23,8 @@ const NAV_ACTIVE_PREFIXES = {
     '/Support/Policy': ['/Support/Policy', '/Support/AddPolicy', '/Support/EditPolicy'],
     '/Support/Subscribers': ['/Support/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
+    '/User/Employee': ['/User/Employee', '/User/AddEmployee', '/User/EditEmployee', '/User/EmployeeOverview'],
+    '/User/Customer': ['/User/Customer'],
 };
 
 const matchesPrefix = (pathname, prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`);
