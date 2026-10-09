@@ -640,5 +640,7 @@
   "updatebannersuccessfull": "Banner updated successfully",
   "deletebannersuccessfull": "Banner Deleted Successfully",
   "bannernotfound": "Banner not found",
-  "imageisrequired": "Banner image is required"
+  "imageisrequired": "Banner image is required",
+  "orimageurl": "Or Banner Image URL (Optional)",
+  "enterimageurl": "Enter banner image URL"
 }

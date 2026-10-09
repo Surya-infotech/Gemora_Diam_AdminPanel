@@ -15,7 +15,7 @@ const Customer = () => {
     const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
     const [searchValue, setSearchValue] = useState("");
 
-    const pageTitle = translations.Customer || "Customer";
+    const pageTitle = translations.Customer;
 
     useEffect(() => {
         if (pageTitle) document.title = pageTitle;
@@ -36,7 +36,7 @@ const Customer = () => {
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="customer-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />

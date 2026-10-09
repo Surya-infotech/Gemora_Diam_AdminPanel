@@ -50,11 +50,11 @@ const GetBanner = ({ searchValue = "" }) => {
                 if (response.ok) {
                     setBanners(data.banners || []);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Failed to load banners");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
-                setWarningMessage(translations.servererror || "Server error");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setLoading(false);
@@ -128,13 +128,13 @@ const GetBanner = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setBanners(banners.map(b => (b._id === item._id || b.bannerid === item.bannerid) ? { ...b, status: updatedStatus } : b));
-                setSuccessMessage(updatedStatus ? (translations.bannerstatusactive || "Banner activated") : (translations.bannerstatusinactive || "Banner deactivated"));
+                setSuccessMessage(updatedStatus ? translations.bannerstatusactive : translations.bannerstatusinactive);
             } else {
-                setWarningMessage(data.message || translations.servererror || "Failed to update status");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         }
     };
@@ -155,13 +155,13 @@ const GetBanner = ({ searchValue = "" }) => {
             if (response.ok) {
                 setBanners(banners.filter(b => b._id !== targetId && b.bannerid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletebannersuccessfull || "Banner Deleted Successfully");
+                setSuccessMessage(translations.deletebannersuccessfull);
             } else {
-                setWarningMessage(result.message || translations.servererror || "Failed to delete banner");
+                setWarningMessage(result.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsDeleting(false);
@@ -177,21 +177,21 @@ const GetBanner = ({ searchValue = "" }) => {
                     <table className="bannertable">
                         <thead>
                             <tr>
-                                <th>{translations.bannerimage || "Banner Image"}</th>
+                                <th>{translations.bannerimage}</th>
                                 <th onClick={() => sortItems("tag")}>
-                                    {translations.bannertag || "Tag"} {renderSortIcon("tag")}
+                                    {translations.bannertag} {renderSortIcon("tag")}
                                 </th>
                                 <th onClick={() => sortItems("headingLine1")}>
-                                    {translations.headingline1 || "Heading"} {renderSortIcon("headingLine1")}
+                                    {translations.headingline1} {renderSortIcon("headingLine1")}
                                 </th>
-                                <th>{translations.bannerdescription || "Description"}</th>
+                                <th>{translations.bannerdescription}</th>
                                 <th onClick={() => sortItems("order")}>
-                                    {translations.displayorder || "Order"} {renderSortIcon("order")}
+                                    {translations.displayorder} {renderSortIcon("order")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th>{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -258,7 +258,7 @@ const GetBanner = ({ searchValue = "" }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="7" style={{ textAlign: "center", padding: "24px 0" }}>
-                                        {translations.nodatafound || "No banners found"}
+                                        {translations.nodatafound}
                                     </td>
                                 </tr>
                             )}

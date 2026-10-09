@@ -344,10 +344,10 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/Support/Banner" className={navLinkClass('/Support/Banner')}>
-                                        <NavTooltip title={translations.Banner || "Home Banners"}>
+                                        <NavTooltip title={translations.Banner}>
                                             <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Banner || "Home Banners"}
+                                        {translations.Banner}
                                     </NavLink>
                                 </li>
                             </div>
@@ -383,10 +383,10 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/User/Customer" className={navLinkClass('/User/Customer')}>
-                                        <NavTooltip title={translations.Customer || "Customer"}>
+                                        <NavTooltip title={translations.Customer}>
                                             <PeopleAltIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Customer || "Customer"}
+                                        {translations.Customer}
                                     </NavLink>
                                 </li>
                             </div>

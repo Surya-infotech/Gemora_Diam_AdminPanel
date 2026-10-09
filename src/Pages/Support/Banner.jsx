@@ -16,8 +16,8 @@ const Banner = () => {
     const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        if (translations.Banner || translations.homebanners) {
-            document.title = translations.Banner || translations.homebanners || "Home Banners";
+        if (translations.Banner) {
+            document.title = translations.Banner;
         }
     }, [translations]);
 
@@ -40,18 +40,18 @@ const Banner = () => {
     return (
         <div className={`Banner-container ${isRtl ? 'rtl-banner' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="banner-container">
-                <h6 className="banner-headingname">{translations.Banner || "Home Banners"}</h6>
+                <h6 className="banner-headingname">{translations.Banner}</h6>
                 <div className="banner-form-container">
                     {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
                     {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
                     <div className="banner-header">
                         <SearchInput
-                            placeholder={translations.searchPlaceholder || "Search..."}
+                            placeholder={translations.searchPlaceholder}
                             value={searchValue}
                             onChange={(e) => setSearchValue(e.target.value)}
                         />
                         <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-                            {translations.addNew || "Add New"}
+                            {translations.addNew}
                         </button>
                     </div>
                     <GetBanner searchValue={searchValue} />

@@ -75,12 +75,12 @@ const GetCustomer = ({ searchValue = "" }) => {
                 if (response.ok) {
                     setCustomers(data.customers || []);
                 } else {
-                    setWarningMessage(data.message || translations.servererror || "Failed to fetch customers");
+                    setWarningMessage(data.message || translations.servererror);
                     setShowWarning(true);
                 }
             } catch {
                 if (isMounted) {
-                    setWarningMessage(translations.servererror || "Server connection error");
+                    setWarningMessage(translations.servererror);
                     setShowWarning(true);
                 }
             } finally {
@@ -189,15 +189,15 @@ const GetCustomer = ({ searchValue = "" }) => {
                 );
                 setSuccessMessage(
                     updatedStatus
-                        ? (translations.customerstatusactive || "Customer Status updated to Active")
-                        : (translations.customerstatusinactive || "Customer Status updated to Inactive")
+                        ? translations.customerstatusactive
+                        : translations.customerstatusinactive
                 );
             } else {
-                setWarningMessage(data.message || translations.servererror || "Failed to update status");
+                setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server connection error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setUpdatingStatusId(null);
@@ -217,22 +217,22 @@ const GetCustomer = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => handleSort("customerid")} style={{ cursor: "pointer", width: "90px" }}>
-                                    {translations.customerid || "ID"} {renderSortIcon("customerid")}
+                                    {translations.customerid} {renderSortIcon("customerid")}
                                 </th>
                                 <th onClick={() => handleSort("fullname")} style={{ cursor: "pointer" }}>
-                                    {translations.Customer || "Customer"} {renderSortIcon("fullname")}
+                                    {translations.Customer} {renderSortIcon("fullname")}
                                 </th>
                                 <th onClick={() => handleSort("email")} style={{ cursor: "pointer" }}>
-                                    {translations.Email || "Email"} {renderSortIcon("email")}
+                                    {translations.Email} {renderSortIcon("email")}
                                 </th>
                                 <th onClick={() => handleSort("phone")} style={{ cursor: "pointer" }}>
-                                    {translations.Phone || "Phone"} {renderSortIcon("phone")}
+                                    {translations.Phone} {renderSortIcon("phone")}
                                 </th>
                                 <th onClick={() => handleSort("createdAt")} style={{ cursor: "pointer" }}>
-                                    {translations.joineddate || "Joined Date"} {renderSortIcon("createdAt")}
+                                    {translations.joineddate} {renderSortIcon("createdAt")}
                                 </th>
                                 <th onClick={() => handleSort("status")} style={{ cursor: "pointer", width: "120px", textAlign: "center" }}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
                             </tr>
                         </thead>
@@ -290,7 +290,7 @@ const GetCustomer = ({ searchValue = "" }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="6" style={{ textAlign: "center", padding: "28px 0" }}>
-                                        {translations.nodatafound || "No data found"}
+                                        {translations.nodatafound}
                                     </td>
                                 </tr>
                             )}

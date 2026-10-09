@@ -74,11 +74,11 @@ const EditBanner = () => {
                         setImagePreview(data.image);
                     }
                 } else {
-                    setWarningMessage(data.message || translations.bannernotfound || "Banner not found");
+                    setWarningMessage(data.message || translations.bannernotfound);
                     setShowWarning(true);
                 }
             } catch {
-                setWarningMessage(translations.servererror || "Server error");
+                setWarningMessage(translations.servererror);
                 setShowWarning(true);
             } finally {
                 setIsLoading(false);
@@ -102,13 +102,13 @@ const EditBanner = () => {
             const allowed = ["jpg", "jpeg", "png", "webp"];
             const ext = file.name.split('.').pop().toLowerCase();
             if (!allowed.includes(ext)) {
-                setWarningMessage(translations.invalidfileextension || "Only JPG, PNG and WebP files are allowed");
+                setWarningMessage(translations.invalidfileextension);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
             }
             if (file.size > 10 * 1024 * 1024) {
-                setWarningMessage(translations.filesizetoolarge || "Image size must not exceed 10MB");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -122,13 +122,13 @@ const EditBanner = () => {
         e.preventDefault();
 
         if (!headingLine1.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Heading Line 1 is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!imageFile && !imageUrl.trim() && (!imagePreview || imagePreview === Placeholder)) {
-            setWarningMessage(translations.imageisrequired || "Banner image is required");
+            setWarningMessage(translations.imageisrequired);
             setShowWarning(true);
             return;
         }
@@ -172,14 +172,14 @@ const EditBanner = () => {
 
             if (response.ok) {
                 navigate("/Support/Banner", {
-                    state: { message: translations.updatebannersuccessfull || "Banner updated successfully" }
+                    state: { message: translations.updatebannersuccessfull }
                 });
             } else {
-                setWarningMessage(result.message || translations.servererror || "Failed to update banner");
+                setWarningMessage(result.message || translations.servererror);
                 setShowWarning(true);
             }
         } catch {
-            setWarningMessage(translations.servererror || "Server error");
+            setWarningMessage(translations.servererror);
             setShowWarning(true);
         } finally {
             setIsSaving(false);
@@ -193,7 +193,7 @@ const EditBanner = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddBanner-container ${isRtl ? 'rtl-addbanner' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addbanner-container">
-                    <h6 className="Addbanner-headingname">{translations.editbanner || "Edit Banner"}</h6>
+                    <h6 className="Addbanner-headingname">{translations.editbanner}</h6>
                     <div className="Addbanner-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -203,14 +203,14 @@ const EditBanner = () => {
                                     <div className="formdiv">
                                         <div className="form-group">
                                             <label htmlFor="headingLine1">
-                                                {translations.headingline1 || "Heading Line 1"} <span style={{ color: "red" }}>*</span>
+                                                {translations.headingline1} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <input
                                                 type="text"
                                                 id="headingLine1"
                                                 name="headingLine1"
                                                 autoComplete="off"
-                                                placeholder={translations.enterheadingline1 || "e.g. UNVEIL YOUR"}
+                                                placeholder={translations.enterheadingline1}
                                                 required
                                                 value={headingLine1}
                                                 onChange={(e) => {
@@ -222,14 +222,14 @@ const EditBanner = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="headingLine2">
-                                                {translations.headingline2 || "Heading Line 2 (Accent)"}
+                                                {translations.headingline2}
                                             </label>
                                             <input
                                                 type="text"
                                                 id="headingLine2"
                                                 name="headingLine2"
                                                 autoComplete="off"
-                                                placeholder={translations.enterheadingline2 || "e.g. SIGNATURE LOOK"}
+                                                placeholder={translations.enterheadingline2}
                                                 value={headingLine2}
                                                 onChange={(e) => {
                                                     const value = e.target.value;
@@ -258,7 +258,7 @@ const EditBanner = () => {
                                                     className="btn btn-primary upload-btn"
                                                     onClick={handleUploadClick}
                                                 >
-                                                    {translations.upload || "Upload"}
+                                                    {translations.upload}
                                                 </button>
                                                 <input
                                                     type="file"
@@ -277,14 +277,14 @@ const EditBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="bannertag">
-                                            {translations.bannertag || "Badge / Tag"}
+                                            {translations.bannertag}
                                         </label>
                                         <input
                                             type="text"
                                             id="bannertag"
                                             name="bannertag"
                                             autoComplete="off"
-                                            placeholder={translations.enterbannertag || "e.g. TRENDING, NEW ARRIVALS"}
+                                            placeholder={translations.enterbannertag}
                                             value={tag}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -295,14 +295,14 @@ const EditBanner = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="bannerorder">
-                                            {translations.displayorder || "Display Order"}
+                                            {translations.displayorder}
                                         </label>
                                         <input
                                             type="number"
                                             id="bannerorder"
                                             name="bannerorder"
                                             autoComplete="off"
-                                            placeholder={translations.enterdisplayorder || "Enter display order"}
+                                            placeholder={translations.enterdisplayorder}
                                             value={order}
                                             onChange={(e) => setOrder(e.target.value)}
                                         />
@@ -312,14 +312,14 @@ const EditBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="primarybuttontext">
-                                            {translations.primarybuttontext || "Primary Button Text"}
+                                            {translations.primarybuttontext}
                                         </label>
                                         <input
                                             type="text"
                                             id="primarybuttontext"
                                             name="primarybuttontext"
                                             autoComplete="off"
-                                            placeholder={translations.enterprimarybuttontext || "e.g. SHOP NOW"}
+                                            placeholder={translations.enterprimarybuttontext}
                                             value={buttonText}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -330,14 +330,14 @@ const EditBanner = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="primarybuttonlink">
-                                            {translations.primarybuttonlink || "Primary Button Link"}
+                                            {translations.primarybuttonlink}
                                         </label>
                                         <input
                                             type="text"
                                             id="primarybuttonlink"
                                             name="primarybuttonlink"
                                             autoComplete="off"
-                                            placeholder={translations.enterprimarybuttonlink || "e.g. /shop"}
+                                            placeholder={translations.enterprimarybuttonlink}
                                             value={buttonLink}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -351,14 +351,14 @@ const EditBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="secondarybuttontext">
-                                            {translations.secondarybuttontext || "Secondary Button Text"}
+                                            {translations.secondarybuttontext}
                                         </label>
                                         <input
                                             type="text"
                                             id="secondarybuttontext"
                                             name="secondarybuttontext"
                                             autoComplete="off"
-                                            placeholder={translations.entersecondarybuttontext || "e.g. EXPLORE MORE"}
+                                            placeholder={translations.entersecondarybuttontext}
                                             value={secondaryButtonText}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -369,14 +369,14 @@ const EditBanner = () => {
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="secondarybuttonlink">
-                                            {translations.secondarybuttonlink || "Secondary Button Link"}
+                                            {translations.secondarybuttonlink}
                                         </label>
                                         <input
                                             type="text"
                                             id="secondarybuttonlink"
                                             name="secondarybuttonlink"
                                             autoComplete="off"
-                                            placeholder={translations.entersecondarybuttonlink || "e.g. /about"}
+                                            placeholder={translations.entersecondarybuttonlink}
                                             value={secondaryButtonLink}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -390,14 +390,14 @@ const EditBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="imageurl">
-                                            {translations.orimageurl || "Or Banner Image URL (Optional)"}
+                                            {translations.orimageurl}
                                         </label>
                                         <input
                                             type="text"
                                             id="imageurl"
                                             name="imageurl"
                                             autoComplete="off"
-                                            placeholder={translations.enterimageurl || "Enter banner image URL"}
+                                            placeholder={translations.enterimageurl}
                                             value={imageUrl}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -409,7 +409,7 @@ const EditBanner = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>{translations.status || "Status"}</label>
+                                        <label>{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}
@@ -422,14 +422,14 @@ const EditBanner = () => {
                                 <div className="form-row full-width">
                                     <div className="form-group">
                                         <label htmlFor="bannerdescription">
-                                            {translations.bannerdescription || "Description"}
+                                            {translations.bannerdescription}
                                         </label>
                                         <textarea
                                             id="bannerdescription"
                                             name="bannerdescription"
                                             rows="3"
                                             autoComplete="off"
-                                            placeholder={translations.enterbannerdescription || "Enter banner description..."}
+                                            placeholder={translations.enterbannerdescription}
                                             value={description}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -447,14 +447,14 @@ const EditBanner = () => {
                                         onClick={handleCancel}
                                         disabled={isSaving}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isSaving}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>
