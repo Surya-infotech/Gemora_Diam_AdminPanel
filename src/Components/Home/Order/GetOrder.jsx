@@ -65,8 +65,10 @@ const GetOrder = ({ searchValue = "" }) => {
     const [sortColumn, setSortColumn] = useState(null);
     const [sortDirection, setSortDirection] = useState("desc");
 
-    // Order Details Modal
-    const [selectedOrderForView, setSelectedOrderForView] = useState(null);
+    const handleViewDetails = (order) => {
+        const orderKey = order._id || order.orderid;
+        navigate(`/Home/OrderDetails/${orderKey}`, { state: { order } });
+    };
 
     // Delete Modal
     const [orderToDelete, setOrderToDelete] = useState(null);
@@ -220,9 +222,6 @@ const GetOrder = ({ searchValue = "" }) => {
                 setOrders((prev) =>
                     prev.map((o) => (o._id === order._id || o.orderid === order.orderid ? { ...o, orderstatus: newStatus } : o))
                 );
-                if (selectedOrderForView && (selectedOrderForView._id === order._id || selectedOrderForView.orderid === order.orderid)) {
-                    setSelectedOrderForView({ ...selectedOrderForView, orderstatus: newStatus });
-                }
                 setSuccessMessage(translations.updateordersuccessfull || "Order status updated successfully");
             } else {
                 setWarningMessage(data.message || translations.servererror);
@@ -320,7 +319,12 @@ const GetOrder = ({ searchValue = "" }) => {
                                         <tr key={orderKey}>
                                             {/* Order Number */}
                                             <td>
-                                                <span className="order-number-badge">
+                                                <span
+                                                    className="order-number-badge"
+                                                    style={{ cursor: "pointer" }}
+                                                    onClick={() => handleViewDetails(order)}
+                                                    title={translations.viewdetails || "View Details"}
+                                                >
                                                     #{order.ordernumber != null ? order.ordernumber : order.orderid}
                                                 </span>
                                             </td>
@@ -332,7 +336,13 @@ const GetOrder = ({ searchValue = "" }) => {
                                                         {getInitials(order.customername)}
                                                     </div>
                                                     <div className="customer-text">
-                                                        <strong>{order.customername || "Guest Customer"}</strong>
+                                                        <strong
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() => handleViewDetails(order)}
+                                                            title={translations.viewdetails || "View Details"}
+                                                        >
+                                                            {order.customername || "Guest Customer"}
+                                                        </strong>
                                                         {order.customeremail && (
                                                             <span className="customer-subtext">{order.customeremail}</span>
                                                         )}
@@ -417,11 +427,11 @@ const GetOrder = ({ searchValue = "" }) => {
                                                     <button
                                                         type="button"
                                                         className="view-details-btn"
-                                                        onClick={() => setSelectedOrderForView(order)}
+                                                        onClick={() => handleViewDetails(order)}
                                                         title={translations.viewdetails || "View Details"}
                                                     >
                                                         <VisibilityIcon style={{ fontSize: 16 }} />
-                                                        {translations.viewdetails || "View"}
+                                                        {translations.viewdetails || "View Details"}
                                                     </button>
                                                     <DeleteButton
                                                         onClick={() => setOrderToDelete(order)}
@@ -470,157 +480,6 @@ const GetOrder = ({ searchValue = "" }) => {
                     headingname={translations.deleteorder || "Delete Order"}
                     isLoading={isDeleting}
                 />
-            )}
-
-            {/* Order Details Modal */}
-            {selectedOrderForView && (
-                <>
-                    <div className="modal fade show order-details-modal" style={{ display: "block" }} tabIndex="-1">
-                        <div className="modal-dialog modal-dialog-centered modal-lg">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">
-                                        <span>{translations.orderdetails || "Order Details"}</span>
-                                        <span className="order-number-badge">
-                                            #{selectedOrderForView.ordernumber != null ? selectedOrderForView.ordernumber : selectedOrderForView.orderid}
-                                        </span>
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={() => setSelectedOrderForView(null)}
-                                        aria-label="Close"
-                                    ></button>
-                                </div>
-                                <div className="modal-body">
-                                    {/* Summary Grid */}
-                                    <div className="order-summary-grid">
-                                        {/* Customer Details */}
-                                        <div className="summary-card">
-                                            <div className="card-title">{translations.customerdetails || "Customer Details"}</div>
-                                            <div className="card-content">
-                                                <strong>{selectedOrderForView.customername || "Guest Customer"}</strong>
-                                                {selectedOrderForView.customeremail && <div>{selectedOrderForView.customeremail}</div>}
-                                                {selectedOrderForView.customerphone && <div>{selectedOrderForView.customerphone}</div>}
-                                            </div>
-                                        </div>
-
-                                        {/* Shipping Address */}
-                                        <div className="summary-card">
-                                            <div className="card-title">{translations.shippingaddress || "Shipping Address"}</div>
-                                            <div className="card-content">
-                                                {selectedOrderForView.shippingaddress ? (
-                                                    <>
-                                                        <div>{selectedOrderForView.shippingaddress.address}</div>
-                                                        <div>
-                                                            {[
-                                                                selectedOrderForView.shippingaddress.cityname,
-                                                                selectedOrderForView.shippingaddress.statename,
-                                                                selectedOrderForView.shippingaddress.pincode
-                                                            ].filter(Boolean).join(", ")}
-                                                        </div>
-                                                        <div>{selectedOrderForView.shippingaddress.countryname}</div>
-                                                    </>
-                                                ) : (
-                                                    <div>-</div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Payment & Status */}
-                                        <div className="summary-card">
-                                            <div className="card-title">{translations.paymentmethod || "Payment & Status"}</div>
-                                            <div className="card-content">
-                                                <div><strong>Method:</strong> {selectedOrderForView.paymentmethod || "Prepaid"}</div>
-                                                <div><strong>Payment Status:</strong> {selectedOrderForView.paymentstatus || "Paid"}</div>
-                                                <div><strong>Order Status:</strong> {selectedOrderForView.orderstatus || "Confirmed"}</div>
-                                                <div><strong>Date:</strong> {formatDate(selectedOrderForView.createdAt)}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Items Table */}
-                                    <div className="modal-section-title">{translations.itemdetails || "Items In Order"}</div>
-                                    <table className="items-detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Item</th>
-                                                <th style={{ textAlign: "center" }}>Qty</th>
-                                                <th style={{ textAlign: "right" }}>Price</th>
-                                                <th style={{ textAlign: "right" }}>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {(selectedOrderForView.items || []).map((item, index) => {
-                                                const specs = [
-                                                    item.metalname && `Metal: ${item.metalname}`,
-                                                    item.diamondsize && `Carat: ${item.diamondsize}`,
-                                                    item.shapename && `Shape: ${item.shapename}`,
-                                                    item.clarityname && `Clarity: ${item.clarityname}`,
-                                                    item.size && `Size: ${item.size}`
-                                                ].filter(Boolean).join(" • ");
-
-                                                return (
-                                                    <tr key={index}>
-                                                        <td>
-                                                            <div className="modal-item-info">
-                                                                {item.image ? (
-                                                                    <img src={item.image} alt={item.itemname || "Item"} />
-                                                                ) : (
-                                                                    <div style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: 6 }}>💎</div>
-                                                                )}
-                                                                <div className="modal-item-meta">
-                                                                    <strong>{item.itemname || "Fine Jewelry Piece"}</strong>
-                                                                    {specs && <div className="specs-text">{specs}</div>}
-                                                                    {item.specialinstruction && (
-                                                                        <div className="instruction-text">
-                                                                            Note: {item.specialinstruction}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td style={{ textAlign: "center", fontWeight: 600 }}>
-                                                            {item.qty || 1}
-                                                        </td>
-                                                        <td style={{ textAlign: "right" }}>
-                                                            {formatPriceWithCurrency(item.price, selectedOrderForView.currencydetails)}
-                                                        </td>
-                                                        <td style={{ textAlign: "right", fontWeight: 600 }}>
-                                                            {formatPriceWithCurrency(item.totalprice || (item.price * (item.qty || 1)), selectedOrderForView.currencydetails)}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-
-                                    {/* Order Totals */}
-                                    <div className="order-totals-box">
-                                        <div className="total-row">
-                                            <span>{translations.subtotal || "Subtotal"}:</span>
-                                            <span>{formatPriceWithCurrency(selectedOrderForView.subtotal, selectedOrderForView.currencydetails)}</span>
-                                        </div>
-                                        <div className="total-row grand-total">
-                                            <span>{translations.total || "Grand Total"}:</span>
-                                            <span>{formatPriceWithCurrency(selectedOrderForView.total, selectedOrderForView.currencydetails)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => setSelectedOrderForView(null)}
-                                    >
-                                        {translations.close || "Close"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="modal-backdrop fade show"></div>
-                </>
             )}
         </>
     );
