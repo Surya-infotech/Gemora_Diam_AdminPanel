@@ -5,7 +5,7 @@
 const NAV_ACTIVE_PREFIXES = {
     '/Home/Dashboard': ['/Home/Dashboard', '/Home/EmployeeDashboard'],
     '/Home/EmployeeDashboard': ['/Home/EmployeeDashboard', '/Home/Dashboard'],
-    '/Products/Item': ['/Products/Item', '/Products/AddItem', '/Products/EditItem'],
+    '/Products/Item': ['/Products/Item', '/Products/AddItem', '/Products/EditItem', '/Products/ItemOverview'],
     '/System/Currency': ['/System/Currency', '/System/AddCurrency', '/System/EditCurrency'],
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
@@ -21,6 +21,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Support/ContactUs': ['/Support/ContactUs'],
     '/Support/FAQ': ['/Support/FAQ', '/Support/AddFAQ', '/Support/EditFAQ'],
     '/Support/Policy': ['/Support/Policy', '/Support/AddPolicy', '/Support/EditPolicy'],
+    '/Support/Banner': ['/Support/Banner', '/Support/AddBanner', '/Support/EditBanner'],
     '/Support/Subscribers': ['/Support/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
     '/User/Employee': ['/User/Employee', '/User/AddEmployee', '/User/EditEmployee', '/User/EmployeeOverview'],
