@@ -306,9 +306,6 @@ const GetOrder = ({ searchValue = "" }) => {
                                                         {order.customeremail && (
                                                             <span className="customer-subtext">{order.customeremail}</span>
                                                         )}
-                                                        {order.customerphone && (
-                                                            <span className="customer-subtext">{order.customerphone}</span>
-                                                        )}
                                                     </div>
                                                 </div>
                                             </td>
@@ -349,14 +346,9 @@ const GetOrder = ({ searchValue = "" }) => {
 
                                             {/* Payment */}
                                             <td>
-                                                <div className="payment-info-cell">
-                                                    <span className={`payment-badge ${paymentStatusClass}`}>
-                                                        {order.paymentstatus || "Paid"}
-                                                    </span>
-                                                    <span className="payment-method-text">
-                                                        {order.paymentmethod || "Card"}
-                                                    </span>
-                                                </div>
+                                                <span className={`payment-badge ${paymentStatusClass}`}>
+                                                    {order.paymentstatus || "Paid"}
+                                                </span>
                                             </td>
 
                                             {/* Order Status */}
