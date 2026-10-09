@@ -30,17 +30,33 @@
             .itemoverview-headingname {
                 @include mixin.heading_name_text;
                 margin: 0 !important;
-                word-break: break-word;
-                overflow-wrap: break-word;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                display: flex;
+                align-items: center;
+                max-width: 100%;
+                min-width: 0;
+                white-space: nowrap;
 
                 &::before {
                     @include mixin.heading_name;
+                    flex-shrink: 0;
+                }
+
+                .heading-item-name {
+                    max-width: min(520px, 45vw);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: inline-block;
+                }
+
+                .heading-separator {
+                    white-space: pre;
+                    flex-shrink: 0;
+                }
+
+                .heading-page-suffix {
+                    white-space: nowrap;
+                    flex-shrink: 0;
                 }
             }
 

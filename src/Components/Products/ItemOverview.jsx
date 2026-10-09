@@ -98,8 +98,17 @@ const ItemOverview = () => {
                 <div className="itemoverview-container">
                     <div className="itemoverview-header">
                         <div className="itemoverview-header__titles">
-                            <h6 className="itemoverview-headingname">
-                                {itemName ? `${itemName} - ` : ''}{translations.itemoverview}
+                            <h6
+                                className="itemoverview-headingname"
+                                title={itemName ? `${itemName} - ${translations.itemoverview}` : translations.itemoverview}
+                            >
+                                {itemName && (
+                                    <>
+                                        <span className="heading-item-name">{itemName}</span>
+                                        <span className="heading-separator"> - </span>
+                                    </>
+                                )}
+                                <span className="heading-page-suffix">{translations.itemoverview}</span>
                             </h6>
                         </div>
                         <button
