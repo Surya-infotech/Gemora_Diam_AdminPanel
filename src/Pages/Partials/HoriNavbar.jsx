@@ -44,7 +44,8 @@ const HoriNavbar = () => {
 
     const showFiscalYearDropdown = [
         '/',
-        '/Home/Dashboard'
+        '/Home/Dashboard',
+        '/Home/Order'
     ].includes(currentPath);
 
     const [isDropdownVisible, setDropdownVisible] = useState(false);

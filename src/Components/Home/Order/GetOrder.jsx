@@ -1,0 +1,629 @@
+import { ArrowDownward, ArrowUpward, UnfoldMore } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteButton from "../../../Pages/Custom/DeleteButton";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../Middleware/Auth";
+import { useLanguage } from "../../../Context/LanguageContext";
+import { useFiscalYear } from "../../../Context/FiscalYearContext";
+import CheckToken from "../../../utils/CheckToken";
+import HandleUnauthorized from "../../../utils/HandleUnauthorized";
+import LoadingSpinner from "../../../Pages/Custom/LoadingSpinner";
+import Pagination from "../../../Pages/Custom/Pagination";
+import WarningModal from "../../../Pages/Custom/WarningModal";
+import AlertMessage from "../../../Pages/Custom/AlertMessage";
+import DeleteModal from "../../../Pages/Custom/DeleteModal";
+import { formatPriceWithCurrency } from "../../../utils/CurrencyFormatter";
+import "../../../Scss/Home/Order/getorder.scss";
+
+const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    try {
+        const d = new Date(dateString);
+        if (isNaN(d.getTime())) return dateString;
+        return d.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    } catch {
+        return dateString;
+    }
+};
+
+const getInitials = (name) => {
+    if (!name) return "C";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
+
+const ORDER_STATUS_OPTIONS = [
+    "Confirmed",
+    "Processing",
+    "Shipped",
+    "Delivered",
+    "Cancelled"
+];
+
+const GetOrder = ({ searchValue = "" }) => {
+    const { logoutUser } = useAuth();
+    const navigate = useNavigate();
+    const { translations } = useLanguage();
+    const { selectedFiscalYear } = useFiscalYear();
+    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+    const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
+    const token = localStorage.getItem(tokenname);
+
+    const [loading, setLoading] = useState(true);
+    const [orders, setOrders] = useState([]);
+    const [warningMessage, setWarningMessage] = useState("");
+    const [showWarning, setShowWarning] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [sortColumn, setSortColumn] = useState(null);
+    const [sortDirection, setSortDirection] = useState("desc");
+
+    // Order Details Modal
+    const [selectedOrderForView, setSelectedOrderForView] = useState(null);
+
+    // Delete Modal
+    const [orderToDelete, setOrderToDelete] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // Fetch orders based on selectedFiscalYear
+    useEffect(() => {
+        let isMounted = true;
+        if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const fetchOrders = async () => {
+            try {
+                setLoading(true);
+                const fyParam = selectedFiscalYear || "all";
+                const response = await fetch(`${adminPanelBackendPath}/Customer/GetOrdersByFiscalYear/${fyParam}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const data = await response.json();
+                if (HandleUnauthorized(data, logoutUser, navigate)) return;
+                if (!isMounted) return;
+
+                if (response.ok) {
+                    setOrders(data.orders || []);
+                } else {
+                    setWarningMessage(data.message || translations.servererror);
+                    setShowWarning(true);
+                }
+            } catch {
+                if (isMounted) {
+                    setWarningMessage(translations.servererror);
+                    setShowWarning(true);
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchOrders();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [adminPanelBackendPath, logoutUser, navigate, selectedFiscalYear, token, translations]);
+
+    const handleSort = (column) => {
+        const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
+        setSortColumn(column);
+        setSortDirection(direction);
+    };
+
+    const renderSortIcon = (column) => (
+        sortColumn !== column ? (
+            <UnfoldMore fontSize="small" />
+        ) : sortDirection === "asc" ? (
+            <ArrowUpward fontSize="small" />
+        ) : (
+            <ArrowDownward fontSize="small" />
+        )
+    );
+
+    const filteredAndSortedOrders = useMemo(() => {
+        const search = (searchValue || "").toLowerCase().trim();
+        let filtered = orders;
+
+        if (search) {
+            filtered = orders.filter((order) => {
+                const orderNum = String(order.ordernumber || order.orderid || "").toLowerCase();
+                const name = (order.customername || "").toLowerCase();
+                const email = (order.customeremail || "").toLowerCase();
+                const phone = (order.customerphone || "").toLowerCase();
+                const status = (order.orderstatus || "").toLowerCase();
+                const payStatus = (order.paymentstatus || "").toLowerCase();
+                const payMethod = (order.paymentmethod || "").toLowerCase();
+                const itemNames = (order.items || []).map(i => (i.itemname || "").toLowerCase()).join(" ");
+
+                return (
+                    orderNum.includes(search) ||
+                    name.includes(search) ||
+                    email.includes(search) ||
+                    phone.includes(search) ||
+                    status.includes(search) ||
+                    payStatus.includes(search) ||
+                    payMethod.includes(search) ||
+                    itemNames.includes(search)
+                );
+            });
+        }
+
+        if (!sortColumn) return filtered;
+
+        return [...filtered].sort((a, b) => {
+            let valA = a[sortColumn] ?? "";
+            let valB = b[sortColumn] ?? "";
+
+            if (sortColumn === "ordernumber") {
+                valA = Number(a.ordernumber || a.orderid) || 0;
+                valB = Number(b.ordernumber || b.orderid) || 0;
+                return sortDirection === "asc" ? valA - valB : valB - valA;
+            } else if (sortColumn === "total") {
+                valA = Number(a.total) || 0;
+                valB = Number(b.total) || 0;
+                return sortDirection === "asc" ? valA - valB : valB - valA;
+            } else if (sortColumn === "createdAt") {
+                const timeA = new Date(a.createdAt || 0).getTime();
+                const timeB = new Date(b.createdAt || 0).getTime();
+                return sortDirection === "asc" ? timeA - timeB : timeB - timeA;
+            } else {
+                valA = valA.toString().toLowerCase();
+                valB = valB.toString().toLowerCase();
+            }
+
+            if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+            if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+            return 0;
+        });
+    }, [orders, searchValue, sortColumn, sortDirection]);
+
+    const totalRecords = filteredAndSortedOrders.length;
+    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+    const visibleOrders = filteredAndSortedOrders.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
+
+    // Update Order Status Handler
+    const handleStatusChange = async (order, newStatus) => {
+        if (!CheckToken(token, logoutUser, navigate)) return;
+        const targetId = order._id || order.orderid;
+
+        try {
+            const response = await fetch(`${adminPanelBackendPath}/Customer/UpdateOrderStatus/${targetId}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ orderstatus: newStatus })
+            });
+
+            const data = await response.json();
+            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
+            if (response.ok) {
+                setOrders((prev) =>
+                    prev.map((o) => (o._id === order._id || o.orderid === order.orderid ? { ...o, orderstatus: newStatus } : o))
+                );
+                if (selectedOrderForView && (selectedOrderForView._id === order._id || selectedOrderForView.orderid === order.orderid)) {
+                    setSelectedOrderForView({ ...selectedOrderForView, orderstatus: newStatus });
+                }
+                setSuccessMessage(translations.updateordersuccessfull || "Order status updated successfully");
+            } else {
+                setWarningMessage(data.message || translations.servererror);
+                setShowWarning(true);
+            }
+        } catch {
+            setWarningMessage(translations.servererror);
+            setShowWarning(true);
+        }
+    };
+
+    // Delete Order Handler
+    const handleDeleteOrder = async () => {
+        if (!orderToDelete) return;
+        if (!CheckToken(token, logoutUser, navigate)) return;
+
+        const targetId = orderToDelete._id || orderToDelete.orderid;
+        try {
+            setIsDeleting(true);
+            const response = await fetch(`${adminPanelBackendPath}/Customer/DeleteOrder/${targetId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+            if (HandleUnauthorized(data, logoutUser, navigate)) return;
+
+            if (response.ok) {
+                setOrders((prev) => prev.filter((o) => o._id !== orderToDelete._id && o.orderid !== orderToDelete.orderid));
+                setOrderToDelete(null);
+                setSuccessMessage(translations.deleteordersuccessfull || "Order deleted successfully");
+            } else {
+                setWarningMessage(data.message || translations.servererror);
+                setShowWarning(true);
+            }
+        } catch {
+            setWarningMessage(translations.servererror);
+            setShowWarning(true);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <>
+            {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
+            {successMessage && <AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />}
+
+            <div className="tablediv">
+                {loading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <table className="ordertable">
+                        <thead>
+                            <tr>
+                                <th onClick={() => handleSort("ordernumber")} style={{ cursor: "pointer", width: "95px" }}>
+                                    {translations.orderno || "Order No."} {renderSortIcon("ordernumber")}
+                                </th>
+                                <th onClick={() => handleSort("customername")} style={{ cursor: "pointer" }}>
+                                    {translations.Customer || "Customer"} {renderSortIcon("customername")}
+                                </th>
+                                <th>
+                                    {translations.items || "Items"}
+                                </th>
+                                <th onClick={() => handleSort("total")} style={{ cursor: "pointer" }}>
+                                    {translations.totalamount || "Total Amount"} {renderSortIcon("total")}
+                                </th>
+                                <th onClick={() => handleSort("paymentstatus")} style={{ cursor: "pointer" }}>
+                                    {translations.paymentstatus || "Payment"} {renderSortIcon("paymentstatus")}
+                                </th>
+                                <th onClick={() => handleSort("orderstatus")} style={{ cursor: "pointer", width: "130px" }}>
+                                    {translations.orderstatus || "Order Status"} {renderSortIcon("orderstatus")}
+                                </th>
+                                <th onClick={() => handleSort("createdAt")} style={{ cursor: "pointer" }}>
+                                    {translations.orderdate || "Date"} {renderSortIcon("createdAt")}
+                                </th>
+                                <th style={{ textAlign: "center", width: "120px" }}>
+                                    {translations.action || "Action"}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {visibleOrders.length > 0 ? (
+                                visibleOrders.map((order) => {
+                                    const orderKey = order._id || order.orderid;
+                                    const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+                                    const totalItemsCount = order.totalitems || (order.items || []).reduce((acc, i) => acc + (i.qty || 1), 0);
+                                    const currentStatusClass = (order.orderstatus || "Confirmed").toLowerCase();
+                                    const paymentStatusClass = (order.paymentstatus || "Paid").toLowerCase();
+
+                                    return (
+                                        <tr key={orderKey}>
+                                            {/* Order Number */}
+                                            <td>
+                                                <span className="order-number-badge">
+                                                    #{order.ordernumber != null ? order.ordernumber : order.orderid}
+                                                </span>
+                                            </td>
+
+                                            {/* Customer */}
+                                            <td>
+                                                <div className="customer-info-cell">
+                                                    <div className="customer-avatar">
+                                                        {getInitials(order.customername)}
+                                                    </div>
+                                                    <div className="customer-text">
+                                                        <strong>{order.customername || "Guest Customer"}</strong>
+                                                        {order.customeremail && (
+                                                            <span className="customer-subtext">{order.customeremail}</span>
+                                                        )}
+                                                        {order.customerphone && (
+                                                            <span className="customer-subtext">{order.customerphone}</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            {/* Items Preview */}
+                                            <td>
+                                                <div className="order-items-preview">
+                                                    {firstItem?.image ? (
+                                                        <img
+                                                            src={firstItem.image}
+                                                            alt={firstItem.itemname || "Item"}
+                                                            className="item-thumb"
+                                                            onError={(e) => {
+                                                                e.target.style.display = "none";
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <div className="item-thumb-placeholder">💎</div>
+                                                    )}
+                                                    <div className="item-details-brief">
+                                                        <span className="item-title">
+                                                            {firstItem?.itemname || "Jewelry Item"}
+                                                        </span>
+                                                        <span className="item-badge-more">
+                                                            {totalItemsCount} {totalItemsCount === 1 ? "item" : "items"}
+                                                            {order.items && order.items.length > 1 && ` (${order.items.length} types)`}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            {/* Total Amount */}
+                                            <td>
+                                                <span className="order-price-cell">
+                                                    {formatPriceWithCurrency(order.total, order.currencydetails)}
+                                                </span>
+                                            </td>
+
+                                            {/* Payment */}
+                                            <td>
+                                                <div className="payment-info-cell">
+                                                    <span className={`payment-badge ${paymentStatusClass}`}>
+                                                        {order.paymentstatus || "Paid"}
+                                                    </span>
+                                                    <span className="payment-method-text">
+                                                        {order.paymentmethod || "Card"}
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            {/* Order Status Select */}
+                                            <td>
+                                                <select
+                                                    className={`status-select ${currentStatusClass}`}
+                                                    value={order.orderstatus || "Confirmed"}
+                                                    onChange={(e) => handleStatusChange(order, e.target.value)}
+                                                >
+                                                    {ORDER_STATUS_OPTIONS.map((st) => (
+                                                        <option key={st} value={st}>
+                                                            {st}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </td>
+
+                                            {/* Date */}
+                                            <td>
+                                                <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)" }}>
+                                                    {formatDate(order.createdAt)}
+                                                </span>
+                                            </td>
+
+                                            {/* Action Buttons */}
+                                            <td>
+                                                <div className="action-cell">
+                                                    <button
+                                                        type="button"
+                                                        className="view-details-btn"
+                                                        onClick={() => setSelectedOrderForView(order)}
+                                                        title={translations.viewdetails || "View Details"}
+                                                    >
+                                                        <VisibilityIcon style={{ fontSize: 16 }} />
+                                                        {translations.viewdetails || "View"}
+                                                    </button>
+                                                    <DeleteButton
+                                                        onClick={() => setOrderToDelete(order)}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+                                        {translations.noordersfound || "No orders found"}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+
+            {/* Pagination */}
+            {!loading && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => setCurrentPage(page)}
+                    pageSizeOptions={[10, 15, 20, 50]}
+                    selectedPageSize={pageSize}
+                    onPageSizeChange={(size) => {
+                        setPageSize(size);
+                        setCurrentPage(1);
+                    }}
+                    totalRecords={totalRecords}
+                />
+            )}
+
+            {/* Delete Modal Confirmation */}
+            {orderToDelete && (
+                <DeleteModal
+                    open={Boolean(orderToDelete)}
+                    onClose={() => setOrderToDelete(null)}
+                    onDelete={handleDeleteOrder}
+                    name={`#${orderToDelete.ordernumber || orderToDelete.orderid}`}
+                    message={`(Total: ${formatPriceWithCurrency(orderToDelete.total, orderToDelete.currencydetails)})`}
+                    headingname={translations.deleteorder || "Delete Order"}
+                    isLoading={isDeleting}
+                />
+            )}
+
+            {/* Order Details Modal */}
+            {selectedOrderForView && (
+                <>
+                    <div className="modal fade show order-details-modal" style={{ display: "block" }} tabIndex="-1">
+                        <div className="modal-dialog modal-dialog-centered modal-lg">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">
+                                        <span>{translations.orderdetails || "Order Details"}</span>
+                                        <span className="order-number-badge">
+                                            #{selectedOrderForView.ordernumber != null ? selectedOrderForView.ordernumber : selectedOrderForView.orderid}
+                                        </span>
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={() => setSelectedOrderForView(null)}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div className="modal-body">
+                                    {/* Summary Grid */}
+                                    <div className="order-summary-grid">
+                                        {/* Customer Details */}
+                                        <div className="summary-card">
+                                            <div className="card-title">{translations.customerdetails || "Customer Details"}</div>
+                                            <div className="card-content">
+                                                <strong>{selectedOrderForView.customername || "Guest Customer"}</strong>
+                                                {selectedOrderForView.customeremail && <div>{selectedOrderForView.customeremail}</div>}
+                                                {selectedOrderForView.customerphone && <div>{selectedOrderForView.customerphone}</div>}
+                                            </div>
+                                        </div>
+
+                                        {/* Shipping Address */}
+                                        <div className="summary-card">
+                                            <div className="card-title">{translations.shippingaddress || "Shipping Address"}</div>
+                                            <div className="card-content">
+                                                {selectedOrderForView.shippingaddress ? (
+                                                    <>
+                                                        <div>{selectedOrderForView.shippingaddress.address}</div>
+                                                        <div>
+                                                            {[
+                                                                selectedOrderForView.shippingaddress.cityname,
+                                                                selectedOrderForView.shippingaddress.statename,
+                                                                selectedOrderForView.shippingaddress.pincode
+                                                            ].filter(Boolean).join(", ")}
+                                                        </div>
+                                                        <div>{selectedOrderForView.shippingaddress.countryname}</div>
+                                                    </>
+                                                ) : (
+                                                    <div>-</div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Payment & Status */}
+                                        <div className="summary-card">
+                                            <div className="card-title">{translations.paymentmethod || "Payment & Status"}</div>
+                                            <div className="card-content">
+                                                <div><strong>Method:</strong> {selectedOrderForView.paymentmethod || "Prepaid"}</div>
+                                                <div><strong>Payment Status:</strong> {selectedOrderForView.paymentstatus || "Paid"}</div>
+                                                <div><strong>Order Status:</strong> {selectedOrderForView.orderstatus || "Confirmed"}</div>
+                                                <div><strong>Date:</strong> {formatDate(selectedOrderForView.createdAt)}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Items Table */}
+                                    <div className="modal-section-title">{translations.itemdetails || "Items In Order"}</div>
+                                    <table className="items-detail-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th style={{ textAlign: "center" }}>Qty</th>
+                                                <th style={{ textAlign: "right" }}>Price</th>
+                                                <th style={{ textAlign: "right" }}>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {(selectedOrderForView.items || []).map((item, index) => {
+                                                const specs = [
+                                                    item.metalname && `Metal: ${item.metalname}`,
+                                                    item.diamondsize && `Carat: ${item.diamondsize}`,
+                                                    item.shapename && `Shape: ${item.shapename}`,
+                                                    item.clarityname && `Clarity: ${item.clarityname}`,
+                                                    item.size && `Size: ${item.size}`
+                                                ].filter(Boolean).join(" • ");
+
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            <div className="modal-item-info">
+                                                                {item.image ? (
+                                                                    <img src={item.image} alt={item.itemname || "Item"} />
+                                                                ) : (
+                                                                    <div style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', borderRadius: 6 }}>💎</div>
+                                                                )}
+                                                                <div className="modal-item-meta">
+                                                                    <strong>{item.itemname || "Fine Jewelry Piece"}</strong>
+                                                                    {specs && <div className="specs-text">{specs}</div>}
+                                                                    {item.specialinstruction && (
+                                                                        <div className="instruction-text">
+                                                                            Note: {item.specialinstruction}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style={{ textAlign: "center", fontWeight: 600 }}>
+                                                            {item.qty || 1}
+                                                        </td>
+                                                        <td style={{ textAlign: "right" }}>
+                                                            {formatPriceWithCurrency(item.price, selectedOrderForView.currencydetails)}
+                                                        </td>
+                                                        <td style={{ textAlign: "right", fontWeight: 600 }}>
+                                                            {formatPriceWithCurrency(item.totalprice || (item.price * (item.qty || 1)), selectedOrderForView.currencydetails)}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+
+                                    {/* Order Totals */}
+                                    <div className="order-totals-box">
+                                        <div className="total-row">
+                                            <span>{translations.subtotal || "Subtotal"}:</span>
+                                            <span>{formatPriceWithCurrency(selectedOrderForView.subtotal, selectedOrderForView.currencydetails)}</span>
+                                        </div>
+                                        <div className="total-row grand-total">
+                                            <span>{translations.total || "Grand Total"}:</span>
+                                            <span>{formatPriceWithCurrency(selectedOrderForView.total, selectedOrderForView.currencydetails)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={() => setSelectedOrderForView(null)}
+                                    >
+                                        {translations.close || "Close"}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-backdrop fade show"></div>
+                </>
+            )}
+        </>
+    );
+};
+
+export default GetOrder;

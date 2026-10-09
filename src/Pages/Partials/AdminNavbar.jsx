@@ -37,6 +37,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -222,6 +223,14 @@ const AdminNavbar = () => {
                                     <LeaderboardIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                 </NavTooltip>
                                 {translations.Dashboard}
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/Home/Order" className={navLinkClass('/Home/Order')}>
+                                <NavTooltip title={translations.Order || "Order"}>
+                                    <ShoppingBagIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                </NavTooltip>
+                                {translations.Order || "Order"}
                             </NavLink>
                         </li>
                     </div>
