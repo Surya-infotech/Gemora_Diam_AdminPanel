@@ -1,4 +1,4 @@
-import { Groups, Paid, Payments, Savings, TrendingDown, TrendingUp } from "@mui/icons-material";
+import { ArrowForward, Diamond, Groups, Payments, ShoppingBag, TrendingDown, TrendingUp } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,45 +11,43 @@ import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
 import AlertMessage from "../Custom/AlertMessage";
 import WarningModal from "../Custom/WarningModal";
-import profilePlaceholder from '../../assets/profile-placeholder.png';
 import { useFiscalYear } from "../../Context/FiscalYearContext";
 
-const sampleFallbackData = {
-    activeSubscriptionCount: 148,
-    totalSubscriptionCount: 230,
-    totalOwnerCount: 85,
-    totalTaxSum: 14200,
-    totalSubtotalSum: 184500,
-    totalPriceSum: 198700,
-    monthlySummary: [
-        { _id: 1, monthlyRevenue: 12500, subscriptionCount: 15 },
-        { _id: 2, monthlyRevenue: 15400, subscriptionCount: 19 },
-        { _id: 3, monthlyRevenue: 18200, subscriptionCount: 22 },
-        { _id: 4, monthlyRevenue: 14800, subscriptionCount: 18 },
-        { _id: 5, monthlyRevenue: 21000, subscriptionCount: 25 },
-        { _id: 6, monthlyRevenue: 24500, subscriptionCount: 30 },
-        { _id: 7, monthlyRevenue: 19800, subscriptionCount: 24 },
-        { _id: 8, monthlyRevenue: 26000, subscriptionCount: 32 },
-        { _id: 9, monthlyRevenue: 28500, subscriptionCount: 35 },
-        { _id: 10, monthlyRevenue: 17800, subscriptionCount: 20 },
-    ],
-    kpiDifferences: {
-        ownerCountDifference: "+12%",
-        totalSubscriptionCountDifference: "+18%",
-        taxDifference: "+8%",
-        subtotalDifference: "+22%",
-        revenueDifference: "+20%"
-    },
-    recentlyAddedOwners: [
-        { ownerfirstname: "Rajesh", ownerlastname: "Patel", email: "rajesh@diamjewels.com" },
-        { ownerfirstname: "Amit", ownerlastname: "Shah", email: "amit.shah@gemoralux.com" },
-        { ownerfirstname: "Suresh", ownerlastname: "Mehta", email: "suresh@shreediam.com" },
-    ],
-    recentlyAddedBusinesses: [
-        { businessname: "Gemora Luxury Diamonds", email: "contact@gemoralux.com" },
-        { businessname: "Shree Diam Exports", email: "exports@shreediam.com" },
-        { businessname: "Surat Diamond Hub", email: "info@suratdiamhub.com" },
-    ]
+const initialDashboardState = {
+    totalOrdersCount: 0,
+    allOrdersCount: 0,
+    totalRevenue: 0,
+    totalSubtotalSum: 0,
+    totalTaxSum: 0,
+    totalProductsCount: 0,
+    publishedProductsCount: 0,
+    totalCustomersCount: 0,
+    monthlySummary: [],
+    kpiDifferences: {},
+    recentOrders: [],
+    recentCustomers: []
+};
+
+const getInitials = (name) => {
+    if (!name) return "C";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
+
+const formatDisplayDate = (dateStr) => {
+    if (!dateStr) return "";
+    try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    } catch {
+        return dateStr;
+    }
 };
 
 const Dashboard = () => {
@@ -65,8 +63,8 @@ const Dashboard = () => {
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
-    const [dashboardData, setDashboardData] = useState(sampleFallbackData);
-    const [currencyDetails, setCurrencyDetails] = useState({ currencysymbol: '$', currencyposition: 'left' });
+    const [dashboardData, setDashboardData] = useState(initialDashboardState);
+    const [currencyDetails, setCurrencyDetails] = useState({ currencysymbol: '₹', currencyposition: 'right' });
 
     useEffect(() => {
         if (isEmployee) {
@@ -100,7 +98,7 @@ const Dashboard = () => {
     }, [location, navigate]);
 
     const formatCurrency = (amount, details) => {
-        if (amount === undefined || amount === null) return "$0.00";
+        if (amount === undefined || amount === null) return "₹0.00";
         const num = parseFloat(amount || 0);
         if (isNaN(num)) return amount;
 
@@ -108,8 +106,8 @@ const Dashboard = () => {
             decimal = 2,
             thousandseparator = ',',
             decimalseparator = '.',
-            currencysymbol = '$',
-            currencyposition = 'left'
+            currencysymbol = '₹',
+            currencyposition = 'right'
         } = details || {};
 
         const decPlaces = decimal !== undefined && decimal !== null ? parseInt(decimal, 10) : 2;
@@ -125,11 +123,11 @@ const Dashboard = () => {
         const formattedAmount = decPlaces > 0 ? `${formattedInt}${decSep}${decPart}` : formattedInt;
 
         switch (currencyposition) {
-            case "left": return `${currencysymbol || '$'}${formattedAmount}`;
-            case "left-space": return `${currencysymbol || '$'} ${formattedAmount}`;
-            case "right": return `${formattedAmount}${currencysymbol || '$'}`;
-            case "right-space": return `${formattedAmount} ${currencysymbol || '$'}`;
-            default: return `${currencysymbol || '$'}${formattedAmount}`;
+            case "left": return `${currencysymbol || '₹'}${formattedAmount}`;
+            case "left-space": return `${currencysymbol || '₹'} ${formattedAmount}`;
+            case "right": return `${formattedAmount}${currencysymbol || '₹'}`;
+            case "right-space": return `${formattedAmount} ${currencysymbol || '₹'}`;
+            default: return `${formattedAmount}${currencysymbol || '₹'}`;
         }
     };
 
@@ -226,62 +224,59 @@ const Dashboard = () => {
 
     const kpiDifferences = dashboardData.kpiDifferences || {};
 
-    const handleOwnersCardClick = () => navigate('/Home/Dashboard');
-    const handleRevenueCardClick = () => navigate('/Home/Dashboard');
-    const handleTaxCardClick = () => navigate('/Home/Dashboard');
-
+    // 4 Key Performance Indicators matching Gemora Diam Fine Jewelry Store
     const cardData = [
         {
-            name: translations.owners,
-            count: dashboardData.totalOwnerCount || 0,
-            difference: kpiDifferences.ownerCountDifference,
-            icon: <Groups className="card-icon" />,
-            onClick: handleOwnersCardClick,
+            name: translations.totalorders || "Total Orders",
+            count: dashboardData.totalOrdersCount ?? (dashboardData.allOrdersCount ?? 0),
+            difference: kpiDifferences.ordersDifference,
+            icon: <ShoppingBag className="card-icon" />,
+            onClick: () => navigate('/Home/Order'),
             isClickable: true,
             variant: "highlight",
         },
         {
-            name: translations.totaltax,
-            count: formatCurrency(dashboardData.totalTaxSum || 0, currencyDetails),
-            difference: kpiDifferences.taxDifference,
+            name: translations.totalrevenue || "Total Revenue",
+            count: formatCurrency(dashboardData.totalRevenue ?? (dashboardData.totalPriceSum ?? 0), currencyDetails),
+            difference: kpiDifferences.revenueDifference,
             icon: <Payments className="card-icon" />,
-            onClick: handleTaxCardClick,
+            onClick: () => navigate('/Home/Order'),
             isClickable: true,
-            variant: "warning",
+            variant: "revenue",
         },
         {
-            name: translations.totalearning,
-            count: formatCurrency(dashboardData.totalSubtotalSum || 0, currencyDetails),
-            difference: kpiDifferences.subtotalDifference,
-            icon: <Paid className="card-icon" />,
-            onClick: handleRevenueCardClick,
+            name: translations.totalproducts || "Jewelry Items",
+            count: dashboardData.totalProductsCount ?? 0,
+            difference: kpiDifferences.productsDifference,
+            icon: <Diamond className="card-icon" />,
+            onClick: () => navigate('/Products/Item'),
             isClickable: true,
             variant: "income",
         },
         {
-            name: translations.totalrevenue,
-            count: formatCurrency(dashboardData.totalPriceSum || 0, currencyDetails),
-            difference: kpiDifferences.revenueDifference,
-            icon: <Savings className="card-icon" />,
-            onClick: handleRevenueCardClick,
+            name: translations.totalcustomers || "Total Customers",
+            count: dashboardData.totalCustomersCount ?? (dashboardData.totalOwnerCount ?? 0),
+            difference: kpiDifferences.customersDifference,
+            icon: <Groups className="card-icon" />,
+            onClick: () => navigate('/User/Customer'),
             isClickable: true,
-            variant: "revenue",
+            variant: "warning",
         },
     ];
 
     const monthNames = [
-        translations.Jan,
-        translations.Feb,
-        translations.Mar,
-        translations.Apr,
-        translations.May,
-        translations.Jun,
-        translations.Jul,
-        translations.Aug,
-        translations.Sep,
-        translations.Oct,
-        translations.Nov,
-        translations.Dec
+        translations.Jan || "Jan",
+        translations.Feb || "Feb",
+        translations.Mar || "Mar",
+        translations.Apr || "Apr",
+        translations.May || "May",
+        translations.Jun || "Jun",
+        translations.Jul || "Jul",
+        translations.Aug || "Aug",
+        translations.Sep || "Sep",
+        translations.Oct || "Oct",
+        translations.Nov || "Nov",
+        translations.Dec || "Dec"
     ];
 
     const initialChartData = monthNames.map((month) => ({ month, Revenue: 0, Orders: 0 }));
@@ -290,7 +285,7 @@ const Dashboard = () => {
         const monthIndex = (item._id ?? 0) - 1;
         if (monthIndex >= 0 && monthIndex < 12) {
             initialChartData[monthIndex].Revenue = item.monthlyRevenue ?? 0;
-            initialChartData[monthIndex].Orders = item.subscriptionCount ?? 0;
+            initialChartData[monthIndex].Orders = item.orderCount ?? (item.subscriptionCount ?? 0);
         }
     });
 
@@ -303,7 +298,7 @@ const Dashboard = () => {
                     <p className="label">{`${label}`}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="tooltip-data">
-                            {`${entry.dataKey === "Revenue" ? translations.revenue : translations.subscriptions}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
+                            {`${entry.dataKey === "Revenue" ? (translations.monthlyrevenue || "Revenue") : (translations.orders || "Orders")}: ${entry.dataKey === "Revenue" ? formatCurrency(entry.value, currencyDetails) : entry.value}`}
                         </p>
                     ))}
                 </div>
@@ -320,6 +315,9 @@ const Dashboard = () => {
     if (isEmployee) {
         return null;
     }
+
+    const recentOrders = dashboardData.recentOrders || [];
+    const recentCustomers = dashboardData.recentCustomers || [];
 
     return (<>
         {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
@@ -352,50 +350,71 @@ const Dashboard = () => {
 
             <div className="dashboard-row row-1">
                 <div className="chart-container monthly-revenue-chart">
-                    <Typography variant="h6" className="chart-title">{translations.monthlyrevenue}</Typography>
+                    <Typography variant="h6" className="chart-title">
+                        {translations.monthlyrevenue || "Monthly Revenue"}
+                    </Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                             <XAxis dataKey="month" className="chart-axis" interval={0} axisLine={false} tickLine={false} />
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={95} tickFormatter={(value) => formatCurrency(value, currencyDetails)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.revenue} />
+                            <Area type="monotone" dataKey="Revenue" stroke="var(--primary-color)" fill="var(--primary-color)" fillOpacity={0.3} strokeWidth={4} name={translations.monthlyrevenue || "Revenue"} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
 
                 <div className="recently-added-container">
-                    <Typography variant="h6" className="section-title">
-                        {translations.recentowners}
-                    </Typography>
-                    {dashboardData.recentlyAddedOwners && dashboardData.recentlyAddedOwners.length > 0 ? (
-                        <div className="owners-list">
-                            {dashboardData.recentlyAddedOwners.map((owner, index) => (
-                                <div key={index} className="owner-item-card" onClick={() => navigate('/Home/Dashboard')}>
-                                    <div className="owner-content">
-                                        <div className="owner-image">
-                                            <img
-                                                src={owner.imageUrl || profilePlaceholder}
-                                                alt={`${owner.ownerfirstname} ${owner.ownerlastname}`}
-                                                className="owner-avatar"
-                                            />
+                    <div className="section-header-wrap">
+                        <Typography variant="h6" className="section-title">
+                            {translations.recentorders || "Recent Orders"}
+                        </Typography>
+                        <button className="view-all-btn" onClick={() => navigate('/Home/Order')}>
+                            {translations.viewall || "View All"} <ArrowForward />
+                        </button>
+                    </div>
+                    {recentOrders.length > 0 ? (
+                        <div className="recent-orders-list">
+                            {recentOrders.map((order, index) => {
+                                const statusClass = (order.orderstatus || "confirmed").toLowerCase();
+                                return (
+                                    <div
+                                        key={order._id || index}
+                                        className="order-item-card"
+                                        onClick={() => navigate(`/Home/OrderDetails/${order._id || order.orderid}`, { state: { order } })}
+                                    >
+                                        <div className="order-left">
+                                            <div className="order-icon-badge">
+                                                <ShoppingBag />
+                                            </div>
+                                            <div className="order-info">
+                                                <div className="order-number">
+                                                    #ORD-{order.ordernumber || order.orderid}
+                                                </div>
+                                                <div className="order-customer">
+                                                    {order.customername || order.customeremail || "Valued Client"}
+                                                </div>
+                                                <div className="order-date">
+                                                    {formatDisplayDate(order.createdAt)}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="owner-details">
-                                            <Typography variant="body1" className="owner-name">
-                                                {owner.ownerfirstname} {owner.ownerlastname}
-                                            </Typography>
-                                            <Typography variant="body2" className="owner-email">
-                                                {owner.email}
-                                            </Typography>
+                                        <div className="order-right">
+                                            <div className="order-price">
+                                                {formatCurrency(order.total, order.currencydetails || currencyDetails)}
+                                            </div>
+                                            <span className={`order-status-pill ${statusClass}`}>
+                                                {order.orderstatus || "Confirmed"}
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentowners}
+                                {translations.notfoundrecentorders || "No recent orders found"}
                             </Typography>
                         </div>
                     )}
@@ -404,29 +423,47 @@ const Dashboard = () => {
 
             <div className="dashboard-row row-2">
                 <div className="recently-added-container">
-                    <Typography variant="h6" className="section-title">
-                        {translations.recentbusinesses}
-                    </Typography>
-                    {dashboardData.recentlyAddedBusinesses && dashboardData.recentlyAddedBusinesses.length > 0 ? (
-                        <div className="businesses-list">
-                            {dashboardData.recentlyAddedBusinesses.map((business, index) => (
-                                <div key={index} className="business-item-card" onClick={() => navigate('/Home/Dashboard')}>
-                                    <div className="business-content">
-                                        <div className="business-image">
-                                            <img
-                                                src={business.imageUrl || profilePlaceholder}
-                                                alt={business.businessname}
-                                                className="business-avatar"
-                                            />
+                    <div className="section-header-wrap">
+                        <Typography variant="h6" className="section-title">
+                            {translations.recentcustomers || "Recent Clients"}
+                        </Typography>
+                        <button className="view-all-btn" onClick={() => navigate('/User/Customer')}>
+                            {translations.viewall || "View All"} <ArrowForward />
+                        </button>
+                    </div>
+                    {recentCustomers.length > 0 ? (
+                        <div className="recent-clients-list">
+                            {recentCustomers.map((cust, index) => (
+                                <div
+                                    key={cust._id || index}
+                                    className="client-item-card"
+                                    onClick={() => navigate('/User/Customer')}
+                                >
+                                    <div className="client-left">
+                                        <div className="client-avatar">
+                                            {getInitials(cust.fullname)}
                                         </div>
-                                        <div className="business-details">
-                                            <Typography variant="body1" className="business-name">
-                                                {business.businessname}
-                                            </Typography>
-                                            <Typography variant="body2" className="business-email">
-                                                {business.email}
-                                            </Typography>
+                                        <div className="client-info">
+                                            <div className="client-name">
+                                                {cust.fullname || "Client"}
+                                            </div>
+                                            <div className="client-email">
+                                                {cust.email || ""}
+                                            </div>
+                                            {cust.phone && (
+                                                <div className="client-phone">
+                                                    {cust.phone}
+                                                </div>
+                                            )}
                                         </div>
+                                    </div>
+                                    <div className="client-right">
+                                        <div className="client-date">
+                                            {formatDisplayDate(cust.createdAt)}
+                                        </div>
+                                        <span className="client-status-badge">
+                                            Active
+                                        </span>
                                     </div>
                                 </div>
                             ))}
@@ -434,21 +471,23 @@ const Dashboard = () => {
                     ) : (
                         <div className="no-data-message">
                             <Typography variant="body2">
-                                {translations.notfoundrecentbusinesses}
+                                {translations.notfoundrecentcustomers || "No recent clients found"}
                             </Typography>
                         </div>
                     )}
                 </div>
 
                 <div className="chart-container monthly-order-chart">
-                    <Typography variant="h6" className="chart-title">{translations.monthlysubscriptions}</Typography>
+                    <Typography variant="h6" className="chart-title">
+                        {translations.monthlyorders || "Monthly Orders"}
+                    </Typography>
                     <ResponsiveContainer width="100%" height={350}>
                         <BarChart data={chartData} barSize={22} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                             <XAxis dataKey="month" className="chart-axis" axisLine={false} tickLine={false} />
                             <YAxis className="chart-axis" axisLine={false} tickLine={false} width={65} allowDecimals={false} tickFormatter={(value) => Math.round(value)} />
                             <Tooltip content={(props) => <CustomTooltip {...props} translations={translations} currencyDetails={currencyDetails} formatCurrency={formatCurrency} />} />
                             <Legend className="chart-legend" />
-                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.subscriptions} radius={[10, 10, 10, 10]} isAnimationActive={false} />
+                            <Bar dataKey="Orders" fill="var(--primary-color)" name={translations.orders || "Orders"} radius={[10, 10, 10, 10]} isAnimationActive={false} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>

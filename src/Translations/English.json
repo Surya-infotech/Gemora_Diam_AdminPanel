@@ -644,5 +644,14 @@
   "deleteorder": "Delete Order",
   "deleteordersuccessfull": "Order deleted successfully",
   "updateordersuccessfull": "Order status updated successfully",
-  "specialinstructions": "Special Instructions"
+  "specialinstructions": "Special Instructions",
+  "totalorders": "Total Orders",
+  "totalproducts": "Jewelry Items",
+  "totalcustomers": "Total Customers",
+  "recentorders": "Recent Orders",
+  "notfoundrecentorders": "No recent orders found",
+  "recentcustomers": "Recent Clients",
+  "notfoundrecentcustomers": "No recent clients found",
+  "monthlyorders": "Monthly Orders",
+  "viewall": "View All"
 }
