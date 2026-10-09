@@ -481,7 +481,21 @@ const EditItem = () => {
                 body: formData,
             });
 
-            const result = await response.json();
+            if (response.status === 413) {
+                setWarningMessage(translations.filesizetoolarge || "File size is too large.");
+                setShowWarning(true);
+                return;
+            }
+
+            let result;
+            try {
+                result = await response.json();
+            } catch {
+                setWarningMessage(translations.servererror);
+                setShowWarning(true);
+                return;
+            }
+
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
