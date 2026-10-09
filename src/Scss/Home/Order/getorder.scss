@@ -238,23 +238,6 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-
-            .delete-btn-icon {
-                background: none;
-                border: 1px solid #fee2e2;
-                padding: 6px;
-                border-radius: 6px;
-                cursor: pointer;
-                color: #ef4444;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.2s ease;
-
-                &:hover {
-                    background-color: #fee2e2;
-                }
-            }
         }
     }
 }
