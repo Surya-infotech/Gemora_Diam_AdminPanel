@@ -16,8 +16,239 @@ function slugify(text) {
         .toLowerCase()
         .trim()
         .replace(/\s+/g, "-")
-        .replace(/[^\w\-]+/g, "")
-        .replace(/\-\-+/g, "-");
+        .replace(/[^\w-]+/g, "")
+        .replace(/--+/g, "-");
+}
+
+function parseFilterValue(val) {
+    if (Array.isArray(val)) return val.filter(Boolean);
+    if (typeof val === "string" && val.trim()) {
+        return val.includes(",") ? val.split(",").map(s => s.trim()).filter(Boolean) : [val.trim()];
+    }
+    return [];
+}
+
+function normalizeItems(items, defaultType = "style") {
+    if (!Array.isArray(items)) return [];
+    return items.map(item => {
+        let fVal = item.filterValue;
+        if ((!fVal || (Array.isArray(fVal) && fVal.length === 0)) && item.shape) {
+            fVal = [item.shape];
+        }
+        return {
+            label: item.label || "",
+            slug: item.slug || "",
+            shape: item.shape || "",
+            badge: item.badge || "",
+            filterType: (item.filterType || defaultType).toLowerCase().replace(/[^a-z]/g, "") || defaultType,
+            filterValue: parseFilterValue(fVal)
+        };
+    });
+}
+
+function AttributeMultiSelect({
+    options = [],
+    selected = [],
+    onChange,
+    placeholder = "Select attribute details...",
+    attributeName = "Attribute",
+    isRtl = false,
+    translations = {}
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (containerRef.current && !containerRef.current.contains(e.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const selectedArray = Array.isArray(selected)
+        ? selected
+        : (typeof selected === "string" && selected.trim()
+            ? (selected.includes(",") ? selected.split(",").map(s => s.trim()).filter(Boolean) : [selected.trim()])
+            : []);
+
+    // Combine active options with any pre-selected values not currently in the active list
+    const allAvailableOptions = Array.from(new Set([...options, ...selectedArray])).filter(Boolean);
+
+    const filteredOptions = allAvailableOptions.filter((opt) =>
+        String(opt).toLowerCase().includes(searchQuery.toLowerCase().trim())
+    );
+
+    const toggleOption = (val) => {
+        if (selectedArray.includes(val)) {
+            onChange(selectedArray.filter(v => v !== val));
+        } else {
+            onChange([...selectedArray, val]);
+        }
+    };
+
+    const handleRemoveChip = (e, val) => {
+        e.stopPropagation();
+        onChange(selectedArray.filter(v => v !== val));
+    };
+
+    const handleClearAll = (e) => {
+        e.stopPropagation();
+        onChange([]);
+    };
+
+    const handleSelectAll = (e) => {
+        e.stopPropagation();
+        const merged = Array.from(new Set([...selectedArray, ...filteredOptions]));
+        onChange(merged);
+    };
+
+    const handleAddCustom = () => {
+        const trimmed = searchQuery.trim();
+        if (trimmed && !selectedArray.includes(trimmed)) {
+            onChange([...selectedArray, trimmed]);
+            setSearchQuery("");
+        }
+    };
+
+    const maxVisibleChips = 2;
+    const visibleChips = selectedArray.slice(0, maxVisibleChips);
+    const hiddenCount = selectedArray.length - maxVisibleChips;
+
+    return (
+        <div className="attribute-multiselect" ref={containerRef} dir={isRtl ? "rtl" : "ltr"}>
+            <div
+                className={`multiselect-trigger ${isOpen ? "is-open" : ""}`}
+                onClick={() => setIsOpen(prev => !prev)}
+                tabIndex={0}
+                role="button"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+            >
+                <div className="multiselect-chips-container">
+                    {selectedArray.length === 0 ? (
+                        <span className="multiselect-placeholder">{placeholder}</span>
+                    ) : (
+                        <>
+                            {visibleChips.map((val) => (
+                                <span key={val} className="multiselect-chip" title={val}>
+                                    <span className="chip-label">{val}</span>
+                                    <button
+                                        type="button"
+                                        className="chip-remove"
+                                        onClick={(e) => handleRemoveChip(e, val)}
+                                        title="Remove"
+                                    >
+                                        ✕
+                                    </button>
+                                </span>
+                            ))}
+                            {hiddenCount > 0 && (
+                                <span className="multiselect-more-badge" title={selectedArray.slice(maxVisibleChips).join(", ")}>
+                                    +{hiddenCount} {translations.more || "more"}
+                                </span>
+                            )}
+                        </>
+                    )}
+                </div>
+                <div className="multiselect-trigger-actions">
+                    {selectedArray.length > 0 && (
+                        <button
+                            type="button"
+                            className="clear-all-btn"
+                            onClick={handleClearAll}
+                            title={translations.clearall || "Clear all"}
+                        >
+                            ✕
+                        </button>
+                    )}
+                    <span className={`chevron-icon ${isOpen ? "is-open" : ""}`}>▼</span>
+                </div>
+            </div>
+
+            {isOpen && (
+                <div className="multiselect-dropdown-menu">
+                    <div className="multiselect-search-wrapper">
+                        <input
+                            type="text"
+                            className="multiselect-search-input"
+                            placeholder={`${translations.search || "Search"} ${attributeName}...`}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    handleAddCustom();
+                                }
+                            }}
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className="multiselect-quick-actions">
+                        <span className="selected-count-label">
+                            {translations.selected || "Selected"}: {selectedArray.length}
+                        </span>
+                        <div className="actions-buttons">
+                            {filteredOptions.length > 0 && (
+                                <button type="button" onClick={handleSelectAll}>
+                                    {translations.selectall || "Select All"}
+                                </button>
+                            )}
+                            {selectedArray.length > 0 && (
+                                <button type="button" onClick={handleClearAll}>
+                                    {translations.clearall || "Clear All"}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="multiselect-options-list" role="listbox">
+                        {filteredOptions.length === 0 ? (
+                            <div className="multiselect-empty-notice">
+                                {searchQuery.trim() ? (
+                                    <div>
+                                        <span>{translations.nomatchingoptions || "No matching options"}</span>
+                                        <button
+                                            type="button"
+                                            className="btn-add-custom-val"
+                                            onClick={handleAddCustom}
+                                        >
+                                            + {translations.add || "Add"} "{searchQuery.trim()}"
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <span>{translations.nooptionsavailable || "No options available"}</span>
+                                )}
+                            </div>
+                        ) : (
+                            filteredOptions.map((opt) => {
+                                const isChecked = selectedArray.includes(opt);
+                                return (
+                                    <label
+                                        key={opt}
+                                        className={`multiselect-option-item ${isChecked ? "is-selected" : ""}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={isChecked}
+                                            onChange={() => toggleOption(opt)}
+                                        />
+                                        <span className="option-text">{opt}</span>
+                                    </label>
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export function MenuForm({ initialData = null, isEdit = false }) {
@@ -33,6 +264,107 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Attribute types definition matching sidebar
+    const ATTRIBUTE_KEYS = [
+        { key: "metal", label: translations.metal || "Metal" },
+        { key: "diamondsize", label: translations.diamondsize || "Diamond Size" },
+        { key: "shape", label: translations.shape || "Shape" },
+        { key: "clarity", label: translations.clarity || "Clarity" },
+        { key: "color", label: translations.color || "Color" },
+        { key: "stone", label: translations.stone || "Stone" },
+        { key: "style", label: translations.style || "Style" },
+        { key: "category", label: translations.category || "Category" },
+        { key: "subcategory", label: translations.subcategory || "Sub Category" }
+    ];
+
+    // State holding active attribute options from the system
+    const [attributeOptionsMap, setAttributeOptionsMap] = useState({
+        metal: [],
+        diamondsize: [],
+        shape: [],
+        clarity: [],
+        color: [],
+        stone: [],
+        style: [],
+        category: [],
+        subcategory: []
+    });
+
+    // Fetch all active attribute options
+    useEffect(() => {
+        const fetchAttributeOptions = async () => {
+            try {
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
+                const [
+                    metalsRes,
+                    diamondSizesRes,
+                    shapesRes,
+                    claritiesRes,
+                    colorsRes,
+                    stonesRes,
+                    stylesRes,
+                    categoriesRes,
+                    subCategoriesRes
+                ] = await Promise.all([
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveMetals`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveDiamondSizes`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveShapes`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveClarities`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveColors`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveStones`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveStyles`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveCategories`, { headers }),
+                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveSubCategories`, { headers })
+                ]);
+
+                const [
+                    metalsData,
+                    diamondSizesData,
+                    shapesData,
+                    claritiesData,
+                    colorsData,
+                    stonesData,
+                    stylesData,
+                    categoriesData,
+                    subCategoriesData
+                ] = await Promise.all([
+                    metalsRes.ok ? metalsRes.json() : [],
+                    diamondSizesRes.ok ? diamondSizesRes.json() : [],
+                    shapesRes.ok ? shapesRes.json() : [],
+                    claritiesRes.ok ? claritiesRes.json() : [],
+                    colorsRes.ok ? colorsRes.json() : [],
+                    stonesRes.ok ? stonesRes.json() : [],
+                    stylesRes.ok ? stylesRes.json() : [],
+                    categoriesRes.ok ? categoriesRes.json() : [],
+                    subCategoriesRes.ok ? subCategoriesRes.json() : []
+                ]);
+
+                const extractNames = (data, key) => {
+                    if (!Array.isArray(data)) return [];
+                    return data
+                        .map(item => (typeof item === 'string' ? item : item?.[key] || item?.name || ''))
+                        .filter(Boolean);
+                };
+
+                setAttributeOptionsMap({
+                    metal: extractNames(metalsData, 'metalname'),
+                    diamondsize: extractNames(diamondSizesData, 'diamondsize'),
+                    shape: extractNames(shapesData, 'shapename'),
+                    clarity: extractNames(claritiesData, 'clarityname'),
+                    color: extractNames(colorsData, 'colorname'),
+                    stone: extractNames(stonesData, 'stonename'),
+                    style: extractNames(stylesData, 'stylename'),
+                    category: extractNames(categoriesData, 'categoryname'),
+                    subcategory: extractNames(subCategoriesData, 'subcategoryname')
+                });
+            } catch (err) {
+                console.error("Error loading active attributes for menu:", err);
+            }
+        };
+
+        fetchAttributeOptions();
+    }, [adminPanelBackendPath, token]);
 
     const tabs = [
         { id: "general", title: translations.menugeneral || "General & URL" },
@@ -52,13 +384,13 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     const [col1Title, setCol1Title] = useState(initialData?.column1?.title || "");
     const [col1BottomText, setCol1BottomText] = useState(initialData?.column1?.bottomText || "");
     const [col1BottomUrl, setCol1BottomUrl] = useState(initialData?.column1?.bottomUrl || "");
-    const [col1Items, setCol1Items] = useState(Array.isArray(initialData?.column1?.items) ? initialData.column1.items : []);
+    const [col1Items, setCol1Items] = useState(() => normalizeItems(initialData?.column1?.items, "style"));
 
     // Column 2
     const [col2Title, setCol2Title] = useState(initialData?.column2?.title || "");
     const [col2BottomText, setCol2BottomText] = useState(initialData?.column2?.bottomText || "");
     const [col2BottomUrl, setCol2BottomUrl] = useState(initialData?.column2?.bottomUrl || "");
-    const [col2Items, setCol2Items] = useState(Array.isArray(initialData?.column2?.items) ? initialData.column2.items : []);
+    const [col2Items, setCol2Items] = useState(() => normalizeItems(initialData?.column2?.items, "shape"));
 
     // Column 3
     const [col3Title, setCol3Title] = useState(initialData?.column3?.title || "");
@@ -70,7 +402,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     const [bannerDescription, setBannerDescription] = useState(initialData?.banner?.description || "");
     const [bannerButtonText, setBannerButtonText] = useState(initialData?.banner?.buttonText || "");
     const [bannerButtonLink, setBannerButtonLink] = useState(initialData?.banner?.buttonLink || "");
-    const [bannerImage, setBannerImage] = useState(initialData?.banner?.image || "");
+    const [bannerImage] = useState(initialData?.banner?.image || "");
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(initialData?.banner?.image || Placeholder);
 
@@ -83,11 +415,13 @@ export function MenuForm({ initialData = null, isEdit = false }) {
         if (pageTitle) document.title = pageTitle;
     }, [isEdit, translations]);
 
-    useEffect(() => {
-        if (!slug && title && !isEdit) {
-            setSlug(slugify(title));
+    const handleTitleChange = (e) => {
+        const val = e.target.value;
+        setTitle(val);
+        if (!isEdit && (!slug || slug === slugify(title))) {
+            setSlug(slugify(val));
         }
-    }, [title, isEdit, slug]);
+    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -112,29 +446,23 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     };
 
     // Repeater handlers
-    const addCol1Item = () => setCol1Items([...col1Items, { label: "", slug: "", filterType: "style", filterValue: "" }]);
+    const addCol1Item = () => setCol1Items([...col1Items, { label: "", slug: "", filterType: "style", filterValue: [] }]);
     const updateCol1Item = (index, field, val) => {
         const next = [...col1Items];
         next[index][field] = val;
         if (field === "label" && !next[index].slug) {
             next[index].slug = slugify(val);
         }
-        if (field === "label" && !next[index].filterValue) {
-            next[index].filterValue = val.replace(/ Rings| Bands| Collection/gi, "").trim();
-        }
         setCol1Items(next);
     };
     const removeCol1Item = (index) => setCol1Items(col1Items.filter((_, i) => i !== index));
 
-    const addCol2Item = () => setCol2Items([...col2Items, { label: "", shape: "round", slug: "", filterType: "shape", filterValue: "round" }]);
+    const addCol2Item = () => setCol2Items([...col2Items, { label: "", slug: "", filterType: "shape", filterValue: [], shape: "" }]);
     const updateCol2Item = (index, field, val) => {
         const next = [...col2Items];
         next[index][field] = val;
         if (field === "label" && !next[index].slug) {
             next[index].slug = slugify(val);
-        }
-        if (field === "shape") {
-            next[index].filterValue = val;
         }
         setCol2Items(next);
     };
@@ -150,6 +478,24 @@ export function MenuForm({ initialData = null, isEdit = false }) {
         setCol3Items(next);
     };
     const removeCol3Item = (index) => setCol3Items(col3Items.filter((_, i) => i !== index));
+
+    const sanitizeColItems = (items, defaultType) => {
+        return items
+            .filter(i => i.label?.trim())
+            .map(i => {
+                const cleanType = (i.filterType || defaultType).toLowerCase().replace(/[^a-z]/g, "") || defaultType;
+                const vals = Array.isArray(i.filterValue)
+                    ? i.filterValue
+                    : (i.filterValue ? (i.filterValue.includes(",") ? i.filterValue.split(",").map(s => s.trim()).filter(Boolean) : [i.filterValue]) : []);
+                return {
+                    label: i.label.trim(),
+                    slug: i.slug?.trim() ? (i.slug.startsWith("/") ? i.slug.trim() : "/" + i.slug.trim()) : slugify(i.label),
+                    filterType: cleanType,
+                    filterValue: vals,
+                    shape: cleanType === "shape" ? (vals[0] || i.shape || "") : (i.shape || "")
+                };
+            });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -171,9 +517,30 @@ export function MenuForm({ initialData = null, isEdit = false }) {
             formData.append("slug", slug.trim() ? (slug.startsWith("/") ? slug.trim() : "/" + slug.trim()) : slugify(title));
             formData.append("order", order !== "" ? String(order) : "1");
 
-            const col1Obj = { title: col1Title.trim(), bottomText: col1BottomText.trim(), bottomUrl: col1BottomUrl.trim(), items: col1Items.filter(i => i.label?.trim()) };
-            const col2Obj = { title: col2Title.trim(), bottomText: col2BottomText.trim(), bottomUrl: col2BottomUrl.trim(), items: col2Items.filter(i => i.label?.trim()) };
-            const col3Obj = { title: col3Title.trim(), items: col3Items.filter(i => i.label?.trim()) };
+            const col1Obj = {
+                title: col1Title.trim(),
+                bottomText: col1BottomText.trim(),
+                bottomUrl: col1BottomUrl.trim(),
+                items: sanitizeColItems(col1Items, "style")
+            };
+            const col2Obj = {
+                title: col2Title.trim(),
+                bottomText: col2BottomText.trim(),
+                bottomUrl: col2BottomUrl.trim(),
+                items: sanitizeColItems(col2Items, "shape")
+            };
+            const col3Obj = {
+                title: col3Title.trim(),
+                items: col3Items
+                    .filter(i => i.label?.trim())
+                    .map(i => ({
+                        label: i.label.trim(),
+                        slug: i.slug?.trim() ? (i.slug.startsWith("/") ? i.slug.trim() : "/" + i.slug.trim()) : slugify(i.label),
+                        badge: i.badge?.trim() || "",
+                        filterType: i.filterType || "featured",
+                        filterValue: i.filterValue || ""
+                    }))
+            };
             const bannerObj = {
                 eyebrow: bannerEyebrow.trim(),
                 title: bannerTitle.trim(),
@@ -212,7 +579,9 @@ export function MenuForm({ initialData = null, isEdit = false }) {
             if (res.ok) {
                 navigate("/Support/Menu", {
                     state: {
-                        message: isEdit ? (translations.updatemenusuccessfull || "Menu updated successfully") : (translations.addmenusuccessfull || "Menu added successfully")
+                        message: isEdit
+                            ? (translations.updatemenusuccessfull || "Menu updated successfully")
+                            : (translations.addmenusuccessfull || "Menu added successfully")
                     }
                 });
             } else {
@@ -272,7 +641,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                 autoComplete="off"
                                                                 value={title}
                                                                 placeholder={translations.entermenutitle || "e.g. Engagement Rings"}
-                                                                onChange={(e) => setTitle(e.target.value)}
+                                                                onChange={handleTitleChange}
                                                                 required
                                                             />
                                                         </div>
@@ -346,52 +715,70 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                         </label>
                                                         {col1Items.length === 0 ? (
                                                             <div className="empty-items-notice">
-                                                                {translations.nodatafound || "No items added yet. Click '+ Add Style Item' below to create links."}
+                                                                {translations.nodatafound || "No items added yet. Click '+ Add Item' below to create links."}
                                                             </div>
                                                         ) : (
-                                                            col1Items.map((item, idx) => (
-                                                                <div key={idx} className="repeater-row">
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Label (e.g. Solitaire Rings)"
-                                                                        value={item.label}
-                                                                        onChange={(e) => updateCol1Item(idx, "label", e.target.value)}
-                                                                    />
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Clean URL (e.g. /solitaire-rings)"
-                                                                        value={item.slug}
-                                                                        onChange={(e) => updateCol1Item(idx, "slug", e.target.value)}
-                                                                    />
-                                                                    <select
-                                                                        value={item.filterType}
-                                                                        onChange={(e) => updateCol1Item(idx, "filterType", e.target.value)}
-                                                                        style={{ maxWidth: "150px" }}
-                                                                    >
-                                                                        <option value="style">Style</option>
-                                                                        <option value="category">Category</option>
-                                                                        <option value="subcategory">Subcategory</option>
-                                                                        <option value="search">Search</option>
-                                                                    </select>
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Filter Value (e.g. Solitaire)"
-                                                                        value={item.filterValue}
-                                                                        onChange={(e) => updateCol1Item(idx, "filterValue", e.target.value)}
-                                                                    />
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn-remove-row"
-                                                                        onClick={() => removeCol1Item(idx)}
-                                                                        title="Remove Item"
-                                                                    >
-                                                                        ✕
-                                                                    </button>
-                                                                </div>
-                                                            ))
+                                                            col1Items.map((item, idx) => {
+                                                                const currentAttrKey = (item.filterType || "style").toLowerCase().replace(/[^a-z]/g, "") || "style";
+                                                                const optionsForType = attributeOptionsMap[currentAttrKey] || [];
+                                                                const selectedValues = Array.isArray(item.filterValue)
+                                                                    ? item.filterValue
+                                                                    : (item.filterValue ? (item.filterValue.includes(",") ? item.filterValue.split(",").map(s => s.trim()).filter(Boolean) : [item.filterValue]) : []);
+
+                                                                return (
+                                                                    <div key={idx} className="repeater-row">
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder={translations.itemlabel || "Label (e.g. Nature Inspired Rings)"}
+                                                                            value={item.label}
+                                                                            onChange={(e) => updateCol1Item(idx, "label", e.target.value)}
+                                                                            style={{ flex: 1.2, minWidth: "150px" }}
+                                                                        />
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder={translations.cleanurl || "Clean URL (e.g. /nature-inspired-rings)"}
+                                                                            value={item.slug}
+                                                                            onChange={(e) => updateCol1Item(idx, "slug", e.target.value)}
+                                                                            style={{ flex: 1.2, minWidth: "150px" }}
+                                                                        />
+                                                                        <select
+                                                                            value={currentAttrKey}
+                                                                            onChange={(e) => {
+                                                                                const newType = e.target.value;
+                                                                                updateCol1Item(idx, "filterType", newType);
+                                                                                updateCol1Item(idx, "filterValue", []);
+                                                                            }}
+                                                                            style={{ flex: 0.9, minWidth: "130px", maxWidth: "160px" }}
+                                                                        >
+                                                                            {ATTRIBUTE_KEYS.map((attr) => (
+                                                                                <option key={attr.key} value={attr.key}>
+                                                                                    {attr.label}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                        <AttributeMultiSelect
+                                                                            options={optionsForType}
+                                                                            selected={selectedValues}
+                                                                            onChange={(newVals) => updateCol1Item(idx, "filterValue", newVals)}
+                                                                            placeholder={translations.selectattributedetails || "Select attribute details..."}
+                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || "Attribute"}
+                                                                            isRtl={isRtl}
+                                                                            translations={translations}
+                                                                        />
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-remove-row"
+                                                                            onClick={() => removeCol1Item(idx)}
+                                                                            title={translations.removeitem || "Remove Item"}
+                                                                        >
+                                                                            ✕
+                                                                        </button>
+                                                                    </div>
+                                                                );
+                                                            })
                                                         )}
                                                         <button type="button" className="btn-add-row" onClick={addCol1Item}>
-                                                            + {translations.additem || "Add Style Item"}
+                                                            + {translations.additem || "Add Item"}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -436,56 +823,75 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                         </label>
                                                         {col2Items.length === 0 ? (
                                                             <div className="empty-items-notice">
-                                                                {translations.nodatafound || "No shape items added yet. Click '+ Add Diamond Shape' below."}
+                                                                {translations.nodatafound || "No shape items added yet. Click '+ Add Item' below."}
                                                             </div>
                                                         ) : (
-                                                            col2Items.map((item, idx) => (
-                                                                <div key={idx} className="repeater-row">
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Label (e.g. Emerald Cut)"
-                                                                        value={item.label}
-                                                                        onChange={(e) => updateCol2Item(idx, "label", e.target.value)}
-                                                                    />
-                                                                    <select
-                                                                        value={item.shape}
-                                                                        onChange={(e) => updateCol2Item(idx, "shape", e.target.value)}
-                                                                        style={{ maxWidth: "160px" }}
-                                                                    >
-                                                                        <option value="round">Round</option>
-                                                                        <option value="emerald">Emerald</option>
-                                                                        <option value="oval">Oval</option>
-                                                                        <option value="cushion">Cushion</option>
-                                                                        <option value="princess">Princess</option>
-                                                                        <option value="pear">Pear</option>
-                                                                        <option value="radiant">Radiant</option>
-                                                                        <option value="marquise">Marquise</option>
-                                                                        <option value="heart">Heart</option>
-                                                                        <option value="asscher">Asscher</option>
-                                                                        <option value="baguette">Baguette</option>
-                                                                        <option value="antique">Antique</option>
-                                                                        <option value="old cut">Old Cut</option>
-                                                                        <option value="rose cut">Rose Cut</option>
-                                                                    </select>
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Clean URL (e.g. /emerald-cut-diamonds)"
-                                                                        value={item.slug}
-                                                                        onChange={(e) => updateCol2Item(idx, "slug", e.target.value)}
-                                                                    />
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn-remove-row"
-                                                                        onClick={() => removeCol2Item(idx)}
-                                                                        title="Remove Item"
-                                                                    >
-                                                                        ✕
-                                                                    </button>
-                                                                </div>
-                                                            ))
+                                                            col2Items.map((item, idx) => {
+                                                                const currentAttrKey = (item.filterType || "shape").toLowerCase().replace(/[^a-z]/g, "") || "shape";
+                                                                const optionsForType = attributeOptionsMap[currentAttrKey] || [];
+                                                                const selectedValues = Array.isArray(item.filterValue)
+                                                                    ? item.filterValue
+                                                                    : (item.filterValue ? (item.filterValue.includes(",") ? item.filterValue.split(",").map(s => s.trim()).filter(Boolean) : [item.filterValue]) : (item.shape ? [item.shape] : []));
+
+                                                                return (
+                                                                    <div key={idx} className="repeater-row">
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder={translations.itemlabel || "Label (e.g. Emerald Cut)"}
+                                                                            value={item.label}
+                                                                            onChange={(e) => updateCol2Item(idx, "label", e.target.value)}
+                                                                            style={{ flex: 1.2, minWidth: "150px" }}
+                                                                        />
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder={translations.cleanurl || "Clean URL (e.g. /emerald-cut-diamonds)"}
+                                                                            value={item.slug}
+                                                                            onChange={(e) => updateCol2Item(idx, "slug", e.target.value)}
+                                                                            style={{ flex: 1.2, minWidth: "150px" }}
+                                                                        />
+                                                                        <select
+                                                                            value={currentAttrKey}
+                                                                            onChange={(e) => {
+                                                                                const newType = e.target.value;
+                                                                                updateCol2Item(idx, "filterType", newType);
+                                                                                updateCol2Item(idx, "filterValue", []);
+                                                                            }}
+                                                                            style={{ flex: 0.9, minWidth: "130px", maxWidth: "160px" }}
+                                                                        >
+                                                                            {ATTRIBUTE_KEYS.map((attr) => (
+                                                                                <option key={attr.key} value={attr.key}>
+                                                                                    {attr.label}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                        <AttributeMultiSelect
+                                                                            options={optionsForType}
+                                                                            selected={selectedValues}
+                                                                            onChange={(newVals) => {
+                                                                                updateCol2Item(idx, "filterValue", newVals);
+                                                                                if (currentAttrKey === "shape") {
+                                                                                    updateCol2Item(idx, "shape", newVals[0] || "");
+                                                                                }
+                                                                            }}
+                                                                            placeholder={translations.selectattributedetails || "Select attribute details..."}
+                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || "Attribute"}
+                                                                            isRtl={isRtl}
+                                                                            translations={translations}
+                                                                        />
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn-remove-row"
+                                                                            onClick={() => removeCol2Item(idx)}
+                                                                            title={translations.removeitem || "Remove Item"}
+                                                                        >
+                                                                            ✕
+                                                                        </button>
+                                                                    </div>
+                                                                );
+                                                            })
                                                         )}
                                                         <button type="button" className="btn-add-row" onClick={addCol2Item}>
-                                                            + {translations.additem || "Add Diamond Shape"}
+                                                            + {translations.additem || "Add Item"}
                                                         </button>
                                                     </div>
                                                 </div>
