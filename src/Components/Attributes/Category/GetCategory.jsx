@@ -13,6 +13,7 @@ import WarningModal from '../../../Pages/Custom/WarningModal';
 import "../../../Scss/Attributes/Category/getcategory.scss";
 import { useLanguage } from "../../../Context/LanguageContext";
 import { usePermissions } from '../../../Hooks/usePermissions';
+import Placeholder from '../../../assets/placeholder.png';
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 
@@ -200,9 +201,22 @@ const GetCategory = ({ searchValue = "" }) => {
                                 visibleItems.map((item) => (
                                     <tr key={item._id || item.categoryid}>
                                         <td>
-                                            <span className="category-badge">
-                                                {item.categoryname}
-                                            </span>
+                                            <div className="category-info-cell">
+                                                <img
+                                                    src={item.image || Placeholder}
+                                                    alt={item.categoryname}
+                                                    className="category-thumbnail"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = Placeholder;
+                                                    }}
+                                                />
+                                                <span className="category-badge">
+                                                    {item.categoryname}
+                                                </span>
+                                            </div>
                                         </td>
                                         <td>
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('category')} />

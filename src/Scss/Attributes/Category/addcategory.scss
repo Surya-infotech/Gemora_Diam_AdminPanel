@@ -19,6 +19,83 @@
         .Addcategory-form-container {
             @include mixin.page_size;
 
+            .imageflex {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+                margin-bottom: 15px !important;
+
+                .formdiv {
+                    flex: 1;
+                    width: 50% !important;
+                    gap: 10px;
+
+                    .form-group {
+                        width: 100% !important;
+                        margin: 0 !important;
+                    }
+
+                    input {
+                        margin-bottom: 15px !important;
+                    }
+
+                    textarea {
+                        margin-bottom: 6px !important;
+                    }
+
+                    .description-counter {
+                        text-align: right;
+                        font-size: 12px;
+                        font-weight: 500;
+                        color: var(--muted-text, #6b7280);
+                        margin-bottom: 15px;
+                        transition: color 0.2s ease, font-weight 0.2s ease;
+
+                        [dir="rtl"] &,
+                        body.rtl-mode & {
+                            text-align: left;
+                        }
+
+                        &.max-reached {
+                            color: #dc2626;
+                            font-weight: 600;
+                        }
+                    }
+                }
+
+                .imagediv {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 50% !important;
+                    margin-right: 4%;
+
+                    .form-group {
+                        width: 100% !important;
+                        margin: 0 !important;
+                    }
+
+                    [dir="rtl"] &,
+                    body.rtl-mode &,
+                    &[dir="rtl"] {
+                        margin-right: 0 !important;
+                        margin-left: 4%;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    flex-direction: column;
+
+                    .formdiv,
+                    .imagediv {
+                        width: 100% !important;
+                        margin-right: 0 !important;
+                        margin-left: 0 !important;
+                    }
+                }
+            }
+
             .form-row {
                 @include form_mixin.form_row;
                 margin-bottom: 15px;
@@ -75,6 +152,14 @@
                     display: flex;
                     align-items: center;
                     min-height: 42px;
+                }
+
+                .imgpreview {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
                 }
             }
 
