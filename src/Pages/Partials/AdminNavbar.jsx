@@ -38,6 +38,7 @@ import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import InfoIcon from '@mui/icons-material/Info';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -364,6 +365,14 @@ const AdminNavbar = () => {
                                             <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.collectionbanners}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/Support/Menu" className={navLinkClass('/Support/Menu')}>
+                                        <NavTooltip title={translations.Menu || "Menu"}>
+                                            <MenuOpenIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.Menu || "Menu"}
                                     </NavLink>
                                 </li>
                                 <li>

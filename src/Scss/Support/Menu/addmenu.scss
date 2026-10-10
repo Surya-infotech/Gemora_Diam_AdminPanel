@@ -1,0 +1,296 @@
+@use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+@use "../../Customize/var.scss" as var;
+
+.AddMenu-container {
+    @include mixin.main_page;
+
+    .Addmenu-container {
+        @include mixin.page;
+
+        .Addmenu-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .Addmenu-form-container {
+            @include mixin.page_size;
+
+            .tabs-container {
+                margin-bottom: 20px;
+
+                .horizontal-tabs {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    padding: 6px;
+                    margin-bottom: 20px;
+                    border-radius: var(--radius-md, 8px);
+                    border: 1px solid var(--border-color, #e2e8f0);
+                    background: color-mix(in srgb, var(--secondary-color, #f8fafc) 22%, var(--background-color, #f1f5f9));
+                    box-shadow: var(--shadow-sm);
+
+                    .tab-button {
+                        flex: 1 1 auto;
+                        min-width: min(120px, 100%);
+                        min-height: 44px;
+                        padding: 10px 18px;
+                        border: none;
+                        border-radius: var(--radius-sm, 6px);
+                        background: transparent;
+                        color: var(--muted-text, #64748b);
+                        font-size: 14px;
+                        font-weight: 600;
+                        letter-spacing: 0.02em;
+                        cursor: pointer;
+                        transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+
+                        &:hover:not(.active) {
+                            color: var(--text-color, #1e293b);
+                            background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+                        }
+
+                        &:focus-visible {
+                            outline: 2px solid color-mix(in srgb, var(--primary-color) 45%, transparent);
+                            outline-offset: 2px;
+                        }
+
+                        &.active {
+                            background: var(--page-color, #ffffff);
+                            color: var(--primary-color);
+                            box-shadow: var(--shadow-sm);
+                            border: 1px solid color-mix(in srgb, var(--primary-color) 18%, var(--border-color, #e2e8f0));
+                        }
+                    }
+                }
+
+                .tab-content {
+                    background-color: var(--page-color, #ffffff) !important;
+                    border-radius: var(--radius-lg, 12px) !important;
+                    border: 1px solid var(--border-color, #e2e8f0);
+                    box-shadow: var(--shadow-md);
+                    overflow: visible;
+                }
+
+                .tab-content-body {
+                    padding: 22px 24px;
+                    animation: fadeIn 0.25s ease-in-out;
+                }
+            }
+
+
+            .form-grid-2 {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                margin-bottom: 16px;
+
+                @media (max-width: 768px) {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .form-grid-3 {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+                margin-bottom: 16px;
+
+                @media (max-width: 900px) {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .form-group {
+                margin-bottom: 14px;
+
+                label {
+                    @include form_mixin.form_label;
+                    margin-bottom: 6px;
+                    display: block;
+                }
+
+                input:not([type="radio"]):not([type="checkbox"]),
+                select,
+                textarea {
+                    @include form_mixin.form_input;
+                    width: 100% !important;
+                }
+
+                textarea {
+                    min-height: 90px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                }
+
+                .field-hint {
+                    display: block;
+                    font-size: 11px;
+                    color: #64748b;
+                    margin-top: 4px;
+                }
+            }
+
+            .repeater-section {
+                margin-top: 18px;
+
+                .repeater-header-label {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: #334155;
+                    margin-bottom: 10px;
+                    display: block;
+                }
+
+                .repeater-row {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    padding: 10px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 6px;
+
+                    @media (max-width: 768px) {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    input, select {
+                        @include form_mixin.form_input;
+                        margin-bottom: 0 !important;
+                        flex: 1;
+                    }
+
+                    .btn-remove-row {
+                        background: #fee2e2;
+                        color: #ef4444;
+                        border: 1px solid #fecaca;
+                        width: 38px;
+                        height: 38px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        flex-shrink: 0;
+                        transition: background-color 0.2s ease;
+
+                        &:hover {
+                            background: #fca5a5;
+                            color: #b91c1c;
+                        }
+                    }
+                }
+
+                .btn-add-row {
+                    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+                    color: var(--primary-color);
+                    border: 1px dashed color-mix(in srgb, var(--primary-color) 35%, transparent);
+                    padding: 8px 18px;
+                    border-radius: 6px;
+                    font-size: 0.88rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 6px;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: color-mix(in srgb, var(--primary-color) 16%, transparent);
+                    }
+                }
+
+                .empty-items-notice {
+                    padding: 14px;
+                    background: #f8fafc;
+                    border: 1px dashed #cbd5e1;
+                    border-radius: 6px;
+                    color: #64748b;
+                    font-size: 0.88rem;
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+            }
+
+            .image-upload-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                margin-top: 8px;
+
+                .preview-box {
+                    width: 140px;
+                    height: 90px;
+                    border-radius: 6px;
+                    object-fit: cover;
+                    border: 1px solid #cbd5e1;
+                    background: #f1f5f9;
+                }
+
+                .upload-action-btn {
+                    @include form_mixin.btn;
+                    background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+                    color: var(--primary-color);
+                    border: 1px solid color-mix(in srgb, var(--primary-color) 30%, transparent);
+                    padding: 8px 16px;
+                    font-size: 0.88rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    border-radius: 6px;
+
+                    &:hover {
+                        background: color-mix(in srgb, var(--primary-color) 20%, transparent);
+                    }
+                }
+            }
+
+            .button-group {
+                @include form_mixin.btn_group;
+                margin-top: 24px;
+
+                button {
+                    @include form_mixin.btn;
+                }
+            }
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
