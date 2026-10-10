@@ -184,7 +184,6 @@ const GetBanner = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("headingLine1")}>
                                     {translations.headingline1} {renderSortIcon("headingLine1")}
                                 </th>
-                                <th>{translations.bannerdescription}</th>
                                 <th onClick={() => sortItems("order")}>
                                     {translations.displayorder} {renderSortIcon("order")}
                                 </th>
@@ -231,11 +230,6 @@ const GetBanner = ({ searchValue = "" }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <span className="banner-desc-text" title={item.description}>
-                                                    {item.description || "-"}
-                                                </span>
-                                            </td>
-                                            <td>
                                                 {item.order !== undefined && item.order !== null && item.order !== "" ? item.order : "-"}
                                             </td>
                                             <td>
@@ -257,7 +251,7 @@ const GetBanner = ({ searchValue = "" }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="6" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
