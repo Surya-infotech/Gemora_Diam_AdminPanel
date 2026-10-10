@@ -4,6 +4,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PaymentIcon from '@mui/icons-material/Payment';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import HistoryIcon from '@mui/icons-material/History';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Middleware/Auth';
@@ -172,8 +173,12 @@ const OrderDetails = () => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setOrder((prev) => ({ ...prev, orderstatus: newStatus }));
-                setAlertMessage(translations.updateordersuccessfull);
+                setOrder((prev) => ({
+                    ...prev,
+                    ...(data.order || {}),
+                    orderstatus: newStatus
+                }));
+                setAlertMessage(translations.updateordersuccessfull || 'Order status updated successfully');
             } else {
                 setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
@@ -719,6 +724,58 @@ const OrderDetails = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Status Logs / History Card */}
+                    {order.statusLogs && order.statusLogs.length > 0 && (
+                        <div className="items-card status-logs-card">
+                            <div className="items-card-title">
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <HistoryIcon style={{ fontSize: 20, color: 'var(--primary-color, #10b981)' }} />
+                                    <span>{translations.orderstatuslogs || "Order Status Logs"}</span>
+                                </div>
+                                <span className="items-count-badge">
+                                    {order.statusLogs.length} {order.statusLogs.length === 1 ? 'entry' : 'entries'}
+                                </span>
+                            </div>
+
+                            <div className="items-table-wrapper">
+                                <table className="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{translations.status || "Status"}</th>
+                                            <th>{translations.updatedby || "Updated By"}</th>
+                                            <th style={{ textAlign: 'right' }}>{translations.updatedat || "Updated Date & Time"}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {[...order.statusLogs].reverse().map((log, index) => {
+                                            const logStatusClass = (log.newStatus || '').toLowerCase();
+                                            return (
+                                                <tr key={log._id || index}>
+                                                    <td>
+                                                        <span className={`status-log-badge ${logStatusClass}`}>
+                                                            {log.newStatus}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                            <PersonIcon style={{ fontSize: 16, color: '#64748b' }} />
+                                                            <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                                                                {log.updatedBy || 'Admin'}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ textAlign: 'right', color: '#64748b', fontSize: '13px' }}>
+                                                        {formatDateTime(log.updatedAt, miscSettings)}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

@@ -633,6 +633,8 @@
   "total": "Total",
   "noordersfound": "No orders found",
   "updateordersuccessfull": "Order status updated successfully",
+  "orderstatuslogs": "Order Status Logs",
+  "updatedby": "Updated By",
   "totalorders": "Total Orders",
   "totalproducts": "Jewelry Items",
   "totalcustomers": "Total Customers",
