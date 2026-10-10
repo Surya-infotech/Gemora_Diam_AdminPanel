@@ -28,18 +28,6 @@
       }
     }
 
-    .tdclick {
-      @include table_mixin.table_tdclick;
-    }
-
-    .edit-icon {
-      @include table_mixin.edit_icon;
-    }
-
-    .delete-icon {
-      @include table_mixin.delete_icon;
-    }
-
     .menu-title-text {
       font-weight: 600;
       color: var(--text-color, #222);
