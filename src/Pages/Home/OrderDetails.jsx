@@ -5,6 +5,8 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import PaymentIcon from '@mui/icons-material/Payment';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import HistoryIcon from '@mui/icons-material/History';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Middleware/Auth';
@@ -48,6 +50,10 @@ const OrderDetails = () => {
     const [alertMessage, setAlertMessage] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
     const [showWarning, setShowWarning] = useState(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+    const [cancelReason, setCancelReason] = useState('');
+    const [cancelReasonError, setCancelReasonError] = useState('');
+    const [updatingStatus, setUpdatingStatus] = useState(false);
 
 
     useEffect(() => {
@@ -154,19 +160,36 @@ const OrderDetails = () => {
         };
     }, [adminPanelBackendPath, logoutUser, navigate, token]);
 
-    const handleStatusChange = async (newStatus) => {
+    const handleStatusSelectChange = (newStatus) => {
+        if (!order || newStatus === order.orderstatus) return;
+        if (newStatus === 'Cancelled') {
+            setCancelReason('');
+            setCancelReasonError('');
+            setIsCancelModalOpen(true);
+        } else {
+            handleStatusChange(newStatus);
+        }
+    };
+
+    const handleStatusChange = async (newStatus, reason = '') => {
         if (!order) return;
         if (!CheckToken(token, logoutUser, navigate)) return;
         const targetId = order._id || order.orderid || id;
+        setUpdatingStatus(true);
 
         try {
+            const payload = { orderstatus: newStatus };
+            if (newStatus === 'Cancelled') {
+                payload.cancelreason = reason;
+            }
+
             const response = await fetch(`${adminPanelBackendPath}/Customer/UpdateOrderStatus/${targetId}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ orderstatus: newStatus })
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
@@ -176,9 +199,15 @@ const OrderDetails = () => {
                 setOrder((prev) => ({
                     ...prev,
                     ...(data.order || {}),
-                    orderstatus: newStatus
+                    orderstatus: newStatus,
+                    cancelreason: newStatus === 'Cancelled' ? reason : '',
+                    cancelledby: newStatus === 'Cancelled' ? (data.order?.cancelledby || prev?.cancelledby) : '',
+                    cancelledat: newStatus === 'Cancelled' ? (data.order?.cancelledat || prev?.cancelledat) : null
                 }));
                 setAlertMessage(translations.updateordersuccessfull || 'Order status updated successfully');
+                setIsCancelModalOpen(false);
+                setCancelReason('');
+                setCancelReasonError('');
             } else {
                 setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
@@ -186,7 +215,19 @@ const OrderDetails = () => {
         } catch {
             setWarningMessage(translations.servererror);
             setShowWarning(true);
+        } finally {
+            setUpdatingStatus(false);
         }
+    };
+
+    const handleConfirmCancelOrder = (e) => {
+        e?.preventDefault();
+        const trimmed = cancelReason.trim();
+        if (!trimmed) {
+            setCancelReasonError(translations.cancelreasonrequired || 'Cancellation reason is required');
+            return;
+        }
+        handleStatusChange('Cancelled', trimmed);
     };
 
     const escapeHtml = (text) => {
@@ -502,7 +543,8 @@ const OrderDetails = () => {
                             <select
                                 className={`status-select-header ${statusClass}`}
                                 value={order.orderstatus || 'Confirmed'}
-                                onChange={(e) => handleStatusChange(e.target.value)}
+                                disabled={updatingStatus}
+                                onChange={(e) => handleStatusSelectChange(e.target.value)}
                             >
                                 {ORDER_STATUS_OPTIONS.map((st) => (
                                     <option key={st} value={st}>
@@ -542,6 +584,38 @@ const OrderDetails = () => {
 
                 {/* Content */}
                 <div className="orderdetails-content">
+                    {/* Cancelled Order Banner */}
+                    {order.orderstatus === 'Cancelled' && (
+                        <div className="order-cancelled-banner">
+                            <div className="cancelled-banner-icon-wrap">
+                                <CancelIcon className="cancelled-banner-icon" />
+                            </div>
+                            <div className="cancelled-banner-body">
+                                <div className="cancelled-banner-header">
+                                    <h6 className="cancelled-banner-title">{translations.ordercancelled || 'Order Cancelled'}</h6>
+                                </div>
+                                <div className="cancelled-banner-grid">
+                                    <div className="cancelled-banner-item reason-item">
+                                        <span className="cancelled-label">{translations.cancelreason || 'Cancellation Reason'}:</span>
+                                        <span className="cancelled-value reason-val">{order.cancelreason || '-'}</span>
+                                    </div>
+                                    {order.cancelledby && (
+                                        <div className="cancelled-banner-item">
+                                            <span className="cancelled-label">{translations.cancelledby || 'Cancelled By'}:</span>
+                                            <span className="cancelled-value">{order.cancelledby}</span>
+                                        </div>
+                                    )}
+                                    {order.cancelledat && (
+                                        <div className="cancelled-banner-item">
+                                            <span className="cancelled-label">{translations.cancelledat || 'Cancelled At'}:</span>
+                                            <span className="cancelled-value">{formatDateTime(order.cancelledat, miscSettings)}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Information Grid */}
                     <div className="details-grid">
                         {/* Order Summary Card */}
@@ -756,6 +830,12 @@ const OrderDetails = () => {
                                                         <span className={`status-log-badge ${logStatusClass}`}>
                                                             {log.newStatus}
                                                         </span>
+                                                        {log.newStatus === 'Cancelled' && (log.reason || order.cancelreason) && (
+                                                            <div className="status-log-reason">
+                                                                <span className="reason-label">{translations.cancelreason || 'Reason'}:</span>
+                                                                <span className="reason-text">{log.reason || order.cancelreason}</span>
+                                                            </div>
+                                                        )}
                                                     </td>
                                                     <td>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -779,6 +859,89 @@ const OrderDetails = () => {
                 </div>
             </div>
 
+            {/* Cancel Order Modal */}
+            {isCancelModalOpen && (
+                <div className="cancel-order-modal-overlay" onClick={() => !updatingStatus && setIsCancelModalOpen(false)}>
+                    <div className="cancel-order-modal-dialog" onClick={(e) => e.stopPropagation()}>
+                        <div className="cancel-modal-header">
+                            <div className="cancel-modal-title-wrap">
+                                <div className="cancel-modal-icon-badge">
+                                    <CancelIcon />
+                                </div>
+                                <div>
+                                    <h5 className="cancel-modal-title">{translations.cancelorder || 'Cancel Order'}</h5>
+                                    <p className="cancel-modal-subtitle">#{orderNumberDisplay}</p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className="cancel-modal-close-btn"
+                                onClick={() => !updatingStatus && setIsCancelModalOpen(false)}
+                                disabled={updatingStatus}
+                            >
+                                <CloseIcon style={{ fontSize: 20 }} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleConfirmCancelOrder}>
+                            <div className="cancel-modal-body">
+                                <p className="cancel-modal-instruction">
+                                    {translations.cancellationmodaldesc || 'Are you sure you want to cancel this order? Please enter the cancellation reason below.'}
+                                </p>
+
+                                <div className="cancel-form-group">
+                                    <label className="cancel-form-label">
+                                        {translations.cancelreason || 'Cancellation Reason'} <span className="required-star">*</span>
+                                    </label>
+                                    <textarea
+                                        className={`cancel-textarea ${cancelReasonError ? 'has-error' : ''}`}
+                                        rows={4}
+                                        placeholder={translations.entercancelreason || 'Please provide the reason for cancelling this order...'}
+                                        value={cancelReason}
+                                        onChange={(e) => {
+                                            setCancelReason(e.target.value);
+                                            if (cancelReasonError) setCancelReasonError('');
+                                        }}
+                                        disabled={updatingStatus}
+                                        autoFocus
+                                    />
+                                    {cancelReasonError && (
+                                        <div className="cancel-error-text">{cancelReasonError}</div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="cancel-modal-footer">
+                                <button
+                                    type="button"
+                                    className="cancel-btn-secondary"
+                                    onClick={() => setIsCancelModalOpen(false)}
+                                    disabled={updatingStatus}
+                                >
+                                    {translations.cancel || 'Close'}
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="cancel-btn-danger"
+                                    disabled={updatingStatus}
+                                >
+                                    {updatingStatus ? (
+                                        <span
+                                            className="spinner-border spinner-border-sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                            style={{ width: 14, height: 14, borderWidth: 2 }}
+                                        />
+                                    ) : (
+                                        <CancelIcon style={{ fontSize: 18 }} />
+                                    )}
+                                    <span>{translations.confirmcancellation || 'Confirm Cancellation'}</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

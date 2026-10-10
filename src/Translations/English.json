@@ -698,5 +698,14 @@
   "addcollectionbannersuccessfull": "Collection Banner added successfully",
   "updatecollectionbannersuccessfull": "Collection Banner updated successfully",
   "deletecollectionbannersuccessfull": "Collection Banner deleted successfully",
-  "collectionbannernotfound": "Collection Banner not found"
+  "collectionbannernotfound": "Collection Banner not found",
+  "cancelorder": "Cancel Order",
+  "cancelreason": "Cancellation Reason",
+  "entercancelreason": "Please provide the reason for cancelling this order...",
+  "cancelreasonrequired": "Cancellation reason is required",
+  "cancelledby": "Cancelled By",
+  "cancelledat": "Cancelled At",
+  "ordercancelled": "Order Cancelled",
+  "confirmcancellation": "Confirm Cancellation",
+  "cancellationmodaldesc": "Are you sure you want to cancel this order? Please provide a clear cancellation reason."
 }
