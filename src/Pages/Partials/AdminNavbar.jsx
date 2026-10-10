@@ -360,18 +360,18 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/Support/CollectionBanner" className={navLinkClass('/Support/CollectionBanner')}>
-                                        <NavTooltip title={translations.collectionbanners || "Collection Banners"}>
+                                        <NavTooltip title={translations.collectionbanners}>
                                             <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.collectionbanners || "Collection Banners"}
+                                        {translations.collectionbanners}
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/Support/AboutUs" className={navLinkClass('/Support/AboutUs')}>
-                                        <NavTooltip title={translations.AboutUs || "About Us"}>
+                                        <NavTooltip title={translations.AboutUs}>
                                             <InfoIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.AboutUs || "About Us"}
+                                        {translations.AboutUs}
                                     </NavLink>
                                 </li>
                             </div>

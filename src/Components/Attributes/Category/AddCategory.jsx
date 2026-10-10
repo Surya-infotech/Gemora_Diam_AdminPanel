@@ -44,7 +44,7 @@ const AddCategory = () => {
             const fileExtension = file.name.split('.').pop().toLowerCase();
 
             if (!allowedExtensions.includes(fileExtension)) {
-                setWarningMessage(translations.invalidfileextension || "Invalid file extension");
+                setWarningMessage(translations.invalidfileextension);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -52,7 +52,7 @@ const AddCategory = () => {
 
             const maxSize = 10 * 1024 * 1024;
             if (file.size > maxSize) {
-                setWarningMessage(translations.filesizetoolarge || "File size too large");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -73,13 +73,13 @@ const AddCategory = () => {
         }
 
         if (description.trim().length > MAX_DESCRIPTION_LENGTH) {
-            setWarningMessage(translations.descriptionlimitexceeded || "Description cannot exceed 120 characters");
+            setWarningMessage(translations.descriptionlimitexceeded);
             setShowWarning(true);
             return;
         }
 
         if (!imageFile) {
-            setWarningMessage(translations.imagerequired || "Image is required");
+            setWarningMessage(translations.imagerequired);
             setShowWarning(true);
             return;
         }
@@ -117,8 +117,8 @@ const AddCategory = () => {
                 const errorMessages = {
                     "All fields are required": translations.allfieldrequired,
                     "Category Already Exists": translations.categoryalreadyexists,
-                    "Image is required": translations.imagerequired || "Image is required",
-                    "Description cannot exceed 120 characters": translations.descriptionlimitexceeded || "Description cannot exceed 120 characters",
+                    "Image is required": translations.imagerequired,
+                    "Description cannot exceed 120 characters": translations.descriptionlimitexceeded,
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -170,7 +170,7 @@ const AddCategory = () => {
 
                                         <div className="form-group">
                                             <label htmlFor="description">
-                                                {translations.description || "Description"} <span style={{ color: "red" }}>*</span>
+                                                {translations.description} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <textarea
                                                 id="description"
@@ -202,7 +202,7 @@ const AddCategory = () => {
                                                     <div className="image-preview-container">
                                                         <img
                                                             src={imagePreview}
-                                                            alt={translations.categorypreview || translations.itempreview || "Category Preview"}
+                                                            alt={translations.categorypreview || translations.itempreview}
                                                             className="image-preview"
                                                             onError={(e) => {
                                                                 e.target.onerror = null;
@@ -216,7 +216,7 @@ const AddCategory = () => {
                                                     className="btn btn-primary upload-btn"
                                                     onClick={handleUploadClick}
                                                 >
-                                                    {translations.upload || "Upload"}
+                                                    {translations.upload}
                                                 </button>
                                                 <input
                                                     type="file"

@@ -729,5 +729,7 @@
   "enterstudiotitle": "e.g. Studio & Showroom",
   "studiodescription": "Studio Description",
   "enterstudiodescription": "Enter studio and craftsmanship description...",
-  "updateaboutussuccessfull": "About Us details updated successfully"
+  "updateaboutussuccessfull": "About Us details updated successfully",
+  "studiopreview": "Studio Preview",
+  "bannerpreview": "Banner Preview"
 }

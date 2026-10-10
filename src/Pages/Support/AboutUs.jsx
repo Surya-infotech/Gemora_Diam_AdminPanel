@@ -182,7 +182,7 @@ const AboutUs = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setAlertMessage(translations.updateaboutussuccessfull || "About Us details updated successfully");
+                setAlertMessage(translations.updateaboutussuccessfull);
                 if (result.aboutUs?.studioImage) {
                     setStudioImage(result.aboutUs.studioImage);
                     setImagePreview(result.aboutUs.studioImage);
@@ -220,18 +220,18 @@ const AboutUs = () => {
                             <form onSubmit={handleSubmit}>
                                 {/* SECTION 1: HERITAGE & VISION (HERO) */}
                                 <div className="form-section-divider">
-                                    <h6 className="form-section-title">{translations.herosection || "Heritage & Vision (Hero)"}</h6>
+                                    <h6 className="form-section-title">{translations.herosection}</h6>
                                 </div>
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="heroEyebrow">{translations.heroeyebrow || "Hero Eyebrow / Tag"}</label>
+                                        <label htmlFor="heroEyebrow">{translations.heroeyebrow}</label>
                                         <input
                                             type="text"
                                             id="heroEyebrow"
                                             name="heroEyebrow"
                                             autoComplete="off"
-                                            placeholder={translations.enterheroeyebrow || "e.g. OUR HERITAGE & VISION"}
+                                            placeholder={translations.enterheroeyebrow}
                                             value={heroEyebrow}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -242,13 +242,13 @@ const AboutUs = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label htmlFor="heroTitle">{translations.herotitle || "Hero Main Heading"}</label>
+                                        <label htmlFor="heroTitle">{translations.herotitle}</label>
                                         <input
                                             type="text"
                                             id="heroTitle"
                                             name="heroTitle"
                                             autoComplete="off"
-                                            placeholder={translations.enterherotitle || "e.g. Crafting Timeless Brilliance"}
+                                            placeholder={translations.enterherotitle}
                                             value={heroTitle}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -261,13 +261,13 @@ const AboutUs = () => {
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label htmlFor="heroDescription">{translations.herodescription || "Hero Description"}</label>
+                                        <label htmlFor="heroDescription">{translations.herodescription}</label>
                                         <textarea
                                             id="heroDescription"
                                             name="heroDescription"
                                             rows="3"
                                             autoComplete="off"
-                                            placeholder={translations.enterherodescription || "Enter heritage and vision story..."}
+                                            placeholder={translations.enterherodescription}
                                             value={heroDescription}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -280,18 +280,18 @@ const AboutUs = () => {
 
                                 {/* SECTION 2: PILLARS OF COMMITMENT */}
                                 <div className="form-section-divider">
-                                    <h6 className="form-section-title">{translations.commitmentsection || "Pillars of Excellence / Commitment"}</h6>
+                                    <h6 className="form-section-title">{translations.commitmentsection}</h6>
                                 </div>
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label htmlFor="commitmentEyebrow">{translations.commitmenteyebrow || "Commitment Eyebrow"}</label>
+                                        <label htmlFor="commitmentEyebrow">{translations.commitmenteyebrow}</label>
                                         <input
                                             type="text"
                                             id="commitmentEyebrow"
                                             name="commitmentEyebrow"
                                             autoComplete="off"
-                                            placeholder={translations.entercommitmenteyebrow || "e.g. OUR COMMITMENT"}
+                                            placeholder={translations.entercommitmenteyebrow}
                                             value={commitmentEyebrow}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -304,13 +304,13 @@ const AboutUs = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="pillar1Title">{translations.pillar1title || "Pillar 1 Title"}</label>
+                                        <label htmlFor="pillar1Title">{translations.pillar1title}</label>
                                         <input
                                             type="text"
                                             id="pillar1Title"
                                             name="pillar1Title"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillartitle || "e.g. Artisanal Precision"}
+                                            placeholder={translations.enterpillartitle}
                                             value={pillar1Title}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -320,13 +320,13 @@ const AboutUs = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="pillar1Description">{translations.pillar1description || "Pillar 1 Description"}</label>
+                                        <label htmlFor="pillar1Description">{translations.pillar1description}</label>
                                         <textarea
                                             id="pillar1Description"
                                             name="pillar1Description"
                                             rows="2"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillardescription || "Enter pillar description..."}
+                                            placeholder={translations.enterpillardescription}
                                             value={pillar1Description}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -339,13 +339,13 @@ const AboutUs = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="pillar2Title">{translations.pillar2title || "Pillar 2 Title"}</label>
+                                        <label htmlFor="pillar2Title">{translations.pillar2title}</label>
                                         <input
                                             type="text"
                                             id="pillar2Title"
                                             name="pillar2Title"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillartitle || "e.g. Certified Quality"}
+                                            placeholder={translations.enterpillartitle}
                                             value={pillar2Title}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -355,13 +355,13 @@ const AboutUs = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="pillar2Description">{translations.pillar2description || "Pillar 2 Description"}</label>
+                                        <label htmlFor="pillar2Description">{translations.pillar2description}</label>
                                         <textarea
                                             id="pillar2Description"
                                             name="pillar2Description"
                                             rows="2"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillardescription || "Enter pillar description..."}
+                                            placeholder={translations.enterpillardescription}
                                             value={pillar2Description}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -374,13 +374,13 @@ const AboutUs = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="pillar3Title">{translations.pillar3title || "Pillar 3 Title"}</label>
+                                        <label htmlFor="pillar3Title">{translations.pillar3title}</label>
                                         <input
                                             type="text"
                                             id="pillar3Title"
                                             name="pillar3Title"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillartitle || "e.g. Lifetime Care"}
+                                            placeholder={translations.enterpillartitle}
                                             value={pillar3Title}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -390,13 +390,13 @@ const AboutUs = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="pillar3Description">{translations.pillar3description || "Pillar 3 Description"}</label>
+                                        <label htmlFor="pillar3Description">{translations.pillar3description}</label>
                                         <textarea
                                             id="pillar3Description"
                                             name="pillar3Description"
                                             rows="2"
                                             autoComplete="off"
-                                            placeholder={translations.enterpillardescription || "Enter pillar description..."}
+                                            placeholder={translations.enterpillardescription}
                                             value={pillar3Description}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -409,19 +409,19 @@ const AboutUs = () => {
 
                                 {/* SECTION 3: FINE JEWELRY STUDIO & SHOWROOM */}
                                 <div className="form-section-divider">
-                                    <h6 className="form-section-title">{translations.studiosection || "Fine Jewelry Studio & Showroom Spotlight"}</h6>
+                                    <h6 className="form-section-title">{translations.studiosection}</h6>
                                 </div>
 
                                 <div className="imageflex">
                                     <div className="formdiv">
                                         <div className="form-group">
-                                            <label htmlFor="studioEyebrow">{translations.studioeyebrow || "Studio Eyebrow"}</label>
+                                            <label htmlFor="studioEyebrow">{translations.studioeyebrow}</label>
                                             <input
                                                 type="text"
                                                 id="studioEyebrow"
                                                 name="studioEyebrow"
                                                 autoComplete="off"
-                                                placeholder={translations.enterstudioeyebrow || "e.g. FINE JEWELRY STUDIO"}
+                                                placeholder={translations.enterstudioeyebrow}
                                                 value={studioEyebrow}
                                                 onChange={(e) => {
                                                     const value = e.target.value;
@@ -432,13 +432,13 @@ const AboutUs = () => {
                                         </div>
 
                                         <div className="form-group">
-                                            <label htmlFor="studioTitle">{translations.studiotitle || "Studio Title"}</label>
+                                            <label htmlFor="studioTitle">{translations.studiotitle}</label>
                                             <input
                                                 type="text"
                                                 id="studioTitle"
                                                 name="studioTitle"
                                                 autoComplete="off"
-                                                placeholder={translations.enterstudiotitle || "e.g. Studio & Showroom"}
+                                                placeholder={translations.enterstudiotitle}
                                                 value={studioTitle}
                                                 onChange={(e) => {
                                                     const value = e.target.value;
@@ -455,7 +455,7 @@ const AboutUs = () => {
                                                 <div className="image-preview-container">
                                                     <img
                                                         src={imagePreview}
-                                                        alt="Studio Preview"
+                                                        alt={translations.studiopreview}
                                                         className="image-preview"
                                                         onError={(e) => {
                                                             e.target.onerror = null;
@@ -486,13 +486,13 @@ const AboutUs = () => {
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label htmlFor="studioDescription">{translations.studiodescription || "Studio Description"}</label>
+                                        <label htmlFor="studioDescription">{translations.studiodescription}</label>
                                         <textarea
                                             id="studioDescription"
                                             name="studioDescription"
                                             rows="3"
                                             autoComplete="off"
-                                            placeholder={translations.enterstudiodescription || "Enter studio and craftsmanship description..."}
+                                            placeholder={translations.enterstudiodescription}
                                             value={studioDescription}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -505,13 +505,13 @@ const AboutUs = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="buttonText">{translations.buttontext || "Button Text"}</label>
+                                        <label htmlFor="buttonText">{translations.buttontext}</label>
                                         <input
                                             type="text"
                                             id="buttonText"
                                             name="buttonText"
                                             autoComplete="off"
-                                            placeholder={translations.enterbuttontext || "e.g. Explore Collections"}
+                                            placeholder={translations.enterbuttontext}
                                             value={buttonText}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -522,13 +522,13 @@ const AboutUs = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label htmlFor="buttonLink">{translations.buttonlink || "Button Link"}</label>
+                                        <label htmlFor="buttonLink">{translations.buttonlink}</label>
                                         <input
                                             type="text"
                                             id="buttonLink"
                                             name="buttonLink"
                                             autoComplete="off"
-                                            placeholder={translations.enterbuttonlink || "e.g. /shop"}
+                                            placeholder={translations.enterbuttonlink}
                                             value={buttonLink}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -541,13 +541,13 @@ const AboutUs = () => {
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label htmlFor="studioImageUrl">{translations.orimageurl || "Or Banner Image URL (Optional)"}</label>
+                                        <label htmlFor="studioImageUrl">{translations.orimageurl}</label>
                                         <input
                                             type="text"
                                             id="studioImageUrl"
                                             name="studioImageUrl"
                                             autoComplete="off"
-                                            placeholder={translations.enterimageurl || "Enter image URL"}
+                                            placeholder={translations.enterimageurl}
                                             value={studioImage}
                                             onChange={(e) => {
                                                 const val = e.target.value;
@@ -567,14 +567,14 @@ const AboutUs = () => {
                                         onClick={handleCancel}
                                         disabled={isSaving}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isSaving}
                                     >
-                                        {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save")}
+                                        {isSaving ? translations.saving : translations.save}
                                     </button>
                                 </div>
                             </form>

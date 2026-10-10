@@ -203,7 +203,7 @@ const EditCollectionBanner = () => {
                                                 id="tag"
                                                 name="tag"
                                                 autoComplete="off"
-                                                placeholder={translations.entercollectionbannertag || "e.g. FEATURED ATELIER"}
+                                                placeholder={translations.entercollectionbannertag}
                                                 value={tag}
                                                 onChange={(e) => {
                                                     const value = e.target.value;
@@ -222,7 +222,7 @@ const EditCollectionBanner = () => {
                                                 id="title"
                                                 name="title"
                                                 autoComplete="off"
-                                                placeholder={translations.entercollectionbannertitle || "e.g. Bracelets Collection"}
+                                                placeholder={translations.entercollectionbannertitle}
                                                 required
                                                 value={title}
                                                 onChange={(e) => {
@@ -240,7 +240,7 @@ const EditCollectionBanner = () => {
                                                 <div className="image-preview-container">
                                                     <img
                                                         src={imagePreview}
-                                                        alt="Banner Preview"
+                                                        alt={translations.bannerpreview}
                                                         className="image-preview"
                                                         onError={(e) => {
                                                             e.target.onerror = null;
@@ -279,7 +279,7 @@ const EditCollectionBanner = () => {
                                             id="buttonText"
                                             name="buttonText"
                                             autoComplete="off"
-                                            placeholder={translations.enterbuttontext || "e.g. SHOP COLLECTION"}
+                                            placeholder={translations.enterbuttontext}
                                             value={buttonText}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -298,7 +298,7 @@ const EditCollectionBanner = () => {
                                             id="buttonLink"
                                             name="buttonLink"
                                             autoComplete="off"
-                                            placeholder={translations.enterbuttonlink || "e.g. /shop"}
+                                            placeholder={translations.enterbuttonlink}
                                             value={buttonLink}
                                             onChange={(e) => {
                                                 const value = e.target.value;
@@ -320,9 +320,9 @@ const EditCollectionBanner = () => {
                                             value={position}
                                             onChange={(e) => setPosition(e.target.value)}
                                         >
-                                            <option value="">{translations.selectimageposition || "Select Image Position"}</option>
-                                            <option value="left">{translations.imageleft || "Image Left, Content Right"}</option>
-                                            <option value="right">{translations.imageright || "Content Left, Image Right"}</option>
+                                            <option value="">{translations.selectimageposition}</option>
+                                            <option value="left">{translations.imageleft}</option>
+                                            <option value="right">{translations.imageright}</option>
                                         </select>
                                     </div>
 
@@ -335,7 +335,7 @@ const EditCollectionBanner = () => {
                                             id="order"
                                             name="order"
                                             min="1"
-                                            placeholder={translations.enterdisplayorder || "Enter display order number"}
+                                            placeholder={translations.enterdisplayorder}
                                             value={order}
                                             onChange={(e) => setOrder(e.target.value)}
                                         />

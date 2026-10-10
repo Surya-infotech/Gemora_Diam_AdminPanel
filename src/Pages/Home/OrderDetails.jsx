@@ -204,7 +204,7 @@ const OrderDetails = () => {
                     cancelledby: newStatus === 'Cancelled' ? (data.order?.cancelledby || prev?.cancelledby) : '',
                     cancelledat: newStatus === 'Cancelled' ? (data.order?.cancelledat || prev?.cancelledat) : null
                 }));
-                setAlertMessage(translations.updateordersuccessfull || 'Order status updated successfully');
+                setAlertMessage(translations.updateordersuccessfull);
                 setIsCancelModalOpen(false);
                 setCancelReason('');
                 setCancelReasonError('');
@@ -224,7 +224,7 @@ const OrderDetails = () => {
         e?.preventDefault();
         const trimmed = cancelReason.trim();
         if (!trimmed) {
-            setCancelReasonError(translations.cancelreasonrequired || 'Cancellation reason is required');
+            setCancelReasonError(translations.cancelreasonrequired);
             return;
         }
         handleStatusChange('Cancelled', trimmed);
@@ -592,22 +592,22 @@ const OrderDetails = () => {
                             </div>
                             <div className="cancelled-banner-body">
                                 <div className="cancelled-banner-header">
-                                    <h6 className="cancelled-banner-title">{translations.ordercancelled || 'Order Cancelled'}</h6>
+                                    <h6 className="cancelled-banner-title">{translations.ordercancelled}</h6>
                                 </div>
                                 <div className="cancelled-banner-grid">
                                     <div className="cancelled-banner-item reason-item">
-                                        <span className="cancelled-label">{translations.cancelreason || 'Cancellation Reason'}:</span>
+                                        <span className="cancelled-label">{translations.cancelreason}:</span>
                                         <span className="cancelled-value reason-val">{order.cancelreason || '-'}</span>
                                     </div>
                                     {order.cancelledby && (
                                         <div className="cancelled-banner-item">
-                                            <span className="cancelled-label">{translations.cancelledby || 'Cancelled By'}:</span>
+                                            <span className="cancelled-label">{translations.cancelledby}:</span>
                                             <span className="cancelled-value">{order.cancelledby}</span>
                                         </div>
                                     )}
                                     {order.cancelledat && (
                                         <div className="cancelled-banner-item">
-                                            <span className="cancelled-label">{translations.cancelledat || 'Cancelled At'}:</span>
+                                            <span className="cancelled-label">{translations.cancelledat}:</span>
                                             <span className="cancelled-value">{formatDateTime(order.cancelledat, miscSettings)}</span>
                                         </div>
                                     )}
@@ -805,7 +805,7 @@ const OrderDetails = () => {
                             <div className="items-card-title">
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     <HistoryIcon style={{ fontSize: 20, color: 'var(--primary-color, #10b981)' }} />
-                                    <span>{translations.orderstatuslogs || "Order Status Logs"}</span>
+                                    <span>{translations.orderstatuslogs}</span>
                                 </div>
                                 <span className="items-count-badge">
                                     {order.statusLogs.length} {order.statusLogs.length === 1 ? 'entry' : 'entries'}
@@ -816,9 +816,9 @@ const OrderDetails = () => {
                                 <table className="items-table">
                                     <thead>
                                         <tr>
-                                            <th>{translations.status || "Status"}</th>
-                                            <th>{translations.updatedby || "Updated By"}</th>
-                                            <th style={{ textAlign: 'right' }}>{translations.updatedat || "Updated Date & Time"}</th>
+                                            <th>{translations.status}</th>
+                                            <th>{translations.updatedby}</th>
+                                            <th style={{ textAlign: 'right' }}>{translations.updatedat}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -832,7 +832,7 @@ const OrderDetails = () => {
                                                         </span>
                                                         {log.newStatus === 'Cancelled' && (log.reason || order.cancelreason) && (
                                                             <div className="status-log-reason">
-                                                                <span className="reason-label">{translations.cancelreason || 'Reason'}:</span>
+                                                                <span className="reason-label">{translations.cancelreason}:</span>
                                                                 <span className="reason-text">{log.reason || order.cancelreason}</span>
                                                             </div>
                                                         )}
@@ -869,7 +869,7 @@ const OrderDetails = () => {
                                     <CancelIcon />
                                 </div>
                                 <div>
-                                    <h5 className="cancel-modal-title">{translations.cancelorder || 'Cancel Order'}</h5>
+                                    <h5 className="cancel-modal-title">{translations.cancelorder}</h5>
                                     <p className="cancel-modal-subtitle">#{orderNumberDisplay}</p>
                                 </div>
                             </div>
@@ -886,17 +886,17 @@ const OrderDetails = () => {
                         <form onSubmit={handleConfirmCancelOrder}>
                             <div className="cancel-modal-body">
                                 <p className="cancel-modal-instruction">
-                                    {translations.cancellationmodaldesc || 'Are you sure you want to cancel this order? Please enter the cancellation reason below.'}
+                                    {translations.cancellationmodaldesc}
                                 </p>
 
                                 <div className="cancel-form-group">
                                     <label className="cancel-form-label">
-                                        {translations.cancelreason || 'Cancellation Reason'} <span className="required-star">*</span>
+                                        {translations.cancelreason} <span className="required-star">*</span>
                                     </label>
                                     <textarea
                                         className={`cancel-textarea ${cancelReasonError ? 'has-error' : ''}`}
                                         rows={4}
-                                        placeholder={translations.entercancelreason || 'Please provide the reason for cancelling this order...'}
+                                        placeholder={translations.entercancelreason}
                                         value={cancelReason}
                                         onChange={(e) => {
                                             setCancelReason(e.target.value);
@@ -918,7 +918,7 @@ const OrderDetails = () => {
                                     onClick={() => setIsCancelModalOpen(false)}
                                     disabled={updatingStatus}
                                 >
-                                    {translations.cancel || 'Close'}
+                                    {translations.close || translations.cancel}
                                 </button>
                                 <button
                                     type="submit"
@@ -935,7 +935,7 @@ const OrderDetails = () => {
                                     ) : (
                                         <CancelIcon style={{ fontSize: 18 }} />
                                     )}
-                                    <span>{translations.confirmcancellation || 'Confirm Cancellation'}</span>
+                                    <span>{translations.confirmcancellation}</span>
                                 </button>
                             </div>
                         </form>
