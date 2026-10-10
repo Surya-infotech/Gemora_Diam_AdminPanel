@@ -20,18 +20,6 @@
 
             .form-row {
                 @include form_mixin.form-row;
-
-                .countrydropdown {
-                    @include form_mixin.dropdown;
-                }
-
-                .dropdown-icon {
-                    margin-left: auto !important;
-                }
-
-                .countrydropdownul {
-                    @include form_mixin.dropdownul;
-                }
             }
 
             .form-group {

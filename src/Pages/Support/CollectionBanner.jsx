@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Support/CollectionBanner/collectionbanner.scss";
 import { useLanguage } from '../../Context/LanguageContext';
@@ -15,7 +15,7 @@ const CollectionBanner = () => {
     const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
     const [searchValue, setSearchValue] = useState("");
 
-    const pageTitle = translations.collectionbanners || translations.CollectionBanner || "Collection Banners";
+    const pageTitle = translations.collectionbanners || "Collection Banners";
 
     useEffect(() => {
         document.title = pageTitle;

@@ -161,46 +161,6 @@
     }
 }
 
-.delete-modal-backdrop,
-.modal-backdrop-top {
+.delete-modal-backdrop {
     z-index: 99998 !important;
-}
-
-.warning-modal {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 100005 !important;
-
-    .modal-dialog {
-        max-width: 460px !important;
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    .modal-header {
-        flex-direction: column !important;
-        align-items: center !important;
-
-        .warning-icon {
-            font-size: 48px !important;
-            color: #dc3545 !important;
-            margin-bottom: 4px !important;
-        }
-
-        .modal-title {
-            color: #dc3545 !important;
-            margin: 0 !important;
-        }
-    }
-
-    .modal-body {
-        p {
-            margin-bottom: 0 !important;
-        }
-    }
-}
-
-.warning-modal-backdrop {
-    z-index: 100004 !important;
 }

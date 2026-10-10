@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Placeholder from '../../../assets/placeholder.png';
 import { useAuth } from '../../../Middleware/Auth';
@@ -28,7 +28,6 @@ const AddCollectionBanner = () => {
     const [position, setPosition] = useState("left");
     const [order, setOrder] = useState("1");
     const [imageFile, setImageFile] = useState(null);
-    const [imageUrl, setImageUrl] = useState("");
     const [imagePreview, setImagePreview] = useState(Placeholder);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -75,7 +74,7 @@ const AddCollectionBanner = () => {
             return;
         }
 
-        if (!imageFile && !imageUrl.trim()) {
+        if (!imageFile) {
             setWarningMessage(translations.imageisrequired || "Banner image is required");
             setShowWarning(true);
             return;
@@ -99,8 +98,6 @@ const AddCollectionBanner = () => {
 
             if (imageFile) {
                 formData.append("image", imageFile);
-            } else if (imageUrl.trim()) {
-                formData.append("image", imageUrl.trim());
             }
 
             const response = await fetch(`${adminPanelBackendPath}/Support/AddCollectionBanner`, {

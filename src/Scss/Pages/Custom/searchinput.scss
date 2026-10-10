@@ -16,14 +16,3 @@
         box-sizing: border-box;
     }
 }
-
-.search-and-add-container {
-    display: inline-flex;
-    align-items: center;
-    gap: 15px;
-    flex-shrink: 0;
-
-    .search-input-container {
-        margin-right: 0;
-    }
-}

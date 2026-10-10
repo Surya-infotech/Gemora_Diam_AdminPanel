@@ -150,17 +150,6 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
-        .item-sku-text {
-          font-size: 11px;
-          font-weight: 500;
-          color: color-mix(in srgb, var(--primary-color) 70%, #6b7280);
-          background: color-mix(in srgb, var(--primary-color) 8%, transparent);
-          padding: 1px 6px;
-          border-radius: 4px;
-          display: inline-block;
-          letter-spacing: 0.3px;
-        }
       }
     }
 
