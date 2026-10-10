@@ -369,10 +369,10 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/Support/Menu" className={navLinkClass('/Support/Menu')}>
-                                        <NavTooltip title={translations.Menu || "Menu"}>
+                                        <NavTooltip title={translations.Menu}>
                                             <MenuOpenIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.Menu || "Menu"}
+                                        {translations.Menu}
                                     </NavLink>
                                 </li>
                                 <li>

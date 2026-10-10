@@ -50,8 +50,8 @@ function AttributeMultiSelect({
     options = [],
     selected = [],
     onChange,
-    placeholder = "Select attribute details...",
-    attributeName = "Attribute",
+    placeholder = "",
+    attributeName = "",
     isRtl = false,
     translations = {}
 }) {
@@ -130,7 +130,7 @@ function AttributeMultiSelect({
             >
                 <div className="multiselect-chips-container">
                     {selectedArray.length === 0 ? (
-                        <span className="multiselect-placeholder">{placeholder}</span>
+                        <span className="multiselect-placeholder">{placeholder || translations.selectattributedetails}</span>
                     ) : (
                         <>
                             {visibleChips.map((val) => (
@@ -140,7 +140,7 @@ function AttributeMultiSelect({
                                         type="button"
                                         className="chip-remove"
                                         onClick={(e) => handleRemoveChip(e, val)}
-                                        title="Remove"
+                                        title={translations.remove}
                                     >
                                         ✕
                                     </button>
@@ -148,7 +148,7 @@ function AttributeMultiSelect({
                             ))}
                             {hiddenCount > 0 && (
                                 <span className="multiselect-more-badge" title={selectedArray.slice(maxVisibleChips).join(", ")}>
-                                    +{hiddenCount} {translations.more || "more"}
+                                    +{hiddenCount} {translations.more}
                                 </span>
                             )}
                         </>
@@ -160,7 +160,7 @@ function AttributeMultiSelect({
                             type="button"
                             className="clear-all-btn"
                             onClick={handleClearAll}
-                            title={translations.clearall || "Clear all"}
+                            title={translations.clearall}
                         >
                             ✕
                         </button>
@@ -175,7 +175,7 @@ function AttributeMultiSelect({
                         <input
                             type="text"
                             className="multiselect-search-input"
-                            placeholder={`${translations.search || "Search"} ${attributeName}...`}
+                            placeholder={`${translations.search || ""} ${attributeName}...`.trim()}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onClick={(e) => e.stopPropagation()}
@@ -191,17 +191,17 @@ function AttributeMultiSelect({
 
                     <div className="multiselect-quick-actions">
                         <span className="selected-count-label">
-                            {translations.selected || "Selected"}: {selectedArray.length}
+                            {translations.selected}: {selectedArray.length}
                         </span>
                         <div className="actions-buttons">
                             {filteredOptions.length > 0 && (
                                 <button type="button" onClick={handleSelectAll}>
-                                    {translations.selectall || "Select All"}
+                                    {translations.selectall}
                                 </button>
                             )}
                             {selectedArray.length > 0 && (
                                 <button type="button" onClick={handleClearAll}>
-                                    {translations.clearall || "Clear All"}
+                                    {translations.clearall}
                                 </button>
                             )}
                         </div>
@@ -212,17 +212,17 @@ function AttributeMultiSelect({
                             <div className="multiselect-empty-notice">
                                 {searchQuery.trim() ? (
                                     <div>
-                                        <span>{translations.nomatchingoptions || "No matching options"}</span>
+                                        <span>{translations.nomatchingoptions}</span>
                                         <button
                                             type="button"
                                             className="btn-add-custom-val"
                                             onClick={handleAddCustom}
                                         >
-                                            + {translations.add || "Add"} "{searchQuery.trim()}"
+                                            + {translations.add} "{searchQuery.trim()}"
                                         </button>
                                     </div>
                                 ) : (
-                                    <span>{translations.nooptionsavailable || "No options available"}</span>
+                                    <span>{translations.nooptionsavailable}</span>
                                 )}
                             </div>
                         ) : (
@@ -267,15 +267,15 @@ export function MenuForm({ initialData = null, isEdit = false }) {
 
     // Attribute types definition matching sidebar
     const ATTRIBUTE_KEYS = [
-        { key: "metal", label: translations.metal || "Metal" },
-        { key: "diamondsize", label: translations.diamondsize || "Diamond Size" },
-        { key: "shape", label: translations.shape || "Shape" },
-        { key: "clarity", label: translations.clarity || "Clarity" },
-        { key: "color", label: translations.color || "Color" },
-        { key: "stone", label: translations.stone || "Stone" },
-        { key: "style", label: translations.style || "Style" },
-        { key: "category", label: translations.category || "Category" },
-        { key: "subcategory", label: translations.subcategory || "Sub Category" }
+        { key: "metal", label: translations.metal },
+        { key: "diamondsize", label: translations.diamondsize },
+        { key: "shape", label: translations.shape },
+        { key: "clarity", label: translations.clarity },
+        { key: "color", label: translations.color },
+        { key: "stone", label: translations.stone },
+        { key: "style", label: translations.style },
+        { key: "category", label: translations.category },
+        { key: "subcategory", label: translations.subcategory }
     ];
 
     // State holding active attribute options from the system
@@ -367,12 +367,12 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     }, [adminPanelBackendPath, token]);
 
     const tabs = [
-        { id: "general", title: translations.menugeneral || "General & URL" },
-        { id: "col1", title: translations.column1 || "Column 1" },
-        { id: "col2", title: translations.column2 || "Column 2" },
-        { id: "col3", title: translations.column3 || "Column 3" },
-        { id: "banner", title: translations.menubanner || "Promotional Banner" },
-        { id: "bottom", title: translations.bottombar || "Bottom Strip" },
+        { id: "general", title: translations.menugeneral },
+        { id: "col1", title: translations.column1 },
+        { id: "col2", title: translations.column2 },
+        { id: "col3", title: translations.column3 },
+        { id: "banner", title: translations.menubanner },
+        { id: "bottom", title: translations.bottombar },
     ];
 
     // Form fields - empty by default (no dummy data)
@@ -429,13 +429,13 @@ export function MenuForm({ initialData = null, isEdit = false }) {
             const allowed = ["jpg", "jpeg", "png", "webp"];
             const ext = file.name.split('.').pop().toLowerCase();
             if (!allowed.includes(ext)) {
-                setWarningMessage(translations.invalidfileextension || "Invalid file format");
+                setWarningMessage(translations.invalidfileextension);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
             }
             if (file.size > 10 * 1024 * 1024) {
-                setWarningMessage(translations.filesizetoolarge || "File size is too large (max 10MB)");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -500,7 +500,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!title.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Menu title is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
@@ -580,8 +580,8 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                 navigate("/Support/Menu", {
                     state: {
                         message: isEdit
-                            ? (translations.updatemenusuccessfull || "Menu updated successfully")
-                            : (translations.addmenusuccessfull || "Menu added successfully")
+                            ? translations.updatemenusuccessfull
+                            : translations.addmenusuccessfull
                     }
                 });
             } else {
@@ -602,7 +602,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
             <div className={`AddMenu-container ${isRtl ? 'rtl-addmenu' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addmenu-container">
                     <h6 className="Addmenu-headingname">
-                        {isEdit ? (translations.editmenu || "Edit Menu") : (translations.addmenu || "Add Menu")}
+                        {isEdit ? translations.editmenu : translations.addmenu}
                     </h6>
                     <div className="Addmenu-form-container">
                         {isLoading ? (
@@ -633,42 +633,42 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                     <div className="form-grid-3">
                                                         <div className="form-group">
                                                             <label htmlFor="menutitle">
-                                                                {translations.menutitle || "Menu Tab Title"} <span style={{ color: "red" }}>*</span>
+                                                                {translations.menutitle} <span style={{ color: "red" }}>*</span>
                                                             </label>
                                                             <input
                                                                 type="text"
                                                                 id="menutitle"
                                                                 autoComplete="off"
                                                                 value={title}
-                                                                placeholder={translations.entermenutitle || "e.g. Engagement Rings"}
+                                                                placeholder={translations.entermenutitle}
                                                                 onChange={handleTitleChange}
                                                                 required
                                                             />
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="menuslug">
-                                                                {translations.menuslug || "Page URL (Slug)"} <span style={{ color: "red" }}>*</span>
+                                                                {translations.menuslug} <span style={{ color: "red" }}>*</span>
                                                             </label>
                                                             <input
                                                                 type="text"
                                                                 id="menuslug"
                                                                 autoComplete="off"
                                                                 value={slug}
-                                                                placeholder={translations.entermenuslug || "/engagement-rings"}
+                                                                placeholder={translations.entermenuslug}
                                                                 onChange={(e) => setSlug(e.target.value)}
                                                                 required
                                                             />
-                                                            <span className="field-hint">e.g. /engagement-rings, /wedding-rings</span>
+                                                            <span className="field-hint">{translations.menuslughint}</span>
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="menuorder">
-                                                                {translations.order || translations.displayorder || "Display Order"}
+                                                                {translations.displayorder}
                                                             </label>
                                                             <input
                                                                 type="number"
                                                                 id="menuorder"
                                                                 value={order}
-                                                                placeholder={translations.entermenuorder || "1"}
+                                                                placeholder={translations.entermenuorder}
                                                                 onChange={(e) => setOrder(e.target.value)}
                                                             />
                                                         </div>
@@ -681,29 +681,29 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                 <div>
                                                     <div className="form-grid-3">
                                                         <div className="form-group">
-                                                            <label>{translations.columnheader || "Column Header"}</label>
+                                                            <label>{translations.columnheader}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col1Title}
-                                                                placeholder="e.g. SHOP BY RING STYLE"
+                                                                placeholder={translations.entercolumnheader}
                                                                 onChange={(e) => setCol1Title(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>{translations.bottomlinktext || "Bottom Link Text"}</label>
+                                                            <label>{translations.bottomlinktext}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col1BottomText}
-                                                                placeholder="e.g. VIEW ALL RING COLLECTIONS"
+                                                                placeholder={translations.enterbottomlinktext}
                                                                 onChange={(e) => setCol1BottomText(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>{translations.bottomlinkurl || "Bottom Link URL"}</label>
+                                                            <label>{translations.bottomlinkurl}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col1BottomUrl}
-                                                                placeholder="e.g. /collections"
+                                                                placeholder={translations.enterbottomlinkurl}
                                                                 onChange={(e) => setCol1BottomUrl(e.target.value)}
                                                             />
                                                         </div>
@@ -711,11 +711,11 @@ export function MenuForm({ initialData = null, isEdit = false }) {
 
                                                     <div className="repeater-section">
                                                         <label className="repeater-header-label">
-                                                            {translations.column1 || "Column Items"}:
+                                                            {translations.columnitems}:
                                                         </label>
                                                         {col1Items.length === 0 ? (
                                                             <div className="empty-items-notice">
-                                                                {translations.nodatafound || "No items added yet. Click '+ Add Item' below to create links."}
+                                                                {translations.nodatafound}
                                                             </div>
                                                         ) : (
                                                             col1Items.map((item, idx) => {
@@ -729,14 +729,14 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                     <div key={idx} className="repeater-row">
                                                                         <input
                                                                             type="text"
-                                                                            placeholder={translations.itemlabel || "Label (e.g. Nature Inspired Rings)"}
+                                                                            placeholder={translations.enteritemlabel}
                                                                             value={item.label}
                                                                             onChange={(e) => updateCol1Item(idx, "label", e.target.value)}
                                                                             style={{ flex: 1.2, minWidth: "150px" }}
                                                                         />
                                                                         <input
                                                                             type="text"
-                                                                            placeholder={translations.cleanurl || "Clean URL (e.g. /nature-inspired-rings)"}
+                                                                            placeholder={translations.entercleanurl}
                                                                             value={item.slug}
                                                                             onChange={(e) => updateCol1Item(idx, "slug", e.target.value)}
                                                                             style={{ flex: 1.2, minWidth: "150px" }}
@@ -760,8 +760,8 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                             options={optionsForType}
                                                                             selected={selectedValues}
                                                                             onChange={(newVals) => updateCol1Item(idx, "filterValue", newVals)}
-                                                                            placeholder={translations.selectattributedetails || "Select attribute details..."}
-                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || "Attribute"}
+                                                                            placeholder={translations.selectattributedetails}
+                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || ""}
                                                                             isRtl={isRtl}
                                                                             translations={translations}
                                                                         />
@@ -769,7 +769,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                             type="button"
                                                                             className="btn-remove-row"
                                                                             onClick={() => removeCol1Item(idx)}
-                                                                            title={translations.removeitem || "Remove Item"}
+                                                                            title={translations.removeitem}
                                                                         >
                                                                             ✕
                                                                         </button>
@@ -778,7 +778,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                             })
                                                         )}
                                                         <button type="button" className="btn-add-row" onClick={addCol1Item}>
-                                                            + {translations.additem || "Add Item"}
+                                                            + {translations.additem}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -789,29 +789,29 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                 <div>
                                                     <div className="form-grid-3">
                                                         <div className="form-group">
-                                                            <label>{translations.columnheader || "Column Header"}</label>
+                                                            <label>{translations.columnheader}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col2Title}
-                                                                placeholder="e.g. SHOP BY DIAMOND SHAPE"
+                                                                placeholder={translations.entercolumnheader}
                                                                 onChange={(e) => setCol2Title(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>{translations.bottomlinktext || "Bottom Link Text"}</label>
+                                                            <label>{translations.bottomlinktext}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col2BottomText}
-                                                                placeholder="e.g. EXPLORE ALL SHAPES"
+                                                                placeholder={translations.enterbottomlinktext}
                                                                 onChange={(e) => setCol2BottomText(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>{translations.bottomlinkurl || "Bottom Link URL"}</label>
+                                                            <label>{translations.bottomlinkurl}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col2BottomUrl}
-                                                                placeholder="e.g. /collections"
+                                                                placeholder={translations.enterbottomlinkurl}
                                                                 onChange={(e) => setCol2BottomUrl(e.target.value)}
                                                             />
                                                         </div>
@@ -819,11 +819,11 @@ export function MenuForm({ initialData = null, isEdit = false }) {
 
                                                     <div className="repeater-section">
                                                         <label className="repeater-header-label">
-                                                            {translations.column2 || "Diamond Shapes"}:
+                                                            {translations.diamondshapes}:
                                                         </label>
                                                         {col2Items.length === 0 ? (
                                                             <div className="empty-items-notice">
-                                                                {translations.nodatafound || "No shape items added yet. Click '+ Add Item' below."}
+                                                                {translations.nodatafound}
                                                             </div>
                                                         ) : (
                                                             col2Items.map((item, idx) => {
@@ -837,14 +837,14 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                     <div key={idx} className="repeater-row">
                                                                         <input
                                                                             type="text"
-                                                                            placeholder={translations.itemlabel || "Label (e.g. Emerald Cut)"}
+                                                                            placeholder={translations.enteritemlabel}
                                                                             value={item.label}
                                                                             onChange={(e) => updateCol2Item(idx, "label", e.target.value)}
                                                                             style={{ flex: 1.2, minWidth: "150px" }}
                                                                         />
                                                                         <input
                                                                             type="text"
-                                                                            placeholder={translations.cleanurl || "Clean URL (e.g. /emerald-cut-diamonds)"}
+                                                                            placeholder={translations.entercleanurl}
                                                                             value={item.slug}
                                                                             onChange={(e) => updateCol2Item(idx, "slug", e.target.value)}
                                                                             style={{ flex: 1.2, minWidth: "150px" }}
@@ -873,8 +873,8 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                                     updateCol2Item(idx, "shape", newVals[0] || "");
                                                                                 }
                                                                             }}
-                                                                            placeholder={translations.selectattributedetails || "Select attribute details..."}
-                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || "Attribute"}
+                                                                            placeholder={translations.selectattributedetails}
+                                                                            attributeName={ATTRIBUTE_KEYS.find(a => a.key === currentAttrKey)?.label || ""}
                                                                             isRtl={isRtl}
                                                                             translations={translations}
                                                                         />
@@ -882,7 +882,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                             type="button"
                                                                             className="btn-remove-row"
                                                                             onClick={() => removeCol2Item(idx)}
-                                                                            title={translations.removeitem || "Remove Item"}
+                                                                            title={translations.removeitem}
                                                                         >
                                                                             ✕
                                                                         </button>
@@ -891,7 +891,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                             })
                                                         )}
                                                         <button type="button" className="btn-add-row" onClick={addCol2Item}>
-                                                            + {translations.additem || "Add Item"}
+                                                            + {translations.additem}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -902,11 +902,11 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                 <div>
                                                     <div className="form-grid-2">
                                                         <div className="form-group">
-                                                            <label>{translations.columnheader || "Column Header"}</label>
+                                                            <label>{translations.columnheader}</label>
                                                             <input
                                                                 type="text"
                                                                 value={col3Title}
-                                                                placeholder="e.g. FEATURED"
+                                                                placeholder={translations.entercolumnheader}
                                                                 onChange={(e) => setCol3Title(e.target.value)}
                                                             />
                                                         </div>
@@ -914,30 +914,30 @@ export function MenuForm({ initialData = null, isEdit = false }) {
 
                                                     <div className="repeater-section">
                                                         <label className="repeater-header-label">
-                                                            {translations.column3 || "Featured Items"}:
+                                                            {translations.featureditems}:
                                                         </label>
                                                         {col3Items.length === 0 ? (
                                                             <div className="empty-items-notice">
-                                                                {translations.nodatafound || "No featured items added yet. Click '+ Add Featured Item' below."}
+                                                                {translations.nodatafound}
                                                             </div>
                                                         ) : (
                                                             col3Items.map((item, idx) => (
                                                                 <div key={idx} className="repeater-row">
                                                                     <input
                                                                         type="text"
-                                                                        placeholder="Label (e.g. Top 20 Engagement Rings)"
+                                                                        placeholder={translations.enteritemlabel}
                                                                         value={item.label}
                                                                         onChange={(e) => updateCol3Item(idx, "label", e.target.value)}
                                                                     />
                                                                     <input
                                                                         type="text"
-                                                                        placeholder="Clean URL (e.g. /top-20-engagement-rings)"
+                                                                        placeholder={translations.entercleanurl}
                                                                         value={item.slug}
                                                                         onChange={(e) => updateCol3Item(idx, "slug", e.target.value)}
                                                                     />
                                                                     <input
                                                                         type="text"
-                                                                        placeholder="Badge (e.g. NEW, HOT)"
+                                                                        placeholder={translations.enterbadge}
                                                                         value={item.badge}
                                                                         onChange={(e) => updateCol3Item(idx, "badge", e.target.value)}
                                                                         style={{ maxWidth: "130px" }}
@@ -946,7 +946,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                         type="button"
                                                                         className="btn-remove-row"
                                                                         onClick={() => removeCol3Item(idx)}
-                                                                        title="Remove Item"
+                                                                        title={translations.removeitem}
                                                                     >
                                                                         ✕
                                                                     </button>
@@ -954,7 +954,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                             ))
                                                         )}
                                                         <button type="button" className="btn-add-row" onClick={addCol3Item}>
-                                                            + {translations.additem || "Add Featured Item"}
+                                                            + {translations.addfeatureditem}
                                                         </button>
                                                     </div>
                                                 </div>
@@ -965,52 +965,52 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                 <div>
                                                     <div className="form-grid-2">
                                                         <div className="form-group">
-                                                            <label>Eyebrow Tag</label>
+                                                            <label>{translations.eyebrowtag}</label>
                                                             <input
                                                                 type="text"
                                                                 value={bannerEyebrow}
-                                                                placeholder="e.g. FEATURED ATELIER"
+                                                                placeholder={translations.entereyebrowtag}
                                                                 onChange={(e) => setBannerEyebrow(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>Card Title</label>
+                                                            <label>{translations.cardtitle}</label>
                                                             <input
                                                                 type="text"
                                                                 value={bannerTitle}
-                                                                placeholder="e.g. Bracelets Collection"
+                                                                placeholder={translations.entercardtitle}
                                                                 onChange={(e) => setBannerTitle(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>Button Text</label>
+                                                            <label>{translations.buttontext}</label>
                                                             <input
                                                                 type="text"
                                                                 value={bannerButtonText}
-                                                                placeholder="e.g. EXPLORE COLLECTION"
+                                                                placeholder={translations.enterbuttontext}
                                                                 onChange={(e) => setBannerButtonText(e.target.value)}
                                                             />
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>Button Link</label>
+                                                            <label>{translations.buttonlink}</label>
                                                             <input
                                                                 type="text"
                                                                 value={bannerButtonLink}
-                                                                placeholder="e.g. /bracelets-collection"
+                                                                placeholder={translations.enterbuttonlink}
                                                                 onChange={(e) => setBannerButtonLink(e.target.value)}
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="form-group">
-                                                        <label>Description Subtitle</label>
+                                                        <label>{translations.descriptionsubtitle}</label>
                                                         <textarea
                                                             value={bannerDescription}
-                                                            placeholder="e.g. Complimentary Insured Delivery & Lifetime Polish on bespoke creations."
+                                                            placeholder={translations.enterdescriptionsubtitle}
                                                             onChange={(e) => setBannerDescription(e.target.value)}
                                                         />
                                                     </div>
                                                     <div className="form-group">
-                                                        <label>{translations.bannerimage || "Promo Card Image"}</label>
+                                                        <label>{translations.promocardimage}</label>
                                                         <input
                                                             type="file"
                                                             ref={fileInputRef}
@@ -1021,7 +1021,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                         <div className="image-upload-wrapper">
                                                             <img
                                                                 src={imagePreview}
-                                                                alt="Promo Card Preview"
+                                                                alt={translations.promocardpreview}
                                                                 className="preview-box"
                                                                 onError={(e) => {
                                                                     e.target.onerror = null;
@@ -1033,7 +1033,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                 className="upload-action-btn"
                                                                 onClick={() => fileInputRef.current?.click()}
                                                             >
-                                                                {translations.upload || "Upload Image"}
+                                                                {translations.upload}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -1044,20 +1044,20 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                             {activeTab === "bottom" && (
                                                 <div>
                                                     <div className="form-group">
-                                                        <label>Strip Text</label>
+                                                        <label>{translations.striptext}</label>
                                                         <input
                                                             type="text"
                                                             value={bottomBarText}
-                                                            placeholder="e.g. DESIGN YOUR OWN BESPOKE ENGAGEMENT RING · BOOK AN ATELIER APPOINTMENT"
+                                                            placeholder={translations.enterstriptext}
                                                             onChange={(e) => setBottomBarText(e.target.value)}
                                                         />
                                                     </div>
                                                     <div className="form-group">
-                                                        <label>Action Link</label>
+                                                        <label>{translations.actionlink}</label>
                                                         <input
                                                             type="text"
                                                             value={bottomBarLink}
-                                                            placeholder="e.g. /contact"
+                                                            placeholder={translations.enteractionlink}
                                                             onChange={(e) => setBottomBarLink(e.target.value)}
                                                         />
                                                     </div>
@@ -1075,14 +1075,14 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                         onClick={() => navigate("/Support/Menu")}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

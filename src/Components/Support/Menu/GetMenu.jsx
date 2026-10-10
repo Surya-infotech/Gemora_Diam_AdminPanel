@@ -181,10 +181,10 @@ const GetMenu = ({ searchValue = "" }) => {
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("order")}>
-                                    {translations.order || translations.displayorder} {renderSortIcon("order")}
+                                    {translations.displayorder} {renderSortIcon("order")}
                                 </th>
                                 <th onClick={() => sortItems("title")}>
-                                    {translations.menutitle || translations.title} {renderSortIcon("title")}
+                                    {translations.menutitle} {renderSortIcon("title")}
                                 </th>
                                 <th onClick={() => sortItems("slug")}>
                                     {translations.menuslug} {renderSortIcon("slug")}
