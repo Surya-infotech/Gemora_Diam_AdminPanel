@@ -189,8 +189,6 @@ const GetMenu = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("slug")}>
                                     {translations.menuslug} {renderSortIcon("slug")}
                                 </th>
-                                <th>{translations.columnsanditems || "Columns & Items"}</th>
-                                <th>{translations.menubanner || "Promotional Banner"}</th>
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status} {renderSortIcon("status")}
                                 </th>
@@ -201,9 +199,6 @@ const GetMenu = ({ searchValue = "" }) => {
                             {visibleItems.length > 0 ? (
                                 visibleItems.map((item, idx) => {
                                     const itemId = item.menuid || item._id || idx;
-                                    const col1Count = item.column1?.items?.length || 0;
-                                    const col2Count = item.column2?.items?.length || 0;
-                                    const col3Count = item.column3?.items?.length || 0;
                                     return (
                                         <tr key={itemId}>
                                             <td style={{ fontWeight: 600 }}>
@@ -220,22 +215,6 @@ const GetMenu = ({ searchValue = "" }) => {
                                                 </span>
                                             </td>
                                             <td>
-                                                <div className="column-summary">
-                                                    <span className="col-pill">Col 1: {col1Count}</span>
-                                                    <span className="col-pill">Col 2: {col2Count}</span>
-                                                    <span className="col-pill">Col 3: {col3Count}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {item.banner?.title ? (
-                                                    <span className="promo-badge" title={item.banner.title}>
-                                                        {item.banner.title}
-                                                    </span>
-                                                ) : (
-                                                    <span className="no-promo-badge">-</span>
-                                                )}
-                                            </td>
-                                            <td>
                                                 <CustomSwitch
                                                     checked={Boolean(item.status)}
                                                     onChange={() => handleStatusToggle(item)}
@@ -250,7 +229,7 @@ const GetMenu = ({ searchValue = "" }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="7" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="5" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>
