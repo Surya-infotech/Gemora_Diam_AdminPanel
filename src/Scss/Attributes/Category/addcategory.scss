@@ -22,6 +22,15 @@
             .form-row {
                 @include form_mixin.form_row;
                 margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
             }
 
             .form-group {
@@ -29,8 +38,37 @@
                     @include form_mixin.form_label;
                 }
 
-                input:not([type="radio"]):not([type="checkbox"]) {
+                input:not([type="radio"]):not([type="checkbox"]),
+                textarea {
                     @include form_mixin.form_input;
+                    width: 100%;
+                }
+
+                textarea {
+                    min-height: 90px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                    margin-bottom: 6px !important;
+                }
+
+                .description-counter {
+                    text-align: right;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--muted-text, #6b7280);
+                    margin-bottom: 15px;
+                    transition: color 0.2s ease, font-weight 0.2s ease;
+
+                    [dir="rtl"] &,
+                    body.rtl-mode & {
+                        text-align: left;
+                    }
+
+                    &.max-reached {
+                        color: #dc2626;
+                        font-weight: 600;
+                    }
                 }
 
                 .switch-container {

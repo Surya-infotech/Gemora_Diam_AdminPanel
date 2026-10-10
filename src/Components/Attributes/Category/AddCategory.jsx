@@ -19,7 +19,9 @@ const AddCategory = () => {
     const token = localStorage.getItem(tokenname);
 
     const [categoryName, setCategoryName] = useState("");
+    const [description, setDescription] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const MAX_DESCRIPTION_LENGTH = 120;
 
     useEffect(() => {
         if (translations.addcategory) document.title = translations.addcategory;
@@ -28,8 +30,14 @@ const AddCategory = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!categoryName.trim()) {
+        if (!categoryName.trim() || !description.trim()) {
             setWarningMessage(translations.allfieldrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (description.trim().length > MAX_DESCRIPTION_LENGTH) {
+            setWarningMessage(translations.descriptionlimitexceeded || "Description cannot exceed 120 characters");
             setShowWarning(true);
             return;
         }
@@ -43,6 +51,7 @@ const AddCategory = () => {
         try {
             const payload = {
                 categoryname: categoryName.trim(),
+                description: description.trim(),
             };
 
             const response = await fetch(`${adminPanelBackendPath}/Attributes/AddCategory`, {
@@ -65,6 +74,7 @@ const AddCategory = () => {
                 const errorMessages = {
                     "All fields are required": translations.allfieldrequired,
                     "Category Already Exists": translations.categoryalreadyexists,
+                    "Description cannot exceed 120 characters": translations.descriptionlimitexceeded || "Description cannot exceed 120 characters",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -111,6 +121,34 @@ const AddCategory = () => {
                                                 setCategoryName(value);
                                             }}
                                         />
+                                    </div>
+                                </div>
+
+                                <div className="form-row full-width">
+                                    <div className="form-group">
+                                        <label htmlFor="description">
+                                            {translations.description || "Description"} <span style={{ color: "red" }}>*</span>
+                                        </label>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            rows="3"
+                                            autoComplete="off"
+                                            placeholder={translations.entercategorydescription || translations.enterdescription}
+                                            required
+                                            maxLength={MAX_DESCRIPTION_LENGTH}
+                                            value={description}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                if (value.length <= MAX_DESCRIPTION_LENGTH) {
+                                                    setDescription(value);
+                                                }
+                                            }}
+                                        />
+                                        <div className={`description-counter ${(description || "").length >= MAX_DESCRIPTION_LENGTH ? 'max-reached' : ''}`}>
+                                            {(description || "").length}/{MAX_DESCRIPTION_LENGTH}
+                                        </div>
                                     </div>
                                 </div>
 

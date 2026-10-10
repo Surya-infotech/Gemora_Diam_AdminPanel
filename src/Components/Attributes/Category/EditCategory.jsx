@@ -21,8 +21,10 @@ const EditCategory = () => {
     const token = localStorage.getItem(tokenname);
 
     const [categoryName, setCategoryName] = useState("");
+    const [description, setDescription] = useState("");
     const [status, setStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const MAX_DESCRIPTION_LENGTH = 120;
 
     useEffect(() => {
         if (translations.editcategory) document.title = translations.editcategory;
@@ -47,6 +49,7 @@ const EditCategory = () => {
 
                 if (response.ok) {
                     setCategoryName(result.categoryname || "");
+                    setDescription(result.description || "");
                     setStatus(Boolean(result.status));
                 } else {
                     const errorMessages = {
@@ -70,8 +73,14 @@ const EditCategory = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!categoryName.trim()) {
+        if (!categoryName.trim() || !description.trim()) {
             setWarningMessage(translations.allfieldrequired);
+            setShowWarning(true);
+            return;
+        }
+
+        if (description.trim().length > MAX_DESCRIPTION_LENGTH) {
+            setWarningMessage(translations.descriptionlimitexceeded || "Description cannot exceed 120 characters");
             setShowWarning(true);
             return;
         }
@@ -85,6 +94,7 @@ const EditCategory = () => {
         try {
             const payload = {
                 categoryname: categoryName.trim(),
+                description: description.trim(),
                 status
             };
 
@@ -109,6 +119,7 @@ const EditCategory = () => {
                     "All fields are required": translations.allfieldrequired,
                     "Category Already Exists": translations.categoryalreadyexists,
                     "Category not found": translations.categorynotfound,
+                    "Description cannot exceed 120 characters": translations.descriptionlimitexceeded || "Description cannot exceed 120 characters",
                     "Server error": translations.servererror
                 };
                 setWarningMessage(errorMessages[result.message] || translations.servererror);
@@ -162,6 +173,34 @@ const EditCategory = () => {
                                                 checked={status}
                                                 onChange={(e) => setStatus(e.target.checked)}
                                             />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-row full-width">
+                                    <div className="form-group">
+                                        <label htmlFor="description">
+                                            {translations.description || "Description"} <span style={{ color: "red" }}>*</span>
+                                        </label>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            rows="3"
+                                            autoComplete="off"
+                                            placeholder={translations.entercategorydescription || translations.enterdescription}
+                                            required
+                                            maxLength={MAX_DESCRIPTION_LENGTH}
+                                            value={description}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                if (value.length <= MAX_DESCRIPTION_LENGTH) {
+                                                    setDescription(value);
+                                                }
+                                            }}
+                                        />
+                                        <div className={`description-counter ${(description || "").length >= MAX_DESCRIPTION_LENGTH ? 'max-reached' : ''}`}>
+                                            {(description || "").length}/{MAX_DESCRIPTION_LENGTH}
                                         </div>
                                     </div>
                                 </div>
