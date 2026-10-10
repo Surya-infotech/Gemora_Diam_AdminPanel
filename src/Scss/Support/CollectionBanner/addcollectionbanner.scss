@@ -1,0 +1,166 @@
+﻿@use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+@use "../../Customize/var.scss" as var;
+
+.AddCollectionBanner-container {
+    @include mixin.main_page;
+
+    .Addcollectionbanner-container {
+        @include mixin.page;
+
+        .Addcollectionbanner-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .Addcollectionbanner-form-container {
+            @include mixin.page_size;
+
+            .imageflex {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: space-between;
+                margin-bottom: 15px !important;
+
+                .formdiv {
+                    flex: 1;
+                    width: 50% !important;
+                    gap: 10px;
+
+                    .form-group {
+                        width: 100% !important;
+                        margin: 0 !important;
+                    }
+
+                    input, select {
+                        margin-bottom: 15px !important;
+                    }
+
+                    textarea {
+                        margin-bottom: 6px !important;
+                    }
+                }
+
+                .imagediv {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 45% !important;
+
+                    .form-group {
+                        width: 100% !important;
+                        margin: 0 !important;
+                    }
+
+                    [dir="rtl"] &,
+                    body.rtl-mode &,
+                    &[dir="rtl"] {
+                        margin-right: 0 !important;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    flex-direction: column;
+
+                    .formdiv,
+                    .imagediv {
+                        width: 100% !important;
+                    }
+                }
+            }
+
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .form-group {
+                label {
+                    @include form_mixin.form_label;
+                }
+
+                input:not([type="radio"]):not([type="checkbox"]),
+                select,
+                textarea {
+                    @include form_mixin.form_input;
+                    width: 100% !important;
+                }
+
+                textarea {
+                    min-height: 100px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                }
+
+                .switch-container {
+                    display: flex;
+                    align-items: center;
+                    min-height: 42px;
+                }
+
+                .imgpreview {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+
+                    .image-preview-container {
+                        position: relative;
+                        width: 100%;
+                        max-width: 380px;
+                        height: 220px;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        border: 2px dashed #d1d5db;
+                        background: #f9fafb;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+
+                        .image-preview {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+            }
+
+            .button-group {
+                @include form_mixin.btn_group;
+
+                button {
+                    @include form_mixin.btn;
+                }
+            }
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
+            }
+        }
+    }
+}
+
+.alert {
+    @include mixin.alert;
+}

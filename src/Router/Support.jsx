@@ -10,6 +10,9 @@ import EditPolicy from "../Components/Support/Policy/EditPolicy";
 import Banner from "../Pages/Support/Banner";
 import AddBanner from "../Components/Support/Banner/AddBanner";
 import EditBanner from "../Components/Support/Banner/EditBanner";
+import CollectionBanner from "../Pages/Support/CollectionBanner";
+import AddCollectionBanner from "../Components/Support/CollectionBanner/AddCollectionBanner";
+import EditCollectionBanner from "../Components/Support/CollectionBanner/EditCollectionBanner";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SupportRouter = () => (
@@ -25,6 +28,9 @@ const SupportRouter = () => (
         <Route path="/Banner" element={<Banner />} />
         <Route path="/AddBanner" element={<AddBanner />} />
         <Route path="/EditBanner/:id" element={<EditBanner />} />
+        <Route path="/CollectionBanner" element={<CollectionBanner />} />
+        <Route path="/AddCollectionBanner" element={<AddCollectionBanner />} />
+        <Route path="/EditCollectionBanner/:id" element={<EditCollectionBanner />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );

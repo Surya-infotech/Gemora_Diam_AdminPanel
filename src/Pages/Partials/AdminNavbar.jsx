@@ -1,4 +1,4 @@
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+﻿import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -355,6 +355,14 @@ const AdminNavbar = () => {
                                             <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.Banner}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/Support/CollectionBanner" className={navLinkClass('/Support/CollectionBanner')}>
+                                        <NavTooltip title={translations.collectionbanners || "Collection Banners"}>
+                                            <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.collectionbanners || "Collection Banners"}
                                     </NavLink>
                                 </li>
                             </div>
