@@ -25,21 +25,21 @@ const EditCollectionBanner = () => {
     const [tag, setTag] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [buttonText, setButtonText] = useState("SHOP COLLECTION");
-    const [buttonLink, setButtonLink] = useState("/shop");
-    const [position, setPosition] = useState("left");
-    const [order, setOrder] = useState("1");
+    const [buttonText, setButtonText] = useState("");
+    const [buttonLink, setButtonLink] = useState("");
+    const [position, setPosition] = useState("");
+    const [order, setOrder] = useState("");
     const [status, setStatus] = useState(true);
     const [imageFile, setImageFile] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
     const [imagePreview, setImagePreview] = useState(Placeholder);
     const [isLoading, setIsLoading] = useState(false);
 
-    const pageTitle = translations.editcollectionbanner || "Edit Collection Banner";
-
     useEffect(() => {
-        document.title = pageTitle;
-    }, [pageTitle]);
+        if (translations.editcollectionbanner) {
+            document.title = translations.editcollectionbanner;
+        }
+    }, [translations]);
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -62,10 +62,10 @@ const EditCollectionBanner = () => {
                     setTag(result.tag || "");
                     setTitle(result.title || "");
                     setDescription(result.description || "");
-                    setButtonText(result.buttonText || "SHOP COLLECTION");
-                    setButtonLink(result.buttonLink || "/shop");
-                    setPosition(result.position || "left");
-                    setOrder(result.order !== undefined ? String(result.order) : "1");
+                    setButtonText(result.buttonText || "");
+                    setButtonLink(result.buttonLink || "");
+                    setPosition(result.position || "");
+                    setOrder(result.order !== undefined && result.order !== null ? String(result.order) : "");
                     setStatus(result.status === true || result.status === "true" || result.status === 1 || result.status === "1");
                     if (result.image) {
                         setImageUrl(result.image);
@@ -98,13 +98,13 @@ const EditCollectionBanner = () => {
             const allowed = ["jpg", "jpeg", "png", "webp"];
             const ext = file.name.split('.').pop().toLowerCase();
             if (!allowed.includes(ext)) {
-                setWarningMessage(translations.invalidfileextension || "Invalid file extension (Only JPG, JPEG, PNG, WEBP allowed)");
+                setWarningMessage(translations.invalidfileextension);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
             }
             if (file.size > 10 * 1024 * 1024) {
-                setWarningMessage(translations.filesizetoolarge || "File size too large (Maximum 10MB)");
+                setWarningMessage(translations.filesizetoolarge);
                 setShowWarning(true);
                 e.target.value = '';
                 return;
@@ -118,13 +118,13 @@ const EditCollectionBanner = () => {
         e.preventDefault();
 
         if (!title.trim()) {
-            setWarningMessage(translations.allfieldrequired || "Title is required");
+            setWarningMessage(translations.allfieldrequired);
             setShowWarning(true);
             return;
         }
 
         if (!imageFile && !imageUrl.trim()) {
-            setWarningMessage(translations.imageisrequired || "Banner image is required");
+            setWarningMessage(translations.imageisrequired);
             setShowWarning(true);
             return;
         }
@@ -140,9 +140,9 @@ const EditCollectionBanner = () => {
             formData.append("tag", tag.trim());
             formData.append("title", title.trim());
             formData.append("description", description.trim());
-            formData.append("buttonText", buttonText.trim() || "SHOP COLLECTION");
-            formData.append("buttonLink", buttonLink.trim() || "/shop");
-            formData.append("position", position);
+            formData.append("buttonText", buttonText.trim());
+            formData.append("buttonLink", buttonLink.trim());
+            formData.append("position", position || "left");
             formData.append("order", order ? String(order) : "1");
             formData.append("status", status ? "true" : "false");
 
@@ -165,7 +165,7 @@ const EditCollectionBanner = () => {
 
             if (response.ok) {
                 navigate("/Support/CollectionBanner", {
-                    state: { message: translations.updatecollectionbannersuccessfull || "Collection Banner updated successfully" }
+                    state: { message: translations.updatecollectionbannersuccessfull }
                 });
             } else {
                 setWarningMessage(result.message || translations.servererror);
@@ -186,7 +186,7 @@ const EditCollectionBanner = () => {
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className={`AddCollectionBanner-container ${isRtl ? 'rtl-addcollectionbanner' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
                 <div className="Addcollectionbanner-container">
-                    <h6 className="Addcollectionbanner-headingname">{pageTitle}</h6>
+                    <h6 className="Addcollectionbanner-headingname">{translations.editcollectionbanner}</h6>
                     <div className="Addcollectionbanner-form-container">
                         {isLoading ? (
                             <LoadingSpinner />
@@ -196,7 +196,7 @@ const EditCollectionBanner = () => {
                                     <div className="formdiv">
                                         <div className="form-group">
                                             <label htmlFor="tag">
-                                                {translations.collectionbannertag || "Tag / Eyebrow"}
+                                                {translations.collectionbannertag || translations.bannertag}
                                             </label>
                                             <input
                                                 type="text"
@@ -205,13 +205,17 @@ const EditCollectionBanner = () => {
                                                 autoComplete="off"
                                                 placeholder={translations.entercollectionbannertag || "e.g. FEATURED ATELIER"}
                                                 value={tag}
-                                                onChange={(e) => setTag(e.target.value)}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value.length === 1 && value === " ") return;
+                                                    setTag(value);
+                                                }}
                                             />
                                         </div>
 
                                         <div className="form-group">
                                             <label htmlFor="title">
-                                                {translations.title || "Title"} <span style={{ color: "red" }}>*</span>
+                                                {translations.title} <span style={{ color: "red" }}>*</span>
                                             </label>
                                             <input
                                                 type="text"
@@ -221,54 +225,45 @@ const EditCollectionBanner = () => {
                                                 placeholder={translations.entercollectionbannertitle || "e.g. Bracelets Collection"}
                                                 required
                                                 value={title}
-                                                onChange={(e) => setTitle(e.target.value)}
-                                            />
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="description">
-                                                {translations.description || "Description"}
-                                            </label>
-                                            <textarea
-                                                id="description"
-                                                name="description"
-                                                rows="3"
-                                                autoComplete="off"
-                                                placeholder={translations.enterdescription || "Enter collection banner description"}
-                                                value={description}
-                                                onChange={(e) => setDescription(e.target.value)}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value.length === 1 && value === " ") return;
+                                                    setTitle(value);
+                                                }}
                                             />
                                         </div>
                                     </div>
 
                                     <div className="imagediv">
                                         <div className="form-group">
-                                            <label>
-                                                {translations.bannerimage || "Banner Image"} <span style={{ color: "red" }}>*</span>
-                                            </label>
                                             <div className="imgpreview">
-                                                <div className="image-preview-container" onClick={handleUploadClick} title="Click to upload banner image">
+                                                <div className="image-preview-container">
                                                     <img
                                                         src={imagePreview}
                                                         alt="Banner Preview"
                                                         className="image-preview"
-                                                        onError={(e) => { e.target.src = Placeholder; }}
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.src = Placeholder;
+                                                        }}
                                                     />
                                                 </div>
-                                                <input
-                                                    type="file"
-                                                    ref={fileInputRef}
-                                                    accept=".jpg,.jpeg,.png,.webp"
-                                                    style={{ display: "none" }}
-                                                    onChange={handleFileChange}
-                                                />
                                                 <button
                                                     type="button"
-                                                    className="btn btn-outline-primary btn-sm mt-2"
+                                                    className="btn btn-primary upload-btn"
                                                     onClick={handleUploadClick}
                                                 >
-                                                    {translations.uploadimage || "Upload Image"}
+                                                    {translations.upload}
                                                 </button>
+                                                <input
+                                                    type="file"
+                                                    id="bannerimage"
+                                                    name="image"
+                                                    accept="image/*"
+                                                    ref={fileInputRef}
+                                                    onChange={handleFileChange}
+                                                    style={{ display: "none" }}
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -277,31 +272,39 @@ const EditCollectionBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="buttonText">
-                                            {translations.buttontext || "Button Text"}
+                                            {translations.buttontext}
                                         </label>
                                         <input
                                             type="text"
                                             id="buttonText"
                                             name="buttonText"
                                             autoComplete="off"
-                                            placeholder="e.g. SHOP COLLECTION"
+                                            placeholder={translations.enterbuttontext || "e.g. SHOP COLLECTION"}
                                             value={buttonText}
-                                            onChange={(e) => setButtonText(e.target.value)}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                setButtonText(value);
+                                            }}
                                         />
                                     </div>
 
                                     <div className="form-group">
                                         <label htmlFor="buttonLink">
-                                            {translations.buttonlink || "Button Link"}
+                                            {translations.buttonlink}
                                         </label>
                                         <input
                                             type="text"
                                             id="buttonLink"
                                             name="buttonLink"
                                             autoComplete="off"
-                                            placeholder="e.g. /shop?category=Bracelets"
+                                            placeholder={translations.enterbuttonlink || "e.g. /shop"}
                                             value={buttonLink}
-                                            onChange={(e) => setButtonLink(e.target.value)}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                setButtonLink(value);
+                                            }}
                                         />
                                     </div>
                                 </div>
@@ -309,7 +312,7 @@ const EditCollectionBanner = () => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label htmlFor="position">
-                                            {translations.imageposition || "Image Position"}
+                                            {translations.imageposition}
                                         </label>
                                         <select
                                             id="position"
@@ -317,6 +320,7 @@ const EditCollectionBanner = () => {
                                             value={position}
                                             onChange={(e) => setPosition(e.target.value)}
                                         >
+                                            <option value="">{translations.selectimageposition || "Select Image Position"}</option>
                                             <option value="left">{translations.imageleft || "Image Left, Content Right"}</option>
                                             <option value="right">{translations.imageright || "Content Left, Image Right"}</option>
                                         </select>
@@ -324,14 +328,14 @@ const EditCollectionBanner = () => {
 
                                     <div className="form-group">
                                         <label htmlFor="order">
-                                            {translations.displayorder || "Display Order"}
+                                            {translations.displayorder}
                                         </label>
                                         <input
                                             type="number"
                                             id="order"
                                             name="order"
                                             min="1"
-                                            placeholder="1"
+                                            placeholder={translations.enterdisplayorder || "Enter display order number"}
                                             value={order}
                                             onChange={(e) => setOrder(e.target.value)}
                                         />
@@ -340,13 +344,54 @@ const EditCollectionBanner = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="status">{translations.status || "Status"}</label>
+                                        <label htmlFor="imageurl">
+                                            {translations.orimageurl}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="imageurl"
+                                            name="imageurl"
+                                            autoComplete="off"
+                                            placeholder={translations.enterimageurl}
+                                            value={imageUrl}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setImageUrl(value);
+                                                if (!imageFile) {
+                                                    setImagePreview(value.trim() ? value.trim() : Placeholder);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{translations.status}</label>
                                         <div className="switch-container">
                                             <CustomSwitch
                                                 checked={status}
-                                                onChange={(e) => setStatus(e.target.checked)}
+                                                onChange={() => setStatus(!status)}
                                             />
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-row full-width">
+                                    <div className="form-group">
+                                        <label htmlFor="description">
+                                            {translations.bannerdescription || translations.description}
+                                        </label>
+                                        <textarea
+                                            id="description"
+                                            name="description"
+                                            rows="3"
+                                            autoComplete="off"
+                                            placeholder={translations.enterdescription}
+                                            value={description}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                if (value.length === 1 && value === " ") return;
+                                                setDescription(value);
+                                            }}
+                                        />
                                     </div>
                                 </div>
 
@@ -357,14 +402,14 @@ const EditCollectionBanner = () => {
                                         onClick={handleCancel}
                                         disabled={isLoading}
                                     >
-                                        {translations.cancel || "Cancel"}
+                                        {translations.cancel}
                                     </button>
                                     <button
                                         type="submit"
                                         className="btn btn-success submit-btn"
                                         disabled={isLoading}
                                     >
-                                        {translations.save || "Save"}
+                                        {translations.save}
                                     </button>
                                 </div>
                             </form>

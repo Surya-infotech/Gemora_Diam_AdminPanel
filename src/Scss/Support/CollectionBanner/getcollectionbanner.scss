@@ -1,4 +1,4 @@
-﻿@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
+@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
 
 .tablediv {
   @include table_mixin.main_table;
@@ -45,8 +45,8 @@
     }
 
     .banner-thumbnail {
-      width: 70px;
-      height: 48px;
+      width: 60px;
+      height: 40px;
       border-radius: 6px;
       object-fit: cover;
       background-color: #f1f3f5;
@@ -72,6 +72,7 @@
       background: color-mix(in srgb, var(--primary-color) 12%, transparent);
       color: var(--primary-color);
       border: 1px solid color-mix(in srgb, var(--primary-color) 25%, transparent);
+      white-space: nowrap;
     }
 
     .banner-heading-text {
@@ -84,7 +85,7 @@
       color: var(--text-color, #666);
       font-size: 12px;
       line-height: 1.4;
-      max-width: 240px;
+      max-width: 220px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
@@ -103,6 +104,13 @@
       border-radius: 4px;
       background: #f1f5f9;
       color: #475569;
+      white-space: nowrap;
+    }
+
+    .action-cell {
+      white-space: nowrap !important;
+      min-width: 90px;
+      text-align: center;
     }
   }
 }

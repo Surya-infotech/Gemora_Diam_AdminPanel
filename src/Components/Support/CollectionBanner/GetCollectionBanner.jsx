@@ -1,4 +1,4 @@
-﻿import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
+import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
 import EditButton from '../../../Pages/Custom/EditButton';
 import DeleteButton from '../../../Pages/Custom/DeleteButton';
 import CustomSwitch from '../../../Pages/Custom/CustomSwitch';
@@ -69,20 +69,20 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
         const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
         setSortColumn(column);
         setSortDirection(direction);
+        setBanners([...banners].sort((a, b) => {
+            let valA = a[column] ?? "";
+            let valB = b[column] ?? "";
 
-        setBanners((prev) => [...prev].sort((a, b) => {
-            let valA = a[column];
-            let valB = b[column];
-
-            if (valA === undefined || valA === null) valA = "";
-            if (valB === undefined || valB === null) valB = "";
-
-            if (typeof valA === "number" && typeof valB === "number") {
-                return direction === "asc" ? valA - valB : valB - valA;
+            if (column === "status") {
+                valA = a[column] ? 1 : 0;
+                valB = b[column] ? 1 : 0;
+            } else if (column === "order") {
+                valA = Number(valA) || 0;
+                valB = Number(valB) || 0;
+            } else {
+                valA = valA.toString().toLowerCase();
+                valB = valB.toString().toLowerCase();
             }
-
-            valA = valA.toString().toLowerCase();
-            valB = valB.toString().toLowerCase();
 
             if (valA < valB) return direction === "asc" ? -1 : 1;
             if (valA > valB) return direction === "asc" ? 1 : -1;
@@ -113,8 +113,8 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
     const handleEditClick = (id) => navigate(`/Support/EditCollectionBanner/${id}`);
 
     const handleDeleteClick = (item) => {
-        setIsModalOpen(true);
         setSelectedItem(item);
+        setIsModalOpen(true);
     };
 
     const handleStatusChange = async (item) => {
@@ -132,7 +132,7 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
             if (response.ok) {
                 setBanners(banners.map(b => (b._id === item._id || b.bannerid === item.bannerid) ? { ...b, status: updatedStatus } : b));
-                setSuccessMessage(updatedStatus ? (translations.collectionbannerstatusactive || "Collection Banner status updated to Active") : (translations.collectionbannerstatusinactive || "Collection Banner status updated to Inactive"));
+                setSuccessMessage(updatedStatus ? translations.collectionbannerstatusactive : translations.collectionbannerstatusinactive);
             } else {
                 setWarningMessage(data.message || translations.servererror);
                 setShowWarning(true);
@@ -159,7 +159,7 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
             if (response.ok) {
                 setBanners(banners.filter(b => b._id !== targetId && b.bannerid !== targetId));
                 setIsModalOpen(false);
-                setSuccessMessage(translations.deletecollectionbannersuccessfull || "Collection Banner deleted successfully");
+                setSuccessMessage(translations.deletecollectionbannersuccessfull);
             } else {
                 setWarningMessage(result.message || translations.servererror);
                 setShowWarning(true);
@@ -181,72 +181,89 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
                     <table className="collectionbannertable">
                         <thead>
                             <tr>
-                                <th>{translations.bannerimage || "Image"}</th>
+                                <th>{translations.bannerimage}</th>
                                 <th onClick={() => sortItems("tag")}>
-                                    {translations.collectionbannertag || "Tag / Eyebrow"} {renderSortIcon("tag")}
+                                    {translations.bannertag || translations.collectionbannertag} {renderSortIcon("tag")}
                                 </th>
                                 <th onClick={() => sortItems("title")}>
-                                    {translations.title || "Title"} {renderSortIcon("title")}
+                                    {translations.title} {renderSortIcon("title")}
                                 </th>
-                                <th>{translations.description || "Description"}</th>
-                                <th>{translations.position || "Position"}</th>
+                                <th>{translations.bannerdescription || translations.description}</th>
+                                <th>{translations.imageposition || translations.position}</th>
                                 <th onClick={() => sortItems("order")}>
-                                    {translations.displayorder || "Order"} {renderSortIcon("order")}
+                                    {translations.displayorder} {renderSortIcon("order")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status || "Status"} {renderSortIcon("status")}
+                                    {translations.status} {renderSortIcon("status")}
                                 </th>
-                                <th>{translations.action || "Action"}</th>
+                                <th>{translations.action}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {visibleItems.length > 0 ? (
-                                visibleItems.map((item) => (
-                                    <tr key={item._id || item.bannerid}>
-                                        <td>
-                                            <img
-                                                src={item.image}
-                                                alt={item.title}
-                                                className="banner-thumbnail"
-                                                onError={(e) => { e.target.src = Placeholder; }}
-                                            />
-                                        </td>
-                                        <td>
-                                            <span className="banner-tag-badge">
-                                                {item.tag || "ATELIER"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="banner-heading-text">
-                                                {item.title}
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p className="banner-desc-text" title={item.description}>
-                                                {item.description || "-"}
-                                            </p>
-                                        </td>
-                                        <td>
-                                            <span className="position-badge">
-                                                {item.position || "left"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span style={{ fontWeight: 600 }}>{item.order ?? 1}</span>
-                                        </td>
-                                        <td>
-                                            <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} />
-                                        </td>
-                                        <td>
-                                            <EditButton onClick={() => handleEditClick(item._id || item.bannerid)} />
-                                            <DeleteButton onClick={() => handleDeleteClick(item)} />
-                                        </td>
-                                    </tr>
-                                ))
+                                visibleItems.map((item, index) => {
+                                    const bannerKey = item._id || item.bannerid || index;
+                                    return (
+                                        <tr key={bannerKey}>
+                                            <td>
+                                                <img
+                                                    src={item.image || Placeholder}
+                                                    alt={item.title || "Banner"}
+                                                    className="banner-thumbnail"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = Placeholder;
+                                                    }}
+                                                />
+                                            </td>
+                                            <td>
+                                                {item.tag ? (
+                                                    <span className="banner-tag-badge">
+                                                        {item.tag}
+                                                    </span>
+                                                ) : (
+                                                    "-"
+                                                )}
+                                            </td>
+                                            <td>
+                                                <div className="banner-heading-text">
+                                                    {item.title || "-"}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span className="banner-desc-text" title={item.description}>
+                                                    {item.description || "-"}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className="position-badge">
+                                                    {item.position || "left"}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span style={{ fontWeight: 600 }}>
+                                                    {item.order !== undefined && item.order !== null && item.order !== "" ? item.order : "-"}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <CustomSwitch
+                                                    checked={Boolean(item.status)}
+                                                    onChange={() => handleStatusChange(item)}
+                                                />
+                                            </td>
+                                            <td className="action-cell">
+                                                <EditButton onClick={() => handleEditClick(item._id || item.bannerid)} />
+                                                <DeleteButton onClick={() => handleDeleteClick(item)} />
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center", padding: "24px 0" }}>
-                                        {translations.nodatafound || "No data found"}
+                                        {translations.nodatafound}
                                     </td>
                                 </tr>
                             )}
@@ -272,10 +289,10 @@ const GetCollectionBanner = ({ searchValue = "" }) => {
                 <DeleteModal
                     open={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    onDelete={() => DeleteItem(selectedItem._id || selectedItem.bannerid)}
-                    name={`${selectedItem?.title}`}
-                    message={translations.collectionbanner || "Collection Banner"}
-                    headingname={translations.deletecollectionbanner || "Delete Collection Banner"}
+                    onDelete={() => DeleteItem(selectedItem?._id || selectedItem?.bannerid)}
+                    name={`${selectedItem?.title || ""}`}
+                    message={translations.collectionbanner}
+                    headingname={translations.deletecollectionbanner}
                     isLoading={isDeleting}
                 />
             )}
