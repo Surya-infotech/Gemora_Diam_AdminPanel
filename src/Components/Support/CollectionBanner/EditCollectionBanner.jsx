@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import Placeholder from '../../../assets/placeholder.png';
 import { useAuth } from '../../../Middleware/Auth';
@@ -66,7 +66,7 @@ const EditCollectionBanner = () => {
                     setButtonLink(result.buttonLink || "/shop");
                     setPosition(result.position || "left");
                     setOrder(result.order !== undefined ? String(result.order) : "1");
-                    setStatus(Boolean(result.status));
+                    setStatus(result.status === true || result.status === "true" || result.status === 1 || result.status === "1");
                     if (result.image) {
                         setImageUrl(result.image);
                         setImagePreview(result.image);
@@ -144,7 +144,7 @@ const EditCollectionBanner = () => {
             formData.append("buttonLink", buttonLink.trim() || "/shop");
             formData.append("position", position);
             formData.append("order", order ? String(order) : "1");
-            formData.append("status", String(status));
+            formData.append("status", status ? "true" : "false");
 
             if (imageFile) {
                 formData.append("image", imageFile);
