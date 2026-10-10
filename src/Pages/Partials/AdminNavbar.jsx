@@ -1,4 +1,4 @@
-﻿import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
@@ -37,6 +37,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import InfoIcon from '@mui/icons-material/Info';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -363,6 +364,14 @@ const AdminNavbar = () => {
                                             <ViewCarouselIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.collectionbanners || "Collection Banners"}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/Support/AboutUs" className={navLinkClass('/Support/AboutUs')}>
+                                        <NavTooltip title={translations.AboutUs || "About Us"}>
+                                            <InfoIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.AboutUs || "About Us"}
                                     </NavLink>
                                 </li>
                             </div>

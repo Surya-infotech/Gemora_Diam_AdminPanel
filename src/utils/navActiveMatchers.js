@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Path prefixes that should mark a sidebar NavLink active (list + add/edit/detail routes).
  * Keys match AdminNavbar `to` paths.
  */
@@ -23,6 +23,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Support/Policy': ['/Support/Policy', '/Support/AddPolicy', '/Support/EditPolicy'],
     '/Support/Banner': ['/Support/Banner', '/Support/AddBanner', '/Support/EditBanner'],
     '/Support/CollectionBanner': ['/Support/CollectionBanner', '/Support/AddCollectionBanner', '/Support/EditCollectionBanner'],
+    '/Support/AboutUs': ['/Support/AboutUs'],
     '/Support/Subscribers': ['/Support/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
     '/User/Employee': ['/User/Employee', '/User/AddEmployee', '/User/EditEmployee', '/User/EmployeeOverview'],

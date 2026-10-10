@@ -1,4 +1,4 @@
-﻿import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ContactUs from "../Pages/Support/ContactUs";
 import Subscribers from "../Pages/Support/Subscribers";
 import FAQ from "../Pages/Support/FAQ";
@@ -13,6 +13,7 @@ import EditBanner from "../Components/Support/Banner/EditBanner";
 import CollectionBanner from "../Pages/Support/CollectionBanner";
 import AddCollectionBanner from "../Components/Support/CollectionBanner/AddCollectionBanner";
 import EditCollectionBanner from "../Components/Support/CollectionBanner/EditCollectionBanner";
+import AboutUs from "../Pages/Support/AboutUs";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SupportRouter = () => (
@@ -31,6 +32,7 @@ const SupportRouter = () => (
         <Route path="/CollectionBanner" element={<CollectionBanner />} />
         <Route path="/AddCollectionBanner" element={<AddCollectionBanner />} />
         <Route path="/EditCollectionBanner/:id" element={<EditCollectionBanner />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="*" element={<PageNotFound />} />
     </Routes>
 );
