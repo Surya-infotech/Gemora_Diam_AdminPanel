@@ -38,12 +38,18 @@
 
                     input {
                         margin-bottom: 15px !important;
+
+                        &#itemname,
+                        &.has-counter {
+                            margin-bottom: 6px !important;
+                        }
                     }
 
                     textarea {
                         margin-bottom: 6px !important;
                     }
 
+                    .character-counter,
                     .description-counter {
                         text-align: right;
                         font-size: 12px;

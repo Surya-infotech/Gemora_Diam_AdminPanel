@@ -405,6 +405,7 @@
     "itemname": "Item Name",
     "enteritemname": "Enter Item Name",
     "itemnamerequired": "Item Name is required",
+    "itemnamelimitexceeded": "Item Name cannot exceed 120 characters",
     "descriptionrequired": "Description is required",
     "subcategoryrequired": "Please select a Sub Category",
     "shaperequired": "Please select at least one Shape",

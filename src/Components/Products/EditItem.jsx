@@ -24,6 +24,7 @@ const EditItem = () => {
     const [warningMessage, setWarningMessage] = useState("");
     const [showWarning, setShowWarning] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const MAX_ITEM_NAME_LENGTH = 120;
     const MAX_DESCRIPTION_LENGTH = 3500;
 
     const [sku, setSku] = useState("");
@@ -394,6 +395,12 @@ const EditItem = () => {
             return;
         }
 
+        if (itemName.trim().length > MAX_ITEM_NAME_LENGTH) {
+            setWarningMessage(translations.itemnamelimitexceeded || "Item Name cannot exceed 120 characters");
+            setShowWarning(true);
+            return;
+        }
+
         if (!description.trim()) {
             setWarningMessage(translations.descriptionrequired);
             setShowWarning(true);
@@ -584,17 +591,24 @@ const EditItem = () => {
                                                 type="text"
                                                 id="itemname"
                                                 name="itemname"
+                                                className="has-counter"
                                                 autoComplete="off"
                                                 placeholder={translations.enteritemname}
                                                 required
+                                                maxLength={MAX_ITEM_NAME_LENGTH}
                                                 value={itemName}
                                                 onChange={(e) => {
                                                     const value = e.target.value;
                                                     if (value.length === 1 && value === " ") return;
-                                                    setItemName(value);
+                                                    if (value.length <= MAX_ITEM_NAME_LENGTH) {
+                                                        setItemName(value);
+                                                    }
                                                 }}
                                                 onInput={(e) => (e.target.value = e.target.value.replace(/^\s+/, ""))}
                                             />
+                                            <div className={`character-counter ${(itemName || "").length >= MAX_ITEM_NAME_LENGTH ? 'max-reached' : ''}`}>
+                                                {(itemName || "").length}/{MAX_ITEM_NAME_LENGTH}
+                                            </div>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="description">
