@@ -383,6 +383,14 @@ const AdminNavbar = () => {
                                         {translations.AboutUs}
                                     </NavLink>
                                 </li>
+                                <li>
+                                    <NavLink to="/Support/ShapeSection" className={navLinkClass('/Support/ShapeSection')}>
+                                        <NavTooltip title={translations.shapeSection || "Shop By Shape"}>
+                                            <AutoAwesomeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.shapeSection || "Shop By Shape"}
+                                    </NavLink>
+                                </li>
                             </div>
                         </div>
                     </>
