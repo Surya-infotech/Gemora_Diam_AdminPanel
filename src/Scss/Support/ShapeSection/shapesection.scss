@@ -124,11 +124,6 @@
                 }
             }
 
-            .form-row-three {
-                @include form_mixin.form-row-three;
-                margin-bottom: 15px;
-            }
-
             .form-group {
                 label {
                     @include form_mixin.form_label;

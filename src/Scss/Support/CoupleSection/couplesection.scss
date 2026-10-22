@@ -254,11 +254,6 @@
                 }
             }
 
-            .form-row-three {
-                @include form_mixin.form-row-three;
-                margin-bottom: 15px;
-            }
-
             .form-row-four {
                 display: flex;
                 justify-content: space-between;

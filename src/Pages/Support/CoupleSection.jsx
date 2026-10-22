@@ -101,7 +101,6 @@ const CoupleSection = () => {
             names: "",
             location: "",
             ringName: "",
-            proposalDate: "",
             excerpt: "",
             badge: "",
             image: "",
