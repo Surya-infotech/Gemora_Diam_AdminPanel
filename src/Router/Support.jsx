@@ -15,6 +15,7 @@ import AddCollectionBanner from "../Components/Support/CollectionBanner/AddColle
 import EditCollectionBanner from "../Components/Support/CollectionBanner/EditCollectionBanner";
 import AboutUs from "../Pages/Support/AboutUs";
 import ShapeSection from "../Pages/Support/ShapeSection";
+import CoupleSection from "../Pages/Support/CoupleSection";
 import Menu from "../Pages/Support/Menu";
 import AddMenu from "../Components/Support/Menu/AddMenu";
 import EditMenu from "../Components/Support/Menu/EditMenu";
@@ -38,6 +39,7 @@ const SupportRouter = () => (
         <Route path="/EditCollectionBanner/:id" element={<EditCollectionBanner />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/ShapeSection" element={<ShapeSection />} />
+        <Route path="/CoupleSection" element={<CoupleSection />} />
         <Route path="/Menu" element={<Menu />} />
         <Route path="/AddMenu" element={<AddMenu />} />
         <Route path="/EditMenu/:id" element={<EditMenu />} />

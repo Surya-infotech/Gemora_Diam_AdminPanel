@@ -13,6 +13,7 @@ import { usePermissions } from '../../Hooks/usePermissions';
 import { isAdminNavLinkActive } from '../../utils/navActiveMatchers';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -389,6 +390,14 @@ const AdminNavbar = () => {
                                             <AutoAwesomeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
                                         {translations.shapeSection || "Shop By Shape"}
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/Support/CoupleSection" className={navLinkClass('/Support/CoupleSection')}>
+                                        <NavTooltip title={translations.coupleSection || "Loved by Couples"}>
+                                            <FavoriteIcon style={{ color: '#e11d48', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.coupleSection || "Loved by Couples"}
                                     </NavLink>
                                 </li>
                             </div>
