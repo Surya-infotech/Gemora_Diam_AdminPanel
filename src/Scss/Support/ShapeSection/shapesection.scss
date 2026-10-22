@@ -1,5 +1,6 @@
 @use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
 @use "../../Customize/Mixin/page_mixin.scss" as mixin;
+@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
 @use "../../Customize/var.scss" as var;
 
 .ShapeSection-container {
@@ -23,23 +24,38 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 24px;
+                margin-bottom: 25px;
                 padding-bottom: 16px;
-                border-bottom: 1px solid #edf0f2;
+                border-bottom: 1px solid var(--border-color, #e5e7eb);
                 flex-wrap: wrap;
-                gap: 12px;
+                gap: 15px;
 
                 .section-toggle-wrap {
                     display: flex;
                     align-items: center;
-                    gap: 10px;
+                    gap: 12px;
 
-                    label {
-                        font-size: 14px;
+                    .toggle-label {
                         font-weight: 600;
-                        color: #1f2937;
-                        margin: 0;
-                        cursor: pointer;
+                        font-size: 14px;
+                        color: var(--text-color, #1f2937);
+                    }
+
+                    .status-badge {
+                        font-size: 13px;
+                        font-weight: 600;
+                        padding: 3px 10px;
+                        border-radius: var(--radius-sm);
+
+                        &.active {
+                            color: var(--primary-color, #028802);
+                            background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+                        }
+
+                        &.inactive {
+                            color: #dc2626;
+                            background-color: rgba(220, 38, 38, 0.1);
+                        }
                     }
                 }
 
@@ -49,137 +65,135 @@
                 }
             }
 
-            .form-section-card {
-                background: #ffffff;
-                border: 1px solid #eef0f2;
-                border-radius: 12px;
-                padding: 24px;
-                margin-bottom: 24px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            .form-section-divider {
+                margin: 25px 0 15px 0;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border-color, #e5e7eb);
 
-                .form-section-header {
+                &:first-of-type {
+                    margin-top: 5px;
+                }
+
+                .form-section-title-wrap {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 20px;
-                    padding-bottom: 12px;
-                    border-bottom: 1px solid #f0f2f5;
-
-                    .section-title {
-                        font-size: 16px;
-                        font-weight: 700;
-                        color: var(--primary-color, #1a1a1a);
-                        margin: 0;
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                    }
-
-                    .section-subtitle {
-                        font-size: 12px;
-                        color: #6b7280;
-                        margin-top: 4px;
-                    }
+                    flex-wrap: wrap;
+                    gap: 10px;
                 }
 
-                .form-grid-2 {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                    gap: 18px;
-                }
-
-                .form-grid-3 {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-                    gap: 16px;
-                }
-
-                .form-group {
+                .form-section-title {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: var(--primary-color, #028802);
+                    margin: 0;
                     display: flex;
-                    flex-direction: column;
-                    gap: 6px;
-                    margin-bottom: 16px;
-
-                    label {
-                        font-size: 13px;
-                        font-weight: 600;
-                        color: #374151;
-                        margin: 0;
-                    }
-
-                    input, select, textarea {
-                        width: 100%;
-                        padding: 9px 12px;
-                        border: 1px solid #d1d5db;
-                        border-radius: 8px;
-                        font-size: 13px;
-                        color: #111827;
-                        background: #ffffff;
-                        transition: all 0.2s ease;
-
-                        &:focus {
-                            border-color: var(--primary-color, #1a1a1a);
-                            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06);
-                            outline: none;
-                        }
-                    }
-
-                    textarea {
-                        min-height: 80px;
-                        resize: vertical;
-                    }
+                    align-items: center;
+                    gap: 8px;
                 }
 
-                .step-card-box {
-                    background: #fbfbfb;
-                    border: 1px solid #e9ecef;
-                    border-radius: 10px;
-                    padding: 16px;
-                    margin-bottom: 12px;
+                .form-section-subtitle {
+                    font-size: 12px;
+                    color: var(--muted-text, #6b7280);
+                    margin-top: 4px;
+                    font-weight: 400;
+                    display: block;
+                }
 
-                    .step-number-tag {
-                        font-weight: 700;
-                        font-size: 12px;
-                        color: var(--primary-color, #1a1a1a);
-                        background: #eef2f5;
-                        padding: 3px 8px;
-                        border-radius: 4px;
-                        display: inline-block;
-                        margin-bottom: 10px;
+                .add-new-btn {
+                    @include mixin.add_new_btn;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 14px !important;
+                    padding: 8px 16px !important;
+                }
+            }
+
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
                     }
                 }
             }
 
-            .shapes-table-wrap {
-                overflow-x: auto;
-                background: #ffffff;
-                border-radius: 10px;
-                border: 1px solid #edf0f2;
+            .form-row-three {
+                @include form_mixin.form-row-three;
+                margin-bottom: 15px;
+            }
 
-                table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-size: 13px;
+            .form-group {
+                label {
+                    @include form_mixin.form_label;
+                }
 
-                    th {
-                        background: #f8fafc;
-                        color: #4b5563;
-                        font-weight: 600;
-                        text-align: left;
-                        padding: 12px 14px;
-                        border-bottom: 1px solid #e2e8f0;
-                        white-space: nowrap;
+                input:not([type="radio"]):not([type="checkbox"]),
+                select,
+                textarea {
+                    @include form_mixin.form_input;
+                    width: 100% !important;
+                }
+
+                textarea {
+                    min-height: 85px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                }
+            }
+
+            .steps-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 16px;
+                margin-top: 15px;
+                margin-bottom: 20px;
+
+                .step-card-box {
+                    background: var(--page-color, #ffffff);
+                    border: 1px solid var(--border-color, #e2e8f0);
+                    border-radius: var(--radius-md);
+                    padding: 18px;
+                    box-shadow: var(--shadow-sm);
+
+                    .step-number-tag {
+                        font-weight: 700;
+                        font-size: 12px;
+                        color: var(--primary-color, #028802);
+                        background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+                        padding: 3px 10px;
+                        border-radius: var(--radius-sm);
+                        display: inline-block;
+                        margin-bottom: 12px;
+                    }
+                }
+            }
+
+            .table-wrapper {
+                @include table_mixin.main_table;
+                margin-top: 15px;
+                margin-bottom: 25px;
+
+                .table {
+                    @include table_mixin.table;
+
+                    thead th {
+                        @include table_mixin.table_thead;
                     }
 
-                    td {
-                        padding: 12px 14px;
-                        border-bottom: 1px solid #edf2f7;
-                        color: #1f2937;
-                        vertical-align: middle;
+                    tbody td {
+                        @include table_mixin.table_td;
                     }
 
-                    tr:hover {
-                        background: #fcfdfe;
+                    tbody tr {
+                        @include table_mixin.table_tr;
                     }
                 }
 
@@ -190,7 +204,7 @@
                     border-radius: 6px;
                     background: #f8fafc;
                     padding: 2px;
-                    border: 1px solid #e2e8f0;
+                    border: 1px solid var(--border-color);
                 }
 
                 .showcase-thumb {
@@ -198,40 +212,28 @@
                     height: 48px;
                     object-fit: cover;
                     border-radius: 6px;
-                    border: 1px solid #e2e8f0;
+                    border: 1px solid var(--border-color);
                 }
             }
 
-            .save-btn-container {
-                display: flex;
-                justify-content: flex-end;
-                margin-top: 24px;
-                gap: 12px;
+            .button-group {
+                @include form_mixin.btn_group;
 
-                .btn-save {
-                    background: var(--primary-color, #1a1a1a);
-                    color: #ffffff;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 12px 28px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-
-                    &:hover:not(:disabled) {
-                        opacity: 0.9;
-                        transform: translateY(-1px);
-                    }
-
-                    &:disabled {
-                        opacity: 0.6;
-                        cursor: not-allowed;
-                    }
+                button {
+                    @include form_mixin.btn;
                 }
+            }
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
             }
         }
     }
@@ -240,66 +242,140 @@
 .modal-backdrop-custom {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     z-index: 1050;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
-}
 
-.shape-modal-card {
-    background: #ffffff;
-    border-radius: 14px;
-    width: 100%;
-    max-width: 680px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
-    display: flex;
-    flex-direction: column;
-
-    .modal-header-custom {
+    .shape-modal-card {
+        background: #ffffff;
+        border-radius: var(--radius-lg, 14px);
+        width: 100%;
+        max-width: 720px;
+        max-height: 90vh;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 18px 24px;
-        border-bottom: 1px solid #eef0f2;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
 
-        h5 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111827;
-            margin: 0;
-        }
+        .modal-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color, #e5e7eb);
 
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 4px;
+            h5 {
+                margin: 0;
+                font-size: 17px;
+                font-weight: 600;
+                color: var(--primary-color, #028802);
+            }
 
-            &:hover {
-                color: #111827;
+            .close-btn {
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: #6b7280;
+                cursor: pointer;
+                line-height: 1;
+
+                &:hover {
+                    color: #111827;
+                }
             }
         }
-    }
 
-    .modal-body-custom {
-        padding: 24px;
-        flex: 1;
-    }
+        .modal-body-custom {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
 
-    .modal-footer-custom {
-        padding: 16px 24px;
-        border-top: 1px solid #eef0f2;
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        background: #fafafa;
-        border-radius: 0 0 14px 14px;
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .form-group {
+                label {
+                    @include form_mixin.form_label;
+                }
+
+                input:not([type="radio"]):not([type="checkbox"]),
+                select,
+                textarea {
+                    @include form_mixin.form_input;
+                    width: 100% !important;
+                }
+
+                textarea {
+                    min-height: 80px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                }
+            }
+
+            .upload-input-wrap {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                input {
+                    margin-bottom: 0 !important;
+                }
+
+                .upload-btn {
+                    background-color: #007bff;
+                    color: #fff;
+                    padding: 9px 14px;
+                    border: none;
+                    border-radius: var(--radius-sm);
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    font-size: 13px;
+                    white-space: nowrap;
+
+                    &:hover {
+                        background-color: #0056b3;
+                    }
+                }
+            }
+
+            .preview-thumb-box {
+                margin-top: 8px;
+            }
+        }
+
+        .modal-footer-custom {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color, #e5e7eb);
+            background: #fbfbfb;
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
+            }
+        }
     }
 }

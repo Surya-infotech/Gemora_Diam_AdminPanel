@@ -1,5 +1,6 @@
 @use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
 @use "../../Customize/Mixin/page_mixin.scss" as mixin;
+@use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
 @use "../../Customize/var.scss" as var;
 
 .CoupleSection-container {
@@ -23,11 +24,11 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 24px;
+                margin-bottom: 25px;
                 padding-bottom: 16px;
-                border-bottom: 1px solid #edf0f2;
+                border-bottom: 1px solid var(--border-color, #e5e7eb);
                 flex-wrap: wrap;
-                gap: 12px;
+                gap: 15px;
 
                 .section-toggle-wrap {
                     display: flex;
@@ -37,82 +38,142 @@
                     .toggle-label {
                         font-weight: 600;
                         font-size: 14px;
-                        color: #2b3674;
+                        color: var(--text-color, #1f2937);
                     }
+
+                    .status-badge {
+                        font-size: 13px;
+                        font-weight: 600;
+                        padding: 3px 10px;
+                        border-radius: var(--radius-sm);
+
+                        &.active {
+                            color: var(--primary-color, #028802);
+                            background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+                        }
+
+                        &.inactive {
+                            color: #dc2626;
+                            background-color: rgba(220, 38, 38, 0.1);
+                        }
+                    }
+                }
+
+                .top-action-btns {
+                    display: flex;
+                    gap: 10px;
                 }
             }
 
-            .settings-card {
-                background: #ffffff;
-                border-radius: 14px;
-                padding: 24px;
-                border: 1px solid #e9ecef;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-                margin-bottom: 24px;
+            .form-section-divider {
+                margin: 25px 0 15px 0;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border-color, #e5e7eb);
 
-                .card-title {
-                    font-size: 16px;
-                    font-weight: 700;
-                    color: #2b3674;
-                    margin-bottom: 18px;
+                &:first-of-type {
+                    margin-top: 5px;
+                }
+
+                .form-section-title {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: var(--primary-color, #028802);
+                    margin: 0;
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
-                    border-bottom: 1px solid #f1f3f5;
-                    padding-bottom: 10px;
+                    gap: 8px;
+                }
+
+                .form-section-subtitle {
+                    font-size: 12px;
+                    color: var(--muted-text, #6b7280);
+                    margin-top: 4px;
+                    font-weight: 400;
+                    display: block;
                 }
             }
 
             .tab-buttons {
                 display: flex;
-                gap: 12px;
+                gap: 10px;
+                margin-top: 25px;
                 margin-bottom: 20px;
-                border-bottom: 2px solid #eef2f6;
-                padding-bottom: 2px;
+                border-bottom: 1px solid var(--border-color, #e5e7eb);
+                padding-bottom: 0;
 
                 .tab-btn {
                     background: none;
                     border: none;
                     outline: none;
                     padding: 10px 18px;
-                    font-size: 15px;
+                    font-size: 14px;
                     font-weight: 600;
-                    color: #718096;
+                    color: var(--muted-text, #6b7280);
                     cursor: pointer;
                     position: relative;
                     transition: all 0.2s ease;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
 
                     &:hover {
-                        color: var(--primary-color, #0f172a);
+                        color: var(--primary-color);
                     }
 
                     &.active {
-                        color: var(--primary-color, #0f172a);
+                        color: var(--primary-color);
+                        font-weight: 700;
 
                         &::after {
                             content: "";
                             position: absolute;
-                            bottom: -2px;
+                            bottom: -1px;
                             left: 0;
                             right: 0;
                             height: 3px;
-                            background-color: var(--primary-color, #0f172a);
+                            background-color: var(--primary-color);
                             border-radius: 3px 3px 0 0;
                         }
                     }
                 }
             }
 
+            .tab-header-action {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+                flex-wrap: wrap;
+                gap: 12px;
+
+                .tab-desc {
+                    font-size: 13px;
+                    color: var(--muted-text, #6b7280);
+                    margin: 0;
+                }
+
+                .add-new-btn {
+                    @include mixin.add_new_btn;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 14px !important;
+                    padding: 8px 16px !important;
+                }
+            }
+
             .item-card {
-                background: #fafbfc;
-                border: 1px solid #e2e8f0;
-                border-radius: 12px;
+                background: var(--page-color, #ffffff);
+                border: 1px solid var(--border-color, #e2e8f0);
+                border-radius: var(--radius-md, 12px);
                 padding: 20px;
-                margin-bottom: 18px;
-                transition: border-color 0.2s ease;
+                margin-bottom: 20px;
+                box-shadow: var(--shadow-sm);
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
                 &:hover {
-                    border-color: #cbd5e1;
+                    border-color: color-mix(in srgb, var(--primary-color) 40%, var(--border-color));
+                    box-shadow: var(--shadow-md);
                 }
 
                 .item-header {
@@ -120,58 +181,149 @@
                     justify-content: space-between;
                     align-items: center;
                     margin-bottom: 16px;
-                    border-bottom: 1px dashed #e2e8f0;
+                    border-bottom: 1px solid var(--border-color, #e2e8f0);
                     padding-bottom: 10px;
 
                     .item-title {
                         font-size: 15px;
-                        font-weight: 700;
-                        color: #1e293b;
+                        font-weight: 600;
+                        color: var(--text-color, #1e293b);
                     }
 
                     .item-actions {
                         display: flex;
                         align-items: center;
-                        gap: 10px;
+                        gap: 12px;
                     }
                 }
             }
 
-            .image-upload-box {
+            .image-upload-row {
                 display: flex;
                 align-items: center;
-                gap: 16px;
+                gap: 15px;
                 margin-top: 6px;
+                flex-wrap: wrap;
 
                 .img-preview {
                     width: 72px;
                     height: 54px;
-                    border-radius: 8px;
+                    border-radius: var(--radius-sm);
                     object-fit: cover;
-                    border: 1px solid #e2e8f0;
-                    background: #f1f5f9;
+                    border: 1px solid var(--border-color);
+                    background: #f8fafc;
                 }
 
-                .upload-btn-label {
+                .img-url-input {
+                    flex: 1;
+                    min-width: 200px;
+                    margin-bottom: 0 !important;
+                }
+
+                .upload-btn {
+                    background-color: #007bff;
+                    color: #fff;
+                    padding: 9px 16px;
+                    border: none;
+                    border-radius: var(--radius-sm);
+                    cursor: pointer;
                     display: inline-flex;
                     align-items: center;
                     gap: 6px;
-                    padding: 7px 14px;
-                    border-radius: 8px;
-                    border: 1px dashed #94a3b8;
-                    background: #f8fafc;
-                    cursor: pointer;
                     font-size: 13px;
-                    color: #475569;
                     font-weight: 500;
-                    transition: all 0.2s ease;
+                    margin-top: 0;
 
                     &:hover {
-                        border-color: var(--primary-color, #0f172a);
-                        color: var(--primary-color, #0f172a);
-                        background: #f1f5f9;
+                        background-color: #0056b3;
                     }
                 }
+            }
+
+            .form-row {
+                @include form_mixin.form_row;
+                margin-bottom: 15px;
+
+                &.full-width {
+                    display: block;
+                    width: 100%;
+
+                    .form-group {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .form-row-three {
+                @include form_mixin.form-row-three;
+                margin-bottom: 15px;
+            }
+
+            .form-row-four {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                gap: 15px;
+                margin-bottom: 15px;
+
+                .form-group {
+                    flex: 1;
+                    min-width: 0;
+                    margin: 0;
+
+                    input, select {
+                        width: 100%;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    flex-direction: column;
+                    gap: 0;
+
+                    .form-group {
+                        width: 100% !important;
+                    }
+                }
+            }
+
+            .form-group {
+                label {
+                    @include form_mixin.form_label;
+                }
+
+                input:not([type="radio"]):not([type="checkbox"]),
+                select,
+                textarea {
+                    @include form_mixin.form_input;
+                    width: 100% !important;
+                }
+
+                textarea {
+                    min-height: 85px;
+                    resize: vertical;
+                    font-family: inherit;
+                    line-height: 1.5;
+                }
+            }
+
+            .button-group {
+                @include form_mixin.btn_group;
+
+                button {
+                    @include form_mixin.btn;
+                }
+            }
+
+            .submit-btn {
+                @include form_mixin.save_btn;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+
+            .cancelbtn {
+                @include form_mixin.cancel_btn;
             }
         }
     }

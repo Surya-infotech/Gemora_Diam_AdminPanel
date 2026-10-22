@@ -4,13 +4,13 @@ import { useAuth } from '../../Middleware/Auth';
 import LoadingSpinner from '../Custom/LoadingSpinner';
 import WarningModal from '../Custom/WarningModal';
 import AlertMessage from '../Custom/AlertMessage';
+import CustomSwitch from '../Custom/CustomSwitch';
+import EditButton from '../Custom/EditButton';
+import DeleteButton from '../Custom/DeleteButton';
 import "../../Scss/Support/ShapeSection/shapesection.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -83,8 +83,8 @@ const ShapeSection = () => {
     const showcaseInputRef = useRef(null);
 
     useEffect(() => {
-        document.title = "Shop By Shape Section | Gemora Diam Admin";
-    }, []);
+        document.title = `${translations.shapeSection || "Shop By Shape"} | Gemora Diam`;
+    }, [translations]);
 
     const fetchSectionData = async () => {
         setIsLoading(true);
@@ -149,37 +149,37 @@ const ShapeSection = () => {
     // Save all changes
     const handleSave = async (e) => {
         if (e) e.preventDefault();
-        if (!CheckToken(token, logoutUser, navigate)) return;
-
-        setIsSaving(true);
         setAlertMessage("");
         setWarningMessage("");
 
-        const payload = {
-            headerEyebrow,
-            headerTitle,
-            headerDescription,
-            designEyebrow,
-            designTitle,
-            designDescription,
-            primaryBtnText,
-            primaryBtnLink,
-            secondaryBtnText,
-            secondaryBtnLink,
-            step1Num,
-            step1Title,
-            step1Desc,
-            step2Num,
-            step2Title,
-            step2Desc,
-            step3Num,
-            step3Title,
-            step3Desc,
-            shapes,
-            status: sectionStatus
-        };
+        if (!CheckToken(token, logoutUser, navigate)) return;
 
+        setIsSaving(true);
         try {
+            const payload = {
+                status: sectionStatus,
+                headerEyebrow,
+                headerTitle,
+                headerDescription,
+                designEyebrow,
+                designTitle,
+                designDescription,
+                primaryBtnText,
+                primaryBtnLink,
+                secondaryBtnText,
+                secondaryBtnLink,
+                step1Num,
+                step1Title,
+                step1Desc,
+                step2Num,
+                step2Title,
+                step2Desc,
+                step3Num,
+                step3Title,
+                step3Desc,
+                shapes
+            };
+
             const res = await fetch(`${adminPanelBackendPath}/Support/UpdateShapeSection`, {
                 method: "PUT",
                 headers: {
@@ -193,31 +193,32 @@ const ShapeSection = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (res.ok) {
-                setAlertMessage("Shop by shape section updated successfully!");
-                if (result.shapeSection?.shapes) {
-                    setShapes(result.shapeSection.shapes);
-                }
+                setAlertMessage("Shop By Shape section updated successfully!");
             } else {
-                setWarningMessage(result.message || "Failed to update shape section.");
+                setWarningMessage(result.message || "Failed to update section.");
             }
-        } catch (err) {
-            console.error("Error updating shape section:", err);
-            setWarningMessage("Network error saving shape section.");
+        } catch (error) {
+            console.error("Save error:", error);
+            setWarningMessage("An unexpected error occurred while saving.");
         } finally {
             setIsSaving(false);
         }
     };
 
-    // Open Modal for Add
+    const handleCancel = () => {
+        navigate('/Home/Dashboard');
+    };
+
+    // Modal Openers
     const handleOpenAddModal = () => {
         setEditingIndex(null);
         setCurrentShape({
-            shapeid: "",
+            shapeid: `shape-${Date.now()}`,
             name: "",
             tagline: "",
             description: "",
             bestFor: "",
-            brilliance: "",
+            brilliance: "Very High",
             shapeIcon: "",
             showcaseImage: "",
             showcaseTitle: "",
@@ -228,70 +229,66 @@ const ShapeSection = () => {
         setIsModalOpen(true);
     };
 
-    // Open Modal for Edit
-    const handleOpenEditModal = (idx) => {
-        setEditingIndex(idx);
-        setCurrentShape({ ...shapes[idx] });
+    const handleOpenEditModal = (index) => {
+        setEditingIndex(index);
+        setCurrentShape({ ...shapes[index] });
         setIsModalOpen(true);
     };
 
-    // Close Modal
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setEditingIndex(null);
     };
 
-    // Save Shape from Modal
     const handleSaveShapeModal = (e) => {
         e.preventDefault();
         if (!currentShape.name.trim()) {
-            alert("Shape name is required!");
+            alert("Shape name is required");
             return;
         }
 
-        const normalizedShape = {
+        const shapeToSave = {
             ...currentShape,
-            shapeid: currentShape.shapeid.trim() || currentShape.name.toLowerCase().replace(/\s+/g, '-'),
-            name: currentShape.name.trim(),
-            order: Number(currentShape.order) || 1
+            shapeid: currentShape.shapeid || currentShape.name.toLowerCase().replace(/[^a-z0-9]/g, "-"),
+            order: parseInt(currentShape.order) || 1
         };
 
         if (editingIndex !== null) {
-            // Update existing
             const updated = [...shapes];
-            updated[editingIndex] = normalizedShape;
+            updated[editingIndex] = shapeToSave;
             setShapes(updated);
         } else {
-            // Add new
-            setShapes([...shapes, normalizedShape]);
+            setShapes([...shapes, shapeToSave]);
         }
+
         setIsModalOpen(false);
     };
 
-    // Delete Shape
-    const handleDeleteShape = (idx) => {
-        if (window.confirm(`Are you sure you want to remove "${shapes[idx]?.name}" shape?`)) {
-            setShapes(shapes.filter((_, i) => i !== idx));
+    const handleDeleteShape = (index) => {
+        if (window.confirm(`Are you sure you want to delete "${shapes[index]?.name}"?`)) {
+            const updated = shapes.filter((_, idx) => idx !== index);
+            setShapes(updated);
         }
     };
 
-    // Toggle Shape Status
-    const handleToggleShapeStatus = (idx) => {
+    const handleToggleShapeStatus = (index) => {
         const updated = [...shapes];
-        updated[idx] = { ...updated[idx], status: !updated[idx].status };
+        updated[index] = {
+            ...updated[index],
+            status: updated[index].status === false ? true : false
+        };
         setShapes(updated);
     };
 
-    // Upload asset
     const handleUploadAsset = async (file, type) => {
         if (!file) return;
         const formData = new FormData();
         formData.append("image", file);
 
-        if (type === 'icon') setIsUploadingIcon(true);
-        if (type === 'showcase') setIsUploadingShowcase(true);
-
         try {
+            if (type === 'icon') setIsUploadingIcon(true);
+            if (type === 'showcase') setIsUploadingShowcase(true);
+
             const res = await fetch(`${adminPanelBackendPath}/Support/UploadShapeAsset`, {
                 method: "POST",
                 headers: {
@@ -326,8 +323,7 @@ const ShapeSection = () => {
         <div className={`ShapeSection-container ${isRtl ? 'rtl-shapesection' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="shapesection-container">
                 <h6 className="shapesection-headingname">
-                    <AutoAwesomeIcon style={{ marginRight: '8px', verticalAlign: 'middle', color: 'var(--primary-color)' }} />
-                    {translations.shapeSection || "Shop By Shape Section"}
+                    {translations.shapeSection || "Shop By Shape"}
                 </h6>
 
                 <div className="shapesection-form-container">
@@ -338,290 +334,301 @@ const ShapeSection = () => {
                         {/* Top bar controls */}
                         <div className="top-actions-bar">
                             <div className="section-toggle-wrap">
-                                <input
-                                    type="checkbox"
-                                    id="sectionStatusToggle"
+                                <span className="toggle-label">{translations.status || "Section Visibility"}:</span>
+                                <CustomSwitch
                                     checked={sectionStatus}
-                                    onChange={(e) => setSectionStatus(e.target.checked)}
-                                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                                    onChange={() => setSectionStatus(!sectionStatus)}
                                 />
-                                <label htmlFor="sectionStatusToggle">
-                                    Section Visible on Website Homepage ({sectionStatus ? "Active" : "Disabled"})
-                                </label>
+                                <span className={`status-badge ${sectionStatus ? 'active' : 'inactive'}`}>
+                                    {sectionStatus ? (translations.active || "Active on Website") : (translations.inactive || "Disabled")}
+                                </span>
                             </div>
                             <div className="top-action-btns">
-                                <button type="submit" className="btn-save" disabled={isSaving}>
+                                <button type="submit" className="btn btn-success submit-btn" disabled={isSaving}>
                                     <SaveIcon fontSize="small" />
-                                    {isSaving ? "Saving..." : "Save All Changes"}
+                                    {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
                                 </button>
                             </div>
                         </div>
 
-                        {/* Card 1: Section Header Texts */}
-                        <div className="form-section-card">
-                            <div className="form-section-header">
-                                <div>
-                                    <h5 className="section-title">1. Section Header & Intro</h5>
-                                    <p className="section-subtitle">Controls the main headline and subtitle shown at the top of the section.</p>
-                                </div>
+                        {/* Section 1: Section Header Texts */}
+                        <div className="form-section-divider">
+                            <h6 className="form-section-title">1. Section Header & Intro</h6>
+                            <span className="form-section-subtitle">Controls the main headline and subtitle shown at the top of the section.</span>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Eyebrow Tag</label>
+                                <input
+                                    type="text"
+                                    value={headerEyebrow}
+                                    onChange={(e) => setHeaderEyebrow(e.target.value)}
+                                    placeholder="e.g. CURATED SILHOUETTES"
+                                />
                             </div>
-                            <div className="form-grid-2">
-                                <div className="form-group">
-                                    <label>Eyebrow Tag</label>
-                                    <input
-                                        type="text"
-                                        value={headerEyebrow}
-                                        onChange={(e) => setHeaderEyebrow(e.target.value)}
-                                        placeholder=""
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Headline Title</label>
-                                    <input
-                                        type="text"
-                                        value={headerTitle}
-                                        onChange={(e) => setHeaderTitle(e.target.value)}
-                                        placeholder=""
-                                    />
-                                </div>
+                            <div className="form-group">
+                                <label>Headline Title</label>
+                                <input
+                                    type="text"
+                                    value={headerTitle}
+                                    onChange={(e) => setHeaderTitle(e.target.value)}
+                                    placeholder="e.g. Shop By Shape"
+                                />
                             </div>
+                        </div>
+
+                        <div className="form-row full-width">
                             <div className="form-group">
                                 <label>Subtitle Description</label>
                                 <textarea
                                     value={headerDescription}
                                     onChange={(e) => setHeaderDescription(e.target.value)}
-                                    placeholder=""
+                                    placeholder="e.g. Every diamond cut tells a unique story. Discover our masterfully cut shapes..."
                                 />
                             </div>
                         </div>
 
-                        {/* Card 2: "Design Your Ring" Left Box Content */}
-                        <div className="form-section-card">
-                            <div className="form-section-header">
-                                <div>
-                                    <h5 className="section-title">2. "Design Your Ring" Feature Box (Left Column)</h5>
-                                    <p className="section-subtitle">Configure the promotional card, buttons, and 3 workflow steps.</p>
-                                </div>
+                        {/* Section 2: "Design Your Ring" Feature Box */}
+                        <div className="form-section-divider">
+                            <h6 className="form-section-title">2. "Design Your Ring" Feature Box (Left Column)</h6>
+                            <span className="form-section-subtitle">Configure the promotional card, buttons, and 3 workflow steps.</span>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Box Eyebrow</label>
+                                <input
+                                    type="text"
+                                    value={designEyebrow}
+                                    onChange={(e) => setDesignEyebrow(e.target.value)}
+                                    placeholder="e.g. BESPOKE ATELIER"
+                                />
                             </div>
-                            <div className="form-grid-2">
-                                <div className="form-group">
-                                    <label>Box Eyebrow</label>
-                                    <input
-                                        type="text"
-                                        value={designEyebrow}
-                                        onChange={(e) => setDesignEyebrow(e.target.value)}
-                                        placeholder=""
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Box Title</label>
-                                    <input
-                                        type="text"
-                                        value={designTitle}
-                                        onChange={(e) => setDesignTitle(e.target.value)}
-                                        placeholder=""
-                                    />
-                                </div>
+                            <div className="form-group">
+                                <label>Box Title</label>
+                                <input
+                                    type="text"
+                                    value={designTitle}
+                                    onChange={(e) => setDesignTitle(e.target.value)}
+                                    placeholder="e.g. Design Your Ring"
+                                />
                             </div>
+                        </div>
+
+                        <div className="form-row full-width">
                             <div className="form-group">
                                 <label>Box Description</label>
                                 <textarea
                                     value={designDescription}
                                     onChange={(e) => setDesignDescription(e.target.value)}
-                                    placeholder=""
+                                    placeholder="Bring your dream ring to life in three intuitive steps..."
                                 />
                             </div>
+                        </div>
 
-                            <div className="form-grid-2">
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Primary Button Label</label>
+                                <input
+                                    type="text"
+                                    value={primaryBtnText}
+                                    onChange={(e) => setPrimaryBtnText(e.target.value)}
+                                    placeholder="e.g. Start with a Diamond"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Primary Button Link</label>
+                                <input
+                                    type="text"
+                                    value={primaryBtnLink}
+                                    onChange={(e) => setPrimaryBtnLink(e.target.value)}
+                                    placeholder="e.g. /custom/diamonds"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label>Secondary Button Label</label>
+                                <input
+                                    type="text"
+                                    value={secondaryBtnText}
+                                    onChange={(e) => setSecondaryBtnText(e.target.value)}
+                                    placeholder="e.g. Start with a Setting"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Secondary Button Link</label>
+                                <input
+                                    type="text"
+                                    value={secondaryBtnLink}
+                                    onChange={(e) => setSecondaryBtnLink(e.target.value)}
+                                    placeholder="e.g. /custom/settings"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Workflow Steps */}
+                        <div className="form-section-divider">
+                            <h6 className="form-section-title">Workflow Steps (Cards 01, 02, 03)</h6>
+                        </div>
+
+                        <div className="steps-grid">
+                            <div className="step-card-box">
+                                <span className="step-number-tag">Step 1</span>
                                 <div className="form-group">
-                                    <label>Primary Button Label</label>
-                                    <input
-                                        type="text"
-                                        value={primaryBtnText}
-                                        onChange={(e) => setPrimaryBtnText(e.target.value)}
-                                        placeholder=""
-                                    />
+                                    <label>Number Label</label>
+                                    <input type="text" value={step1Num} onChange={(e) => setStep1Num(e.target.value)} placeholder="01" />
                                 </div>
                                 <div className="form-group">
-                                    <label>Primary Button Link</label>
-                                    <input
-                                        type="text"
-                                        value={primaryBtnLink}
-                                        onChange={(e) => setPrimaryBtnLink(e.target.value)}
-                                        placeholder=""
-                                    />
+                                    <label>Step Title</label>
+                                    <input type="text" value={step1Title} onChange={(e) => setStep1Title(e.target.value)} placeholder="Choose Diamond" />
                                 </div>
                                 <div className="form-group">
-                                    <label>Secondary Button Label</label>
-                                    <input
-                                        type="text"
-                                        value={secondaryBtnText}
-                                        onChange={(e) => setSecondaryBtnText(e.target.value)}
-                                        placeholder=""
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Secondary Button Link</label>
-                                    <input
-                                        type="text"
-                                        value={secondaryBtnLink}
-                                        onChange={(e) => setSecondaryBtnLink(e.target.value)}
-                                        placeholder=""
-                                    />
+                                    <label>Step Summary</label>
+                                    <textarea value={step1Desc} onChange={(e) => setStep1Desc(e.target.value)} placeholder="Filter certified diamonds..." />
                                 </div>
                             </div>
 
-                            <div className="form-section-header" style={{ marginTop: '20px' }}>
-                                <h6 style={{ margin: 0, fontSize: '14px', fontWeight: 600 }}>Workflow Steps (Cards 01, 02, 03)</h6>
+                            <div className="step-card-box">
+                                <span className="step-number-tag">Step 2</span>
+                                <div className="form-group">
+                                    <label>Number Label</label>
+                                    <input type="text" value={step2Num} onChange={(e) => setStep2Num(e.target.value)} placeholder="02" />
+                                </div>
+                                <div className="form-group">
+                                    <label>Step Title</label>
+                                    <input type="text" value={step2Title} onChange={(e) => setStep2Title(e.target.value)} placeholder="Select Setting" />
+                                </div>
+                                <div className="form-group">
+                                    <label>Step Summary</label>
+                                    <textarea value={step2Desc} onChange={(e) => setStep2Desc(e.target.value)} placeholder="Match with handcrafted settings..." />
+                                </div>
                             </div>
-                            <div className="form-grid-3">
-                                <div className="step-card-box">
-                                    <span className="step-number-tag">Step 1</span>
-                                    <div className="form-group">
-                                        <label>Number Label</label>
-                                        <input type="text" value={step1Num} onChange={(e) => setStep1Num(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Title</label>
-                                        <input type="text" value={step1Title} onChange={(e) => setStep1Title(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Summary</label>
-                                        <textarea value={step1Desc} onChange={(e) => setStep1Desc(e.target.value)} />
-                                    </div>
-                                </div>
 
-                                <div className="step-card-box">
-                                    <span className="step-number-tag">Step 2</span>
-                                    <div className="form-group">
-                                        <label>Number Label</label>
-                                        <input type="text" value={step2Num} onChange={(e) => setStep2Num(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Title</label>
-                                        <input type="text" value={step2Title} onChange={(e) => setStep2Title(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Summary</label>
-                                        <textarea value={step2Desc} onChange={(e) => setStep2Desc(e.target.value)} />
-                                    </div>
+                            <div className="step-card-box">
+                                <span className="step-number-tag">Step 3</span>
+                                <div className="form-group">
+                                    <label>Number Label</label>
+                                    <input type="text" value={step3Num} onChange={(e) => setStep3Num(e.target.value)} placeholder="03" />
                                 </div>
-
-                                <div className="step-card-box">
-                                    <span className="step-number-tag">Step 3</span>
-                                    <div className="form-group">
-                                        <label>Number Label</label>
-                                        <input type="text" value={step3Num} onChange={(e) => setStep3Num(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Title</label>
-                                        <input type="text" value={step3Title} onChange={(e) => setStep3Title(e.target.value)} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Step Summary</label>
-                                        <textarea value={step3Desc} onChange={(e) => setStep3Desc(e.target.value)} />
-                                    </div>
+                                <div className="form-group">
+                                    <label>Step Title</label>
+                                    <input type="text" value={step3Title} onChange={(e) => setStep3Title(e.target.value)} placeholder="Complete Ring" />
+                                </div>
+                                <div className="form-group">
+                                    <label>Step Summary</label>
+                                    <textarea value={step3Desc} onChange={(e) => setStep3Desc(e.target.value)} placeholder="Select finger size, engraving..." />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Card 3: Diamond Shapes Management */}
-                        <div className="form-section-card">
-                            <div className="form-section-header">
+                        {/* Section 3: Diamond Shapes Management */}
+                        <div className="form-section-divider">
+                            <div className="form-section-title-wrap">
                                 <div>
-                                    <h5 className="section-title">3. Diamond Shapes & Dial Showcase ({shapes.length} Shapes)</h5>
-                                    <p className="section-subtitle">Manage each diamond shape on the rotating dial, specs, and right showcase card.</p>
+                                    <h6 className="form-section-title">3. Diamond Shapes & Dial Showcase ({shapes.length} Shapes)</h6>
+                                    <span className="form-section-subtitle">Manage each diamond shape on the rotating dial, specs, and right showcase card.</span>
                                 </div>
-                                <button type="button" className="btn-save" onClick={handleOpenAddModal} style={{ padding: '8px 16px', fontSize: '13px' }}>
-                                    <AddIcon fontSize="small" />
-                                    Add New Shape
+                                <button type="button" className="add-new-btn" onClick={handleOpenAddModal}>
+                                    <AddIcon fontSize="small" /> Add New Shape
                                 </button>
                             </div>
+                        </div>
 
-                            <div className="shapes-table-wrap">
-                                <table>
-                                    <thead>
+                        <div className="table-wrapper">
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Icon</th>
+                                        <th>Shape Name</th>
+                                        <th>Best For</th>
+                                        <th>Brilliance</th>
+                                        <th>Showcase Photo</th>
+                                        <th>Showcase Title</th>
+                                        <th>Status</th>
+                                        <th style={{ textAlign: 'center' }}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {shapes.length === 0 ? (
                                         <tr>
-                                            <th>Order</th>
-                                            <th>Icon</th>
-                                            <th>Shape Name</th>
-                                            <th>Best For</th>
-                                            <th>Brilliance</th>
-                                            <th>Showcase Photo</th>
-                                            <th>Showcase Title</th>
-                                            <th>Status</th>
-                                            <th style={{ textAlign: 'right' }}>Actions</th>
+                                            <td colSpan="9" style={{ textAlign: 'center', padding: '24px 0' }}>
+                                                {translations.nodatafound || "No shapes found."}
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {shapes.map((s, idx) => (
+                                    ) : (
+                                        shapes.map((s, idx) => (
                                             <tr key={s.shapeid || idx}>
                                                 <td><strong>#{s.order || idx + 1}</strong></td>
                                                 <td>
-                                                    <img
-                                                        src={s.shapeIcon || "/placeholder.png"}
-                                                        alt={s.name}
-                                                        className="shape-icon-thumb"
-                                                        onError={(e) => (e.currentTarget.style.display = 'none')}
-                                                    />
+                                                    {s.shapeIcon ? (
+                                                        <img
+                                                            src={s.shapeIcon}
+                                                            alt={s.name}
+                                                            className="shape-icon-thumb"
+                                                            onError={(e) => (e.currentTarget.style.display = 'none')}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-muted">—</span>
+                                                    )}
                                                 </td>
                                                 <td>
-                                                    <strong style={{ fontSize: '14px' }}>{s.name}</strong>
-                                                    <div style={{ fontSize: '11px', color: '#6b7280' }}>ID: {s.shapeid}</div>
+                                                    <strong>{s.name}</strong>
+                                                    {s.shapeid && <div style={{ fontSize: '11px', color: 'var(--muted-text)' }}>ID: {s.shapeid}</div>}
                                                 </td>
                                                 <td>{s.bestFor || "—"}</td>
-                                                <td><span className="badge bg-light text-dark border">{s.brilliance || "—"}</span></td>
+                                                <td>{s.brilliance || "—"}</td>
                                                 <td>
-                                                    <img
-                                                        src={s.showcaseImage || "/placeholder.png"}
-                                                        alt={s.showcaseTitle}
-                                                        className="showcase-thumb"
-                                                        onError={(e) => (e.currentTarget.style.display = 'none')}
-                                                    />
+                                                    {s.showcaseImage ? (
+                                                        <img
+                                                            src={s.showcaseImage}
+                                                            alt={s.showcaseTitle}
+                                                            className="showcase-thumb"
+                                                            onError={(e) => (e.currentTarget.style.display = 'none')}
+                                                        />
+                                                    ) : (
+                                                        <span className="text-muted">—</span>
+                                                    )}
                                                 </td>
                                                 <td style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                     {s.showcaseTitle || "—"}
                                                 </td>
                                                 <td>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleToggleShapeStatus(idx)}
-                                                        className={`btn btn-sm ${s.status !== false ? 'btn-success' : 'btn-secondary'}`}
-                                                        style={{ fontSize: '11px', padding: '2px 8px' }}
-                                                    >
-                                                        {s.status !== false ? "Active" : "Inactive"}
-                                                    </button>
+                                                    <CustomSwitch
+                                                        checked={s.status !== false}
+                                                        onChange={() => handleToggleShapeStatus(idx)}
+                                                    />
                                                 </td>
-                                                <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-outline-primary btn-sm me-2"
-                                                        onClick={() => handleOpenEditModal(idx)}
-                                                        title="Edit Shape"
-                                                    >
-                                                        <EditIcon fontSize="small" />
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-outline-danger btn-sm"
-                                                        onClick={() => handleDeleteShape(idx)}
-                                                        title="Delete Shape"
-                                                    >
-                                                        <DeleteIcon fontSize="small" />
-                                                    </button>
+                                                <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
+                                                    <EditButton onClick={() => handleOpenEditModal(idx)} />
+                                                    <DeleteButton onClick={() => handleDeleteShape(idx)} />
                                                 </td>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
 
-                        {/* Bottom Save */}
-                        <div className="save-btn-container">
-                            <button type="submit" className="btn-save" disabled={isSaving}>
-                                <SaveIcon fontSize="small" />
-                                {isSaving ? "Saving..." : "Save All Changes"}
+                        {/* Bottom Save & Cancel Button Group */}
+                        <div className="button-group">
+                            <button
+                                type="button"
+                                className="btn btn-secondary cancelbtn"
+                                onClick={handleCancel}
+                                disabled={isSaving}
+                            >
+                                {translations.cancel || "Cancel"}
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-success submit-btn"
+                                disabled={isSaving}
+                            >
+                                {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
                             </button>
                         </div>
                     </form>
@@ -638,215 +645,202 @@ const ShapeSection = () => {
                         </div>
                         <form onSubmit={handleSaveShapeModal}>
                             <div className="modal-body-custom">
-                                <div className="row g-3">
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Shape Name *</label>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Shape Name *</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.name}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, name: e.target.value })}
+                                            placeholder="e.g. Round Brilliant"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Shape ID / Slug</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.shapeid}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, shapeid: e.target.value })}
+                                            placeholder="e.g. round"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row full-width">
+                                    <div className="form-group">
+                                        <label>Tagline (Italic under shape title)</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.tagline}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, tagline: e.target.value })}
+                                            placeholder="e.g. Timeless & Iconic"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row full-width">
+                                    <div className="form-group">
+                                        <label>Description</label>
+                                        <textarea
+                                            value={currentShape.description}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, description: e.target.value })}
+                                            placeholder="Detailed description of this cut..."
+                                            rows="2"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Best For (Specification)</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.bestFor}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, bestFor: e.target.value })}
+                                            placeholder="e.g. Maximum Fire & Sparkle"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Brilliance Rating</label>
+                                        <select
+                                            value={currentShape.brilliance}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, brilliance: e.target.value })}
+                                        >
+                                            <option value="">Select Brilliance</option>
+                                            <option value="Very High">Very High (5 / 5)</option>
+                                            <option value="High">High (4 / 5)</option>
+                                            <option value="Medium">Medium (3 / 5)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Shape Cut Icon Upload / Link */}
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Shape Cut Icon (PNG with transparent bg)</label>
+                                        <div className="upload-input-wrap">
                                             <input
                                                 type="text"
-                                                value={currentShape.name}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, name: e.target.value })}
-                                                placeholder=""
-                                                required
+                                                value={currentShape.shapeIcon}
+                                                onChange={(e) => setCurrentShape({ ...currentShape, shapeIcon: e.target.value })}
+                                                placeholder="Icon URL or upload"
                                             />
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Shape ID / Slug</label>
                                             <input
-                                                type="text"
-                                                value={currentShape.shapeid}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, shapeid: e.target.value })}
-                                                placeholder=""
+                                                type="file"
+                                                ref={iconInputRef}
+                                                accept="image/*"
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => handleUploadAsset(e.target.files[0], 'icon')}
                                             />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-12">
-                                        <div className="form-group">
-                                            <label>Tagline (Italic under shape title)</label>
-                                            <input
-                                                type="text"
-                                                value={currentShape.tagline}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, tagline: e.target.value })}
-                                                placeholder=""
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-12">
-                                        <div className="form-group">
-                                            <label>Description</label>
-                                            <textarea
-                                                value={currentShape.description}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, description: e.target.value })}
-                                                placeholder=""
-                                                rows="2"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Best For (Specification)</label>
-                                            <input
-                                                type="text"
-                                                value={currentShape.bestFor}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, bestFor: e.target.value })}
-                                                placeholder=""
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Brilliance Rating</label>
-                                            <select
-                                                value={currentShape.brilliance}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, brilliance: e.target.value })}
+                                            <button
+                                                type="button"
+                                                className="upload-btn"
+                                                onClick={() => iconInputRef.current?.click()}
+                                                disabled={isUploadingIcon}
                                             >
-                                                <option value="">Select Brilliance</option>
-                                                <option value="Very High">Very High (5 / 5)</option>
-                                                <option value="High">High (4 / 5)</option>
-                                                <option value="Medium">Medium (3 / 5)</option>
-                                            </select>
+                                                <CloudUploadIcon fontSize="small" /> Upload
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    {/* Shape Cut Icon Upload / Link */}
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Shape Cut Icon (PNG with transparent bg)</label>
-                                            <div className="d-flex gap-2 align-items-center mb-1">
-                                                <input
-                                                    type="text"
-                                                    value={currentShape.shapeIcon}
-                                                    onChange={(e) => setCurrentShape({ ...currentShape, shapeIcon: e.target.value })}
-                                                    placeholder=""
-                                                />
-                                                <input
-                                                    type="file"
-                                                    ref={iconInputRef}
-                                                    accept="image/*"
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleUploadAsset(e.target.files[0], 'icon')}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline-secondary btn-sm"
-                                                    onClick={() => iconInputRef.current?.click()}
-                                                    disabled={isUploadingIcon}
-                                                    title="Upload PNG to S3"
-                                                >
-                                                    <CloudUploadIcon fontSize="small" />
-                                                </button>
-                                            </div>
-                                            {currentShape.shapeIcon && (
+                                        {currentShape.shapeIcon && (
+                                            <div className="preview-thumb-box">
                                                 <img
                                                     src={currentShape.shapeIcon}
                                                     alt="Icon Preview"
-                                                    style={{ width: '40px', height: '40px', objectFit: 'contain', background: '#f5f5f5', borderRadius: '4px', padding: '2px' }}
+                                                    style={{ width: '40px', height: '40px', objectFit: 'contain', background: '#f5f5f5', borderRadius: '4px', padding: '2px', border: '1px solid var(--border-color)' }}
                                                 />
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Showcase Ring Image Upload / Link */}
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Showcase Image (Model hand ring photo)</label>
-                                            <div className="d-flex gap-2 align-items-center mb-1">
-                                                <input
-                                                    type="text"
-                                                    value={currentShape.showcaseImage}
-                                                    onChange={(e) => setCurrentShape({ ...currentShape, showcaseImage: e.target.value })}
-                                                    placeholder=""
-                                                />
-                                                <input
-                                                    type="file"
-                                                    ref={showcaseInputRef}
-                                                    accept="image/*"
-                                                    style={{ display: 'none' }}
-                                                    onChange={(e) => handleUploadAsset(e.target.files[0], 'showcase')}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline-secondary btn-sm"
-                                                    onClick={() => showcaseInputRef.current?.click()}
-                                                    disabled={isUploadingShowcase}
-                                                    title="Upload photo to S3"
-                                                >
-                                                    <CloudUploadIcon fontSize="small" />
-                                                </button>
-                                            </div>
-                                            {currentShape.showcaseImage && (
+                                    <div className="form-group">
+                                        <label>Showcase Image (Model hand ring photo)</label>
+                                        <div className="upload-input-wrap">
+                                            <input
+                                                type="text"
+                                                value={currentShape.showcaseImage}
+                                                onChange={(e) => setCurrentShape({ ...currentShape, showcaseImage: e.target.value })}
+                                                placeholder="Image URL or upload"
+                                            />
+                                            <input
+                                                type="file"
+                                                ref={showcaseInputRef}
+                                                accept="image/*"
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => handleUploadAsset(e.target.files[0], 'showcase')}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="upload-btn"
+                                                onClick={() => showcaseInputRef.current?.click()}
+                                                disabled={isUploadingShowcase}
+                                            >
+                                                <CloudUploadIcon fontSize="small" /> Upload
+                                            </button>
+                                        </div>
+                                        {currentShape.showcaseImage && (
+                                            <div className="preview-thumb-box">
                                                 <img
                                                     src={currentShape.showcaseImage}
                                                     alt="Showcase Preview"
-                                                    style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }}
+                                                    style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-color)' }}
                                                 />
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                     </div>
+                                </div>
 
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Showcase Card Title</label>
-                                            <input
-                                                type="text"
-                                                value={currentShape.showcaseTitle}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, showcaseTitle: e.target.value })}
-                                                placeholder=""
-                                            />
-                                        </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Showcase Card Title</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.showcaseTitle}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, showcaseTitle: e.target.value })}
+                                            placeholder="e.g. Classic Round Brilliant Solitaire"
+                                        />
                                     </div>
-
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Shop Button Link</label>
-                                            <input
-                                                type="text"
-                                                value={currentShape.buttonLink}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, buttonLink: e.target.value })}
-                                                placeholder=""
-                                            />
-                                        </div>
+                                    <div className="form-group">
+                                        <label>Shop Button Link</label>
+                                        <input
+                                            type="text"
+                                            value={currentShape.buttonLink}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, buttonLink: e.target.value })}
+                                            placeholder="e.g. /collections/round-cut-rings"
+                                        />
                                     </div>
+                                </div>
 
-                                    <div className="col-md-6">
-                                        <div className="form-group">
-                                            <label>Display Order</label>
-                                            <input
-                                                type="number"
-                                                value={currentShape.order}
-                                                onChange={(e) => setCurrentShape({ ...currentShape, order: e.target.value })}
-                                                min="1"
-                                            />
-                                        </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label>Display Order</label>
+                                        <input
+                                            type="number"
+                                            value={currentShape.order}
+                                            onChange={(e) => setCurrentShape({ ...currentShape, order: e.target.value })}
+                                            min="1"
+                                        />
                                     </div>
-
-                                    <div className="col-md-6 d-flex align-items-center mt-4">
-                                        <div className="form-check">
-                                            <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                id="shapeStatusCheck"
+                                    <div className="form-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                        <label>Dial Visibility Status</label>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '6px' }}>
+                                            <CustomSwitch
                                                 checked={currentShape.status !== false}
                                                 onChange={(e) => setCurrentShape({ ...currentShape, status: e.target.checked })}
                                             />
-                                            <label className="form-check-label ms-2" htmlFor="shapeStatusCheck">
-                                                Active on Dial
-                                            </label>
+                                            <span style={{ fontSize: '13px', fontWeight: 600, color: currentShape.status !== false ? 'var(--primary-color)' : '#dc2626' }}>
+                                                {currentShape.status !== false ? "Active on Dial" : "Disabled on Dial"}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="modal-footer-custom">
-                                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
-                                    Cancel
+                                <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCloseModal}>
+                                    {translations.cancel || "Cancel"}
                                 </button>
-                                <button type="submit" className="btn btn-primary">
+                                <button type="submit" className="btn btn-success submit-btn">
                                     {editingIndex !== null ? "Update Shape" : "Add Shape"}
                                 </button>
                             </div>

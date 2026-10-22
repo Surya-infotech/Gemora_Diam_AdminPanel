@@ -4,17 +4,17 @@ import { useAuth } from '../../Middleware/Auth';
 import LoadingSpinner from '../Custom/LoadingSpinner';
 import WarningModal from '../Custom/WarningModal';
 import AlertMessage from '../Custom/AlertMessage';
+import CustomSwitch from '../Custom/CustomSwitch';
+import DeleteButton from '../Custom/DeleteButton';
 import "../../Scss/Support/CoupleSection/couplesection.scss";
 import { useLanguage } from "../../Context/LanguageContext";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
-import StarIcon from '@mui/icons-material/Star';
 
 const CoupleSection = () => {
     const navigate = useNavigate();
@@ -46,9 +46,8 @@ const CoupleSection = () => {
     const fileInputRefs = useRef({});
 
     useEffect(() => {
-        CheckToken(token, logoutUser, navigate);
-        fetchCoupleSection();
-    }, []);
+        document.title = `${translations.coupleSection || "Loved by Couples"} | Gemora Diam`;
+    }, [translations]);
 
     const fetchCoupleSection = async () => {
         setIsLoading(true);
@@ -80,6 +79,13 @@ const CoupleSection = () => {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        CheckToken(token, logoutUser, navigate);
+        fetchCoupleSection();
+    }, []);
+
+
 
     // Story Handlers
     const handleStoryChange = (index, field, value) => {
@@ -127,7 +133,7 @@ const CoupleSection = () => {
             const data = await res.json();
             if (res.ok && data.url) {
                 handleStoryChange(index, "image", data.url);
-                setAlertMessage("Image uploaded successfully to AWS S3!");
+                setAlertMessage("Image uploaded successfully!");
             } else {
                 setWarningMessage(data.message || "Failed to upload image");
             }
@@ -207,108 +213,108 @@ const CoupleSection = () => {
         }
     };
 
+    const handleCancel = () => {
+        navigate('/Home/Dashboard');
+    };
+
     if (isLoading) {
         return <LoadingSpinner />;
     }
 
     return (
-        <div className="CoupleSection-container">
+        <div className={`CoupleSection-container ${isRtl ? 'rtl-couplesection' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="couplesection-container">
-                <div className="couplesection-headingname">
-                    Loved by Couples Section
-                </div>
+                <h6 className="couplesection-headingname">
+                    {translations.coupleSection || "Loved by Couples"}
+                </h6>
 
                 <div className="couplesection-form-container">
+                    {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
+                    {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
+
                     {/* Top Action Bar */}
                     <div className="top-actions-bar">
                         <div className="section-toggle-wrap">
-                            <span className="toggle-label">Section Visibility:</span>
-                            <label className="switch">
-                                <input
-                                    type="checkbox"
-                                    checked={sectionStatus}
-                                    onChange={(e) => setSectionStatus(e.target.checked)}
-                                />
-                                <span className="slider round"></span>
-                            </label>
-                            <span style={{ fontSize: '13px', color: sectionStatus ? '#10b981' : '#ef4444', fontWeight: 600 }}>
-                                {sectionStatus ? 'Active on Website' : 'Hidden from Website'}
+                            <span className="toggle-label">{translations.status || "Section Visibility"}:</span>
+                            <CustomSwitch
+                                checked={sectionStatus}
+                                onChange={() => setSectionStatus(!sectionStatus)}
+                            />
+                            <span className={`status-badge ${sectionStatus ? 'active' : 'inactive'}`}>
+                                {sectionStatus ? (translations.active || "Active on Website") : (translations.inactive || "Disabled")}
                             </span>
                         </div>
 
-                        <button
-                            type="button"
-                            className="btn btn-primary d-flex align-items-center gap-2"
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            style={{ padding: '9px 24px', fontWeight: 600, borderRadius: '8px' }}
-                        >
-                            <SaveIcon fontSize="small" />
-                            {isSaving ? "Saving..." : "Save All Changes"}
-                        </button>
+                        <div className="top-action-btns">
+                            <button
+                                type="button"
+                                className="btn btn-success submit-btn"
+                                onClick={handleSave}
+                                disabled={isSaving}
+                            >
+                                <SaveIcon fontSize="small" />
+                                {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Section Header Settings Card */}
-                    <div className="settings-card">
-                        <div className="card-title">
-                            <span>Main Section Header & Overall Rating</span>
+                    {/* Section Header Settings */}
+                    <div className="form-section-divider">
+                        <h6 className="form-section-title">Main Section Header & Overall Rating</h6>
+                        <span className="form-section-subtitle">Headline, sub-description, and customer rating summary.</span>
+                    </div>
+
+                    <div className="form-row-four">
+                        <div className="form-group">
+                            <label>Eyebrow Tag</label>
+                            <input
+                                type="text"
+                                value={headerEyebrow}
+                                onChange={(e) => setHeaderEyebrow(e.target.value)}
+                                placeholder="e.g. REAL LOVE STORIES"
+                            />
                         </div>
 
-                        <div className="row g-3">
-                            <div className="col-md-3">
-                                <label className="form-label fw-semibold">Eyebrow Tag</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={headerEyebrow}
-                                    onChange={(e) => setHeaderEyebrow(e.target.value)}
-                                    placeholder=""
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Main Heading Title</label>
+                            <input
+                                type="text"
+                                value={headerTitle}
+                                onChange={(e) => setHeaderTitle(e.target.value)}
+                                placeholder="e.g. Loved by couples"
+                            />
+                        </div>
 
-                            <div className="col-md-4">
-                                <label className="form-label fw-semibold">Main Heading Title</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={headerTitle}
-                                    onChange={(e) => setHeaderTitle(e.target.value)}
-                                    placeholder=""
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Rating Score</label>
+                            <input
+                                type="text"
+                                value={ratingScore}
+                                onChange={(e) => setRatingScore(e.target.value)}
+                                placeholder="e.g. 5.0"
+                            />
+                        </div>
 
-                            <div className="col-md-2">
-                                <label className="form-label fw-semibold">Rating Score</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={ratingScore}
-                                    onChange={(e) => setRatingScore(e.target.value)}
-                                    placeholder=""
-                                />
-                            </div>
+                        <div className="form-group">
+                            <label>Review Count Label</label>
+                            <input
+                                type="text"
+                                value={reviewCountText}
+                                onChange={(e) => setReviewCountText(e.target.value)}
+                                placeholder="e.g. from 5 verified reviews"
+                            />
+                        </div>
+                    </div>
 
-                            <div className="col-md-3">
-                                <label className="form-label fw-semibold">Review Count Label</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={reviewCountText}
-                                    onChange={(e) => setReviewCountText(e.target.value)}
-                                    placeholder=""
-                                />
-                            </div>
-
-                            <div className="col-12">
-                                <label className="form-label fw-semibold">Sub-heading Description</label>
-                                <textarea
-                                    className="form-control"
-                                    rows="2"
-                                    value={headerDescription}
-                                    onChange={(e) => setHeaderDescription(e.target.value)}
-                                    placeholder=""
-                                />
-                            </div>
+                    <div className="form-row full-width">
+                        <div className="form-group">
+                            <label>Sub-heading Description</label>
+                            <textarea
+                                rows="2"
+                                value={headerDescription}
+                                onChange={(e) => setHeaderDescription(e.target.value)}
+                                placeholder="Proposals, promises, and the rings that made them. In their own words."
+                            />
                         </div>
                     </div>
 
@@ -319,7 +325,7 @@ const CoupleSection = () => {
                             className={`tab-btn ${activeTab === 'stories' ? 'active' : ''}`}
                             onClick={() => setActiveTab('stories')}
                         >
-                            <FavoriteIcon fontSize="small" style={{ marginRight: '6px', verticalAlign: 'middle', color: '#e11d48' }} />
+                            <FavoriteIcon fontSize="small" style={{ color: '#e11d48' }} />
                             Real Couple Stories ({stories.length})
                         </button>
                         <button
@@ -327,7 +333,7 @@ const CoupleSection = () => {
                             className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
                             onClick={() => setActiveTab('reviews')}
                         >
-                            <FormatQuoteIcon fontSize="small" style={{ marginRight: '6px', verticalAlign: 'middle', color: '#d97706' }} />
+                            <FormatQuoteIcon fontSize="small" style={{ color: '#d97706' }} />
                             Client Reviews ({reviews.length})
                         </button>
                     </div>
@@ -335,13 +341,13 @@ const CoupleSection = () => {
                     {/* STORIES TAB CONTENT */}
                     {activeTab === 'stories' && (
                         <div>
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                <p className="text-muted mb-0" style={{ fontSize: '13px' }}>
+                            <div className="tab-header-action">
+                                <p className="tab-desc">
                                     Photo story cards displayed in the horizontal carousel with real couple photos and proposal excerpts.
                                 </p>
                                 <button
                                     type="button"
-                                    className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
+                                    className="add-new-btn"
                                     onClick={handleAddStory}
                                 >
                                     <AddIcon fontSize="small" /> Add New Couple Story
@@ -349,7 +355,7 @@ const CoupleSection = () => {
                             </div>
 
                             {stories.length === 0 ? (
-                                <div className="text-center py-5 text-muted bg-white rounded-3 border">
+                                <div className="text-center py-5 text-muted bg-white rounded-3 border" style={{ padding: '30px', textAlign: 'center' }}>
                                     No couple stories added yet. Click &quot;Add New Couple Story&quot; above.
                                 </div>
                             ) : (
@@ -360,105 +366,93 @@ const CoupleSection = () => {
                                                 #{index + 1} &mdash; {story.names || "Untitled Story"}
                                             </div>
                                             <div className="item-actions">
-                                                <label className="switch" title="Active Status">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={story.status !== false}
-                                                        onChange={(e) => handleStoryChange(index, "status", e.target.checked)}
-                                                    />
-                                                    <span className="slider round"></span>
-                                                </label>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-link text-danger p-1"
-                                                    title="Delete Story"
-                                                    onClick={() => handleDeleteStory(index)}
-                                                >
-                                                    <DeleteIcon fontSize="small" />
-                                                </button>
+                                                <CustomSwitch
+                                                    checked={story.status !== false}
+                                                    onChange={(e) => handleStoryChange(index, "status", e.target.checked)}
+                                                />
+                                                <DeleteButton onClick={() => handleDeleteStory(index)} />
                                             </div>
                                         </div>
 
-                                        <div className="row g-3">
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Couple Names</label>
+                                        <div className="form-row-four">
+                                            <div className="form-group">
+                                                <label>Couple Names</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={story.names || ""}
                                                     onChange={(e) => handleStoryChange(index, "names", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. Liam & Sophia"
                                                 />
                                             </div>
 
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Location</label>
+                                            <div className="form-group">
+                                                <label>Location</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={story.location || ""}
                                                     onChange={(e) => handleStoryChange(index, "location", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. Aspen, Colorado"
                                                 />
                                             </div>
 
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Badge Label</label>
+                                            <div className="form-group">
+                                                <label>Badge Label</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={story.badge || ""}
                                                     onChange={(e) => handleStoryChange(index, "badge", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. Custom Solitaire"
                                                 />
                                             </div>
 
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Display Order</label>
+                                            <div className="form-group">
+                                                <label>Display Order</label>
                                                 <input
                                                     type="number"
-                                                    className="form-control form-control-sm"
                                                     value={story.order ?? (index + 1)}
                                                     onChange={(e) => handleStoryChange(index, "order", parseInt(e.target.value) || 1)}
                                                 />
                                             </div>
+                                        </div>
 
-                                            <div className="col-md-6">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Ring Details / Name</label>
+                                        <div className="form-row">
+                                            <div className="form-group">
+                                                <label>Ring Details / Name</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={story.ringName || ""}
                                                     onChange={(e) => handleStoryChange(index, "ringName", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. 2.45ct Oval Diamond in Platinum"
                                                 />
                                             </div>
 
-                                            <div className="col-md-6">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Story Link</label>
+                                            <div className="form-group">
+                                                <label>Story Link</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={story.storyLink || ""}
                                                     onChange={(e) => handleStoryChange(index, "storyLink", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. /collections/solitaire-rings"
                                                 />
                                             </div>
+                                        </div>
 
-                                            <div className="col-12">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Proposal Story Excerpt</label>
+                                        <div className="form-row full-width">
+                                            <div className="form-group">
+                                                <label>Proposal Story Excerpt</label>
                                                 <textarea
-                                                    className="form-control form-control-sm"
                                                     rows="2"
                                                     value={story.excerpt || ""}
                                                     onChange={(e) => handleStoryChange(index, "excerpt", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="Write the couple's story excerpt here..."
                                                 />
                                             </div>
+                                        </div>
 
-                                            <div className="col-12">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Couple Photo</label>
-                                                <div className="image-upload-box">
+                                        <div className="form-row full-width">
+                                            <div className="form-group">
+                                                <label>Couple Photo</label>
+                                                <div className="image-upload-row">
                                                     {story.image && (
                                                         <img
                                                             src={story.image}
@@ -468,10 +462,10 @@ const CoupleSection = () => {
                                                     )}
                                                     <input
                                                         type="text"
-                                                        className="form-control form-control-sm flex-grow-1"
+                                                        className="img-url-input"
                                                         value={story.image || ""}
                                                         onChange={(e) => handleStoryChange(index, "image", e.target.value)}
-                                                        placeholder=""
+                                                        placeholder="Image URL or upload below"
                                                     />
                                                     <input
                                                         type="file"
@@ -484,12 +478,13 @@ const CoupleSection = () => {
                                                             }
                                                         }}
                                                     />
-                                                    <label
-                                                        className="upload-btn-label"
+                                                    <button
+                                                        type="button"
+                                                        className="upload-btn"
                                                         onClick={() => fileInputRefs.current[`story_${index}`]?.click()}
                                                     >
                                                         <CloudUploadIcon fontSize="small" /> Upload to S3
-                                                    </label>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -502,13 +497,13 @@ const CoupleSection = () => {
                     {/* REVIEWS TAB CONTENT */}
                     {activeTab === 'reviews' && (
                         <div>
-                            <div className="d-flex justify-content-between align-items-center mb-3">
-                                <p className="text-muted mb-0" style={{ fontSize: '13px' }}>
+                            <div className="tab-header-action">
+                                <p className="tab-desc">
                                     Dark luxury quotation cards with verified client badges and 5-star ratings interleaved between stories.
                                 </p>
                                 <button
                                     type="button"
-                                    className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
+                                    className="add-new-btn"
                                     onClick={handleAddReview}
                                 >
                                     <AddIcon fontSize="small" /> Add New Client Review
@@ -516,7 +511,7 @@ const CoupleSection = () => {
                             </div>
 
                             {reviews.length === 0 ? (
-                                <div className="text-center py-5 text-muted bg-white rounded-3 border">
+                                <div className="text-center py-5 text-muted bg-white rounded-3 border" style={{ padding: '30px', textAlign: 'center' }}>
                                     No client reviews added yet. Click &quot;Add New Client Review&quot; above.
                                 </div>
                             ) : (
@@ -527,52 +522,38 @@ const CoupleSection = () => {
                                                 #{index + 1} &mdash; {rev.name || "Anonymous Client"} ({rev.rating || 5} Stars)
                                             </div>
                                             <div className="item-actions">
-                                                <label className="switch" title="Active Status">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={rev.status !== false}
-                                                        onChange={(e) => handleReviewChange(index, "status", e.target.checked)}
-                                                    />
-                                                    <span className="slider round"></span>
-                                                </label>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-link text-danger p-1"
-                                                    title="Delete Review"
-                                                    onClick={() => handleDeleteReview(index)}
-                                                >
-                                                    <DeleteIcon fontSize="small" />
-                                                </button>
+                                                <CustomSwitch
+                                                    checked={rev.status !== false}
+                                                    onChange={(e) => handleReviewChange(index, "status", e.target.checked)}
+                                                />
+                                                <DeleteButton onClick={() => handleDeleteReview(index)} />
                                             </div>
                                         </div>
 
-                                        <div className="row g-3">
-                                            <div className="col-md-4">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Client Name</label>
+                                        <div className="form-row-four">
+                                            <div className="form-group">
+                                                <label>Client Name</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={rev.name || ""}
                                                     onChange={(e) => handleReviewChange(index, "name", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. Marcus T."
                                                 />
                                             </div>
 
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Badge</label>
+                                            <div className="form-group">
+                                                <label>Badge</label>
                                                 <input
                                                     type="text"
-                                                    className="form-control form-control-sm"
                                                     value={rev.badge || ""}
                                                     onChange={(e) => handleReviewChange(index, "badge", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="e.g. Verified Buyer"
                                                 />
                                             </div>
 
-                                            <div className="col-md-2">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Rating (Stars)</label>
+                                            <div className="form-group">
+                                                <label>Rating (Stars)</label>
                                                 <select
-                                                    className="form-select form-select-sm"
                                                     value={rev.rating || 5}
                                                     onChange={(e) => handleReviewChange(index, "rating", parseInt(e.target.value) || 5)}
                                                 >
@@ -584,24 +565,24 @@ const CoupleSection = () => {
                                                 </select>
                                             </div>
 
-                                            <div className="col-md-3">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Display Order</label>
+                                            <div className="form-group">
+                                                <label>Display Order</label>
                                                 <input
                                                     type="number"
-                                                    className="form-control form-control-sm"
                                                     value={rev.order ?? (index + 1)}
                                                     onChange={(e) => handleReviewChange(index, "order", parseInt(e.target.value) || 1)}
                                                 />
                                             </div>
+                                        </div>
 
-                                            <div className="col-12">
-                                                <label className="form-label" style={{ fontSize: '12px', fontWeight: 600 }}>Testimonial Quote</label>
+                                        <div className="form-row full-width">
+                                            <div className="form-group">
+                                                <label>Testimonial Quote</label>
                                                 <textarea
-                                                    className="form-control form-control-sm"
                                                     rows="3"
                                                     value={rev.quote || ""}
                                                     onChange={(e) => handleReviewChange(index, "quote", e.target.value)}
-                                                    placeholder=""
+                                                    placeholder="Client quote text..."
                                                 />
                                             </div>
                                         </div>
@@ -610,22 +591,28 @@ const CoupleSection = () => {
                             )}
                         </div>
                     )}
+
+                    {/* Bottom Save & Cancel Button Group */}
+                    <div className="button-group">
+                        <button
+                            type="button"
+                            className="btn btn-secondary cancelbtn"
+                            onClick={handleCancel}
+                            disabled={isSaving}
+                        >
+                            {translations.cancel || "Cancel"}
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-success submit-btn"
+                            onClick={handleSave}
+                            disabled={isSaving}
+                        >
+                            {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            {/* Modals & Alerts */}
-            {alertMessage && (
-                <AlertMessage
-                    message={alertMessage}
-                    onClose={() => setAlertMessage("")}
-                />
-            )}
-            {warningMessage && (
-                <WarningModal
-                    message={warningMessage}
-                    onClose={() => setWarningMessage("")}
-                />
-            )}
         </div>
     );
 };
