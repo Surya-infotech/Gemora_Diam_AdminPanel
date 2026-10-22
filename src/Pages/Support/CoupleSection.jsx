@@ -46,8 +46,15 @@ const CoupleSection = () => {
     const fileInputRefs = useRef({});
 
     useEffect(() => {
-        document.title = `${translations.coupleSection || "Loved by Couples"} | Gemora Diam`;
+        if (translations.coupleSection) {
+            document.title = `${translations.coupleSection} | Gemora Diam`;
+        }
     }, [translations]);
+
+    useEffect(() => {
+        CheckToken(token, logoutUser, navigate);
+        fetchCoupleSection();
+    }, []);
 
     const fetchCoupleSection = async () => {
         setIsLoading(true);
@@ -72,20 +79,12 @@ const CoupleSection = () => {
                 setStories(data.stories || []);
                 setReviews(data.reviews || []);
             }
-        } catch (error) {
-            console.error("Error fetching couple section:", error);
-            setWarningMessage("Failed to load Couple Stories section data");
+        } catch {
+            setWarningMessage(translations.failedtoloadcouplesection);
         } finally {
             setIsLoading(false);
         }
     };
-
-    useEffect(() => {
-        CheckToken(token, logoutUser, navigate);
-        fetchCoupleSection();
-    }, []);
-
-
 
     // Story Handlers
     const handleStoryChange = (index, field, value) => {
@@ -133,13 +132,12 @@ const CoupleSection = () => {
             const data = await res.json();
             if (res.ok && data.url) {
                 handleStoryChange(index, "image", data.url);
-                setAlertMessage("Image uploaded successfully!");
+                setAlertMessage(translations.imageuploadedsuccessfully);
             } else {
-                setWarningMessage(data.message || "Failed to upload image");
+                setWarningMessage(data.message || translations.servererror);
             }
-        } catch (error) {
-            console.error("Upload error:", error);
-            setWarningMessage("Network error while uploading image");
+        } catch {
+            setWarningMessage(translations.servererror);
         }
     };
 
@@ -201,13 +199,12 @@ const CoupleSection = () => {
 
             const data = await res.json();
             if (res.ok) {
-                setAlertMessage("Couple Stories & Reviews section updated successfully!");
+                setAlertMessage(translations.updatecouplesectionsuccessfull);
             } else {
-                setWarningMessage(data.message || "Failed to update section");
+                setWarningMessage(data.message || translations.servererror);
             }
-        } catch (error) {
-            console.error("Save error:", error);
-            setWarningMessage("Network error while saving changes");
+        } catch {
+            setWarningMessage(translations.servererror);
         } finally {
             setIsSaving(false);
         }
@@ -225,7 +222,7 @@ const CoupleSection = () => {
         <div className={`CoupleSection-container ${isRtl ? 'rtl-couplesection' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="couplesection-container">
                 <h6 className="couplesection-headingname">
-                    {translations.coupleSection || "Loved by Couples"}
+                    {translations.coupleSection}
                 </h6>
 
                 <div className="couplesection-form-container">
@@ -235,13 +232,13 @@ const CoupleSection = () => {
                     {/* Top Action Bar */}
                     <div className="top-actions-bar">
                         <div className="section-toggle-wrap">
-                            <span className="toggle-label">{translations.status || "Section Visibility"}:</span>
+                            <span className="toggle-label">{translations.sectionvisibility}:</span>
                             <CustomSwitch
                                 checked={sectionStatus}
                                 onChange={() => setSectionStatus(!sectionStatus)}
                             />
                             <span className={`status-badge ${sectionStatus ? 'active' : 'inactive'}`}>
-                                {sectionStatus ? (translations.active || "Active on Website") : (translations.inactive || "Disabled")}
+                                {sectionStatus ? translations.activeonwebsite : translations.hiddenfromwebsite}
                             </span>
                         </div>
 
@@ -253,67 +250,67 @@ const CoupleSection = () => {
                                 disabled={isSaving}
                             >
                                 <SaveIcon fontSize="small" />
-                                {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                                {isSaving ? translations.saving : translations.saveallchanges}
                             </button>
                         </div>
                     </div>
 
                     {/* Section Header Settings */}
                     <div className="form-section-divider">
-                        <h6 className="form-section-title">Main Section Header & Overall Rating</h6>
-                        <span className="form-section-subtitle">Headline, sub-description, and customer rating summary.</span>
+                        <h6 className="form-section-title">{translations.mainsectionheaderoverallrating}</h6>
+                        <span className="form-section-subtitle">{translations.mainsectionheadersubdesc}</span>
                     </div>
 
                     <div className="form-row-four">
                         <div className="form-group">
-                            <label>Eyebrow Tag</label>
+                            <label>{translations.eyebrowtag}</label>
                             <input
                                 type="text"
                                 value={headerEyebrow}
                                 onChange={(e) => setHeaderEyebrow(e.target.value)}
-                                placeholder="e.g. REAL LOVE STORIES"
+                                placeholder={translations.entereyebrowtag}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label>Main Heading Title</label>
+                            <label>{translations.mainheadingtitle}</label>
                             <input
                                 type="text"
                                 value={headerTitle}
                                 onChange={(e) => setHeaderTitle(e.target.value)}
-                                placeholder="e.g. Loved by couples"
+                                placeholder={translations.entermainheadingtitle}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label>Rating Score</label>
+                            <label>{translations.ratingscore}</label>
                             <input
                                 type="text"
                                 value={ratingScore}
                                 onChange={(e) => setRatingScore(e.target.value)}
-                                placeholder="e.g. 5.0"
+                                placeholder={translations.enterratingscore}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label>Review Count Label</label>
+                            <label>{translations.reviewcountlabel}</label>
                             <input
                                 type="text"
                                 value={reviewCountText}
                                 onChange={(e) => setReviewCountText(e.target.value)}
-                                placeholder="e.g. from 5 verified reviews"
+                                placeholder={translations.enterreviewcountlabel}
                             />
                         </div>
                     </div>
 
                     <div className="form-row full-width">
                         <div className="form-group">
-                            <label>Sub-heading Description</label>
+                            <label>{translations.subheadingdescription}</label>
                             <textarea
                                 rows="2"
                                 value={headerDescription}
                                 onChange={(e) => setHeaderDescription(e.target.value)}
-                                placeholder="Proposals, promises, and the rings that made them. In their own words."
+                                placeholder={translations.entersubheadingdescription}
                             />
                         </div>
                     </div>
@@ -326,7 +323,7 @@ const CoupleSection = () => {
                             onClick={() => setActiveTab('stories')}
                         >
                             <FavoriteIcon fontSize="small" style={{ color: '#e11d48' }} />
-                            Real Couple Stories ({stories.length})
+                            {translations.realcouplestories} ({stories.length})
                         </button>
                         <button
                             type="button"
@@ -334,7 +331,7 @@ const CoupleSection = () => {
                             onClick={() => setActiveTab('reviews')}
                         >
                             <FormatQuoteIcon fontSize="small" style={{ color: '#d97706' }} />
-                            Client Reviews ({reviews.length})
+                            {translations.clientreviews} ({reviews.length})
                         </button>
                     </div>
 
@@ -343,27 +340,27 @@ const CoupleSection = () => {
                         <div>
                             <div className="tab-header-action">
                                 <p className="tab-desc">
-                                    Photo story cards displayed in the horizontal carousel with real couple photos and proposal excerpts.
+                                    {translations.couplestoriesdesc}
                                 </p>
                                 <button
                                     type="button"
                                     className="add-new-btn"
                                     onClick={handleAddStory}
                                 >
-                                    <AddIcon fontSize="small" /> Add New Couple Story
+                                    <AddIcon fontSize="small" /> {translations.addnewcouplestory}
                                 </button>
                             </div>
 
                             {stories.length === 0 ? (
                                 <div className="text-center py-5 text-muted bg-white rounded-3 border" style={{ padding: '30px', textAlign: 'center' }}>
-                                    No couple stories added yet. Click &quot;Add New Couple Story&quot; above.
+                                    {translations.nocouplestoriesyet}
                                 </div>
                             ) : (
                                 stories.map((story, index) => (
                                     <div key={story.storyId || index} className="item-card">
                                         <div className="item-header">
                                             <div className="item-title">
-                                                #{index + 1} &mdash; {story.names || "Untitled Story"}
+                                                #{index + 1} &mdash; {story.names}
                                             </div>
                                             <div className="item-actions">
                                                 <CustomSwitch
@@ -376,87 +373,88 @@ const CoupleSection = () => {
 
                                         <div className="form-row-four">
                                             <div className="form-group">
-                                                <label>Couple Names</label>
+                                                <label>{translations.couplenames}</label>
                                                 <input
                                                     type="text"
                                                     value={story.names || ""}
                                                     onChange={(e) => handleStoryChange(index, "names", e.target.value)}
-                                                    placeholder="e.g. Liam & Sophia"
+                                                    placeholder={translations.entercouplenames}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Location</label>
+                                                <label>{translations.location}</label>
                                                 <input
                                                     type="text"
                                                     value={story.location || ""}
                                                     onChange={(e) => handleStoryChange(index, "location", e.target.value)}
-                                                    placeholder="e.g. Aspen, Colorado"
+                                                    placeholder={translations.enterlocation}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Badge Label</label>
+                                                <label>{translations.badgelabel}</label>
                                                 <input
                                                     type="text"
                                                     value={story.badge || ""}
                                                     onChange={(e) => handleStoryChange(index, "badge", e.target.value)}
-                                                    placeholder="e.g. Custom Solitaire"
+                                                    placeholder={translations.enterbadgelabel}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Display Order</label>
+                                                <label>{translations.displayorder}</label>
                                                 <input
                                                     type="number"
                                                     value={story.order ?? (index + 1)}
                                                     onChange={(e) => handleStoryChange(index, "order", parseInt(e.target.value) || 1)}
+                                                    placeholder={translations.enterdisplayorder}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="form-row">
                                             <div className="form-group">
-                                                <label>Ring Details / Name</label>
+                                                <label>{translations.ringdetailsname}</label>
                                                 <input
                                                     type="text"
                                                     value={story.ringName || ""}
                                                     onChange={(e) => handleStoryChange(index, "ringName", e.target.value)}
-                                                    placeholder="e.g. 2.45ct Oval Diamond in Platinum"
+                                                    placeholder={translations.enterringdetailsname}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Story Link</label>
+                                                <label>{translations.storylink}</label>
                                                 <input
                                                     type="text"
                                                     value={story.storyLink || ""}
                                                     onChange={(e) => handleStoryChange(index, "storyLink", e.target.value)}
-                                                    placeholder="e.g. /collections/solitaire-rings"
+                                                    placeholder={translations.enterstorylink}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="form-row full-width">
                                             <div className="form-group">
-                                                <label>Proposal Story Excerpt</label>
+                                                <label>{translations.proposalstoryexcerpt}</label>
                                                 <textarea
                                                     rows="2"
                                                     value={story.excerpt || ""}
                                                     onChange={(e) => handleStoryChange(index, "excerpt", e.target.value)}
-                                                    placeholder="Write the couple's story excerpt here..."
+                                                    placeholder={translations.enterproposalstoryexcerpt}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="form-row full-width">
                                             <div className="form-group">
-                                                <label>Couple Photo</label>
+                                                <label>{translations.couplephoto}</label>
                                                 <div className="image-upload-row">
                                                     {story.image && (
                                                         <img
                                                             src={story.image}
-                                                            alt={story.names || "Couple"}
+                                                            alt={story.names}
                                                             className="img-preview"
                                                         />
                                                     )}
@@ -465,7 +463,7 @@ const CoupleSection = () => {
                                                         className="img-url-input"
                                                         value={story.image || ""}
                                                         onChange={(e) => handleStoryChange(index, "image", e.target.value)}
-                                                        placeholder="Image URL or upload below"
+                                                        placeholder={translations.entercouplephoto}
                                                     />
                                                     <input
                                                         type="file"
@@ -483,7 +481,7 @@ const CoupleSection = () => {
                                                         className="upload-btn"
                                                         onClick={() => fileInputRefs.current[`story_${index}`]?.click()}
                                                     >
-                                                        <CloudUploadIcon fontSize="small" /> Upload to S3
+                                                        <CloudUploadIcon fontSize="small" /> {translations.uploadtos3}
                                                     </button>
                                                 </div>
                                             </div>
@@ -499,27 +497,27 @@ const CoupleSection = () => {
                         <div>
                             <div className="tab-header-action">
                                 <p className="tab-desc">
-                                    Dark luxury quotation cards with verified client badges and 5-star ratings interleaved between stories.
+                                    {translations.clientreviewsdesc}
                                 </p>
                                 <button
                                     type="button"
                                     className="add-new-btn"
                                     onClick={handleAddReview}
                                 >
-                                    <AddIcon fontSize="small" /> Add New Client Review
+                                    <AddIcon fontSize="small" /> {translations.addnewclientreview}
                                 </button>
                             </div>
 
                             {reviews.length === 0 ? (
                                 <div className="text-center py-5 text-muted bg-white rounded-3 border" style={{ padding: '30px', textAlign: 'center' }}>
-                                    No client reviews added yet. Click &quot;Add New Client Review&quot; above.
+                                    {translations.noclientreviewsyet}
                                 </div>
                             ) : (
                                 reviews.map((rev, index) => (
                                     <div key={rev.reviewId || index} className="item-card">
                                         <div className="item-header">
                                             <div className="item-title">
-                                                #{index + 1} &mdash; {rev.name || "Anonymous Client"} ({rev.rating || 5} Stars)
+                                                #{index + 1} &mdash; {rev.name} ({rev.rating || 5} Stars)
                                             </div>
                                             <div className="item-actions">
                                                 <CustomSwitch
@@ -532,57 +530,58 @@ const CoupleSection = () => {
 
                                         <div className="form-row-four">
                                             <div className="form-group">
-                                                <label>Client Name</label>
+                                                <label>{translations.clientname}</label>
                                                 <input
                                                     type="text"
                                                     value={rev.name || ""}
                                                     onChange={(e) => handleReviewChange(index, "name", e.target.value)}
-                                                    placeholder="e.g. Marcus T."
+                                                    placeholder={translations.enterclientname}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Badge</label>
+                                                <label>{translations.badgelabel}</label>
                                                 <input
                                                     type="text"
                                                     value={rev.badge || ""}
                                                     onChange={(e) => handleReviewChange(index, "badge", e.target.value)}
-                                                    placeholder="e.g. Verified Buyer"
+                                                    placeholder={translations.enterbadgelabel}
                                                 />
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Rating (Stars)</label>
+                                                <label>{translations.ratingstars}</label>
                                                 <select
                                                     value={rev.rating || 5}
                                                     onChange={(e) => handleReviewChange(index, "rating", parseInt(e.target.value) || 5)}
                                                 >
-                                                    <option value="5">5 Stars</option>
-                                                    <option value="4">4 Stars</option>
-                                                    <option value="3">3 Stars</option>
-                                                    <option value="2">2 Stars</option>
-                                                    <option value="1">1 Star</option>
+                                                    <option value="5">{translations.fivestars}</option>
+                                                    <option value="4">{translations.fourstars}</option>
+                                                    <option value="3">{translations.threestars}</option>
+                                                    <option value="2">{translations.twostars}</option>
+                                                    <option value="1">{translations.onestar}</option>
                                                 </select>
                                             </div>
 
                                             <div className="form-group">
-                                                <label>Display Order</label>
+                                                <label>{translations.displayorder}</label>
                                                 <input
                                                     type="number"
                                                     value={rev.order ?? (index + 1)}
                                                     onChange={(e) => handleReviewChange(index, "order", parseInt(e.target.value) || 1)}
+                                                    placeholder={translations.enterdisplayorder}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="form-row full-width">
                                             <div className="form-group">
-                                                <label>Testimonial Quote</label>
+                                                <label>{translations.testimonialquote}</label>
                                                 <textarea
                                                     rows="3"
                                                     value={rev.quote || ""}
                                                     onChange={(e) => handleReviewChange(index, "quote", e.target.value)}
-                                                    placeholder="Client quote text..."
+                                                    placeholder={translations.entertestimonialquote}
                                                 />
                                             </div>
                                         </div>
@@ -600,7 +599,7 @@ const CoupleSection = () => {
                             onClick={handleCancel}
                             disabled={isSaving}
                         >
-                            {translations.cancel || "Cancel"}
+                            {translations.cancel}
                         </button>
                         <button
                             type="button"
@@ -608,7 +607,7 @@ const CoupleSection = () => {
                             onClick={handleSave}
                             disabled={isSaving}
                         >
-                            {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                            {isSaving ? translations.saving : translations.saveallchanges}
                         </button>
                     </div>
                 </div>

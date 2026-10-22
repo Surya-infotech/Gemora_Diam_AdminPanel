@@ -61,14 +61,14 @@ const ShapeSection = () => {
 
     // Modal State for Shape Edit / Add
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingIndex, setEditingIndex] = useState(null); // null means adding new
+    const [editingIndex, setEditingIndex] = useState(null);
     const [currentShape, setCurrentShape] = useState({
         shapeid: "",
         name: "",
         tagline: "",
         description: "",
         bestFor: "",
-        brilliance: "",
+        brilliance: "Very High",
         shapeIcon: "",
         showcaseImage: "",
         showcaseTitle: "",
@@ -83,7 +83,9 @@ const ShapeSection = () => {
     const showcaseInputRef = useRef(null);
 
     useEffect(() => {
-        document.title = `${translations.shapeSection || "Shop By Shape"} | Gemora Diam`;
+        if (translations.shapeSection) {
+            document.title = `${translations.shapeSection} | Gemora Diam`;
+        }
     }, [translations]);
 
     const fetchSectionData = async () => {
@@ -134,9 +136,8 @@ const ShapeSection = () => {
                     setShapes(result.shapes);
                 }
             }
-        } catch (error) {
-            console.error("Error fetching shape section:", error);
-            setWarningMessage("Failed to load section data from server.");
+        } catch {
+            setWarningMessage(translations.servererror);
         } finally {
             setIsLoading(false);
         }
@@ -193,13 +194,12 @@ const ShapeSection = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (res.ok) {
-                setAlertMessage("Shop By Shape section updated successfully!");
+                setAlertMessage(translations.updateshapesectionsuccessfull);
             } else {
-                setWarningMessage(result.message || "Failed to update section.");
+                setWarningMessage(result.message || translations.servererror);
             }
-        } catch (error) {
-            console.error("Save error:", error);
-            setWarningMessage("An unexpected error occurred while saving.");
+        } catch {
+            setWarningMessage(translations.servererror);
         } finally {
             setIsSaving(false);
         }
@@ -243,7 +243,7 @@ const ShapeSection = () => {
     const handleSaveShapeModal = (e) => {
         e.preventDefault();
         if (!currentShape.name.trim()) {
-            alert("Shape name is required");
+            alert(translations.shapenamesrequired);
             return;
         }
 
@@ -265,7 +265,7 @@ const ShapeSection = () => {
     };
 
     const handleDeleteShape = (index) => {
-        if (window.confirm(`Are you sure you want to delete "${shapes[index]?.name}"?`)) {
+        if (window.confirm(translations.deleteshapeconfirm)) {
             const updated = shapes.filter((_, idx) => idx !== index);
             setShapes(updated);
         }
@@ -304,11 +304,10 @@ const ShapeSection = () => {
                     setCurrentShape(prev => ({ ...prev, showcaseImage: data.url }));
                 }
             } else {
-                alert(data.message || "Upload failed");
+                alert(data.message || translations.servererror);
             }
-        } catch (err) {
-            console.error("Upload error:", err);
-            alert("Error uploading file");
+        } catch {
+            alert(translations.servererror);
         } finally {
             if (type === 'icon') setIsUploadingIcon(false);
             if (type === 'showcase') setIsUploadingShowcase(false);
@@ -323,7 +322,7 @@ const ShapeSection = () => {
         <div className={`ShapeSection-container ${isRtl ? 'rtl-shapesection' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="shapesection-container">
                 <h6 className="shapesection-headingname">
-                    {translations.shapeSection || "Shop By Shape"}
+                    {translations.shapeSection}
                 </h6>
 
                 <div className="shapesection-form-container">
@@ -334,192 +333,192 @@ const ShapeSection = () => {
                         {/* Top bar controls */}
                         <div className="top-actions-bar">
                             <div className="section-toggle-wrap">
-                                <span className="toggle-label">{translations.status || "Section Visibility"}:</span>
+                                <span className="toggle-label">{translations.sectionvisibility}:</span>
                                 <CustomSwitch
                                     checked={sectionStatus}
                                     onChange={() => setSectionStatus(!sectionStatus)}
                                 />
                                 <span className={`status-badge ${sectionStatus ? 'active' : 'inactive'}`}>
-                                    {sectionStatus ? (translations.active || "Active on Website") : (translations.inactive || "Disabled")}
+                                    {sectionStatus ? translations.activeonwebsite : translations.hiddenfromwebsite}
                                 </span>
                             </div>
                             <div className="top-action-btns">
                                 <button type="submit" className="btn btn-success submit-btn" disabled={isSaving}>
                                     <SaveIcon fontSize="small" />
-                                    {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                                    {isSaving ? translations.saving : translations.saveallchanges}
                                 </button>
                             </div>
                         </div>
 
                         {/* Section 1: Section Header Texts */}
                         <div className="form-section-divider">
-                            <h6 className="form-section-title">1. Section Header & Intro</h6>
-                            <span className="form-section-subtitle">Controls the main headline and subtitle shown at the top of the section.</span>
+                            <h6 className="form-section-title">{translations.sectionheaderintro}</h6>
+                            <span className="form-section-subtitle">{translations.sectionheaderintrodesc}</span>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Eyebrow Tag</label>
+                                <label>{translations.eyebrowtag}</label>
                                 <input
                                     type="text"
                                     value={headerEyebrow}
                                     onChange={(e) => setHeaderEyebrow(e.target.value)}
-                                    placeholder="e.g. CURATED SILHOUETTES"
+                                    placeholder={translations.entereyebrowtag}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Headline Title</label>
+                                <label>{translations.headlinetitle}</label>
                                 <input
                                     type="text"
                                     value={headerTitle}
                                     onChange={(e) => setHeaderTitle(e.target.value)}
-                                    placeholder="e.g. Shop By Shape"
+                                    placeholder={translations.enterheadlinetitle}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row full-width">
                             <div className="form-group">
-                                <label>Subtitle Description</label>
+                                <label>{translations.subtitledescription}</label>
                                 <textarea
                                     value={headerDescription}
                                     onChange={(e) => setHeaderDescription(e.target.value)}
-                                    placeholder="e.g. Every diamond cut tells a unique story. Discover our masterfully cut shapes..."
+                                    placeholder={translations.entersubtitledescription}
                                 />
                             </div>
                         </div>
 
                         {/* Section 2: "Design Your Ring" Feature Box */}
                         <div className="form-section-divider">
-                            <h6 className="form-section-title">2. "Design Your Ring" Feature Box (Left Column)</h6>
-                            <span className="form-section-subtitle">Configure the promotional card, buttons, and 3 workflow steps.</span>
+                            <h6 className="form-section-title">{translations.designyourringbox}</h6>
+                            <span className="form-section-subtitle">{translations.designyourringboxdesc}</span>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Box Eyebrow</label>
+                                <label>{translations.boxeyebrow}</label>
                                 <input
                                     type="text"
                                     value={designEyebrow}
                                     onChange={(e) => setDesignEyebrow(e.target.value)}
-                                    placeholder="e.g. BESPOKE ATELIER"
+                                    placeholder={translations.enterboxeyebrow}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Box Title</label>
+                                <label>{translations.boxtitle}</label>
                                 <input
                                     type="text"
                                     value={designTitle}
                                     onChange={(e) => setDesignTitle(e.target.value)}
-                                    placeholder="e.g. Design Your Ring"
+                                    placeholder={translations.enterboxtitle}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row full-width">
                             <div className="form-group">
-                                <label>Box Description</label>
+                                <label>{translations.boxdescription}</label>
                                 <textarea
                                     value={designDescription}
                                     onChange={(e) => setDesignDescription(e.target.value)}
-                                    placeholder="Bring your dream ring to life in three intuitive steps..."
+                                    placeholder={translations.enterboxdescription}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Primary Button Label</label>
+                                <label>{translations.primarybuttonlabel}</label>
                                 <input
                                     type="text"
                                     value={primaryBtnText}
                                     onChange={(e) => setPrimaryBtnText(e.target.value)}
-                                    placeholder="e.g. Start with a Diamond"
+                                    placeholder={translations.enterprimarybuttonlabel}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Primary Button Link</label>
+                                <label>{translations.primarybuttonlink}</label>
                                 <input
                                     type="text"
                                     value={primaryBtnLink}
                                     onChange={(e) => setPrimaryBtnLink(e.target.value)}
-                                    placeholder="e.g. /custom/diamonds"
+                                    placeholder={translations.enterprimarybuttonlink}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Secondary Button Label</label>
+                                <label>{translations.secondarybuttonlabel}</label>
                                 <input
                                     type="text"
                                     value={secondaryBtnText}
                                     onChange={(e) => setSecondaryBtnText(e.target.value)}
-                                    placeholder="e.g. Start with a Setting"
+                                    placeholder={translations.entersecondarybuttonlabel}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Secondary Button Link</label>
+                                <label>{translations.secondarybuttonlink}</label>
                                 <input
                                     type="text"
                                     value={secondaryBtnLink}
                                     onChange={(e) => setSecondaryBtnLink(e.target.value)}
-                                    placeholder="e.g. /custom/settings"
+                                    placeholder={translations.entersecondarybuttonlink}
                                 />
                             </div>
                         </div>
 
                         {/* Workflow Steps */}
                         <div className="form-section-divider">
-                            <h6 className="form-section-title">Workflow Steps (Cards 01, 02, 03)</h6>
+                            <h6 className="form-section-title">{translations.workflowsteps}</h6>
                         </div>
 
                         <div className="steps-grid">
                             <div className="step-card-box">
-                                <span className="step-number-tag">Step 1</span>
+                                <span className="step-number-tag">{translations.step1}</span>
                                 <div className="form-group">
-                                    <label>Number Label</label>
-                                    <input type="text" value={step1Num} onChange={(e) => setStep1Num(e.target.value)} placeholder="01" />
+                                    <label>{translations.numberlabel}</label>
+                                    <input type="text" value={step1Num} onChange={(e) => setStep1Num(e.target.value)} placeholder={translations.enternumberlabel} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Step Title</label>
-                                    <input type="text" value={step1Title} onChange={(e) => setStep1Title(e.target.value)} placeholder="Choose Diamond" />
+                                    <label>{translations.steptitle}</label>
+                                    <input type="text" value={step1Title} onChange={(e) => setStep1Title(e.target.value)} placeholder={translations.entersteptitle} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Step Summary</label>
-                                    <textarea value={step1Desc} onChange={(e) => setStep1Desc(e.target.value)} placeholder="Filter certified diamonds..." />
-                                </div>
-                            </div>
-
-                            <div className="step-card-box">
-                                <span className="step-number-tag">Step 2</span>
-                                <div className="form-group">
-                                    <label>Number Label</label>
-                                    <input type="text" value={step2Num} onChange={(e) => setStep2Num(e.target.value)} placeholder="02" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Step Title</label>
-                                    <input type="text" value={step2Title} onChange={(e) => setStep2Title(e.target.value)} placeholder="Select Setting" />
-                                </div>
-                                <div className="form-group">
-                                    <label>Step Summary</label>
-                                    <textarea value={step2Desc} onChange={(e) => setStep2Desc(e.target.value)} placeholder="Match with handcrafted settings..." />
+                                    <label>{translations.stepsummary}</label>
+                                    <textarea value={step1Desc} onChange={(e) => setStep1Desc(e.target.value)} placeholder={translations.enterstepsummary} />
                                 </div>
                             </div>
 
                             <div className="step-card-box">
-                                <span className="step-number-tag">Step 3</span>
+                                <span className="step-number-tag">{translations.step2}</span>
                                 <div className="form-group">
-                                    <label>Number Label</label>
-                                    <input type="text" value={step3Num} onChange={(e) => setStep3Num(e.target.value)} placeholder="03" />
+                                    <label>{translations.numberlabel}</label>
+                                    <input type="text" value={step2Num} onChange={(e) => setStep2Num(e.target.value)} placeholder={translations.enternumberlabel} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Step Title</label>
-                                    <input type="text" value={step3Title} onChange={(e) => setStep3Title(e.target.value)} placeholder="Complete Ring" />
+                                    <label>{translations.steptitle}</label>
+                                    <input type="text" value={step2Title} onChange={(e) => setStep2Title(e.target.value)} placeholder={translations.entersteptitle} />
                                 </div>
                                 <div className="form-group">
-                                    <label>Step Summary</label>
-                                    <textarea value={step3Desc} onChange={(e) => setStep3Desc(e.target.value)} placeholder="Select finger size, engraving..." />
+                                    <label>{translations.stepsummary}</label>
+                                    <textarea value={step2Desc} onChange={(e) => setStep2Desc(e.target.value)} placeholder={translations.enterstepsummary} />
+                                </div>
+                            </div>
+
+                            <div className="step-card-box">
+                                <span className="step-number-tag">{translations.step3}</span>
+                                <div className="form-group">
+                                    <label>{translations.numberlabel}</label>
+                                    <input type="text" value={step3Num} onChange={(e) => setStep3Num(e.target.value)} placeholder={translations.enternumberlabel} />
+                                </div>
+                                <div className="form-group">
+                                    <label>{translations.steptitle}</label>
+                                    <input type="text" value={step3Title} onChange={(e) => setStep3Title(e.target.value)} placeholder={translations.entersteptitle} />
+                                </div>
+                                <div className="form-group">
+                                    <label>{translations.stepsummary}</label>
+                                    <textarea value={step3Desc} onChange={(e) => setStep3Desc(e.target.value)} placeholder={translations.enterstepsummary} />
                                 </div>
                             </div>
                         </div>
@@ -528,11 +527,11 @@ const ShapeSection = () => {
                         <div className="form-section-divider">
                             <div className="form-section-title-wrap">
                                 <div>
-                                    <h6 className="form-section-title">3. Diamond Shapes & Dial Showcase ({shapes.length} Shapes)</h6>
-                                    <span className="form-section-subtitle">Manage each diamond shape on the rotating dial, specs, and right showcase card.</span>
+                                    <h6 className="form-section-title">{translations.diamondshapesdialshowcase} ({shapes.length})</h6>
+                                    <span className="form-section-subtitle">{translations.diamondshapesdialshowcasedesc}</span>
                                 </div>
                                 <button type="button" className="add-new-btn" onClick={handleOpenAddModal}>
-                                    <AddIcon fontSize="small" /> Add New Shape
+                                    <AddIcon fontSize="small" /> {translations.addnewshape}
                                 </button>
                             </div>
                         </div>
@@ -542,21 +541,21 @@ const ShapeSection = () => {
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Icon</th>
-                                        <th>Shape Name</th>
-                                        <th>Best For</th>
-                                        <th>Brilliance</th>
-                                        <th>Showcase Photo</th>
-                                        <th>Showcase Title</th>
-                                        <th>Status</th>
-                                        <th style={{ textAlign: 'center' }}>Actions</th>
+                                        <th>{translations.icon}</th>
+                                        <th>{translations.shapename}</th>
+                                        <th>{translations.bestfor}</th>
+                                        <th>{translations.brilliance}</th>
+                                        <th>{translations.showcasephoto}</th>
+                                        <th>{translations.showcasetitle}</th>
+                                        <th>{translations.status}</th>
+                                        <th style={{ textAlign: 'center' }}>{translations.action}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {shapes.length === 0 ? (
                                         <tr>
                                             <td colSpan="9" style={{ textAlign: 'center', padding: '24px 0' }}>
-                                                {translations.nodatafound || "No shapes found."}
+                                                {translations.nodatafound}
                                             </td>
                                         </tr>
                                     ) : (
@@ -621,14 +620,14 @@ const ShapeSection = () => {
                                 onClick={handleCancel}
                                 disabled={isSaving}
                             >
-                                {translations.cancel || "Cancel"}
+                                {translations.cancel}
                             </button>
                             <button
                                 type="submit"
                                 className="btn btn-success submit-btn"
                                 disabled={isSaving}
                             >
-                                {isSaving ? (translations.saving || "Saving...") : (translations.save || "Save All Changes")}
+                                {isSaving ? translations.saving : translations.saveallchanges}
                             </button>
                         </div>
                     </form>
@@ -640,52 +639,52 @@ const ShapeSection = () => {
                 <div className="modal-backdrop-custom" onClick={handleCloseModal}>
                     <div className="shape-modal-card" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header-custom">
-                            <h5>{editingIndex !== null ? `Edit "${currentShape.name}" Shape` : "Add New Diamond Shape"}</h5>
+                            <h5>{editingIndex !== null ? translations.editshape : translations.addshape}</h5>
                             <button type="button" className="close-btn" onClick={handleCloseModal}>×</button>
                         </div>
                         <form onSubmit={handleSaveShapeModal}>
                             <div className="modal-body-custom">
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Shape Name *</label>
+                                        <label>{translations.shapename} *</label>
                                         <input
                                             type="text"
                                             value={currentShape.name}
                                             onChange={(e) => setCurrentShape({ ...currentShape, name: e.target.value })}
-                                            placeholder="e.g. Round Brilliant"
+                                            placeholder={translations.entershapename}
                                             required
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Shape ID / Slug</label>
+                                        <label>{translations.shapeid}</label>
                                         <input
                                             type="text"
                                             value={currentShape.shapeid}
                                             onChange={(e) => setCurrentShape({ ...currentShape, shapeid: e.target.value })}
-                                            placeholder="e.g. round"
+                                            placeholder={translations.entershapeid}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label>Tagline (Italic under shape title)</label>
+                                        <label>{translations.tagline}</label>
                                         <input
                                             type="text"
                                             value={currentShape.tagline}
                                             onChange={(e) => setCurrentShape({ ...currentShape, tagline: e.target.value })}
-                                            placeholder="e.g. Timeless & Iconic"
+                                            placeholder={translations.entertagline}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="form-row full-width">
                                     <div className="form-group">
-                                        <label>Description</label>
+                                        <label>{translations.shapedescription}</label>
                                         <textarea
                                             value={currentShape.description}
                                             onChange={(e) => setCurrentShape({ ...currentShape, description: e.target.value })}
-                                            placeholder="Detailed description of this cut..."
+                                            placeholder={translations.entershapedescription}
                                             rows="2"
                                         />
                                     </div>
@@ -693,24 +692,24 @@ const ShapeSection = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Best For (Specification)</label>
+                                        <label>{translations.bestfor}</label>
                                         <input
                                             type="text"
                                             value={currentShape.bestFor}
                                             onChange={(e) => setCurrentShape({ ...currentShape, bestFor: e.target.value })}
-                                            placeholder="e.g. Maximum Fire & Sparkle"
+                                            placeholder={translations.enterbestfor}
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Brilliance Rating</label>
+                                        <label>{translations.brilliance}</label>
                                         <select
                                             value={currentShape.brilliance}
                                             onChange={(e) => setCurrentShape({ ...currentShape, brilliance: e.target.value })}
                                         >
-                                            <option value="">Select Brilliance</option>
-                                            <option value="Very High">Very High (5 / 5)</option>
-                                            <option value="High">High (4 / 5)</option>
-                                            <option value="Medium">Medium (3 / 5)</option>
+                                            <option value="">{translations.selectbrilliance}</option>
+                                            <option value="Very High">{translations.veryhigh}</option>
+                                            <option value="High">{translations.high}</option>
+                                            <option value="Medium">{translations.medium}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -718,13 +717,13 @@ const ShapeSection = () => {
                                 {/* Shape Cut Icon Upload / Link */}
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Shape Cut Icon (PNG with transparent bg)</label>
+                                        <label>{translations.shapecuticon}</label>
                                         <div className="upload-input-wrap">
                                             <input
                                                 type="text"
                                                 value={currentShape.shapeIcon}
                                                 onChange={(e) => setCurrentShape({ ...currentShape, shapeIcon: e.target.value })}
-                                                placeholder="Icon URL or upload"
+                                                placeholder={translations.entershapecuticon}
                                             />
                                             <input
                                                 type="file"
@@ -739,7 +738,7 @@ const ShapeSection = () => {
                                                 onClick={() => iconInputRef.current?.click()}
                                                 disabled={isUploadingIcon}
                                             >
-                                                <CloudUploadIcon fontSize="small" /> Upload
+                                                <CloudUploadIcon fontSize="small" /> {translations.upload}
                                             </button>
                                         </div>
                                         {currentShape.shapeIcon && (
@@ -755,13 +754,13 @@ const ShapeSection = () => {
 
                                     {/* Showcase Ring Image Upload / Link */}
                                     <div className="form-group">
-                                        <label>Showcase Image (Model hand ring photo)</label>
+                                        <label>{translations.showcaseimage}</label>
                                         <div className="upload-input-wrap">
                                             <input
                                                 type="text"
                                                 value={currentShape.showcaseImage}
                                                 onChange={(e) => setCurrentShape({ ...currentShape, showcaseImage: e.target.value })}
-                                                placeholder="Image URL or upload"
+                                                placeholder={translations.entershowcaseimage}
                                             />
                                             <input
                                                 type="file"
@@ -776,7 +775,7 @@ const ShapeSection = () => {
                                                 onClick={() => showcaseInputRef.current?.click()}
                                                 disabled={isUploadingShowcase}
                                             >
-                                                <CloudUploadIcon fontSize="small" /> Upload
+                                                <CloudUploadIcon fontSize="small" /> {translations.upload}
                                             </button>
                                         </div>
                                         {currentShape.showcaseImage && (
@@ -793,44 +792,45 @@ const ShapeSection = () => {
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Showcase Card Title</label>
+                                        <label>{translations.showcasetitle}</label>
                                         <input
                                             type="text"
                                             value={currentShape.showcaseTitle}
                                             onChange={(e) => setCurrentShape({ ...currentShape, showcaseTitle: e.target.value })}
-                                            placeholder="e.g. Classic Round Brilliant Solitaire"
+                                            placeholder={translations.entershowcasetitle}
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Shop Button Link</label>
+                                        <label>{translations.shopbuttonlink}</label>
                                         <input
                                             type="text"
                                             value={currentShape.buttonLink}
                                             onChange={(e) => setCurrentShape({ ...currentShape, buttonLink: e.target.value })}
-                                            placeholder="e.g. /collections/round-cut-rings"
+                                            placeholder={translations.entershopbuttonlink}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label>Display Order</label>
+                                        <label>{translations.displayorder}</label>
                                         <input
                                             type="number"
                                             value={currentShape.order}
                                             onChange={(e) => setCurrentShape({ ...currentShape, order: e.target.value })}
+                                            placeholder={translations.enterdisplayorder}
                                             min="1"
                                         />
                                     </div>
                                     <div className="form-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                        <label>Dial Visibility Status</label>
+                                        <label>{translations.dialvisibilitystatus}</label>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '6px' }}>
                                             <CustomSwitch
                                                 checked={currentShape.status !== false}
                                                 onChange={(e) => setCurrentShape({ ...currentShape, status: e.target.checked })}
                                             />
                                             <span style={{ fontSize: '13px', fontWeight: 600, color: currentShape.status !== false ? 'var(--primary-color)' : '#dc2626' }}>
-                                                {currentShape.status !== false ? "Active on Dial" : "Disabled on Dial"}
+                                                {currentShape.status !== false ? translations.activeondial : translations.disabledondial}
                                             </span>
                                         </div>
                                     </div>
@@ -838,10 +838,10 @@ const ShapeSection = () => {
                             </div>
                             <div className="modal-footer-custom">
                                 <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCloseModal}>
-                                    {translations.cancel || "Cancel"}
+                                    {translations.cancel}
                                 </button>
                                 <button type="submit" className="btn btn-success submit-btn">
-                                    {editingIndex !== null ? "Update Shape" : "Add Shape"}
+                                    {editingIndex !== null ? translations.updateshape : translations.addshape}
                                 </button>
                             </div>
                         </form>
