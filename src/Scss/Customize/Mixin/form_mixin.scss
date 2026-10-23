@@ -325,3 +325,22 @@
         background-color: var.$cancel_btn_hover_bgcolor !important;
     }
 }
+
+@mixin form_button_custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: #e5e7eb;
+    }
+}
