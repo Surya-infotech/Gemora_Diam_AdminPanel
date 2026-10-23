@@ -12,6 +12,7 @@ import ItemOverviewTab from './ItemOverviewTab';
 import ItemAttributesTab from './ItemAttributesTab';
 import ItemGalleryTab from './ItemGalleryTab';
 import ItemPriceTab from './ItemPriceTab';
+import ItemSeoMarketingTab from './ItemSeoMarketingTab';
 
 const ItemOverview = () => {
     const navigate = useNavigate();
@@ -84,7 +85,8 @@ const ItemOverview = () => {
         { title: translations.overview },
         { title: translations.Attributes },
         { title: translations.gallery },
-        { title: translations.pricetab }
+        { title: translations.pricetab },
+        { title: translations.seomarketingcontent || 'SEO Marketing Content' }
     ];
 
     if (loading) {
@@ -155,6 +157,12 @@ const ItemOverview = () => {
                                 )}
                                 {activeTab === 3 && (
                                     <ItemPriceTab
+                                        itemData={itemData}
+                                        onItemUpdated={handleItemUpdated}
+                                    />
+                                )}
+                                {activeTab === 4 && (
+                                    <ItemSeoMarketingTab
                                         itemData={itemData}
                                         onItemUpdated={handleItemUpdated}
                                     />
