@@ -958,5 +958,7 @@
     "desktopview": "Desktop",
     "mobileview": "Mobile",
     "copyurl": "Copy Link",
-    "linkcopied": "Link copied to clipboard!"
+    "linkcopied": "Link copied to clipboard!",
+    "promiseSection": "The Promise & Vow",
+    "updatepromisesectionsuccessfull": "The Promise & Vow section updated successfully!"
 }

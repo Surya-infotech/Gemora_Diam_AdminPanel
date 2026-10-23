@@ -400,6 +400,14 @@ const AdminNavbar = () => {
                                         {translations.coupleSection || "Loved by Couples"}
                                     </NavLink>
                                 </li>
+                                <li>
+                                    <NavLink to="/Support/PromiseSection" className={navLinkClass('/Support/PromiseSection')}>
+                                        <NavTooltip title={translations.promiseSection || "Promise & Vows Section"}>
+                                            <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                        </NavTooltip>
+                                        {translations.promiseSection || "Promise & Vows Section"}
+                                    </NavLink>
+                                </li>
                             </div>
                         </div>
                     </>
