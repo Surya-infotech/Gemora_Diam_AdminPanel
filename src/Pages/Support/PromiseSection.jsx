@@ -31,29 +31,29 @@ const PromiseSection = () => {
 
     // Section Status & Header
     const [sectionStatus, setSectionStatus] = useState(true);
-    const [headerEyebrow, setHeaderEyebrow] = useState("The Promise & The Vow");
-    const [headerTitle, setHeaderTitle] = useState("Two rings. One forever.");
-    const [headerHighlightText, setHeaderHighlightText] = useState("One");
-    const [headerDescription, setHeaderDescription] = useState("From the moment you ask to the day you say “I do,” find the handcrafted rings that tell your story.");
+    const [headerEyebrow, setHeaderEyebrow] = useState("");
+    const [headerTitle, setHeaderTitle] = useState("");
+    const [headerHighlightText, setHeaderHighlightText] = useState("");
+    const [headerDescription, setHeaderDescription] = useState("");
 
     // The Vows Left Large Card
-    const [vowsEyebrow, setVowsEyebrow] = useState("The Vows");
-    const [vowsTitle, setVowsTitle] = useState("Wedding Bands");
-    const [vowsSubtitle, setVowsSubtitle] = useState("The bands that seal the answer");
-    const [vowsImage, setVowsImage] = useState("https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop");
-    const [vowsButtonText, setVowsButtonText] = useState("Shop Now");
-    const [vowsButtonLink, setVowsButtonLink] = useState("/collections?category=Wedding+Bands");
+    const [vowsEyebrow, setVowsEyebrow] = useState("");
+    const [vowsTitle, setVowsTitle] = useState("");
+    const [vowsSubtitle, setVowsSubtitle] = useState("");
+    const [vowsImage, setVowsImage] = useState("");
+    const [vowsButtonText, setVowsButtonText] = useState("");
+    const [vowsButtonLink, setVowsButtonLink] = useState("");
 
     // The Proposal Right Top Card
-    const [proposalEyebrow, setProposalEyebrow] = useState("The Proposal");
-    const [proposalTitle, setProposalTitle] = useState("Engagement Rings");
-    const [proposalSubtitle, setProposalSubtitle] = useState("The ring that asks the question");
-    const [proposalImage, setProposalImage] = useState("https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1600&auto=format&fit=crop");
-    const [proposalButtonText, setProposalButtonText] = useState("Shop Now");
-    const [proposalButtonLink, setProposalButtonLink] = useState("/collections?category=Engagement+Rings");
+    const [proposalEyebrow, setProposalEyebrow] = useState("");
+    const [proposalTitle, setProposalTitle] = useState("");
+    const [proposalSubtitle, setProposalSubtitle] = useState("");
+    const [proposalImage, setProposalImage] = useState("");
+    const [proposalButtonText, setProposalButtonText] = useState("");
+    const [proposalButtonLink, setProposalButtonLink] = useState("");
 
     // Shop By Style Dial
-    const [styleSectionTitle, setStyleSectionTitle] = useState("SHOP BY STYLE");
+    const [styleSectionTitle, setStyleSectionTitle] = useState("");
     const [styles, setStyles] = useState([]);
 
     // Modal state for Style
@@ -100,29 +100,31 @@ const PromiseSection = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (res.ok && result) {
-                setSectionStatus(result.status !== false);
-                setHeaderEyebrow(result.headerEyebrow || "The Promise & The Vow");
-                setHeaderTitle(result.headerTitle || "Two rings. One forever.");
-                setHeaderHighlightText(result.headerHighlightText || "One");
+                setSectionStatus(result.status !== undefined ? result.status : true);
+                setHeaderEyebrow(result.headerEyebrow || "");
+                setHeaderTitle(result.headerTitle || "");
+                setHeaderHighlightText(result.headerHighlightText || "");
                 setHeaderDescription(result.headerDescription || "");
 
-                setVowsEyebrow(result.vowsEyebrow || "The Vows");
-                setVowsTitle(result.vowsTitle || "Wedding Bands");
-                setVowsSubtitle(result.vowsSubtitle || "The bands that seal the answer");
+                setVowsEyebrow(result.vowsEyebrow || "");
+                setVowsTitle(result.vowsTitle || "");
+                setVowsSubtitle(result.vowsSubtitle || "");
                 setVowsImage(result.vowsImage || "");
-                setVowsButtonText(result.vowsButtonText || "Shop Now");
-                setVowsButtonLink(result.vowsButtonLink || "/collections?category=Wedding+Bands");
+                setVowsButtonText(result.vowsButtonText || "");
+                setVowsButtonLink(result.vowsButtonLink || "");
 
-                setProposalEyebrow(result.proposalEyebrow || "The Proposal");
-                setProposalTitle(result.proposalTitle || "Engagement Rings");
-                setProposalSubtitle(result.proposalSubtitle || "The ring that asks the question");
+                setProposalEyebrow(result.proposalEyebrow || "");
+                setProposalTitle(result.proposalTitle || "");
+                setProposalSubtitle(result.proposalSubtitle || "");
                 setProposalImage(result.proposalImage || "");
-                setProposalButtonText(result.proposalButtonText || "Shop Now");
-                setProposalButtonLink(result.proposalButtonLink || "/collections?category=Engagement+Rings");
+                setProposalButtonText(result.proposalButtonText || "");
+                setProposalButtonLink(result.proposalButtonLink || "");
 
-                setStyleSectionTitle(result.styleSectionTitle || "SHOP BY STYLE");
+                setStyleSectionTitle(result.styleSectionTitle || "");
                 if (Array.isArray(result.styles)) {
                     setStyles(result.styles);
+                } else {
+                    setStyles([]);
                 }
             }
         } catch {
@@ -235,7 +237,7 @@ const PromiseSection = () => {
             name: "",
             desc: "",
             img: "",
-            link: "/collections?style=",
+            link: "",
             order: styles.length + 1,
             status: true
         });
@@ -634,11 +636,17 @@ const PromiseSection = () => {
                                         styles.map((style, idx) => (
                                             <tr key={style.styleId || idx}>
                                                 <td>
-                                                    <img
-                                                        src={style.img || "https://placehold.co/100"}
-                                                        alt={style.name}
-                                                        className="style-thumb"
-                                                    />
+                                                    {style.img ? (
+                                                        <img
+                                                            src={style.img}
+                                                            alt={style.name || "Style preview"}
+                                                            className="style-thumb"
+                                                        />
+                                                    ) : (
+                                                        <div className="style-thumb empty-thumb">
+                                                            <DiamondIcon fontSize="small" />
+                                                        </div>
+                                                    )}
                                                 </td>
                                                 <td style={{ fontWeight: 600 }}>{style.name}</td>
                                                 <td style={{ maxWidth: "250px", color: "#6b7280" }}>{style.desc}</td>

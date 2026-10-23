@@ -228,6 +228,13 @@
                         border-radius: 50%;
                         object-fit: cover;
                         border: 1px solid #e5e7eb;
+
+                        &.empty-thumb {
+                            display: grid;
+                            place-items: center;
+                            background-color: #f3f4f6;
+                            color: #9ca3af;
+                        }
                     }
 
                     .actions-cell {
