@@ -86,7 +86,7 @@ const ItemOverview = () => {
         { title: translations.Attributes },
         { title: translations.gallery },
         { title: translations.pricetab },
-        { title: translations.seomarketingcontent || 'SEO Marketing Content' }
+        { title: translations.seomarketingcontent }
     ];
 
     if (loading) {

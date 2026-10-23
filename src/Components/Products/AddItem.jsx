@@ -287,7 +287,7 @@ const AddItem = () => {
         }
 
         if (itemName.trim().length > MAX_ITEM_NAME_LENGTH) {
-            setWarningMessage(translations.itemnamelimitexceeded || "Item Name cannot exceed 120 characters");
+            setWarningMessage(translations.itemnamelimitexceeded);
             setShowWarning(true);
             return;
         }

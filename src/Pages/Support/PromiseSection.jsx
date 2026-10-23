@@ -78,7 +78,9 @@ const PromiseSection = () => {
     const modalImgInputRef = useRef(null);
 
     useEffect(() => {
-        document.title = `${translations.promiseSection || "Promise & Vows Section"} | Gemora Diam`;
+        if (translations.promiseSection) {
+            document.title = `${translations.promiseSection} | Gemora Diam`;
+        }
     }, [translations]);
 
     const fetchSectionData = async () => {
@@ -128,7 +130,7 @@ const PromiseSection = () => {
                 }
             }
         } catch {
-            setWarningMessage("Failed to connect to backend server.");
+            setWarningMessage(translations.failedtoconnectserver);
         } finally {
             setIsLoading(false);
         }
@@ -183,12 +185,12 @@ const PromiseSection = () => {
             if (HandleUnauthorized(result, logoutUser, navigate)) return;
 
             if (res.ok) {
-                setAlertMessage("Promise & Vows section updated successfully!");
+                setAlertMessage(translations.promisesectionupdatedsuccessfully);
             } else {
-                setWarningMessage(result.message || "Failed to update section.");
+                setWarningMessage(result.message || translations.failedtoupdatesection);
             }
         } catch {
-            setWarningMessage("Network or server error while updating.");
+            setWarningMessage(translations.failedtoupdatesection);
         } finally {
             setIsSaving(false);
         }
@@ -218,10 +220,10 @@ const PromiseSection = () => {
                 if (target === 'proposal') setProposalImage(data.url);
                 if (target === 'modal') setCurrentStyle(prev => ({ ...prev, img: data.url }));
             } else {
-                alert(data.message || "Upload failed");
+                alert(data.message || translations.uploadfailed);
             }
         } catch {
-            alert("Upload failed due to connection error");
+            alert(translations.uploadfailedconnectionerror);
         } finally {
             if (target === 'vows') setIsUploadingVows(false);
             if (target === 'proposal') setIsUploadingProposal(false);
@@ -253,7 +255,7 @@ const PromiseSection = () => {
     const handleSaveStyleModal = (e) => {
         e.preventDefault();
         if (!currentStyle.name.trim()) {
-            alert("Style name is required");
+            alert(translations.stylenamerequired);
             return;
         }
 
@@ -275,7 +277,7 @@ const PromiseSection = () => {
     };
 
     const handleDeleteStyle = (idx) => {
-        if (window.confirm("Are you sure you want to delete this style?")) {
+        if (window.confirm(translations.confirmdeletestyle)) {
             setStyles(styles.filter((_, i) => i !== idx));
         }
     };
@@ -294,7 +296,7 @@ const PromiseSection = () => {
         <div className={`PromiseSection-container ${isRtl ? 'rtl-promisesection' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="promisesection-container">
                 <h6 className="promisesection-headingname">
-                    The Promise & The Vow Section ("Two rings. One forever.")
+                    {translations.promisesectionheading}
                 </h6>
 
                 <div className="promisesection-form-container">
@@ -305,23 +307,23 @@ const PromiseSection = () => {
                         {/* Top bar controls */}
                         <div className="top-actions-bar">
                             <div className="section-toggle-wrap">
-                                <span className="toggle-label">Section Visibility:</span>
+                                <span className="toggle-label">{translations.sectionvisibility}:</span>
                                 <CustomSwitch
                                     checked={sectionStatus}
                                     onChange={() => setSectionStatus(!sectionStatus)}
                                 />
                                 <span className={`status-badge ${sectionStatus ? 'active' : 'inactive'}`}>
-                                    {sectionStatus ? 'Active on Homepage' : 'Hidden'}
+                                    {sectionStatus ? translations.activeonhomepage : translations.hidden}
                                 </span>
                             </div>
 
                             <div className="top-action-btns">
                                 <button type="button" className="cancel-btn" onClick={() => navigate('/Home/Dashboard')}>
-                                    Cancel
+                                    {translations.cancel}
                                 </button>
                                 <button type="submit" className="save-btn" disabled={isSaving}>
                                     <SaveIcon fontSize="small" />
-                                    {isSaving ? "Saving..." : "Save Changes"}
+                                    {isSaving ? translations.saving : translations.savechanges}
                                 </button>
                             </div>
                         </div>
@@ -330,52 +332,52 @@ const PromiseSection = () => {
                         <div className="form-section-divider">
                             <div className="form-section-title-wrap">
                                 <h4 className="form-section-title">
-                                    <DiamondIcon fontSize="small" /> 1. Main Section Heading
+                                    <DiamondIcon fontSize="small" /> {translations.mainsectionheading}
                                 </h4>
                             </div>
                             <span className="form-section-subtitle">
-                                Customize the top heading text displayed above the dual collection cards.
+                                {translations.mainsectionheadingdesc}
                             </span>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Header Eyebrow</label>
+                                <label>{translations.headereyebrow}</label>
                                 <input
                                     type="text"
                                     value={headerEyebrow}
                                     onChange={(e) => setHeaderEyebrow(e.target.value)}
-                                    placeholder="e.g. The Promise & The Vow"
+                                    placeholder={translations.enterheadereyebrow}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Header Title</label>
+                                <label>{translations.headertitle}</label>
                                 <input
                                     type="text"
                                     value={headerTitle}
                                     onChange={(e) => setHeaderTitle(e.target.value)}
-                                    placeholder="e.g. Two rings. One forever."
+                                    placeholder={translations.enterheadertitle}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Highlighted Accent Word (Rendered in Italic Gold)</label>
+                                <label>{translations.highlightedaccentword}</label>
                                 <input
                                     type="text"
                                     value={headerHighlightText}
                                     onChange={(e) => setHeaderHighlightText(e.target.value)}
-                                    placeholder="e.g. One"
+                                    placeholder={translations.enterhighlightedaccentword}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Header Description</label>
+                                <label>{translations.headerdescription}</label>
                                 <input
                                     type="text"
                                     value={headerDescription}
                                     onChange={(e) => setHeaderDescription(e.target.value)}
-                                    placeholder="From the moment you ask to the day you say 'I do'..."
+                                    placeholder={translations.enterheaderdescription}
                                 />
                             </div>
                         </div>
@@ -384,75 +386,75 @@ const PromiseSection = () => {
                         <div className="form-section-divider">
                             <div className="form-section-title-wrap">
                                 <h4 className="form-section-title">
-                                    <DiamondIcon fontSize="small" /> 2. The Vows (Left Large Card: Wedding Bands)
+                                    <DiamondIcon fontSize="small" /> {translations.vowscardheading}
                                 </h4>
                             </div>
                             <span className="form-section-subtitle">
-                                The high-impact editorial portrait card representing Wedding Bands.
+                                {translations.vowscarddesc}
                             </span>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Card Eyebrow</label>
+                                <label>{translations.cardeyebrow}</label>
                                 <input
                                     type="text"
                                     value={vowsEyebrow}
                                     onChange={(e) => setVowsEyebrow(e.target.value)}
-                                    placeholder="e.g. The Vows"
+                                    placeholder={translations.entervowseyebrow}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Card Main Title</label>
+                                <label>{translations.cardmaintitle}</label>
                                 <input
                                     type="text"
                                     value={vowsTitle}
                                     onChange={(e) => setVowsTitle(e.target.value)}
-                                    placeholder="e.g. Wedding Bands"
+                                    placeholder={translations.entervowstitle}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Card Italic Subtitle</label>
+                                <label>{translations.carditalicsubtitle}</label>
                                 <input
                                     type="text"
                                     value={vowsSubtitle}
                                     onChange={(e) => setVowsSubtitle(e.target.value)}
-                                    placeholder="e.g. The bands that seal the answer"
+                                    placeholder={translations.entervowssubtitle}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Button Text</label>
+                                <label>{translations.buttontext}</label>
                                 <input
                                     type="text"
                                     value={vowsButtonText}
                                     onChange={(e) => setVowsButtonText(e.target.value)}
-                                    placeholder="e.g. Shop Now"
+                                    placeholder={translations.enterbuttontext}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Button Link URL</label>
+                                <label>{translations.buttonlinkurl}</label>
                                 <input
                                     type="text"
                                     value={vowsButtonLink}
                                     onChange={(e) => setVowsButtonLink(e.target.value)}
-                                    placeholder="/collections?category=Wedding+Bands"
+                                    placeholder={translations.entervowsbuttonlink}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Background Image URL / S3 Upload</label>
+                                <label>{translations.backgroundimageupload}</label>
                                 <div className="image-upload-wrapper">
                                     <div className="upload-input-group">
                                         <input
                                             type="text"
                                             value={vowsImage}
                                             onChange={(e) => setVowsImage(e.target.value)}
-                                            placeholder="Paste image URL or upload"
+                                            placeholder={translations.pasteimageurlorupload}
                                         />
                                         <input
                                             type="file"
@@ -468,14 +470,14 @@ const PromiseSection = () => {
                                             disabled={isUploadingVows}
                                         >
                                             <CloudUploadIcon fontSize="small" />
-                                            {isUploadingVows ? "Uploading..." : "Upload Image"}
+                                            {isUploadingVows ? translations.uploading : translations.uploadimage}
                                         </button>
                                     </div>
                                     <div className="image-preview-box">
                                         {vowsImage ? (
                                             <img src={vowsImage} alt="Wedding Bands Preview" />
                                         ) : (
-                                            <span className="empty-preview">No image selected</span>
+                                            <span className="empty-preview">{translations.noimageselected}</span>
                                         )}
                                     </div>
                                 </div>
@@ -486,75 +488,75 @@ const PromiseSection = () => {
                         <div className="form-section-divider">
                             <div className="form-section-title-wrap">
                                 <h4 className="form-section-title">
-                                    <DiamondIcon fontSize="small" /> 3. The Proposal (Right Top Card: Engagement Rings)
+                                    <DiamondIcon fontSize="small" /> {translations.proposalcardheading}
                                 </h4>
                             </div>
                             <span className="form-section-subtitle">
-                                The landscape card representing Engagement Rings.
+                                {translations.proposalcarddesc}
                             </span>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Card Eyebrow</label>
+                                <label>{translations.cardeyebrow}</label>
                                 <input
                                     type="text"
                                     value={proposalEyebrow}
                                     onChange={(e) => setProposalEyebrow(e.target.value)}
-                                    placeholder="e.g. The Proposal"
+                                    placeholder={translations.enterproposaleyebrow}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Card Main Title</label>
+                                <label>{translations.cardmaintitle}</label>
                                 <input
                                     type="text"
                                     value={proposalTitle}
                                     onChange={(e) => setProposalTitle(e.target.value)}
-                                    placeholder="e.g. Engagement Rings"
+                                    placeholder={translations.enterproposaltitle}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Card Italic Subtitle</label>
+                                <label>{translations.carditalicsubtitle}</label>
                                 <input
                                     type="text"
                                     value={proposalSubtitle}
                                     onChange={(e) => setProposalSubtitle(e.target.value)}
-                                    placeholder="e.g. The ring that asks the question"
+                                    placeholder={translations.enterproposalsubtitle}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Button Text</label>
+                                <label>{translations.buttontext}</label>
                                 <input
                                     type="text"
                                     value={proposalButtonText}
                                     onChange={(e) => setProposalButtonText(e.target.value)}
-                                    placeholder="e.g. Shop Now"
+                                    placeholder={translations.enterbuttontext}
                                 />
                             </div>
                         </div>
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label>Button Link URL</label>
+                                <label>{translations.buttonlinkurl}</label>
                                 <input
                                     type="text"
                                     value={proposalButtonLink}
                                     onChange={(e) => setProposalButtonLink(e.target.value)}
-                                    placeholder="/collections?category=Engagement+Rings"
+                                    placeholder={translations.enterproposalbuttonlink}
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Background Image URL / S3 Upload</label>
+                                <label>{translations.backgroundimageupload}</label>
                                 <div className="image-upload-wrapper">
                                     <div className="upload-input-group">
                                         <input
                                             type="text"
                                             value={proposalImage}
                                             onChange={(e) => setProposalImage(e.target.value)}
-                                            placeholder="Paste image URL or upload"
+                                            placeholder={translations.pasteimageurlorupload}
                                         />
                                         <input
                                             type="file"
@@ -570,14 +572,14 @@ const PromiseSection = () => {
                                             disabled={isUploadingProposal}
                                         >
                                             <CloudUploadIcon fontSize="small" />
-                                            {isUploadingProposal ? "Uploading..." : "Upload Image"}
+                                            {isUploadingProposal ? translations.uploading : translations.uploadimage}
                                         </button>
                                     </div>
                                     <div className="image-preview-box">
                                         {proposalImage ? (
                                             <img src={proposalImage} alt="Engagement Rings Preview" />
                                         ) : (
-                                            <span className="empty-preview">No image selected</span>
+                                            <span className="empty-preview">{translations.noimageselected}</span>
                                         )}
                                     </div>
                                 </div>
@@ -588,25 +590,25 @@ const PromiseSection = () => {
                         <div className="form-section-divider">
                             <div className="form-section-title-wrap">
                                 <h4 className="form-section-title">
-                                    <DiamondIcon fontSize="small" /> 4. Shop By Style Dial & Styles
+                                    <DiamondIcon fontSize="small" /> {translations.shopbystyledialheading}
                                 </h4>
                                 <button type="button" className="add-new-btn" onClick={handleOpenAddModal}>
-                                    <AddIcon fontSize="small" /> Add Style
+                                    <AddIcon fontSize="small" /> {translations.addstyle}
                                 </button>
                             </div>
                             <span className="form-section-subtitle">
-                                Manage the interactive style selector circular avatars and descriptions (Solitaire, Halo, Pavé, etc.).
+                                {translations.shopbystyledialdesc}
                             </span>
                         </div>
 
                         <div className="form-row full-width">
                             <div className="form-group">
-                                <label>Section Subtitle Label</label>
+                                <label>{translations.sectionsubtitlelabel}</label>
                                 <input
                                     type="text"
                                     value={styleSectionTitle}
                                     onChange={(e) => setStyleSectionTitle(e.target.value)}
-                                    placeholder="e.g. SHOP BY STYLE"
+                                    placeholder={translations.entersectionsubtitlelabel}
                                 />
                             </div>
                         </div>
@@ -616,20 +618,20 @@ const PromiseSection = () => {
                             <table className="table">
                                 <thead>
                                     <tr>
-                                        <th style={{ width: "65px", textAlign: "center" }}>Thumb</th>
-                                        <th style={{ minWidth: "120px", textAlign: "left" }}>Style Name</th>
-                                        <th style={{ minWidth: "260px", maxWidth: "340px", textAlign: "left" }}>Description</th>
-                                        <th style={{ minWidth: "190px", maxWidth: "240px", textAlign: "left" }}>Link URL</th>
-                                        <th style={{ width: "70px", textAlign: "center" }}>Order</th>
-                                        <th style={{ width: "90px", textAlign: "center" }}>Status</th>
-                                        <th style={{ width: "100px", textAlign: "center" }}>Actions</th>
+                                        <th style={{ width: "65px", textAlign: "center" }}>{translations.thumb}</th>
+                                        <th style={{ minWidth: "120px", textAlign: "left" }}>{translations.stylename}</th>
+                                        <th style={{ minWidth: "260px", maxWidth: "340px", textAlign: "left" }}>{translations.description}</th>
+                                        <th style={{ minWidth: "190px", maxWidth: "240px", textAlign: "left" }}>{translations.linkurl}</th>
+                                        <th style={{ width: "70px", textAlign: "center" }}>{translations.displayorder || translations.order}</th>
+                                        <th style={{ width: "90px", textAlign: "center" }}>{translations.status}</th>
+                                        <th style={{ width: "100px", textAlign: "center" }}>{translations.actions}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {styles.length === 0 ? (
                                         <tr>
                                             <td colSpan="7" style={{ textAlign: "center", padding: "28px", color: "#9ca3af" }}>
-                                                No styles added yet. Click "+ Add Style" to create one.
+                                                {translations.nostylesyet}
                                             </td>
                                         </tr>
                                     ) : (
@@ -695,11 +697,11 @@ const PromiseSection = () => {
                         {/* Bottom Actions */}
                         <div className="bottom-action-bar">
                             <button type="button" className="cancel-btn" onClick={() => navigate('/Home/Dashboard')}>
-                                Cancel
+                                {translations.cancel}
                             </button>
                             <button type="submit" className="save-btn" disabled={isSaving}>
                                 <SaveIcon fontSize="small" />
-                                {isSaving ? "Saving..." : "Save Changes"}
+                                {isSaving ? translations.saving : translations.savechanges}
                             </button>
                         </div>
                     </form>
@@ -711,44 +713,44 @@ const PromiseSection = () => {
                 <div className="modal-overlay">
                     <div className="modal-card">
                         <div className="modal-header">
-                            <h5>{editingIndex !== null ? "Edit Ring Style" : "Add New Ring Style"}</h5>
+                            <h5>{editingIndex !== null ? translations.editringstyle : translations.addnewringstyle}</h5>
                             <button type="button" className="close-btn" onClick={() => setIsModalOpen(false)}>×</button>
                         </div>
                         <form onSubmit={handleSaveStyleModal}>
                             <div className="modal-body">
                                 <div className="form-group" style={{ marginBottom: "14px" }}>
-                                    <label>Style Name *</label>
+                                    <label>{translations.stylename} *</label>
                                     <input
                                         type="text"
                                         required
                                         value={currentStyle.name}
                                         onChange={(e) => setCurrentStyle({ ...currentStyle, name: e.target.value })}
-                                        placeholder="e.g. Solitaire, Halo, Pavé"
+                                        placeholder={translations.enterstylename}
                                     />
                                 </div>
 
                                 <div className="form-group" style={{ marginBottom: "14px" }}>
-                                    <label>Short Description *</label>
+                                    <label>{translations.shortdescription} *</label>
                                     <textarea
                                         rows="2"
                                         value={currentStyle.desc}
                                         onChange={(e) => setCurrentStyle({ ...currentStyle, desc: e.target.value })}
-                                        placeholder="e.g. The timeless purity of a single certified diamond"
+                                        placeholder={translations.entershortdescription}
                                     />
                                 </div>
 
                                 <div className="form-group" style={{ marginBottom: "14px" }}>
-                                    <label>Destination Link URL</label>
+                                    <label>{translations.destinationlinkurl}</label>
                                     <input
                                         type="text"
                                         value={currentStyle.link}
                                         onChange={(e) => setCurrentStyle({ ...currentStyle, link: e.target.value })}
-                                        placeholder="/collections?style=Solitaire"
+                                        placeholder={translations.enterdestinationlinkurl}
                                     />
                                 </div>
 
                                 <div className="form-group" style={{ marginBottom: "14px" }}>
-                                    <label>Display Order</label>
+                                    <label>{translations.displayorder}</label>
                                     <input
                                         type="number"
                                         value={currentStyle.order}
@@ -757,14 +759,14 @@ const PromiseSection = () => {
                                 </div>
 
                                 <div className="form-group" style={{ marginBottom: "14px" }}>
-                                    <label>Avatar / Thumbnail Image</label>
+                                    <label>{translations.avatarthumbnailimage}</label>
                                     <div className="image-upload-wrapper">
                                         <div className="upload-input-group">
                                             <input
                                                 type="text"
                                                 value={currentStyle.img}
                                                 onChange={(e) => setCurrentStyle({ ...currentStyle, img: e.target.value })}
-                                                placeholder="Paste image URL or upload"
+                                                placeholder={translations.pasteimageurlorupload}
                                             />
                                             <input
                                                 type="file"
@@ -780,14 +782,14 @@ const PromiseSection = () => {
                                                 disabled={isUploadingModalImg}
                                             >
                                                 <CloudUploadIcon fontSize="small" />
-                                                {isUploadingModalImg ? "Uploading..." : "Upload"}
+                                                {isUploadingModalImg ? translations.uploading : translations.upload}
                                             </button>
                                         </div>
                                         <div className="image-preview-box" style={{ maxWidth: "120px", height: "120px", borderRadius: "50%" }}>
                                             {currentStyle.img ? (
                                                 <img src={currentStyle.img} alt="Style Avatar Preview" />
                                             ) : (
-                                                <span className="empty-preview">No Avatar</span>
+                                                <span className="empty-preview">{translations.noavatar}</span>
                                             )}
                                         </div>
                                     </div>
@@ -798,15 +800,15 @@ const PromiseSection = () => {
                                         checked={currentStyle.status !== false}
                                         onChange={() => setCurrentStyle({ ...currentStyle, status: !currentStyle.status })}
                                     />
-                                    <label style={{ margin: 0 }}>Active on Website</label>
+                                    <label style={{ margin: 0 }}>{translations.activeonwebsite}</label>
                                 </div>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="cancel-btn" onClick={() => setIsModalOpen(false)}>
-                                    Cancel
+                                    {translations.cancel}
                                 </button>
                                 <button type="submit" className="save-btn">
-                                    {editingIndex !== null ? "Update Style" : "Add Style"}
+                                    {editingIndex !== null ? translations.updatestyle : translations.addstyle}
                                 </button>
                             </div>
                         </form>

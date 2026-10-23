@@ -386,26 +386,26 @@ const AdminNavbar = () => {
                                 </li>
                                 <li>
                                     <NavLink to="/Support/ShapeSection" className={navLinkClass('/Support/ShapeSection')}>
-                                        <NavTooltip title={translations.shapeSection || "Shop By Shape"}>
+                                        <NavTooltip title={translations.shapeSection}>
                                             <AutoAwesomeIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.shapeSection || "Shop By Shape"}
+                                        {translations.shapeSection}
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/Support/CoupleSection" className={navLinkClass('/Support/CoupleSection')}>
-                                        <NavTooltip title={translations.coupleSection || "Loved by Couples"}>
+                                        <NavTooltip title={translations.coupleSection}>
                                             <FavoriteIcon style={{ color: '#e11d48', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.coupleSection || "Loved by Couples"}
+                                        {translations.coupleSection}
                                     </NavLink>
                                 </li>
                                 <li>
                                     <NavLink to="/Support/PromiseSection" className={navLinkClass('/Support/PromiseSection')}>
-                                        <NavTooltip title={translations.promiseSection || "Promise & Vows Section"}>
+                                        <NavTooltip title={translations.promiseSection}>
                                             <DiamondIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
                                         </NavTooltip>
-                                        {translations.promiseSection || "Promise & Vows Section"}
+                                        {translations.promiseSection}
                                     </NavLink>
                                 </li>
                             </div>

@@ -49,28 +49,28 @@ const FieldCharacterCounter = ({ current = 0, max = 60, recommendedMin, recommen
 
     if (current === 0) {
         statusType = 'empty';
-        statusText = translations.empty || 'Empty';
+        statusText = translations.empty;
     } else if (recommendedMin && recommendedMax) {
         if (current >= recommendedMin && current <= recommendedMax) {
             statusType = 'optimal';
-            statusText = translations.optimal || 'Optimal';
+            statusText = translations.optimal;
         } else if (current < recommendedMin) {
             statusType = 'progress';
             statusText = `${recommendedMin - current} more for optimal`;
         } else if (current > recommendedMax && current < max) {
             statusType = 'warning';
-            statusText = translations.nearlimit || 'Near limit';
+            statusText = translations.nearlimit;
         } else {
             statusType = 'max-reached';
-            statusText = translations.maxreached || 'Max limit';
+            statusText = translations.maxlimit || translations.maxreached;
         }
     } else {
         if (current >= max) {
             statusType = 'max-reached';
-            statusText = translations.maxreached || 'Max limit';
+            statusText = translations.maxlimit || translations.maxreached;
         } else if (percentage >= 90) {
             statusType = 'warning';
-            statusText = translations.nearlimit || 'Near limit';
+            statusText = translations.nearlimit;
         } else {
             statusType = 'progress';
             statusText = `${max - current} left`;
@@ -81,7 +81,7 @@ const FieldCharacterCounter = ({ current = 0, max = 60, recommendedMin, recommen
         <div className={`field-char-counter-wrapper status-${statusType}`}>
             <div className="counter-row">
                 <span className="counter-counts">
-                    <strong>{current}</strong> / {max} {translations.characters || 'chars'}
+                    <strong>{current}</strong> / {max} {translations.characters}
                 </span>
                 <span className={`counter-badge badge-${statusType}`}>
                     {statusType === 'optimal' && <CheckCircleIcon className="badge-icon" fontSize="inherit" />}
@@ -232,7 +232,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
 
         const itemId = itemData?.itemid || itemData?._id;
         if (!itemId) {
-            setWarningMessage(translations.itemnotfound || 'Item not found');
+            setWarningMessage(translations.itemnotfound);
             setShowWarning(true);
             return;
         }
@@ -262,7 +262,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
             if (HandleUnauthorized(data, logoutUser, navigate)) return;
 
             if (response.ok) {
-                setSuccessMessage(data.message || translations.seocontentupdatedsuccessfully || 'SEO Marketing content updated successfully');
+                setSuccessMessage(data.message || translations.seocontentupdatedsuccessfully);
                 if (onItemUpdated && data.item) {
                     onItemUpdated(data.item);
                 }
@@ -309,14 +309,14 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                         </div>
                         <div className="banner-info">
                             <div className="banner-title-row">
-                                <h5 className="banner-title">{translations.seomarketingcontent || 'SEO Marketing Content'}</h5>
+                                <h5 className="banner-title">{translations.seomarketingcontent}</h5>
                                 <div className={`seo-health-chip level-${seoHealth.level}`}>
                                     <span className="health-dot" />
                                     <span className="health-text">{seoHealth.percentage}% {seoHealth.label}</span>
                                 </div>
                             </div>
                             <p className="banner-subtitle">
-                                {translations.seomarketingsubtitle || 'Optimize search engine rankings, URL slug, and meta tags'}
+                                {translations.seomarketingsubtitle}
                             </p>
                         </div>
                     </div>
@@ -337,10 +337,10 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                         </div>
                                         <div>
                                             <h6 className="section-title">
-                                                {translations.searchengineoptimization || 'Search Engine Optimization (SERP)'}
+                                                {translations.searchengineoptimization}
                                             </h6>
                                             <span className="section-description">
-                                                {translations.searchenginesubtitle || 'Configure meta tags for Google, Bing, and other search engines'}
+                                                {translations.searchenginesubtitle}
                                             </span>
                                         </div>
                                     </div>
@@ -351,17 +351,17 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                     <div className="form-group field-with-counter">
                                         <div className="field-label-row">
                                             <label htmlFor="metaTitle" className="field-label">
-                                                {translations.metatitle || 'Meta Title (Page Title)'}
+                                                {translations.metatitle}
                                             </label>
                                             <span className="recommended-tag">
-                                                {translations.recommended || 'Recommended'}: {LIMITS.metaTitleOptimalMin}-{LIMITS.metaTitleOptimalMax} {translations.characters || 'chars'}
+                                                {translations.recommended}: {LIMITS.metaTitleOptimalMin}-{LIMITS.metaTitleOptimalMax} {translations.characters}
                                             </span>
                                         </div>
                                         <input
                                             type="text"
                                             id="metaTitle"
                                             className="form-control seo-input"
-                                            placeholder={translations.entermetatitle || 'e.g. Solitaire Diamond Ring | Gemora Diam'}
+                                            placeholder={translations.entermetatitle}
                                             value={metaTitle}
                                             maxLength={LIMITS.metaTitle}
                                             onChange={(e) => setMetaTitle(e.target.value)}
@@ -374,7 +374,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             translations={translations}
                                         />
                                         <small className="field-hint">
-                                            {translations.metatitlehelp || 'Headline in Google search results and browser tab. Recommended: 50-60 characters.'}
+                                            {translations.metatitlehelp}
                                         </small>
                                     </div>
 
@@ -382,10 +382,10 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                     <div className="form-group field-with-counter">
                                         <div className="field-label-row">
                                             <label htmlFor="slug" className="field-label">
-                                                {translations.urlslug || 'URL Slug'}
+                                                {translations.urlslug}
                                             </label>
                                             <span className="recommended-tag">
-                                                {translations.recommended || 'Recommended'}: {LIMITS.slugOptimalMin}-{LIMITS.slugOptimalMax} {translations.characters || 'chars'}
+                                                {translations.recommended}: {LIMITS.slugOptimalMin}-{LIMITS.slugOptimalMax} {translations.characters}
                                             </span>
                                         </div>
                                         <div className="slug-input-wrapper">
@@ -394,7 +394,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                                 type="text"
                                                 id="slug"
                                                 className="form-control seo-input slug-input"
-                                                placeholder={translations.enterurlslug || 'solitaire-diamond-ring'}
+                                                placeholder={translations.enterurlslug}
                                                 value={slug}
                                                 maxLength={LIMITS.slug}
                                                 onChange={(e) => setSlug(slugify(e.target.value))}
@@ -409,7 +409,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             translations={translations}
                                         />
                                         <small className="field-hint">
-                                            {translations.urlslughelp || 'SEO-friendly URL path for this product. Lowercase letters, numbers, and hyphens only.'}
+                                            {translations.urlslughelp}
                                         </small>
                                     </div>
 
@@ -417,17 +417,17 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                     <div className="form-group field-with-counter">
                                         <div className="field-label-row">
                                             <label htmlFor="metaDescription" className="field-label">
-                                                {translations.metadescription || 'Meta Description'}
+                                                {translations.metadescription}
                                             </label>
                                             <span className="recommended-tag">
-                                                {translations.recommended || 'Recommended'}: {LIMITS.metaDescriptionOptimalMin}-{LIMITS.metaDescriptionOptimalMax} {translations.characters || 'chars'}
+                                                {translations.recommended}: {LIMITS.metaDescriptionOptimalMin}-{LIMITS.metaDescriptionOptimalMax} {translations.characters}
                                             </span>
                                         </div>
                                         <textarea
                                             id="metaDescription"
                                             rows="3"
                                             className="form-control seo-textarea"
-                                            placeholder={translations.entermetadescription || 'Enter brief description displayed in search results...'}
+                                            placeholder={translations.entermetadescription}
                                             value={metaDescription}
                                             maxLength={LIMITS.metaDescription}
                                             onChange={(e) => setMetaDescription(e.target.value)}
@@ -440,7 +440,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             translations={translations}
                                         />
                                         <small className="field-hint">
-                                            {translations.metadescriptionhelp || 'Summary displayed beneath title in search results. Recommended: 140-160 characters.'}
+                                            {translations.metadescriptionhelp}
                                         </small>
                                     </div>
 
@@ -448,17 +448,17 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                     <div className="form-group field-with-counter">
                                         <div className="field-label-row">
                                             <label htmlFor="metaKeywords" className="field-label">
-                                                {translations.focuskeywords || 'Focus / Meta Keywords'}
+                                                {translations.focuskeywords}
                                             </label>
                                             <span className="character-limit-label">
-                                                Max {LIMITS.metaKeywords} {translations.characters || 'chars'}
+                                                Max {LIMITS.metaKeywords} {translations.characters}
                                             </span>
                                         </div>
                                         <input
                                             type="text"
                                             id="metaKeywords"
                                             className="form-control seo-input"
-                                            placeholder={translations.enterfocuskeywords || 'e.g. solitaire ring, 18k gold, conflict-free diamond'}
+                                            placeholder={translations.enterfocuskeywords}
                                             value={metaKeywords}
                                             maxLength={LIMITS.metaKeywords}
                                             onChange={(e) => setMetaKeywords(e.target.value)}
@@ -478,7 +478,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             </div>
                                         )}
                                         <small className="field-hint">
-                                            {translations.focuskeywordshelp || 'Relevant keywords for search engine indexing and internal search optimization.'}
+                                            {translations.focuskeywordshelp}
                                         </small>
                                     </div>
 
@@ -486,10 +486,10 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                     <div className="form-group field-with-counter">
                                         <div className="field-label-row">
                                             <label htmlFor="canonicalUrl" className="field-label">
-                                                {translations.canonicalurl || 'Canonical URL'}
+                                                {translations.canonicalurl}
                                             </label>
                                             <span className="character-limit-label">
-                                                Max {LIMITS.canonicalUrl} {translations.characters || 'chars'}
+                                                Max {LIMITS.canonicalUrl} {translations.characters}
                                             </span>
                                         </div>
                                         <div className="input-with-icon-wrapper">
@@ -498,7 +498,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                                 type="url"
                                                 id="canonicalUrl"
                                                 className="form-control seo-input has-inner-icon"
-                                                placeholder={translations.entercanonicalurl || 'https://gemoradiam.com/products/ring'}
+                                                placeholder={translations.entercanonicalurl}
                                                 value={canonicalUrl}
                                                 maxLength={LIMITS.canonicalUrl}
                                                 onChange={(e) => setCanonicalUrl(e.target.value)}
@@ -510,7 +510,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             translations={translations}
                                         />
                                         <small className="field-hint">
-                                            {translations.canonicalurlhelp || 'Preferred URL version to prevent duplicate content indexing across variants.'}
+                                            {translations.canonicalurlhelp}
                                         </small>
                                     </div>
                                 </div>
@@ -526,7 +526,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                 <div className="previews-header-row">
                                     <div className="previews-title-group">
                                         <TravelExploreIcon className="previews-title-icon" />
-                                        <h6 className="previews-heading">{translations.livepreview || 'Live Previews'}</h6>
+                                        <h6 className="previews-heading">{translations.livepreview}</h6>
                                     </div>
                                     <div className="device-toggle-group">
                                         <button
@@ -536,7 +536,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             title="Desktop View"
                                         >
                                             <ComputerIcon fontSize="small" />
-                                            <span>{translations.desktopview || 'Desktop'}</span>
+                                            <span>{translations.desktopview}</span>
                                         </button>
                                         <button
                                             type="button"
@@ -545,12 +545,11 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             title="Mobile View"
                                         >
                                             <PhoneAndroidIcon fontSize="small" />
-                                            <span>{translations.mobileview || 'Mobile'}</span>
+                                            <span>{translations.mobileview}</span>
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* Preview: Google SERP Snippet */}
                                 <div className="preview-card google-serp-card">
                                     <div className="preview-card-header">
                                         <span className="card-tag google-tag">Google SERP</span>
@@ -586,12 +585,12 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             {copiedSlug ? (
                                                 <>
                                                     <CheckIcon fontSize="small" />
-                                                    <span>{translations.linkcopied || 'Link copied!'}</span>
+                                                    <span>{translations.linkcopied}</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <LinkIcon fontSize="small" />
-                                                    <span>{translations.copyurl || 'Copy Link'}</span>
+                                                    <span>{translations.copyurl}</span>
                                                 </>
                                             )}
                                         </button>
@@ -608,7 +607,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                         <div className="actions-left-info">
                             <span className="actions-status-dot" />
                             <span className="actions-status-text">
-                                {translations.seoperformanceoverview || 'SEO Health'}: <strong>{seoHealth.percentage}%</strong> ({seoHealth.label})
+                                {translations.seoperformanceoverview}: <strong>{seoHealth.percentage}%</strong> ({seoHealth.label})
                             </span>
                         </div>
                         <div className="actions-right-buttons">
@@ -619,7 +618,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                 disabled={isSaving}
                             >
                                 <RestartAltIcon fontSize="small" />
-                                <span>{translations.reset || 'Reset'}</span>
+                                <span>{translations.reset}</span>
                             </button>
                             <button
                                 type="submit"
@@ -627,7 +626,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                 disabled={isSaving}
                             >
                                 <SaveIcon fontSize="small" />
-                                <span>{isSaving ? (translations.saving || 'Saving...') : (translations.saveseocontent || 'Save SEO Content')}</span>
+                                <span>{isSaving ? translations.saving : translations.saveseocontent}</span>
                             </button>
                         </div>
                     </div>
