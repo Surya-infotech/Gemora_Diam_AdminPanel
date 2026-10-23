@@ -78,8 +78,8 @@ const PromiseSection = () => {
     const modalImgInputRef = useRef(null);
 
     useEffect(() => {
-        document.title = "Promise & Vows Section | Gemora Diam";
-    }, []);
+        document.title = `${translations.promiseSection || "Promise & Vows Section"} | Gemora Diam`;
+    }, [translations]);
 
     const fetchSectionData = async () => {
         setIsLoading(true);
