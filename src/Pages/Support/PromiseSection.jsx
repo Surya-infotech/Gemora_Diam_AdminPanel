@@ -612,30 +612,30 @@ const PromiseSection = () => {
                         </div>
 
                         {/* Styles Table */}
-                        <div className="styles-table-wrapper">
-                            <table>
+                        <div className="table-wrapper">
+                            <table className="table">
                                 <thead>
                                     <tr>
-                                        <th>Thumb</th>
-                                        <th>Style Name</th>
-                                        <th>Description</th>
-                                        <th>Link URL</th>
-                                        <th>Order</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <th style={{ width: "65px", textAlign: "center" }}>Thumb</th>
+                                        <th style={{ minWidth: "120px", textAlign: "left" }}>Style Name</th>
+                                        <th style={{ minWidth: "260px", maxWidth: "340px", textAlign: "left" }}>Description</th>
+                                        <th style={{ minWidth: "190px", maxWidth: "240px", textAlign: "left" }}>Link URL</th>
+                                        <th style={{ width: "70px", textAlign: "center" }}>Order</th>
+                                        <th style={{ width: "90px", textAlign: "center" }}>Status</th>
+                                        <th style={{ width: "100px", textAlign: "center" }}>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {styles.length === 0 ? (
                                         <tr>
-                                            <td colSpan="7" style={{ textAlign: "center", padding: "20px", color: "#9ca3af" }}>
+                                            <td colSpan="7" style={{ textAlign: "center", padding: "28px", color: "#9ca3af" }}>
                                                 No styles added yet. Click "+ Add Style" to create one.
                                             </td>
                                         </tr>
                                     ) : (
                                         styles.map((style, idx) => (
                                             <tr key={style.styleId || idx}>
-                                                <td>
+                                                <td style={{ textAlign: "center" }}>
                                                     {style.img ? (
                                                         <img
                                                             src={style.img}
@@ -648,17 +648,38 @@ const PromiseSection = () => {
                                                         </div>
                                                     )}
                                                 </td>
-                                                <td style={{ fontWeight: 600 }}>{style.name}</td>
-                                                <td style={{ maxWidth: "250px", color: "#6b7280" }}>{style.desc}</td>
-                                                <td style={{ fontSize: "12px", color: "#2563eb" }}>{style.link}</td>
-                                                <td>{style.order || idx + 1}</td>
-                                                <td>
+                                                <td style={{ textAlign: "left", fontWeight: 600 }}>
+                                                    {style.name}
+                                                    {style.styleId && (
+                                                        <div style={{ fontSize: "11px", color: "var(--muted-text, #6b7280)", fontWeight: 400 }}>
+                                                            ID: {style.styleId}
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                <td className="desc-cell" style={{ textAlign: "left" }}>
+                                                    {style.desc || "—"}
+                                                </td>
+                                                <td className="link-cell" style={{ textAlign: "left" }}>
+                                                    <a
+                                                        href={style.link || "#"}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="style-link-anchor"
+                                                        title={style.link}
+                                                    >
+                                                        {style.link || "—"}
+                                                    </a>
+                                                </td>
+                                                <td style={{ textAlign: "center", fontWeight: 600 }}>
+                                                    #{style.order || idx + 1}
+                                                </td>
+                                                <td style={{ textAlign: "center" }}>
                                                     <CustomSwitch
                                                         checked={style.status !== false}
                                                         onChange={() => handleToggleStyleStatus(idx)}
                                                     />
                                                 </td>
-                                                <td>
+                                                <td style={{ textAlign: "center" }}>
                                                     <div className="actions-cell">
                                                         <EditButton onClick={() => handleOpenEditModal(idx)} />
                                                         <DeleteButton onClick={() => handleDeleteStyle(idx)} />

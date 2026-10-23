@@ -201,14 +201,13 @@
                 }
             }
 
-            .styles-table-wrapper {
+            .table-wrapper {
+                @include table_mixin.main_table;
                 margin-top: 15px;
-                overflow-x: auto;
+                margin-bottom: 25px;
 
-                table {
-                    width: 100%;
-                    border-collapse: separate;
-                    border-spacing: 0;
+                .table {
+                    @include table_mixin.table;
 
                     thead th {
                         @include table_mixin.table_thead;
@@ -216,6 +215,38 @@
 
                     tbody td {
                         @include table_mixin.table_td;
+                        vertical-align: middle;
+
+                        &.desc-cell {
+                            white-space: normal !important;
+                            max-width: 320px;
+                            line-height: 1.45;
+                            color: #4b5563;
+                            font-size: 13px;
+                            word-break: break-word;
+                        }
+
+                        &.link-cell {
+                            white-space: nowrap;
+                            max-width: 240px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            .style-link-anchor {
+                                color: #2563eb;
+                                text-decoration: none;
+                                font-size: 12px;
+                                display: inline-block;
+                                max-width: 100%;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                }
+                            }
+                        }
                     }
 
                     tbody tr {
@@ -228,9 +259,11 @@
                         border-radius: 50%;
                         object-fit: cover;
                         border: 1px solid #e5e7eb;
+                        display: inline-block;
+                        vertical-align: middle;
 
                         &.empty-thumb {
-                            display: grid;
+                            display: inline-grid;
                             place-items: center;
                             background-color: #f3f4f6;
                             color: #9ca3af;
@@ -238,8 +271,9 @@
                     }
 
                     .actions-cell {
-                        display: flex;
+                        display: inline-flex;
                         align-items: center;
+                        justify-content: center;
                         gap: 8px;
                     }
                 }
