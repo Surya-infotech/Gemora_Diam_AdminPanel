@@ -114,39 +114,6 @@
                 }
             }
         }
-
-        .banner-right-actions {
-            .btn-autogenerate {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                padding: 9px 16px;
-                border-radius: var(--radius-sm, 8px);
-                background: linear-gradient(135deg, color-mix(in srgb, var(--primary-color) 90%, black), var(--primary-color));
-                color: #ffffff;
-                font-size: 13px;
-                font-weight: 600;
-                border: none;
-                cursor: pointer;
-                transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-                box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color) 30%, transparent);
-
-                &:hover {
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 40%, transparent);
-                    opacity: 0.95;
-                }
-
-                &:active {
-                    transform: translateY(0);
-                }
-
-                .btn-icon {
-                    font-size: 18px;
-                    animation: pulseIcon 2s infinite ease-in-out;
-                }
-            }
-        }
     }
 
     /* Layout Grid */
@@ -829,15 +796,6 @@
         .seo-header-banner {
             flex-direction: column;
             align-items: flex-start;
-
-            .banner-right-actions {
-                width: 100%;
-
-                .btn-autogenerate {
-                    width: 100%;
-                    justify-content: center;
-                }
-            }
         }
 
         .seo-form-actions-bar {
@@ -854,14 +812,5 @@
                 }
             }
         }
-    }
-}
-
-@keyframes pulseIcon {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15);
     }
 }

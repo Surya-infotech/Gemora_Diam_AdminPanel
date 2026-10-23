@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -158,56 +157,6 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
         }
     }, [itemData]);
 
-    // Auto-generate SEO content from product data
-    const handleAutoGenerate = () => {
-        if (!itemData) return;
-
-        const itemName = itemData.itemname || 'Diamond Jewelry';
-        const category = itemData.categoryname || '';
-        const subcategory = itemData.subcategoryname || '';
-        const cleanDesc = stripHtml(itemData.description || '');
-
-        // 1. Meta Title (Max 60)
-        let generatedTitle = `${itemName} | Luxury ${category || 'Fine Jewelry'} | Gemora Diam`;
-        if (generatedTitle.length > LIMITS.metaTitle) {
-            generatedTitle = `${itemName} | Gemora Diam`;
-        }
-        setMetaTitle(generatedTitle.slice(0, LIMITS.metaTitle));
-
-        // 2. Slug (Max 100)
-        const generatedSlug = slugify(itemName).slice(0, LIMITS.slug);
-        setSlug(generatedSlug);
-
-        // 3. Meta Description (140-160 optimal)
-        let generatedDesc = cleanDesc;
-        if (!generatedDesc || generatedDesc.length < 50) {
-            generatedDesc = `Discover ${itemName} crafted in hallmarked precious metal and sparkling certified diamonds. Exclusively handcrafted at Gemora Diam with free insured shipping.`;
-        }
-        if (generatedDesc.length > LIMITS.metaDescription) {
-            generatedDesc = generatedDesc.slice(0, 155).trim() + '...';
-        }
-        setMetaDescription(generatedDesc.slice(0, LIMITS.metaDescription));
-
-        // 4. Focus Keywords (Max 255)
-        const kwParts = [
-            itemName,
-            category,
-            subcategory,
-            'lab grown diamonds',
-            '18k solid gold',
-            'luxury jewelry',
-            'certified diamond',
-            'Gemora Diam'
-        ].filter(Boolean);
-        const generatedKeywords = [...new Set(kwParts)].join(', ').slice(0, LIMITS.metaKeywords);
-        setMetaKeywords(generatedKeywords);
-
-        // 5. Canonical URL
-        const generatedCanonical = `https://gemoradiam.com/products/${generatedSlug}`.slice(0, LIMITS.canonicalUrl);
-        setCanonicalUrl(generatedCanonical);
-
-        setSuccessMessage(translations.autogenerateseotip || 'SEO fields auto-filled from product details! Review and click Save.');
-    };
 
     // Calculate SEO Optimization Health Score (0 - 100%)
     const seoHealth = useMemo(() => {
@@ -370,17 +319,6 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                 {translations.seomarketingsubtitle || 'Optimize search engine rankings, URL slug, and meta tags'}
                             </p>
                         </div>
-                    </div>
-                    <div className="banner-right-actions">
-                        <button
-                            type="button"
-                            className="btn-autogenerate"
-                            onClick={handleAutoGenerate}
-                            title={translations.autogenerateseotip || 'Auto-generate SEO fields from product details'}
-                        >
-                            <AutoAwesomeIcon className="btn-icon" />
-                            <span>{translations.autogenerateseo || 'Auto-Fill from Product'}</span>
-                        </button>
                     </div>
                 </div>
 
