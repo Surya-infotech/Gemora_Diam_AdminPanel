@@ -42,7 +42,7 @@ const OwnerLogin = () => {
     const [selectedLanguage, setSelectedLanguage] = useState('English');
     const [isLoading, setIsLoading] = useState(false);
     const [formError, setFormError] = useState('');
-    const FALLBACK_LOGO = `${import.meta.env.BASE_URL}logo.png`;
+    const FALLBACK_LOGO = `${import.meta.env.BASE_URL}GEMORALOGO.png`;
     const [logoUrl, setLogoUrl] = useState(FALLBACK_LOGO);
     const softwareName = 'Gemora Diam';
     const HOME_URL = import.meta.env.VITE_HOME_URL || '/';

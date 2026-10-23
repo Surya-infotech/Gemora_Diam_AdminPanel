@@ -43,7 +43,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const logoUrl = "/logo.png";
+    const logoUrl = "/GEMORALOGO.png";
     const { translations, isRtl } = useLanguage();
     const { canView, isEmployee } = usePermissions();
     const { pathname } = useLocation();
