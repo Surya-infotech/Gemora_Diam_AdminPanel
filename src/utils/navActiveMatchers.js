@@ -27,7 +27,6 @@ const NAV_ACTIVE_PREFIXES = {
     '/Support/AboutUs': ['/Support/AboutUs'],
     '/Support/ShapeSection': ['/Support/ShapeSection'],
     '/Support/CoupleSection': ['/Support/CoupleSection'],
-    '/Support/PromiseSection': ['/Support/PromiseSection'],
     '/Support/Subscribers': ['/Support/Subscribers'],
     '/System/Setting': ['/System/Setting', '/System/Setting/AddFiscalYear', '/System/Setting/EditFiscalYear'],
     '/User/Employee': ['/User/Employee', '/User/AddEmployee', '/User/EditEmployee', '/User/EmployeeOverview'],
