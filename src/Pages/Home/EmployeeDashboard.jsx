@@ -133,19 +133,19 @@ const EmployeeDashboard = () => {
                             <div className="avatar-container">
                                 <img
                                     src={employeeData?.profileimage || profilePlaceholder}
-                                    alt={employeeFullName || "Employee"}
+                                    alt={employeeFullName || translations.Employee || translations.employee || "Employee"}
                                     className="employee-avatar-img"
                                     onError={(e) => {
                                         e.target.onerror = null;
                                         e.target.src = profilePlaceholder;
                                     }}
                                 />
-                                {isActive && <span className="online-status-dot" title="Active Account" />}
+                                {isActive && <span className="online-status-dot" title={translations.activeaccount || "Active Account"} />}
                             </div>
 
                             <div className="hero-details">
                                 <span className="welcome-greeting">
-                                    {getGreeting()}, {employeeData?.firstname || 'Employee'}
+                                    {getGreeting()}, {employeeData?.firstname || translations.Employee || translations.employee || 'Employee'}
                                 </span>
                                 <div className="employee-name-row">
                                     <h4 className="employee-name">{employeeFullName || '-'}</h4>

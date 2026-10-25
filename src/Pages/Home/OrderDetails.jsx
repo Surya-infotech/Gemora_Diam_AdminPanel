@@ -299,7 +299,7 @@ const OrderDetails = () => {
                     <tr>
                         <td style="padding: 12px 14px; border-bottom: 1px solid #eef2f6; vertical-align: top;">
                             <div style="font-weight: 700; color: #0f172a; font-size: 13.5px; margin-bottom: 4px;">
-                                ${idx + 1}. ${escapeHtml(item.itemname || 'Fine Jewelry Piece')}
+                                ${idx + 1}. ${escapeHtml(item.itemname || translations.finejewelrypiece || 'Fine Jewelry Piece')}
                             </div>
                             ${specs ? `<div style="font-size: 11.5px; color: #64748b; line-height: 1.5; margin-bottom: 4px;">${escapeHtml(specs)}</div>` : ''}
                             ${item.specialinstruction ? `<div style="font-size: 11px; color: #047857; background: #ecfdf5; display: inline-block; padding: 2px 8px; border-radius: 4px; font-style: italic;">${escapeHtml(translations.instruction)}: ${escapeHtml(item.specialinstruction)}</div>` : ''}
@@ -396,7 +396,7 @@ const OrderDetails = () => {
                             ${brandEmail ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.email)}: ${escapeHtml(brandEmail)}</div>` : ''}
                             ${brandPhone ? `<div style="font-size: 12px; color: #475569;">${escapeHtml(translations.phone)}: ${escapeHtml(brandPhone)}</div>` : ''}
                             ${brandAddress ? `<div style="font-size: 12px; color: #475569; margin-top: 6px; line-height: 1.4;">${escapeHtml(brandAddress)}</div>` : ''}
-                            <div style="font-size: 12px; color: #475569; margin-top: 6px;"><strong>${escapeHtml(translations.paymentmethod)}:</strong> ${escapeHtml(order.paymentmethod || 'Credit/Debit Card')}</div>
+                            <div style="font-size: 12px; color: #475569; margin-top: 6px;"><strong>${escapeHtml(translations.paymentmethod)}:</strong> ${escapeHtml(order.paymentmethod || translations.creditdebitcard || 'Credit/Debit Card')}</div>
                         </div>
                     </div>
 
@@ -548,7 +548,7 @@ const OrderDetails = () => {
                             >
                                 {ORDER_STATUS_OPTIONS.map((st) => (
                                     <option key={st} value={st}>
-                                        {st}
+                                        {translations[st.toLowerCase()] || st}
                                     </option>
                                 ))}
                             </select>
@@ -697,12 +697,12 @@ const OrderDetails = () => {
                             <div className="info-card-body">
                                 <div className="info-row">
                                     <span className="info-label">{translations.method}:</span>
-                                    <span className="info-val">{order.paymentmethod || 'Prepaid'}</span>
+                                    <span className="info-val">{order.paymentmethod || translations.prepaid || 'Prepaid'}</span>
                                 </div>
                                 <div className="info-row">
                                     <span className="info-label">{translations.paymentstatus}:</span>
                                     <span className={`badge-pill ${paymentStatusClass}`}>
-                                        {order.paymentstatus || 'Paid'}
+                                        {translations[(order.paymentstatus || 'paid').toLowerCase()] || order.paymentstatus || 'Paid'}
                                     </span>
                                 </div>
                                 <div className="info-row">
@@ -720,7 +720,7 @@ const OrderDetails = () => {
                         <div className="items-card-title">
                             <span>{translations.itemdetails}</span>
                             <span className="items-count-badge">
-                                {order.items?.length || 0} {order.items?.length === 1 ? 'type' : 'types'} • {totalItemsCount} total
+                                {order.items?.length || 0} {order.items?.length === 1 ? (translations.type || 'type') : (translations.types || 'types')} • {totalItemsCount} {translations.itemtotal || 'total'}
                             </span>
                         </div>
 
@@ -750,12 +750,12 @@ const OrderDetails = () => {
                                                 <td>
                                                     <div className="item-media">
                                                         {item.image ? (
-                                                            <img src={item.image} alt={item.itemname || 'Item'} className="item-img" />
+                                                            <img src={item.image} alt={item.itemname || translations.item || 'Item'} className="item-img" />
                                                         ) : (
                                                             <div className="item-placeholder">💎</div>
                                                         )}
                                                         <div className="item-meta">
-                                                            <strong>{item.itemname || 'Fine Jewelry Piece'}</strong>
+                                                            <strong>{item.itemname || translations.finejewelrypiece || 'Fine Jewelry Piece'}</strong>
                                                             {specs && <div className="specs-row">{specs}</div>}
                                                             {item.specialinstruction && (
                                                                 <div className="instruction-row">

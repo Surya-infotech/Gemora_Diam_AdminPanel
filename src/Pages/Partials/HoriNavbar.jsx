@@ -197,7 +197,7 @@ const HoriNavbar = () => {
                     type="button"
                     className="mobile-sidebar-toggle"
                     onClick={() => window.dispatchEvent(new CustomEvent('toggleMobileSidebar'))}
-                    aria-label="Toggle navigation"
+                    aria-label={translations.togglenavigation || "Toggle navigation"}
                 >
                     <MenuIcon />
                 </button>

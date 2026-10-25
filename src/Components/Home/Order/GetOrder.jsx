@@ -294,7 +294,7 @@ const GetOrder = ({ searchValue = "" }) => {
                                                     {firstItem?.image ? (
                                                         <img
                                                             src={firstItem.image}
-                                                            alt={firstItem.itemname || "Item"}
+                                                            alt={firstItem.itemname || translations.item || "Item"}
                                                             className="item-thumb"
                                                             onError={(e) => {
                                                                 e.target.style.display = "none";
@@ -305,11 +305,11 @@ const GetOrder = ({ searchValue = "" }) => {
                                                     )}
                                                     <div className="item-details-brief">
                                                         <span className="item-title">
-                                                            {firstItem?.itemname || "Jewelry Item"}
+                                                            {firstItem?.itemname || translations.finejewelrypiece || "Jewelry Item"}
                                                         </span>
                                                         <span className="item-badge-more">
-                                                            {totalItemsCount} {totalItemsCount === 1 ? "item" : "items"}
-                                                            {order.items && order.items.length > 1 && ` (${order.items.length} types)`}
+                                                            {totalItemsCount} {totalItemsCount === 1 ? (translations.item || "item") : (translations.items || "items")}
+                                                            {order.items && order.items.length > 1 && ` (${order.items.length} ${translations.types || "types"})`}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -325,14 +325,14 @@ const GetOrder = ({ searchValue = "" }) => {
                                             {/* Payment */}
                                             <td>
                                                 <span className={`payment-badge ${paymentStatusClass}`}>
-                                                    {order.paymentstatus || "Paid"}
+                                                    {translations[(order.paymentstatus || 'paid').toLowerCase()] || order.paymentstatus || "Paid"}
                                                 </span>
                                             </td>
 
                                             {/* Order Status */}
                                             <td>
                                                 <span className={`order-status-badge ${currentStatusClass}`}>
-                                                    {order.orderstatus || "Confirmed"}
+                                                    {translations[(order.orderstatus || 'confirmed').toLowerCase()] || order.orderstatus || "Confirmed"}
                                                 </span>
                                             </td>
 

@@ -516,7 +516,7 @@ const CoupleSection = () => {
                                     <div key={rev.reviewId || index} className="item-card">
                                         <div className="item-header">
                                             <div className="item-title">
-                                                #{index + 1} &mdash; {rev.name} ({rev.rating || 5} Stars)
+                                                #{index + 1} &mdash; {rev.name} ({rev.rating || 5} {translations.stars || 'Stars'})
                                             </div>
                                             <div className="item-actions">
                                                 <CustomSwitch

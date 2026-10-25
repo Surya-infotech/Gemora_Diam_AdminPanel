@@ -576,7 +576,7 @@ const ShapeSection = () => {
                                                 </td>
                                                 <td>
                                                     <strong>{s.name}</strong>
-                                                    {s.shapeid && <div style={{ fontSize: '11px', color: 'var(--muted-text)' }}>ID: {s.shapeid}</div>}
+                                                    {s.shapeid && <div style={{ fontSize: '11px', color: 'var(--muted-text)' }}>{translations.id || 'ID'}: {s.shapeid}</div>}
                                                 </td>
                                                 <td>{s.bestFor || "—"}</td>
                                                 <td>{s.brilliance || "—"}</td>
@@ -745,7 +745,7 @@ const ShapeSection = () => {
                                             <div className="preview-thumb-box">
                                                 <img
                                                     src={currentShape.shapeIcon}
-                                                    alt="Icon Preview"
+                                                    alt={translations.iconpreview || "Icon Preview"}
                                                     style={{ width: '40px', height: '40px', objectFit: 'contain', background: '#f5f5f5', borderRadius: '4px', padding: '2px', border: '1px solid var(--border-color)' }}
                                                 />
                                             </div>
@@ -782,7 +782,7 @@ const ShapeSection = () => {
                                             <div className="preview-thumb-box">
                                                 <img
                                                     src={currentShape.showcaseImage}
-                                                    alt="Showcase Preview"
+                                                    alt={translations.showcasepreview || "Showcase Preview"}
                                                     style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--border-color)' }}
                                                 />
                                             </div>

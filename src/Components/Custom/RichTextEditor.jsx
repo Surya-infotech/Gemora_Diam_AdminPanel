@@ -12,6 +12,7 @@ import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import FormatClearIcon from '@mui/icons-material/FormatClear';
 import Tooltip from '@mui/material/Tooltip';
+import { useLanguage } from '../../Context/LanguageContext';
 import '../../Scss/Custom/General/richtexteditor.scss';
 
 const FONT_SIZES = [
@@ -38,7 +39,9 @@ const formatInitialContent = (content) => {
         .join('');
 };
 
-const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description...' }) => {
+const RichTextEditor = ({ value = '', onChange, placeholder }) => {
+    const { translations } = useLanguage();
+    const editorPlaceholder = placeholder || translations?.enterdescription || 'Enter description...';
     const editorRef = useRef(null);
     const savedRangeRef = useRef(null);
     const [currentFontSize, setCurrentFontSize] = useState('16px');
@@ -200,7 +203,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             e.stopPropagation();
                         }}
                         onChange={handleFontSizeSelect}
-                        aria-label="Font Size"
+                        aria-label={translations?.fontsize || "Font Size"}
                     >
                         {FONT_SIZES.map((item) => (
                             <option key={item.value} value={item.value}>
@@ -212,7 +215,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
 
                 {/* Text Formatting */}
                 <div className="toolbar-group">
-                    <Tooltip title="Bold (Ctrl+B)">
+                    <Tooltip title={translations?.bold || "Bold (Ctrl+B)"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.bold ? 'active' : ''}`}
@@ -221,7 +224,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatBoldIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Italic (Ctrl+I)">
+                    <Tooltip title={translations?.italic || "Italic (Ctrl+I)"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.italic ? 'active' : ''}`}
@@ -230,7 +233,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatItalicIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Underline (Ctrl+U)">
+                    <Tooltip title={translations?.underline || "Underline (Ctrl+U)"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.underline ? 'active' : ''}`}
@@ -239,7 +242,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatUnderlinedIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Clear Formatting">
+                    <Tooltip title={translations?.clearformatting || "Clear Formatting"}>
                         <button
                             type="button"
                             className="toolbar-btn"
@@ -252,7 +255,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
 
                 {/* Text Alignment */}
                 <div className="toolbar-group">
-                    <Tooltip title="Align Left">
+                    <Tooltip title={translations?.alignleft || "Align Left"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.justifyLeft ? 'active' : ''}`}
@@ -261,7 +264,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatAlignLeftIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Align Center">
+                    <Tooltip title={translations?.aligncenter || "Align Center"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.justifyCenter ? 'active' : ''}`}
@@ -270,7 +273,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatAlignCenterIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Align Right">
+                    <Tooltip title={translations?.alignright || "Align Right"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.justifyRight ? 'active' : ''}`}
@@ -279,7 +282,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatAlignRightIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Align Justify">
+                    <Tooltip title={translations?.alignjustify || "Align Justify"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.justifyFull ? 'active' : ''}`}
@@ -292,7 +295,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
 
                 {/* Lists */}
                 <div className="toolbar-group">
-                    <Tooltip title="Bulleted List">
+                    <Tooltip title={translations?.bulletedlist || "Bulleted List"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.insertUnorderedList ? 'active' : ''}`}
@@ -301,7 +304,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <FormatListBulletedIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Numbered List">
+                    <Tooltip title={translations?.numberedlist || "Numbered List"}>
                         <button
                             type="button"
                             className={`toolbar-btn ${activeFormats.insertOrderedList ? 'active' : ''}`}
@@ -314,7 +317,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
 
                 {/* Undo / Redo */}
                 <div className="toolbar-group">
-                    <Tooltip title="Undo (Ctrl+Z)">
+                    <Tooltip title={translations?.undo || "Undo (Ctrl+Z)"}>
                         <button
                             type="button"
                             className="toolbar-btn"
@@ -323,7 +326,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                             <UndoIcon fontSize="small" />
                         </button>
                     </Tooltip>
-                    <Tooltip title="Redo (Ctrl+Y)">
+                    <Tooltip title={translations?.redo || "Redo (Ctrl+Y)"}>
                         <button
                             type="button"
                             className="toolbar-btn"
@@ -340,7 +343,7 @@ const RichTextEditor = ({ value = '', onChange, placeholder = 'Enter description
                 ref={editorRef}
                 className="rich-editor-content"
                 contentEditable="true"
-                data-placeholder={placeholder}
+                data-placeholder={editorPlaceholder}
                 onInput={handleContentChange}
                 onKeyUp={updateActiveStates}
                 onMouseUp={updateActiveStates}

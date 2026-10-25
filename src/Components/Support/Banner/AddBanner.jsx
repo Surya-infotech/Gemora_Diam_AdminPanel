@@ -194,7 +194,7 @@ const AddBanner = () => {
                                                 <div className="image-preview-container">
                                                     <img
                                                         src={imagePreview}
-                                                        alt="Banner Preview"
+                                                        alt={translations.bannerpreview || "Banner Preview"}
                                                         className="image-preview"
                                                         onError={(e) => {
                                                             e.target.onerror = null;

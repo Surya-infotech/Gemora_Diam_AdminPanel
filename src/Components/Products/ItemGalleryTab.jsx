@@ -622,10 +622,10 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                             <div key={imageObj.id} className="gallery-item preview-item">
                                 <img
                                     src={imageObj.preview}
-                                    alt="Preview"
+                                    alt={translations.preview || "Preview"}
                                     className="gallery-image"
                                 />
-                                <span className="preview-badge">New</span>
+                                <span className="preview-badge">{translations.newbadge || "New"}</span>
                                 <button
                                     className="remove-image-btn"
                                     onClick={() => handleRemoveSelectedImage(imageObj.id)}
@@ -644,7 +644,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                 <div key={imageId} className="gallery-item">
                                     <img
                                         src={image.imageUrl}
-                                        alt="Gallery item"
+                                        alt={translations.galleryitem || "Gallery item"}
                                         className="gallery-image"
                                         loading="lazy"
                                         decoding="async"
@@ -684,10 +684,10 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                     <div className="video-section-header">
                         <div className="video-header-title">
                             <span className="video-icon-badge">
-                                <VideocamIcon />
+                                 <VideocamIcon />
                             </span>
                             <h5>{translations.itemvideos}</h5>
-                            <span className="video-hint">MP4, WebM, MOV • Max 100MB</span>
+                            <span className="video-hint">{translations.videohint || "MP4, WebM, MOV • Max 100MB"}</span>
                         </div>
                         <div className="video-header-actions">
                             {userCanEdit && (
@@ -749,13 +749,13 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                             {selectedVideos.map((videoObj, index) => (
                                 <div className="video-item-card preview-video-card" key={`preview-${index}`}>
                                     <div className="video-card-top-bar">
-                                        <span className="video-status-tag">Pending Upload</span>
+                                        <span className="video-status-tag">{translations.pendingupload || "Pending Upload"}</span>
                                         <button
                                             type="button"
                                             className="remove-video-btn"
                                             onClick={() => handleRemoveSelectedVideo(index)}
                                             disabled={videoUploading}
-                                            title="Remove Video"
+                                            title={translations.removevideo || "Remove Video"}
                                         >
                                             &times;
                                         </button>
@@ -782,7 +782,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                 return (
                                     <div className="video-item-card" key={`saved-${videoId || index}`}>
                                         <div className="video-card-top-bar">
-                                            <span className="video-count-badge">Video #{index + 1}</span>
+                                            <span className="video-count-badge">{(translations.video || "Video")} #{index + 1}</span>
                                             {userCanDelete && (
                                                 <button
                                                     type="button"
@@ -805,9 +805,9 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                                         </div>
                                         <div className="video-card-info-footer">
                                             <span className="video-filename">
-                                                {itemData?.itemname ? `${itemData.itemname} - Video ${index + 1}` : `Video ${index + 1}`}
+                                                {itemData?.itemname ? `${itemData.itemname} - ${(translations.video || "Video")} ${index + 1}` : `${(translations.video || "Video")} ${index + 1}`}
                                             </span>
-                                            <span className="video-filesize">Uploaded showcase video</span>
+                                            <span className="video-filesize">{translations.uploadedshowcasevideo || "Uploaded showcase video"}</span>
                                         </div>
                                     </div>
                                 );
@@ -819,7 +819,7 @@ const ItemGalleryTab = ({ itemData, onItemUpdated }) => {
                             <MovieCreationOutlinedIcon className="empty-video-icon" />
                             <h6 className="empty-video-title">{translations.novideofound}</h6>
                             <p className="empty-video-desc">
-                                Upload multiple videos to showcase the jewelry or diamond from every angle
+                                {translations.uploadvideosdesc || "Upload multiple videos to showcase the jewelry or diamond from every angle"}
                             </p>
                             {userCanEdit && (
                                 <button

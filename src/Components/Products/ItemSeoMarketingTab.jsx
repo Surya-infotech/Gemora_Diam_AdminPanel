@@ -451,7 +451,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                                 {translations.focuskeywords}
                                             </label>
                                             <span className="character-limit-label">
-                                                Max {LIMITS.metaKeywords} {translations.characters}
+                                                {translations.max || "Max"} {LIMITS.metaKeywords} {translations.characters}
                                             </span>
                                         </div>
                                         <input
@@ -489,7 +489,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                                 {translations.canonicalurl}
                                             </label>
                                             <span className="character-limit-label">
-                                                Max {LIMITS.canonicalUrl} {translations.characters}
+                                                {translations.max || "Max"} {LIMITS.canonicalUrl} {translations.characters}
                                             </span>
                                         </div>
                                         <div className="input-with-icon-wrapper">
@@ -533,7 +533,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             type="button"
                                             className={`device-btn ${previewMode === 'desktop' ? 'active' : ''}`}
                                             onClick={() => setPreviewMode('desktop')}
-                                            title="Desktop View"
+                                            title={translations.desktopview || "Desktop View"}
                                         >
                                             <ComputerIcon fontSize="small" />
                                             <span>{translations.desktopview}</span>
@@ -542,7 +542,7 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                             type="button"
                                             className={`device-btn ${previewMode === 'mobile' ? 'active' : ''}`}
                                             onClick={() => setPreviewMode('mobile')}
-                                            title="Mobile View"
+                                            title={translations.mobileview || "Mobile View"}
                                         >
                                             <PhoneAndroidIcon fontSize="small" />
                                             <span>{translations.mobileview}</span>
@@ -552,9 +552,11 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
 
                                 <div className="preview-card google-serp-card">
                                     <div className="preview-card-header">
-                                        <span className="card-tag google-tag">Google SERP</span>
+                                        <span className="card-tag google-tag">{translations.googleserp || "Google SERP"}</span>
                                         <span className="card-subtitle-note">
-                                            {previewMode === 'desktop' ? 'Desktop Search Result' : 'Mobile Search Result'}
+                                            {previewMode === 'desktop'
+                                                ? (translations.desktopsearchresult || 'Desktop Search Result')
+                                                : (translations.mobilesearchresult || 'Mobile Search Result')}
                                         </span>
                                     </div>
                                     <div className={`google-snippet-content mode-${previewMode}`}>

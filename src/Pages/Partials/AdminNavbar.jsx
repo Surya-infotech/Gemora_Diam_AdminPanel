@@ -208,7 +208,7 @@ const AdminNavbar = () => {
                     type="button"
                     className="mobile-close-btn"
                     onClick={() => setIsMobileOpen(false)}
-                    aria-label="Close navigation"
+                    aria-label={translations.closenavigation || "Close navigation"}
                 >
                     <CloseIcon />
                 </button>
