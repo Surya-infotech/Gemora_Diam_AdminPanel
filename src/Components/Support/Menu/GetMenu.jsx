@@ -186,9 +186,6 @@ const GetMenu = ({ searchValue = "" }) => {
                                 <th onClick={() => sortItems("title")}>
                                     {translations.menutitle} {renderSortIcon("title")}
                                 </th>
-                                <th onClick={() => sortItems("slug")}>
-                                    {translations.menuslug} {renderSortIcon("slug")}
-                                </th>
                                 <th onClick={() => sortItems("status")}>
                                     {translations.status} {renderSortIcon("status")}
                                 </th>
@@ -210,11 +207,6 @@ const GetMenu = ({ searchValue = "" }) => {
                                                 </div>
                                             </td>
                                             <td>
-                                                <span className="slug-badge">
-                                                    {item.slug || "-"}
-                                                </span>
-                                            </td>
-                                            <td>
                                                 <CustomSwitch
                                                     checked={Boolean(item.status)}
                                                     onChange={() => handleStatusToggle(item)}
@@ -229,7 +221,7 @@ const GetMenu = ({ searchValue = "" }) => {
                                 })
                             ) : (
                                 <tr>
-                                    <td colSpan="5" style={{ textAlign: "center", padding: "24px 0" }}>
+                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>
                                         {translations.nodatafound}
                                     </td>
                                 </tr>

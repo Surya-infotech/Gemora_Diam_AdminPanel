@@ -377,7 +377,6 @@ export function MenuForm({ initialData = null, isEdit = false }) {
 
     // Form fields - empty by default (no dummy data)
     const [title, setTitle] = useState(initialData?.title || "");
-    const [slug, setSlug] = useState(initialData?.slug || "");
     const [order, setOrder] = useState(initialData?.order !== undefined && initialData?.order !== null ? initialData.order : "");
 
     // Column 1
@@ -416,11 +415,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
     }, [isEdit, translations]);
 
     const handleTitleChange = (e) => {
-        const val = e.target.value;
-        setTitle(val);
-        if (!isEdit && (!slug || slug === slugify(title))) {
-            setSlug(slugify(val));
-        }
+        setTitle(e.target.value);
     };
 
     const handleFileChange = (e) => {
@@ -514,7 +509,6 @@ export function MenuForm({ initialData = null, isEdit = false }) {
         try {
             const formData = new FormData();
             formData.append("title", title.trim());
-            formData.append("slug", slug.trim() ? (slug.startsWith("/") ? slug.trim() : "/" + slug.trim()) : slugify(title));
             formData.append("order", order !== "" ? String(order) : "1");
 
             const col1Obj = {
@@ -630,7 +624,7 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                             {/* Tab 1: General */}
                                             {activeTab === "general" && (
                                                 <div>
-                                                    <div className="form-grid-3">
+                                                    <div className="form-grid-2">
                                                         <div className="form-group">
                                                             <label htmlFor="menutitle">
                                                                 {translations.menutitle} <span style={{ color: "red" }}>*</span>
@@ -644,21 +638,6 @@ export function MenuForm({ initialData = null, isEdit = false }) {
                                                                 onChange={handleTitleChange}
                                                                 required
                                                             />
-                                                        </div>
-                                                        <div className="form-group">
-                                                            <label htmlFor="menuslug">
-                                                                {translations.menuslug} <span style={{ color: "red" }}>*</span>
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                id="menuslug"
-                                                                autoComplete="off"
-                                                                value={slug}
-                                                                placeholder={translations.entermenuslug}
-                                                                onChange={(e) => setSlug(e.target.value)}
-                                                                required
-                                                            />
-                                                            <span className="field-hint">{translations.menuslughint}</span>
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="menuorder">
