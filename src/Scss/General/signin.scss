@@ -7,7 +7,8 @@ body {
 
 .full-page {
     width: 100% !important;
-    height: 100vh !important;
+    min-height: 100vh !important;
+    height: auto !important;
     background-image: url('/signin.jpg');
     background-size: cover;
     background-position: center;
@@ -16,7 +17,8 @@ body {
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto !important;
+    padding: 30px 16px;
 
     &::before {
         content: "";
@@ -36,6 +38,11 @@ body {
         top: 20px;
         right: 20px;
         z-index: 1000;
+
+        @media (max-width: 480px) {
+            top: 12px;
+            right: 12px;
+        }
     }
 
     .language-dropdown {
@@ -147,8 +154,8 @@ body {
     }
 
     .login-container {
-        width: min(460px, calc(100vw - 40px)) !important;
-        min-height: 420px !important;
+        width: min(460px, calc(100vw - 32px)) !important;
+        min-height: auto !important;
         height: auto !important;
         padding: 26px;
         border-radius: var(--radius-lg);
@@ -157,11 +164,17 @@ body {
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         box-shadow: var(--shadow-lg);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: auto !important;
         z-index: 1;
+
+        @media (max-width: 480px) {
+            padding: 20px 16px !important;
+            border-radius: var(--radius-md);
+        }
 
         .logo-container {
             display: flex;

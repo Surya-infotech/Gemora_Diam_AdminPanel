@@ -40,15 +40,33 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import InfoIcon from '@mui/icons-material/Info';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import CloseIcon from '@mui/icons-material/Close';
 
 const AdminNavbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
     const logoUrl = "/GEMORALOGO.png";
     const { translations, isRtl } = useLanguage();
     const { canView, isEmployee } = usePermissions();
     const { pathname } = useLocation();
     const navLinkClass = (to) => () => (isAdminNavLinkActive(to, pathname) ? 'active' : '');
     const toggleNavbar = () => setIsCollapsed(prevState => !prevState);
+
+    useEffect(() => {
+        const handleToggle = () => setIsMobileOpen(prev => !prev);
+        const handleClose = () => setIsMobileOpen(false);
+
+        window.addEventListener('toggleMobileSidebar', handleToggle);
+        window.addEventListener('closeMobileSidebar', handleClose);
+        return () => {
+            window.removeEventListener('toggleMobileSidebar', handleToggle);
+            window.removeEventListener('closeMobileSidebar', handleClose);
+        };
+    }, []);
+
+    useEffect(() => {
+        setIsMobileOpen(false);
+    }, [pathname]);
 
     const attributeNavItems = [
         { id: 'metal', label: translations.Metal, to: '/Attributes/Metal', Icon: DiamondIcon },
@@ -181,11 +199,19 @@ const AdminNavbar = () => {
     };
 
     return (<>
-        <nav className={`navbar ${isCollapsed ? 'collapsed' : ''} ${isRtl ? 'rtl-navbar' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
+        <nav className={`navbar ${isCollapsed ? 'collapsed' : ''} ${isRtl ? 'rtl-navbar' : ''} ${isMobileOpen ? 'mobile-open' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
             <div className="logo">
-                <Link to={isEmployee ? "/Home/EmployeeDashboard" : "/Home/Dashboard"} className='logoimage'>
+                <Link to={isEmployee ? "/Home/EmployeeDashboard" : "/Home/Dashboard"} className='logoimage' onClick={() => setIsMobileOpen(false)}>
                     <img src={logoUrl} className="logo-img" alt={translations.logo} />
                 </Link>
+                <button
+                    type="button"
+                    className="mobile-close-btn"
+                    onClick={() => setIsMobileOpen(false)}
+                    aria-label="Close navigation"
+                >
+                    <CloseIcon />
+                </button>
                 <div className={`arrowdiv ${isCollapsed ? 'collapsed' : ''}`}>
                     {isRtl ? (
                         isCollapsed ? (
@@ -500,6 +526,13 @@ const AdminNavbar = () => {
                 )}
             </ul>
         </nav>
+        {isMobileOpen && (
+            <div
+                className="sidebar-backdrop"
+                onClick={() => setIsMobileOpen(false)}
+                aria-hidden="true"
+            />
+        )}
     </>);
 };
 

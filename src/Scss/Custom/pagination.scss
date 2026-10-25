@@ -138,3 +138,42 @@ body.rtl-mode .paginationdiv {
         }
     }
 }
+
+@media (max-width: 640px) {
+    .paginationdiv {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 10px !important;
+
+        .page-size-dropdown {
+            margin: 0 !important;
+            width: auto !important;
+        }
+
+        .records-info {
+            font-size: 13px !important;
+            order: 2;
+            width: 100%;
+            text-align: center !important;
+        }
+
+        nav {
+            order: 3;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .pagination {
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+
+                button.page-link,
+                .page-link {
+                    padding: 5px 10px !important;
+                    font-size: 12.5px !important;
+                }
+            }
+        }
+    }
+}

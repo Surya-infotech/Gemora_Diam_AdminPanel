@@ -4,12 +4,13 @@
     max-height: 715px !important;
     overflow-y: auto;
     border-radius: var(--radius-md);
-    width: auto !important;
+    width: 100% !important;
     overflow-x: auto;
     max-width: 100% !important;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
     background-color: #ffffff;
+    -webkit-overflow-scrolling: touch;
 
     &::-webkit-scrollbar {
         height: 8px !important;
@@ -27,6 +28,11 @@
     [dir="rtl"] &,
     body.rtl-mode & {
         direction: rtl;
+    }
+
+    @media (max-width: 768px) {
+        max-height: calc(100vh - 220px) !important;
+        border-radius: var(--radius-sm);
     }
 }
 
@@ -138,11 +144,21 @@
     width: auto;
     min-width: fit-content;
     max-width: none;
+
+    @media (max-width: 768px) {
+        padding: 10px 8px !important;
+        font-size: 13px !important;
+    }
 }
 
 @mixin table_tr {
     height: 55px !important;
     color: black;
+
+    @media (max-width: 768px) {
+        height: auto !important;
+        min-height: 48px;
+    }
 
     .container {
         display: flex;
@@ -189,6 +205,16 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
     margin-bottom: 24px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
 
     .kpi-card,
     .report-kpi-card,

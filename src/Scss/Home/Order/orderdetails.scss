@@ -780,6 +780,37 @@
     }
 }
 
+@media (max-width: 768px) {
+    .orderdetails-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px;
+
+        .orderdetails-header-left {
+            width: 100%;
+        }
+
+        .orderdetails-header-actions {
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: space-between;
+
+            .status-change-box {
+                flex: 1;
+                min-width: 140px;
+
+                .status-select-header {
+                    flex: 1;
+                }
+            }
+
+            .invoice-btn {
+                flex-shrink: 0;
+            }
+        }
+    }
+}
+
 @media print {
     .navbar,
     .hori-navbar,

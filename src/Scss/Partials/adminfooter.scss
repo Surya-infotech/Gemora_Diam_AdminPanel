@@ -104,3 +104,51 @@
     direction: ltr;
   }
 }
+
+/* ==========================================================================
+   Responsive Footer for Tablet & Mobile Resolutions
+   ========================================================================== */
+@media (max-width: 991px) {
+  .body-move-left-80 .footer,
+  .body-move-left-150 .footer,
+  .body-move-right-80 .footer,
+  .body-move-right-150 .footer,
+  .footer {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 8px 14px;
+    border-radius: 0;
+  }
+
+  .footer-layout {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    font-size: 0.78rem;
+
+    .footer-left,
+    .footer-center,
+    .footer-right {
+      justify-content: center;
+      text-align: center;
+      white-space: normal;
+      width: 100%;
+    }
+  }
+
+  .footer.rtl-footer,
+  .footer[dir="rtl"] {
+    .footer-left,
+    .footer-center,
+    .footer-right {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+}

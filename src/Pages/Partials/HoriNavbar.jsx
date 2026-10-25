@@ -7,6 +7,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Middleware/Auth';
@@ -191,23 +192,33 @@ const HoriNavbar = () => {
 
     return (<>
         <nav className={`hori-navbar ${isRtl ? 'rtl-horinav' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
-            {showFiscalYearDropdown && (
-                <div className="left-side">
-                    <div className="navbar-dropdown-group">
-                        <div className="fiscal-year-dropdown-container">
-                            <Dropdown
-                                options={fiscalYears}
-                                selectedValue={selectedFiscalYear}
-                                onValueChange={setSelectedFiscalYear}
-                                labelKey="fiscalyear"
-                                valueKey="fiscalyearid"
-                                placeholder={translations.selectfiscalyear}
-                                showSearch={false}
-                            />
+            <div className="hori-navbar-start">
+                <button
+                    type="button"
+                    className="mobile-sidebar-toggle"
+                    onClick={() => window.dispatchEvent(new CustomEvent('toggleMobileSidebar'))}
+                    aria-label="Toggle navigation"
+                >
+                    <MenuIcon />
+                </button>
+                {showFiscalYearDropdown && (
+                    <div className="left-side">
+                        <div className="navbar-dropdown-group">
+                            <div className="fiscal-year-dropdown-container">
+                                <Dropdown
+                                    options={fiscalYears}
+                                    selectedValue={selectedFiscalYear}
+                                    onValueChange={setSelectedFiscalYear}
+                                    labelKey="fiscalyear"
+                                    valueKey="fiscalyearid"
+                                    placeholder={translations.selectfiscalyear}
+                                    showSearch={false}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
             <div className="right-side">
                 <div className={`quick-menu-section${isQuickMenuVisible ? ' is-open' : ''}`} onClick={toggleQuickMenu}>
                     <button type="button" className="quick-menu-btn" aria-label={translations.quick} aria-expanded={isQuickMenuVisible}>

@@ -46,6 +46,18 @@
           width: 50% !important;
           margin-right: 4%;
         }
+
+        @media (max-width: 768px) {
+          flex-direction: column;
+          gap: 16px;
+
+          .formdiv,
+          .imagediv {
+            width: 100% !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+          }
+        }
       }
 
       .form-group {

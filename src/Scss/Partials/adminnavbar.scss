@@ -414,3 +414,120 @@
         padding-right: 12px;
     }
 }
+
+/* ==========================================================================
+   Mobile & Tablet Responsive Drawer (< 992px)
+   ========================================================================== */
+.mobile-close-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    svg {
+        font-size: 20px;
+    }
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1040;
+    animation: sidebarBackdropFade 0.25s ease-out;
+}
+
+@keyframes sidebarBackdropFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 991px) {
+    /* Reset desktop body shift margins */
+    body.body-move-left-80,
+    body.body-move-left-150,
+    body.body-move-right-80,
+    body.body-move-right-150 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .navbar {
+        width: 275px !important;
+        max-width: 82vw !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1050 !important;
+        box-shadow: none;
+        overflow-y: hidden;
+
+        &.mobile-open {
+            transform: translateX(0) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .arrowdiv {
+            display: none !important;
+        }
+
+        .logo {
+            padding-right: 12px;
+            justify-content: space-between;
+
+            .logoimage {
+                justify-content: flex-start;
+                padding-left: 8px;
+            }
+        }
+
+        .mobile-close-btn {
+            display: inline-flex;
+            margin-right: 6px;
+        }
+    }
+
+    .navbar.rtl-navbar {
+        transform: translateX(100%);
+
+        &.mobile-open {
+            transform: translateX(0) !important;
+        }
+
+        .logo {
+            padding-left: 12px;
+            padding-right: 0;
+
+            .logoimage {
+                justify-content: flex-start;
+                padding-right: 8px;
+                padding-left: 0;
+            }
+        }
+
+        .mobile-close-btn {
+            margin-right: 0;
+            margin-left: 6px;
+        }
+    }
+}
