@@ -8,6 +8,8 @@ import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import AlertMessage from '../../Pages/Custom/AlertMessage';
 
+const hasHtmlTags = (str) => typeof str === 'string' && /<\/?[a-z][\s\S]*>/i.test(str);
+
 const ItemOverviewTab = ({ itemData, onItemUpdated }) => {
     const navigate = useNavigate();
     const { translations } = useLanguage();
@@ -177,10 +179,16 @@ const ItemOverviewTab = ({ itemData, onItemUpdated }) => {
                     {itemData.description && itemData.description.trim() && (
                         <div className="item-description-block">
                             <h6 className="description-heading">{translations.description}</h6>
-                            <div
-                                className="description-content"
-                                dangerouslySetInnerHTML={{ __html: itemData.description }}
-                            />
+                            {hasHtmlTags(itemData.description) ? (
+                                <div
+                                    className="description-content html-description"
+                                    dangerouslySetInnerHTML={{ __html: itemData.description }}
+                                />
+                            ) : (
+                                <div className="description-content plain-description">
+                                    {itemData.description}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

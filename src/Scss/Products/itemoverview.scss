@@ -377,9 +377,11 @@
 
             .description-content {
                 font-size: 14px;
-                line-height: 1.6;
+                line-height: 1.65;
                 color: var(--text-color, #1e293b);
                 word-break: break-word;
+                overflow-wrap: break-word;
+                white-space: pre-wrap;
 
                 p:last-child {
                     margin-bottom: 0;
