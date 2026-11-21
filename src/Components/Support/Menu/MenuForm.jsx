@@ -43,8 +43,41 @@ function AttributeMultiSelect({
   attributeName = ""
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef(null);
+
+  const updatePosition = () => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      if (spaceBelow < 290 && rect.top > spaceBelow) {
+        setOpenUpward(true);
+      } else {
+        setOpenUpward(false);
+      }
+    }
+  };
+
+  const handleToggle = () => {
+    if (!isOpen) {
+      updatePosition();
+    }
+    setIsOpen(prev => !prev);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      updatePosition();
+      const handleScrollOrResize = () => updatePosition();
+      window.addEventListener("scroll", handleScrollOrResize, true);
+      window.addEventListener("resize", handleScrollOrResize);
+      return () => {
+        window.removeEventListener("scroll", handleScrollOrResize, true);
+        window.removeEventListener("resize", handleScrollOrResize);
+      };
+    }
+  }, [isOpen]);
   useEffect(() => {
     const handleClickOutside = e => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -89,8 +122,8 @@ function AttributeMultiSelect({
   const maxVisibleChips = 2;
   const visibleChips = selectedArray.slice(0, maxVisibleChips);
   const hiddenCount = selectedArray.length - maxVisibleChips;
-  return <div className="attribute-multiselect" ref={containerRef}>
-            <div className={`multiselect-trigger ${isOpen ? "is-open" : ""}`} onClick={() => setIsOpen(prev => !prev)} tabIndex={0} role="button" aria-haspopup="listbox" aria-expanded={isOpen}>
+  return <div className={`attribute-multiselect ${isOpen ? "is-open" : ""} ${openUpward ? "open-upward" : ""}`} ref={containerRef}>
+            <div className={`multiselect-trigger ${isOpen ? "is-open" : ""}`} onClick={handleToggle} tabIndex={0} role="button" aria-haspopup="listbox" aria-expanded={isOpen}>
                 <div className="multiselect-chips-container">
                     {selectedArray.length === 0 ? <span className="multiselect-placeholder">{placeholder || "Select attribute details..."}</span> : <>
                             {visibleChips.map(val => <span key={val} className="multiselect-chip" title={val}>
@@ -112,7 +145,7 @@ function AttributeMultiSelect({
                 </div>
             </div>
 
-            {isOpen && <div className="multiselect-dropdown-menu">
+            {isOpen && <div className={`multiselect-dropdown-menu ${openUpward ? "open-upward" : ""}`}>
                     <div className="multiselect-search-wrapper">
                         <input type="text" className="multiselect-search-input" placeholder={`${"Search"} ${attributeName}...`.trim()} value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onClick={e => e.stopPropagation()} onKeyDown={e => {
           if (e.key === "Enter") {
