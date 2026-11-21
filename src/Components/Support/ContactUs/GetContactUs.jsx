@@ -83,6 +83,9 @@ const GetContactUs = ({ searchValue }) => {
         if (column === 'fullname') {
             return item.fullname || '';
         }
+        if (column === 'countryname') {
+            return item.countryname || '';
+        }
         return item[column] ?? '';
     };
 
@@ -138,6 +141,9 @@ const GetContactUs = ({ searchValue }) => {
                                 <th onClick={() => sortContactList('email')}>
                                     {translations.Email} {renderSortIcon('email')}
                                 </th>
+                                <th onClick={() => sortContactList('countryname')}>
+                                    {translations.Country || 'Country'} {renderSortIcon('countryname')}
+                                </th>
                                 <th onClick={() => sortContactList('message')}>
                                     {translations.Message} {renderSortIcon('message')}
                                 </th>
@@ -156,6 +162,9 @@ const GetContactUs = ({ searchValue }) => {
                                         <td>
                                             {contact.email || '-'}
                                         </td>
+                                        <td>
+                                            {contact.countryname || '-'}
+                                        </td>
                                         <td className="contactus-message-cell" title={contact.message || ''}>
                                             {truncateMessage(contact.message)}
                                         </td>
@@ -173,7 +182,7 @@ const GetContactUs = ({ searchValue }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" style={{ textAlign: "center", padding: "24px 0" }}>{translations.nodatafound}</td>
+                                    <td colSpan="5" style={{ textAlign: "center", padding: "24px 0" }}>{translations.nodatafound}</td>
                                 </tr>
                             )}
                         </tbody>
@@ -228,6 +237,12 @@ const GetContactUs = ({ searchValue }) => {
                                         <span className="contactus-view-label">{translations.Email}:</span>
                                         <span className="contactus-view-value">
                                             {viewModalContact.email || '-'}
+                                        </span>
+                                    </div>
+                                    <div className="contactus-view-row">
+                                        <span className="contactus-view-label">{translations.Country || 'Country'}:</span>
+                                        <span className="contactus-view-value">
+                                            {viewModalContact.countryname || '-'}
                                         </span>
                                     </div>
                                     <div className="contactus-view-row contactus-view-row-message">
