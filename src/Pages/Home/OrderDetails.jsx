@@ -7,9 +7,12 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import HistoryIcon from '@mui/icons-material/History';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Middleware/Auth';
+import { usePermissions } from '../../Hooks/usePermissions';
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import LoadingSpinner from '../Custom/LoadingSpinner';
@@ -47,6 +50,19 @@ const OrderDetails = () => {
   const [cancelReason, setCancelReason] = useState('');
   const [cancelReasonError, setCancelReasonError] = useState('');
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const { isEmployee } = usePermissions();
+
+  const handleOpenCustomerChat = () => {
+    if (!order?.customeremail && !order?.customerid && !order?.customerId) return;
+    navigate(`/Support/LiveChat?email=${encodeURIComponent(order.customeremail || '')}`, {
+      state: {
+        customerEmail: order.customeremail,
+        customerName: order.customername,
+        customerPhone: order.customerphone,
+        customerId: order.customerid || order.customerId
+      }
+    });
+  };
   useEffect(() => {
     const orderNum = order?.ordernumber != null ? order.ordernumber : order?.orderid || id;
     document.title = `${"Order Details"} #${orderNum}`;
@@ -454,6 +470,19 @@ const OrderDetails = () => {
                             <span>{"Order Details"}</span>
                             <span className="order-badge-highlight">#{orderNumberDisplay}</span>
                         </h5>
+                        {!isEmployee && (order.customeremail || order.customerid || order.customerId) && (
+                            <Tooltip title={`Chat with ${order.customername || 'Customer'}`}>
+                                <button
+                                    type="button"
+                                    className="orderdetails-chat-btn"
+                                    onClick={handleOpenCustomerChat}
+                                    aria-label="Chat with Customer"
+                                >
+                                    <SupportAgentIcon className="chat-btn-icon" />
+                                    <span>{"Chat"}</span>
+                                </button>
+                            </Tooltip>
+                        )}
                     </div>
 
                     <div className="orderdetails-header-actions">

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import moment from 'moment';
 import { io } from 'socket.io-client';
 import {
@@ -26,6 +26,14 @@ import CheckToken from '../../utils/CheckToken';
 
 export default function LiveChat() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const targetEmail = searchParams.get('email') || location.state?.customerEmail;
+  const targetConvId = searchParams.get('conversationId') || location.state?.conversationId;
+  const targetCustomerId = searchParams.get('customerId') || location.state?.customerId;
+  const targetCustomerName = location.state?.customerName;
+  const targetCustomerPhone = location.state?.customerPhone;
+  const initialSelectHandled = useRef(false);
   const { logoutUser } = useAuth();
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8085";
   const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
@@ -144,42 +152,9 @@ export default function LiveChat() {
     };
   }, [backendUrl, selectedConv?.conversationId, token]);
 
-  // Fetch conversations from REST API
-  const fetchConversations = useCallback(async () => {
-    if (!CheckToken(token, logoutUser, navigate)) return;
-
-    try {
-      setLoadingConversations(true);
-      const params = new URLSearchParams();
-      if (searchTerm.trim()) params.append('search', searchTerm.trim());
-
-      const res = await fetch(`${backendUrl}/Chat/Admin/Conversations?${params.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = await res.json();
-      if (data.success) {
-        const convList = (data.conversations || []).map((c) =>
-          selectedConv?.conversationId === c.conversationId
-            ? { ...c, unreadCountAdmin: 0 }
-            : c
-        );
-        setConversations(convList);
-      }
-    } catch (err) {
-      console.error('Failed to fetch admin conversations:', err);
-    } finally {
-      setLoadingConversations(false);
-    }
-  }, [backendUrl, logoutUser, navigate, searchTerm, selectedConv?.conversationId, token]);
-
-  useEffect(() => {
-    fetchConversations();
-  }, [fetchConversations]);
-
   // Fetch messages when selecting a conversation
-  const handleSelectConversation = async (conv) => {
+  const handleSelectConversation = useCallback(async (conv) => {
+    if (!conv?.conversationId) return;
     setSelectedConv(conv);
     setCustomerTyping(false);
 
@@ -235,7 +210,91 @@ export default function LiveChat() {
     } finally {
       setLoadingMessages(false);
     }
-  };
+  }, [backendUrl, selectedConv?.conversationId, token]);
+
+  // Fetch conversations from REST API
+  const fetchConversations = useCallback(async () => {
+    if (!CheckToken(token, logoutUser, navigate)) return;
+
+    try {
+      setLoadingConversations(true);
+      const params = new URLSearchParams();
+      if (searchTerm.trim()) params.append('search', searchTerm.trim());
+
+      const res = await fetch(`${backendUrl}/Chat/Admin/Conversations?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      if (data.success) {
+        let convList = (data.conversations || []).map((c) =>
+          selectedConv?.conversationId === c.conversationId
+            ? { ...c, unreadCountAdmin: 0 }
+            : c
+        );
+
+        if (!initialSelectHandled.current && (targetConvId || targetEmail || targetCustomerId)) {
+          initialSelectHandled.current = true;
+          const normalizedTargetEmail = (targetEmail || '').trim().toLowerCase();
+          const targetNumId = targetCustomerId ? Number(targetCustomerId) : null;
+
+          let matched = convList.find((c) => {
+            if (targetConvId && c.conversationId === targetConvId) return true;
+            if (normalizedTargetEmail && (c.customerEmail || '').trim().toLowerCase() === normalizedTargetEmail) return true;
+            if (targetNumId && Number(c.customerId) === targetNumId) return true;
+            return false;
+          });
+
+          if (matched) {
+            setConversations(convList);
+            handleSelectConversation(matched);
+            return;
+          }
+
+          // If not in current conversation list, get or create it on backend
+          try {
+            const createRes = await fetch(`${backendUrl}/Chat/Admin/GetOrCreateConversation`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                conversationId: targetConvId,
+                email: targetEmail,
+                customerId: targetCustomerId,
+                name: targetCustomerName,
+                phone: targetCustomerPhone
+              })
+            });
+            const createData = await createRes.json();
+            if (createData.success && createData.conversation) {
+              const newConv = createData.conversation;
+              convList = [newConv, ...convList.filter((c) => c.conversationId !== newConv.conversationId)];
+              setConversations(convList);
+              handleSelectConversation(newConv);
+              return;
+            }
+          } catch (e) {
+            console.error('Failed to get/create conversation:', e);
+          }
+        }
+
+        setConversations(convList);
+      }
+    } catch (err) {
+      console.error('Failed to fetch admin conversations:', err);
+    } finally {
+      setLoadingConversations(false);
+    }
+  }, [backendUrl, handleSelectConversation, logoutUser, navigate, searchTerm, selectedConv?.conversationId, targetConvId, targetCustomerId, targetCustomerName, targetCustomerPhone, targetEmail, token]);
+
+  useEffect(() => {
+    fetchConversations();
+  }, [fetchConversations]);
+
+
 
   // Send reply message
   const handleSendMessage = (textToSend = inputText, attachmentUrl = '') => {
