@@ -215,11 +215,11 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
         }
     };
 
-    // Keyword chips parsed from comma-separated input
+    // Keyword chips parsed from comma-separated or newline-separated input
     const parsedKeywords = useMemo(() => {
         if (!metaKeywords) return [];
         return metaKeywords
-            .split(',')
+            .split(/[,\n]+/)
             .map(k => k.trim())
             .filter(Boolean);
     }, [metaKeywords]);
@@ -454,10 +454,10 @@ const ItemSeoMarketingTab = ({ itemData, onItemUpdated }) => {
                                                 {translations.max || "Max"} {LIMITS.metaKeywords} {translations.characters}
                                             </span>
                                         </div>
-                                        <input
-                                            type="text"
+                                        <textarea
                                             id="metaKeywords"
-                                            className="form-control seo-input"
+                                            rows="3"
+                                            className="form-control seo-textarea"
                                             placeholder={translations.enterfocuskeywords}
                                             value={metaKeywords}
                                             maxLength={LIMITS.metaKeywords}
