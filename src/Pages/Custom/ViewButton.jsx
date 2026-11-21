@@ -5,11 +5,12 @@ const ViewButton = React.forwardRef(({
   onClick,
   disabled = false,
   size = "small",
+  title = "View Details",
   ...props
 }, ref) => {
-  return <Tooltip title={"View Details"} arrow>
+  return <Tooltip title={title} arrow>
             <span ref={ref} {...props}>
-                <IconButton size={size} onClick={onClick} disabled={disabled} aria-label={"View Details"} className="view-icon">
+                <IconButton size={size} onClick={onClick} disabled={disabled} aria-label={title} className="view-icon">
                     <ViewIcon fontSize="small" />
                 </IconButton>
             </span>

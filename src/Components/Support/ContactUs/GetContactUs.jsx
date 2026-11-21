@@ -1,5 +1,4 @@
-import { ArrowDownward, ArrowUpward, UnfoldMore, Visibility as ViewIcon } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Middleware/Auth';
@@ -9,6 +8,7 @@ import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import AlertMessage from '../../../Pages/Custom/AlertMessage';
+import ViewButton from '../../../Pages/Custom/ViewButton';
 import '../../../Scss/Support/ContactUs/getcontactus.scss';
 const MESSAGE_TRUNCATE_LENGTH = 50;
 const truncateMessage = text => {
@@ -151,9 +151,7 @@ const GetContactUs = ({
               {truncateMessage(contact.message)}
             </td>
             <td>
-              <IconButton onClick={() => setViewModalContact(contact)} aria-label={"View"} className="view-icon" size="small">
-                <ViewIcon fontSize="small" />
-              </IconButton>
+              <ViewButton onClick={() => setViewModalContact(contact)} />
             </td>
           </tr>) : <tr>
             <td colSpan="4" style={{
