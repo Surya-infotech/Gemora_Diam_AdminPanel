@@ -160,14 +160,19 @@ export default function LiveChat() {
       });
       const data = await res.json();
       if (data.success) {
-        setConversations(data.conversations || []);
+        const convList = (data.conversations || []).map((c) =>
+          selectedConv?.conversationId === c.conversationId
+            ? { ...c, unreadCountAdmin: 0 }
+            : c
+        );
+        setConversations(convList);
       }
     } catch (err) {
       console.error('Failed to fetch admin conversations:', err);
     } finally {
       setLoadingConversations(false);
     }
-  }, [backendUrl, logoutUser, navigate, searchTerm, token]);
+  }, [backendUrl, logoutUser, navigate, searchTerm, selectedConv?.conversationId, token]);
 
   useEffect(() => {
     fetchConversations();
@@ -177,6 +182,20 @@ export default function LiveChat() {
   const handleSelectConversation = async (conv) => {
     setSelectedConv(conv);
     setCustomerTyping(false);
+
+    // Call REST endpoint to mark conversation read on server immediately
+    try {
+      fetch(`${backendUrl}/Chat/Admin/MarkRead/${conv.conversationId}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then(() => {
+        window.dispatchEvent(new CustomEvent('chatUnreadUpdated'));
+      });
+    } catch {
+      // ignore
+    }
 
     // Leave previous room & join new room
     if (socketRef.current) {
