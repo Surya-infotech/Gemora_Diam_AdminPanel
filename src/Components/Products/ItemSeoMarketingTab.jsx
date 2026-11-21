@@ -44,8 +44,8 @@ const stripHtml = (html = '') => {
 const FieldCharacterCounter = ({ current = 0, max = 60, recommendedMin, recommendedMax, translations = {} }) => {
     const percentage = Math.min(Math.round((current / max) * 100), 100);
 
-    let statusType = 'neutral';
-    let statusText = `${current} / ${max}`;
+    let statusType;
+    let statusText;
 
     if (current === 0) {
         statusType = 'empty';
