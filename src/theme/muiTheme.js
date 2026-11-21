@@ -25,11 +25,12 @@ export const muiTheme = createTheme({
     primary: { main: "#1976d2" },
     secondary: { main: "#9c27b0" },
     background: {
-      default: "var(--body-background-color)",
-      paper: "var(--page-color)",
+      default: "#f8fafc",
+      paper: "#ffffff",
     },
     text: {
-      primary: "var(--text-color)",
+      primary: "#1e293b",
+      secondary: "#64748b",
     },
   },
   components: {

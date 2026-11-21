@@ -19,11 +19,13 @@ import CoupleSection from "../Pages/Support/CoupleSection";
 import Menu from "../Pages/Support/Menu";
 import AddMenu from "../Components/Support/Menu/AddMenu";
 import EditMenu from "../Components/Support/Menu/EditMenu";
+import LiveChat from "../Pages/Support/LiveChat";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 
 const SupportRouter = () => (
     <Routes>
         <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/LiveChat" element={<LiveChat />} />
         <Route path="/Subscribers" element={<Subscribers />} />
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/AddFAQ" element={<AddFAQ />} />
