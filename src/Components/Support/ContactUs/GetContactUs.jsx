@@ -1,4 +1,7 @@
 import { ArrowDownward, ArrowUpward, UnfoldMore } from '@mui/icons-material';
+import EmailIcon from '@mui/icons-material/Email';
+import SendIcon from '@mui/icons-material/Send';
+import { IconButton, Tooltip, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../Middleware/Auth';
@@ -37,6 +40,11 @@ const GetContactUs = ({
   const [sortDirection, setSortDirection] = useState('desc');
   const [contactList, setContactList] = useState([]);
   const [viewModalContact, setViewModalContact] = useState(null);
+  const [emailModalContact, setEmailModalContact] = useState(null);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailError, setEmailError] = useState('');
   useEffect(() => {
     if (!CheckToken(token, logoutUser, navigate)) return;
     const fetchContactUs = async () => {
@@ -110,6 +118,57 @@ const GetContactUs = ({
   const handleWarningClose = () => setShowWarning(false);
   const handleCloseAlert = () => setSuccessMessage('');
   const handleCloseViewModal = () => setViewModalContact(null);
+  const handleOpenEmailModal = contact => {
+    setEmailModalContact(contact);
+    setEmailSubject('Regarding your inquiry - Gemora Diam');
+    setEmailMessage('');
+    setEmailError('');
+  };
+  const handleCloseEmailModal = () => {
+    if (isSendingEmail) return;
+    setEmailModalContact(null);
+    setEmailSubject('');
+    setEmailMessage('');
+    setEmailError('');
+  };
+  const handleSendEmail = async e => {
+    e.preventDefault();
+    if (!emailModalContact) return;
+    if (!emailMessage.trim()) {
+      setEmailError('Please enter a reply message');
+      return;
+    }
+    try {
+      setIsSendingEmail(true);
+      setEmailError('');
+      const response = await fetch(`${adminPanelBackendPath}/Support/SendContactUsReply`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          toEmail: emailModalContact.email,
+          customerName: emailModalContact.fullname,
+          subject: emailSubject,
+          replyMessage: emailMessage,
+          originalMessage: emailModalContact.message
+        })
+      });
+      const data = await response.json();
+      if (HandleUnauthorized(data, logoutUser, navigate)) return;
+      if (response.ok) {
+        setSuccessMessage(data.message || 'Email sent successfully to customer');
+        handleCloseEmailModal();
+      } else {
+        setEmailError(data.message || 'Failed to send email');
+      }
+    } catch {
+      setEmailError('Server error while sending email');
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
   return <>
     {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
     {loading ? <LoadingSpinner /> : <div className="tablediv">
@@ -125,8 +184,8 @@ const GetContactUs = ({
             <th onClick={() => sortContactList('message')}>
               {"Message"} {renderSortIcon('message')}
             </th>
-            <th className="contactus-view-th">
-              {"View"}
+            <th className="contactus-action-th">
+              {"Action"}
             </th>
           </tr>
         </thead>
@@ -151,7 +210,22 @@ const GetContactUs = ({
               {truncateMessage(contact.message)}
             </td>
             <td>
-              <ViewButton onClick={() => setViewModalContact(contact)} />
+              <div className="contactus-action-buttons">
+                <Tooltip title={"Send Email"} arrow>
+                  <span>
+                    <IconButton
+                      onClick={() => handleOpenEmailModal(contact)}
+                      aria-label={"Send Email"}
+                      className="contactus-email-btn"
+                      size="small"
+                      disabled={!contact.email}
+                    >
+                      <EmailIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <ViewButton onClick={() => setViewModalContact(contact)} />
+              </div>
             </td>
           </tr>) : <tr>
             <td colSpan="4" style={{
@@ -218,6 +292,87 @@ const GetContactUs = ({
                 {"Close"}
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>}
+
+    {emailModalContact && <div className="modal fade show contactus-email-modal" style={{
+      display: 'block'
+    }} tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="contactus-email-modal-title">
+      <div className="contactus-email-modal-backdrop" onClick={handleCloseEmailModal} />
+      <div className="contactus-email-modal-dialog-wrapper">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 id="contactus-email-modal-title" className="modal-title">
+                <EmailIcon style={{ marginRight: '8px', verticalAlign: 'middle', color: '#0284c7' }} />
+                {"Send Email to Customer"}
+              </h5>
+              <button type="button" className="btn-close" onClick={handleCloseEmailModal} disabled={isSendingEmail} aria-label={"Close"} />
+            </div>
+            <form onSubmit={handleSendEmail}>
+              <div className="modal-body contactus-email-modal-body">
+                <div className="email-recipient-info">
+                  <span className="recipient-label">{"To"}:</span>
+                  <span className="recipient-value">
+                    <strong>{emailModalContact.fullname || 'Customer'}</strong> &lt;{emailModalContact.email}&gt;
+                  </span>
+                </div>
+
+                {emailModalContact.message && <div className="original-message-card">
+                  <span className="original-message-label">{"Customer's Message"}:</span>
+                  <p className="original-message-text">{emailModalContact.message}</p>
+                </div>}
+
+                <div className="form-group">
+                  <label className="form-label">{"Subject"} <span className="text-danger">*</span></label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={emailSubject}
+                    onChange={e => setEmailSubject(e.target.value)}
+                    required
+                    disabled={isSendingEmail}
+                    placeholder={"Enter subject"}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">{"Message"} <span className="text-danger">*</span></label>
+                  <textarea
+                    className="form-control"
+                    rows={5}
+                    value={emailMessage}
+                    onChange={e => {
+                      setEmailMessage(e.target.value);
+                      if (emailError) setEmailError('');
+                    }}
+                    required
+                    disabled={isSendingEmail}
+                    placeholder={"Type your reply message to the customer here..."}
+                  />
+                </div>
+
+                {emailError && <div className="alert alert-danger py-2 px-3 mb-0" style={{ fontSize: '13px' }}>
+                  {emailError}
+                </div>}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={handleCloseEmailModal} disabled={isSendingEmail}>
+                  {"Cancel"}
+                </button>
+                <button type="submit" className="btn btn-primary btn-send-email" disabled={isSendingEmail}>
+                  {isSendingEmail ? <>
+                    <CircularProgress size={16} color="inherit" style={{ marginRight: '8px' }} />
+                    {"Sending..."}
+                  </> : <>
+                    <SendIcon fontSize="small" style={{ marginRight: '6px' }} />
+                    {"Send Email"}
+                  </>}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

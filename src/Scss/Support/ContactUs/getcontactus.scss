@@ -50,6 +50,26 @@
                 word-break: break-word;
             }
 
+            .contactus-action-buttons {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+
+                .contactus-email-btn {
+                    color: #0284c7;
+
+                    &:hover {
+                        color: #0369a1;
+                        background-color: rgba(2, 132, 199, 0.08);
+                    }
+
+                    &:disabled {
+                        color: #94a3b8;
+                    }
+                }
+            }
+
             .view-icon {
                 color: #2e7d32;
 
@@ -68,7 +88,8 @@
             }
         }
 
-        .contactus-view-th {
+        .contactus-view-th,
+        .contactus-action-th {
             cursor: default;
         }
     }
@@ -173,6 +194,171 @@
             word-break: break-word;
             max-height: 200px;
             overflow-y: auto;
+        }
+    }
+}
+
+.contactus-email-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1100;
+    outline: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .contactus-email-modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.65);
+        z-index: 1100;
+    }
+
+    .contactus-email-modal-dialog-wrapper {
+        position: relative;
+        z-index: 1101;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100%;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    .modal-dialog {
+        max-width: 560px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .modal-content {
+        background-color: var(--page-color, #fff);
+        color: var(--text-color, #333);
+        border-radius: 8px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .contactus-email-modal-body {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+
+        .email-recipient-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background-color: color-mix(in srgb, var(--primary-color) 8%, var(--page-color, #fff));
+            border: 1px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
+            border-radius: 6px;
+            font-size: 13.5px;
+
+            .recipient-label {
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+
+            .recipient-value {
+                color: var(--text-color, #1e293b);
+                word-break: break-all;
+            }
+        }
+
+        .original-message-card {
+            background-color: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            padding: 10px 14px;
+            border-radius: 4px;
+
+            .original-message-label {
+                font-size: 11.5px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #64748b;
+                font-weight: 600;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .original-message-text {
+                margin: 0;
+                font-size: 13px;
+                color: #334155;
+                line-height: 1.5;
+                max-height: 90px;
+                overflow-y: auto;
+                white-space: pre-wrap;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .form-label {
+                font-size: 13.5px;
+                font-weight: 600;
+                margin: 0;
+                color: var(--text-color, #1e293b);
+            }
+
+            input, textarea {
+                font-size: 13.5px;
+                border-radius: 6px;
+                border: 1px solid #cbd5e1;
+                padding: 8px 12px;
+                color: var(--text-color, #1e293b);
+                background-color: #fff;
+                transition: border-color 0.2s, box-shadow 0.2s;
+
+                &:focus {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 18%, transparent);
+                    outline: none;
+                }
+            }
+
+            textarea {
+                resize: vertical;
+                min-height: 110px;
+            }
+        }
+    }
+
+    .modal-footer {
+        padding: 0.85rem 1.25rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+
+        .btn-send-email {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 }
