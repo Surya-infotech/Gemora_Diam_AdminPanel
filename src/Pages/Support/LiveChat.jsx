@@ -13,16 +13,13 @@ import {
   Phone as PhoneIcon,
   Email as EmailIcon,
   SupportAgent as SupportAgentIcon,
-  Circle as CircleIcon,
-  CheckCircle as CheckCircleIcon,
-  LockReset as LockResetIcon
+  Circle as CircleIcon
 } from '@mui/icons-material';
 import {
   IconButton,
   Tooltip,
   CircularProgress,
-  Badge,
-  Chip
+  Badge
 } from '@mui/material';
 import { useAuth } from '../../Middleware/Auth';
 import CheckToken from '../../utils/CheckToken';
@@ -38,7 +35,6 @@ export default function LiveChat() {
   const [selectedConv, setSelectedConv] = useState(null);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'open', 'closed'
   const [searchTerm, setSearchTerm] = useState('');
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -89,8 +85,7 @@ export default function LiveChat() {
             ...updated[index],
             lastMessage,
             lastMessageAt: new Date(),
-            unreadCountAdmin: selectedConv?.conversationId === conversationId ? 0 : (updated[index].unreadCountAdmin || 0) + 1,
-            status: 'open'
+            unreadCountAdmin: selectedConv?.conversationId === conversationId ? 0 : (updated[index].unreadCountAdmin || 0) + 1
           };
           // Move to top
           const [moved] = updated.splice(index, 1);
@@ -154,7 +149,6 @@ export default function LiveChat() {
     try {
       setLoadingConversations(true);
       const params = new URLSearchParams();
-      if (filterStatus !== 'all') params.append('status', filterStatus);
       if (searchTerm.trim()) params.append('search', searchTerm.trim());
 
       const res = await fetch(`${backendUrl}/Chat/Admin/Conversations?${params.toString()}`, {
@@ -171,7 +165,7 @@ export default function LiveChat() {
     } finally {
       setLoadingConversations(false);
     }
-  }, [backendUrl, filterStatus, logoutUser, navigate, searchTerm, token]);
+  }, [backendUrl, logoutUser, navigate, searchTerm, token]);
 
   useEffect(() => {
     fetchConversations();
@@ -310,36 +304,6 @@ export default function LiveChat() {
     }
   };
 
-  // Toggle conversation open/closed status
-  const handleToggleStatus = async () => {
-    if (!selectedConv?.conversationId) return;
-    const newStatus = selectedConv.status === 'open' ? 'closed' : 'open';
-
-    try {
-      const res = await fetch(`${backendUrl}/Chat/Admin/ConversationStatus/${selectedConv.conversationId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setSelectedConv((prev) => ({ ...prev, status: newStatus }));
-        setConversations((prev) =>
-          prev.map((c) =>
-            c.conversationId === selectedConv.conversationId
-              ? { ...c, status: newStatus }
-              : c
-          )
-        );
-      }
-    } catch (err) {
-      console.error('Failed to toggle status:', err);
-    }
-  };
-
   return (
     <div
       style={{
@@ -400,7 +364,7 @@ export default function LiveChat() {
         {/* ========================================= */}
         <div style={{ borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', backgroundColor: '#f8fafc', height: '100%', minHeight: 0, overflow: 'hidden' }}>
           {/* Search Bar */}
-          <div style={{ padding: '16px 14px 10px', borderBottom: '1px solid #e2e8f0', flexShrink: 0 }}>
+          <div style={{ padding: '14px', borderBottom: '1px solid #e2e8f0', flexShrink: 0 }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <SearchIcon style={{ position: 'absolute', left: '12px', color: '#94a3b8', fontSize: '20px' }} />
               <input
@@ -418,31 +382,6 @@ export default function LiveChat() {
                   outline: 'none'
                 }}
               />
-            </div>
-
-            {/* Filter Tabs */}
-            <div style={{ display: 'flex', gap: '6px', marginTop: '10px' }}>
-              {['all', 'open', 'closed'].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setFilterStatus(status)}
-                  style={{
-                    flex: 1,
-                    padding: '6px 0',
-                    fontSize: '12px',
-                    fontWeight: filterStatus === status ? 600 : 500,
-                    textTransform: 'capitalize',
-                    border: 'none',
-                    borderRadius: '6px',
-                    backgroundColor: filterStatus === status ? '#1e293b' : 'transparent',
-                    color: filterStatus === status ? '#ffffff' : '#64748b',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  {status}
-                </button>
-              ))}
             </div>
           </div>
 
@@ -539,20 +478,6 @@ export default function LiveChat() {
                       >
                         {conv.lastMessage || 'No message'}
                       </p>
-
-                      <span
-                        style={{
-                          fontSize: '10px',
-                          padding: '2px 8px',
-                          borderRadius: '10px',
-                          textTransform: 'uppercase',
-                          fontWeight: 600,
-                          backgroundColor: conv.status === 'open' ? '#dcfce7' : '#f1f5f9',
-                          color: conv.status === 'open' ? '#166534' : '#64748b'
-                        }}
-                      >
-                        {conv.status}
-                      </span>
                     </div>
                   </div>
                 );
@@ -596,17 +521,9 @@ export default function LiveChat() {
                   {(selectedConv.customerName || 'V').substring(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h5 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#1e293b' }}>
-                      {selectedConv.customerName}
-                    </h5>
-                    <Chip
-                      label={selectedConv.status.toUpperCase()}
-                      size="small"
-                      color={selectedConv.status === 'open' ? 'success' : 'default'}
-                      style={{ height: '20px', fontSize: '10px', fontWeight: 600 }}
-                    />
-                  </div>
+                  <h5 style={{ margin: 0, fontSize: '15px', fontWeight: 600, color: '#1e293b' }}>
+                    {selectedConv.customerName}
+                  </h5>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '3px', fontSize: '12px', color: '#64748b' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <EmailIcon fontSize="inherit" /> {selectedConv.customerEmail}
@@ -619,34 +536,6 @@ export default function LiveChat() {
                   </div>
                 </div>
               </div>
-
-              {/* Status Action Button */}
-              <button
-                onClick={handleToggleStatus}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '7px 14px',
-                  borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
-                  backgroundColor: selectedConv.status === 'open' ? '#fef2f2' : '#f0fdf4',
-                  color: selectedConv.status === 'open' ? '#b91c1c' : '#15803d',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                {selectedConv.status === 'open' ? (
-                  <>
-                    <CheckCircleIcon fontSize="small" /> Mark Resolved
-                  </>
-                ) : (
-                  <>
-                    <LockResetIcon fontSize="small" /> Reopen Chat
-                  </>
-                )}
-              </button>
             </div>
 
             {/* Messages Body */}
