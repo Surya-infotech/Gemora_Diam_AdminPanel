@@ -225,51 +225,53 @@ const GetContactUs = ({ searchValue }) => {
                                     />
                                 </div>
                                 <div className="modal-body contactus-view-modal-body">
-                                    <div className="contactus-view-row">
-                                        <span className="contactus-view-label">
-                                            {translations.FullName}:
-                                        </span>
-                                        <span className="contactus-view-value">
-                                            {viewModalContact.fullname || '-'}
-                                        </span>
+                                        <div className="contactus-view-grid">
+                                            <div className="contactus-view-row">
+                                                <span className="contactus-view-label">
+                                                    {translations.FullName}:
+                                                </span>
+                                                <span className="contactus-view-value">
+                                                    {viewModalContact.fullname || '-'}
+                                                </span>
+                                            </div>
+                                            <div className="contactus-view-row">
+                                                <span className="contactus-view-label">{translations.Country || 'Country'}:</span>
+                                                <span className="contactus-view-value">
+                                                    {viewModalContact.countryname || '-'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="contactus-view-row">
+                                            <span className="contactus-view-label">{translations.Email}:</span>
+                                            <span className="contactus-view-value">
+                                                {viewModalContact.email || '-'}
+                                            </span>
+                                        </div>
+                                        <div className="contactus-view-row contactus-view-row-message">
+                                            <span className="contactus-view-label">
+                                                {translations.Message}:
+                                            </span>
+                                            <span className="contactus-view-value contactus-view-message">
+                                                {viewModalContact.message || '-'}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="contactus-view-row">
-                                        <span className="contactus-view-label">{translations.Email}:</span>
-                                        <span className="contactus-view-value">
-                                            {viewModalContact.email || '-'}
-                                        </span>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={handleCloseViewModal}
+                                        >
+                                            {translations.Close}
+                                        </button>
                                     </div>
-                                    <div className="contactus-view-row">
-                                        <span className="contactus-view-label">{translations.Country || 'Country'}:</span>
-                                        <span className="contactus-view-value">
-                                            {viewModalContact.countryname || '-'}
-                                        </span>
-                                    </div>
-                                    <div className="contactus-view-row contactus-view-row-message">
-                                        <span className="contactus-view-label">
-                                            {translations.Message}:
-                                        </span>
-                                        <span className="contactus-view-value contactus-view-message">
-                                            {viewModalContact.message || '-'}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={handleCloseViewModal}
-                                    >
-                                        {translations.Close}
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             )}
-        </>
-    );
+                </>
+            );
 };
 
-export default GetContactUs;
+            export default GetContactUs;
