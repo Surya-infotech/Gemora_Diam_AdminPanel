@@ -11,194 +11,189 @@ import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
 import Pagination from '../../../Pages/Custom/Pagination';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import "../../../Scss/Attributes/Shape/getshape.scss";
-import { useLanguage } from "../../../Context/LanguageContext";
 import { usePermissions } from '../../../Hooks/usePermissions';
 import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
-
-const GetShape = ({ searchValue = "" }) => {
-    const { logoutUser } = useAuth();
-    const navigate = useNavigate();
-    const { translations } = useLanguage();
-    const { canEdit, canDelete } = usePermissions();
-    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-    const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
-    const [loading, setLoading] = useState(true);
-    const [warningMessage, setWarningMessage] = useState("");
-    const [showWarning, setShowWarning] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const token = localStorage.getItem(tokenname);
-    const [sortColumn, setSortColumn] = useState(null);
-    const [sortDirection, setSortDirection] = useState("asc");
-    const [shapes, setShapes] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    useEffect(() => {
-        const fetchShapes = async () => {
-            if (!CheckToken(token, logoutUser, navigate)) return;
-            try {
-                setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/Attributes/GetShapes`, {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                });
-                const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
-                if (response.ok) {
-                    setShapes(data.shapes || []);
-                } else {
-                    setWarningMessage(data.message || translations.servererror);
-                    setShowWarning(true);
-                }
-            } catch {
-                setWarningMessage(translations.servererror);
-                setShowWarning(true);
-            } finally {
-                setLoading(false);
-            }
+const GetShape = ({
+  searchValue = ""
+}) => {
+  const {
+    logoutUser
+  } = useAuth();
+  const navigate = useNavigate();
+  const {
+    canEdit,
+    canDelete
+  } = usePermissions();
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+  const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
+  const [loading, setLoading] = useState(true);
+  const [warningMessage, setWarningMessage] = useState("");
+  const [showWarning, setShowWarning] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const token = localStorage.getItem(tokenname);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState("asc");
+  const [shapes, setShapes] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  useEffect(() => {
+    const fetchShapes = async () => {
+      if (!CheckToken(token, logoutUser, navigate)) return;
+      try {
+        setLoading(true);
+        const response = await fetch(`${adminPanelBackendPath}/Attributes/GetShapes`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+        const data = await response.json();
+        if (HandleUnauthorized(data, logoutUser, navigate)) return;
+        if (response.ok) {
+          setShapes(data.shapes || []);
+        } else {
+          setWarningMessage(data.message || "Server error");
+          setShowWarning(true);
+        }
+      } catch {
+        setWarningMessage("Server error");
+        setShowWarning(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    setCurrentPage(1);
+    fetchShapes();
+  }, [navigate, logoutUser, token, adminPanelBackendPath]);
+  const sortItems = column => {
+    const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
+    setSortColumn(column);
+    setSortDirection(direction);
+    setShapes([...shapes].sort((a, b) => {
+      let valA = a[column] ?? "";
+      let valB = b[column] ?? "";
+      if (column === "status") {
+        valA = a[column] ? 1 : 0;
+        valB = b[column] ? 1 : 0;
+      } else {
+        valA = valA.toString().toLowerCase();
+        valB = valB.toString().toLowerCase();
+      }
+      if (valA < valB) return direction === "asc" ? -1 : 1;
+      if (valA > valB) return direction === "asc" ? 1 : -1;
+      return 0;
+    }));
+  };
+  const renderSortIcon = column => sortColumn !== column ? <UnfoldMore fontSize="small" /> : sortDirection === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />;
+  const filteredItems = shapes.filter(item => {
+    const search = (searchValue || "").toLowerCase().trim();
+    if (!search) return true;
+    return Object.values(item).some(value => value !== null && value !== undefined && value.toString().toLowerCase().includes(search));
+  });
+  const totalRecords = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+  const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const handleEditClick = id => navigate(`/Attributes/EditShape/${id}`);
+  const handleDeleteClick = item => {
+    setIsModalOpen(true);
+    setSelectedItem(item);
+  };
+  const showActionColumn = canEdit('shape') || canDelete('shape');
+  const handleStatusChange = async item => {
+    if (!canEdit('shape')) return;
+    if (!CheckToken(token, logoutUser, navigate)) return;
+    try {
+      const updatedStatus = !item.status;
+      const targetId = item._id || item.shapeid;
+      const response = await fetch(`${adminPanelBackendPath}/Attributes/UpdateShapeStatus/${targetId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          status: updatedStatus
+        })
+      });
+      const data = await response.json();
+      if (HandleUnauthorized(data, logoutUser, navigate)) return;
+      if (response.ok) {
+        setShapes(shapes.map(s => s._id === item._id || s.shapeid === item.shapeid ? {
+          ...s,
+          status: updatedStatus
+        } : s));
+        setSuccessMessage(updatedStatus ? "Shape Status updated to Active" : "Shape Status updated to Inactive");
+      } else {
+        const errorMessages = {
+          "Shape not found": "Shape not found",
+          "Server error": "Server error"
         };
-
-        setCurrentPage(1);
-        fetchShapes();
-    }, [navigate, logoutUser, token, adminPanelBackendPath, translations]);
-
-    const sortItems = (column) => {
-        const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
-        setSortColumn(column);
-        setSortDirection(direction);
-        setShapes([...shapes].sort((a, b) => {
-            let valA = a[column] ?? "";
-            let valB = b[column] ?? "";
-
-            if (column === "status") {
-                valA = a[column] ? 1 : 0;
-                valB = b[column] ? 1 : 0;
-            } else {
-                valA = valA.toString().toLowerCase();
-                valB = valB.toString().toLowerCase();
-            }
-
-            if (valA < valB) return direction === "asc" ? -1 : 1;
-            if (valA > valB) return direction === "asc" ? 1 : -1;
-            return 0;
-        }));
-    };
-
-    const renderSortIcon = (column) => (
-        sortColumn !== column ? <UnfoldMore fontSize="small" /> : sortDirection === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />
-    );
-
-    const filteredItems = shapes.filter((item) => {
-        const search = (searchValue || "").toLowerCase().trim();
-        if (!search) return true;
-        return Object.values(item).some((value) =>
-            value !== null && value !== undefined && value.toString().toLowerCase().includes(search)
-        );
-    });
-
-    const totalRecords = filteredItems.length;
-    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-    const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-    const handleEditClick = (id) => navigate(`/Attributes/EditShape/${id}`);
-
-    const handleDeleteClick = (item) => {
-        setIsModalOpen(true);
-        setSelectedItem(item);
-    };
-
-    const showActionColumn = canEdit('shape') || canDelete('shape');
-
-    const handleStatusChange = async (item) => {
-        if (!canEdit('shape')) return;
-        if (!CheckToken(token, logoutUser, navigate)) return;
-        try {
-            const updatedStatus = !item.status;
-            const targetId = item._id || item.shapeid;
-            const response = await fetch(`${adminPanelBackendPath}/Attributes/UpdateShapeStatus/${targetId}`, {
-                method: "PUT",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ status: updatedStatus }),
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-            if (response.ok) {
-                setShapes(shapes.map(s => (s._id === item._id || s.shapeid === item.shapeid) ? { ...s, status: updatedStatus } : s));
-                setSuccessMessage(updatedStatus ? (translations.shapestatusactive) : (translations.shapestatusinactive));
-            } else {
-                const errorMessages = {
-                    "Shape not found": translations.shapenotfound,
-                    "Server error": translations.servererror
-                };
-                setWarningMessage(errorMessages[data.message] || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
+        setWarningMessage(errorMessages[data.message] || "Server error");
+        setShowWarning(true);
+      }
+    } catch {
+      setWarningMessage("Server error");
+      setShowWarning(true);
+    }
+  };
+  const DeleteItem = async targetId => {
+    setIsDeleting(true);
+    if (!CheckToken(token, logoutUser, navigate)) {
+      setIsDeleting(false);
+      return;
+    }
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Attributes/DeleteShape/${targetId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         }
-    };
-
-    const DeleteItem = async (targetId) => {
-        setIsDeleting(true);
-        if (!CheckToken(token, logoutUser, navigate)) {
-            setIsDeleting(false);
-            return;
-        }
-        try {
-            const response = await fetch(`${adminPanelBackendPath}/Attributes/DeleteShape/${targetId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            });
-            const result = await response.json();
-            if (HandleUnauthorized(result, logoutUser, navigate)) return;
-            if (response.ok) {
-                setShapes(shapes.filter(s => s._id !== targetId && s.shapeid !== targetId));
-                setIsModalOpen(false);
-                setSuccessMessage(translations.deleteshapesuccessfull);
-            } else {
-                const errorMessages = {
-                    "Shape not found": translations.shapenotfound,
-                    "Server error": translations.servererror
-                };
-                setWarningMessage(errorMessages[result.message] || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        } finally {
-            setIsDeleting(false);
-            setIsModalOpen(false);
-        }
-    };
-
-    return (
-        <>
+      });
+      const result = await response.json();
+      if (HandleUnauthorized(result, logoutUser, navigate)) return;
+      if (response.ok) {
+        setShapes(shapes.filter(s => s._id !== targetId && s.shapeid !== targetId));
+        setIsModalOpen(false);
+        setSuccessMessage("Shape Deleted Successfully");
+      } else {
+        const errorMessages = {
+          "Shape not found": "Shape not found",
+          "Server error": "Server error"
+        };
+        setWarningMessage(errorMessages[result.message] || "Server error");
+        setShowWarning(true);
+      }
+    } catch {
+      setWarningMessage("Server error");
+      setShowWarning(true);
+    } finally {
+      setIsDeleting(false);
+      setIsModalOpen(false);
+    }
+  };
+  return <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className="tablediv">
-                {loading ? <LoadingSpinner /> : (
-                    <table className="shapetable">
+                {loading ? <LoadingSpinner /> : <table className="shapetable">
                         <thead>
                             <tr>
                                 <th onClick={() => sortItems("shapename")}>
-                                    {translations.shapename} {renderSortIcon("shapename")}
+                                    {"Shape Name"} {renderSortIcon("shapename")}
                                 </th>
                                 <th onClick={() => sortItems("status")}>
-                                    {translations.status} {renderSortIcon("status")}
+                                    {"Status"} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th>{translations.action}</th>}
+                                {showActionColumn && <th>{"Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
-                            {visibleItems.length > 0 ? (
-                                visibleItems.map((item) => (
-                                    <tr key={item._id || item.shapeid}>
+                            {visibleItems.length > 0 ? visibleItems.map(item => <tr key={item._id || item.shapeid}>
                                         <td>
                                             <span className="shape-badge">
                                                 {item.shapename}
@@ -207,53 +202,27 @@ const GetShape = ({ searchValue = "" }) => {
                                         <td>
                                             <CustomSwitch checked={item.status} onChange={() => handleStatusChange(item)} disabled={!canEdit('shape')} />
                                         </td>
-                                        {showActionColumn && (
-                                            <td>
+                                        {showActionColumn && <td>
                                                 {canEdit('shape') && <EditButton onClick={() => handleEditClick(item._id || item.shapeid)} />}
                                                 {canDelete('shape') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                            </td>
-                                        )}
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={showActionColumn ? 3 : 2} style={{ textAlign: "center", padding: "24px 0" }}>
-                                        {translations.nodatafound}
+                                            </td>}
+                                    </tr>) : <tr>
+                                    <td colSpan={showActionColumn ? 3 : 2} style={{
+              textAlign: "center",
+              padding: "24px 0"
+            }}>
+                                        {"No data found"}
                                     </td>
-                                </tr>
-                            )}
+                                </tr>}
                         </tbody>
-                    </table>
-                )}
+                    </table>}
             </div>
-            {!loading && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={(page) => setCurrentPage(page)}
-                    pageSizeOptions={[10, 15, 20, 50]}
-                    selectedPageSize={pageSize}
-                    onPageSizeChange={(size) => {
-                        setPageSize(size);
-                        setCurrentPage(1);
-                    }}
-                    totalRecords={totalRecords}
-                />
-            )}
-            {isModalOpen && (
-                <DeleteModal
-                    open={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onDelete={() => DeleteItem(selectedItem._id || selectedItem.shapeid)}
-                    name={`${selectedItem?.shapename}`}
-                    message={translations.shape}
-                    headingname={translations.deleteshape}
-                    isLoading={isDeleting}
-                />
-            )}
-            {successMessage && (<AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />)}
-        </>
-    );
+            {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={page => setCurrentPage(page)} pageSizeOptions={[10, 15, 20, 50]} selectedPageSize={pageSize} onPageSizeChange={size => {
+      setPageSize(size);
+      setCurrentPage(1);
+    }} totalRecords={totalRecords} />}
+            {isModalOpen && <DeleteModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onDelete={() => DeleteItem(selectedItem._id || selectedItem.shapeid)} name={`${selectedItem?.shapename}`} message={"Shape"} headingname={"Delete Shape"} isLoading={isDeleting} />}
+            {successMessage && <AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />}
+        </>;
 };
-
 export default GetShape;

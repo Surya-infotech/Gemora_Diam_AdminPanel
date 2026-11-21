@@ -7,612 +7,597 @@ import LayersIcon from '@mui/icons-material/Layers';
 import SaveIcon from '@mui/icons-material/Save';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useAuth } from '../../Middleware/Auth';
-import { useLanguage } from '../../Context/LanguageContext';
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
 import LoadingSpinner from '../../Pages/Custom/LoadingSpinner';
 import WarningModal from '../../Pages/Custom/WarningModal';
 import AlertMessage from '../../Pages/Custom/AlertMessage';
 import Dropdown from '../Dropdown/Dropdown';
+const ItemPriceTab = ({
+  itemData,
+  onItemUpdated
+}) => {
+  const navigate = useNavigate();
+  const {
+    logoutUser
+  } = useAuth();
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+  const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
+  const token = localStorage.getItem(tokenname);
+  const [metals, setMetals] = useState([]);
+  const [diamondSizes, setDiamondSizes] = useState([]);
+  const [stones, setStones] = useState([]);
+  const [isLoadingMeta, setIsLoadingMeta] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
+  const [showWarning, setShowWarning] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [priceType, setPriceType] = useState('metal_wise');
 
-const ItemPriceTab = ({ itemData, onItemUpdated }) => {
-    const navigate = useNavigate();
-    const { translations, isRtl } = useLanguage();
-    const { logoutUser } = useAuth();
-    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-    const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
-    const token = localStorage.getItem(tokenname);
+  // 1. Metal wise state
+  const [metalWisePrices, setMetalWisePrices] = useState([{
+    metalid: '',
+    metalname: '',
+    metaltype: '',
+    price: ''
+  }]);
 
-    const [metals, setMetals] = useState([]);
-    const [diamondSizes, setDiamondSizes] = useState([]);
-    const [stones, setStones] = useState([]);
-    const [isLoadingMeta, setIsLoadingMeta] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-    const [warningMessage, setWarningMessage] = useState('');
-    const [showWarning, setShowWarning] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
+  // 2. Metal with Stone & Diamond Carat state
+  const [metalWithStoneDiamondCaratPrices, setMetalWithStoneDiamondCaratPrices] = useState([{
+    metalid: '',
+    metalname: '',
+    metaltype: '',
+    stoneid: '',
+    stonename: '',
+    hasCarat: true,
+    price: '',
+    caratPrices: [{
+      diamondsizeid: '',
+      diamondsize: '',
+      price: ''
+    }]
+  }]);
 
-    const [priceType, setPriceType] = useState('metal_wise');
-
-    // 1. Metal wise state
-    const [metalWisePrices, setMetalWisePrices] = useState([
-        { metalid: '', metalname: '', metaltype: '', price: '' }
-    ]);
-
-    // 2. Metal with Stone & Diamond Carat state
-    const [metalWithStoneDiamondCaratPrices, setMetalWithStoneDiamondCaratPrices] = useState([
-        {
-            metalid: '',
-            metalname: '',
-            metaltype: '',
-            stoneid: '',
-            stonename: '',
-            hasCarat: true,
-            price: '',
-            caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }]
+  // Fetch active metals, diamond sizes, and stones for dropdown options
+  useEffect(() => {
+    const fetchMeta = async () => {
+      if (!CheckToken(token, logoutUser, navigate)) return;
+      try {
+        setIsLoadingMeta(true);
+        const [metalsRes, diamondRes, stonesRes] = await Promise.all([fetch(`${adminPanelBackendPath}/Attributes/GetActiveMetals`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }), fetch(`${adminPanelBackendPath}/Attributes/GetActiveDiamondSizes`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }), fetch(`${adminPanelBackendPath}/Attributes/GetActiveStones`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })]);
+        const metalsData = await metalsRes.json();
+        const diamondData = await diamondRes.json();
+        const stonesData = await stonesRes.json();
+        if (metalsRes.ok && Array.isArray(metalsData)) {
+          setMetals(metalsData);
         }
-    ]);
+        if (diamondRes.ok && Array.isArray(diamondData)) {
+          setDiamondSizes(diamondData);
+        }
+        if (stonesRes.ok && Array.isArray(stonesData)) {
+          setStones(stonesData);
+        }
+      } catch (err) {
+        console.error('Fetch price metadata error:', err);
+      } finally {
+        setIsLoadingMeta(false);
+      }
+    };
+    fetchMeta();
+  }, [adminPanelBackendPath, token, logoutUser, navigate]);
 
-    // Fetch active metals, diamond sizes, and stones for dropdown options
-    useEffect(() => {
-        const fetchMeta = async () => {
-            if (!CheckToken(token, logoutUser, navigate)) return;
-            try {
-                setIsLoadingMeta(true);
-                const [metalsRes, diamondRes, stonesRes] = await Promise.all([
-                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveMetals`, {
-                        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-                    }),
-                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveDiamondSizes`, {
-                        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-                    }),
-                    fetch(`${adminPanelBackendPath}/Attributes/GetActiveStones`, {
-                        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-                    })
-                ]);
+  // Load initial data from itemData when available
+  useEffect(() => {
+    if (!itemData) return;
+    const pricing = itemData.pricing;
+    if (pricing) {
+      let currentType = pricing.priceType || 'metal_wise';
+      if (currentType !== 'metal_wise' && currentType !== 'metal_with_stone_diamond_carat') {
+        currentType = 'metal_wise';
+      }
+      setPriceType(currentType);
 
-                const metalsData = await metalsRes.json();
-                const diamondData = await diamondRes.json();
-                const stonesData = await stonesRes.json();
+      // Flow 1
+      if (currentType === 'metal_wise' && Array.isArray(pricing.metalWisePrices) && pricing.metalWisePrices.length > 0) {
+        setMetalWisePrices(pricing.metalWisePrices.map(m => ({
+          metalid: m.metalid ? Number(m.metalid) : '',
+          metalname: m.metalname || '',
+          metaltype: m.metaltype || '',
+          price: m.price !== undefined && m.price !== null ? String(m.price) : ''
+        })));
+      } else {
+        setMetalWisePrices([{
+          metalid: '',
+          metalname: '',
+          metaltype: '',
+          price: ''
+        }]);
+      }
 
-                if (metalsRes.ok && Array.isArray(metalsData)) {
-                    setMetals(metalsData);
-                }
-                if (diamondRes.ok && Array.isArray(diamondData)) {
-                    setDiamondSizes(diamondData);
-                }
-                if (stonesRes.ok && Array.isArray(stonesData)) {
-                    setStones(stonesData);
-                }
-            } catch (err) {
-                console.error('Fetch price metadata error:', err);
-            } finally {
-                setIsLoadingMeta(false);
-            }
+      // Flow 2: Metal with Stone & Diamond Carat
+      if (currentType === 'metal_with_stone_diamond_carat' && Array.isArray(pricing.metalWithStoneDiamondCaratPrices) && pricing.metalWithStoneDiamondCaratPrices.length > 0) {
+        setMetalWithStoneDiamondCaratPrices(pricing.metalWithStoneDiamondCaratPrices.map(msg => ({
+          metalid: msg.metalid ? Number(msg.metalid) : '',
+          metalname: msg.metalname || '',
+          metaltype: msg.metaltype || '',
+          stoneid: msg.stoneid ? Number(msg.stoneid) : '',
+          stonename: msg.stonename || '',
+          hasCarat: msg.hasCarat !== undefined ? Boolean(msg.hasCarat) : msg.stonePricingType === 'fixed' ? false : Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price),
+          price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
+          caratPrices: Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 ? msg.caratPrices.map(cp => ({
+            diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
+            diamondsize: cp.diamondsize || '',
+            price: cp.price !== undefined && cp.price !== null ? String(cp.price) : ''
+          })) : [{
+            diamondsizeid: '',
+            diamondsize: '',
+            price: ''
+          }]
+        })));
+      } else {
+        setMetalWithStoneDiamondCaratPrices([{
+          metalid: '',
+          metalname: '',
+          metaltype: '',
+          stoneid: '',
+          stonename: '',
+          hasCarat: true,
+          price: '',
+          caratPrices: [{
+            diamondsizeid: '',
+            diamondsize: '',
+            price: ''
+          }]
+        }]);
+      }
+    }
+  }, [itemData]);
+  const formattedMetals = useMemo(() => {
+    return metals.map(m => ({
+      ...m,
+      metalid: Number(m.metalid || m._id),
+      displayLabel: m.metaltype ? `${m.metalname} (${m.metaltype})` : m.metalname
+    }));
+  }, [metals]);
+  const formattedDiamondSizes = useMemo(() => {
+    return diamondSizes.map(d => ({
+      ...d,
+      diamondsizeid: Number(d.diamondsizeid || d._id),
+      displayLabel: d.diamondsize
+    }));
+  }, [diamondSizes]);
+
+  // Available stones: uses itemData.stones if assigned, fallback to all active stones
+  const availableStones = useMemo(() => {
+    if (Array.isArray(itemData?.stones) && itemData.stones.length > 0) {
+      return itemData.stones.map(s => ({
+        ...s,
+        stoneid: Number(s.stoneid || s._id),
+        displayLabel: s.stonename || s.name || ''
+      }));
+    }
+    return stones.map(s => ({
+      ...s,
+      stoneid: Number(s.stoneid || s._id),
+      displayLabel: s.stonename || s.name || ''
+    }));
+  }, [itemData, stones]);
+
+  // ==========================================
+  // Flow 1: Metal Wise Handlers
+  // ==========================================
+  const getMetalOptionsForIndex = currentIndex => {
+    const currentMetalId = Number(metalWisePrices[currentIndex]?.metalid);
+    const otherSelectedIds = metalWisePrices.filter((_, idx) => idx !== currentIndex).map(r => Number(r.metalid)).filter(Boolean);
+    return formattedMetals.filter(m => {
+      const id = Number(m.metalid);
+      return id === currentMetalId || !otherSelectedIds.includes(id);
+    });
+  };
+  const handleMetalWiseChange = (index, field, value) => {
+    setMetalWisePrices(prev => {
+      const updated = [...prev];
+      const row = {
+        ...updated[index]
+      };
+      if (field === 'metalid') {
+        const numId = Number(value);
+        const found = formattedMetals.find(m => Number(m.metalid) === numId);
+        row.metalid = numId || '';
+        row.metalname = found ? found.metalname : '';
+        row.metaltype = found ? found.metaltype : '';
+      } else if (field === 'price') {
+        row.price = value;
+      }
+      updated[index] = row;
+      return updated;
+    });
+  };
+  const handleAddMetalWiseRow = () => {
+    if (formattedMetals.length > 0 && metalWisePrices.length >= formattedMetals.length) {
+      return;
+    }
+    const usedIds = new Set(metalWisePrices.map(r => Number(r.metalid)).filter(Boolean));
+    const nextAvail = formattedMetals.find(m => !usedIds.has(Number(m.metalid)));
+    setMetalWisePrices(prev => [...prev, {
+      metalid: nextAvail ? Number(nextAvail.metalid) : '',
+      metalname: nextAvail ? nextAvail.metalname : '',
+      metaltype: nextAvail ? nextAvail.metaltype : '',
+      price: ''
+    }]);
+  };
+  const handleRemoveMetalWiseRow = index => {
+    if (metalWisePrices.length <= 1) return;
+    setMetalWisePrices(prev => prev.filter((_, idx) => idx !== index));
+  };
+
+  // ==========================================
+  // Flow 2: Metal with Stone & Diamond Carat Handlers
+  // ==========================================
+  const handleMetalWithStoneCaratGroupChange = (groupIndex, field, value) => {
+    setMetalWithStoneDiamondCaratPrices(prev => prev.map((group, gIdx) => {
+      if (gIdx !== groupIndex) return group;
+      const updated = {
+        ...group
+      };
+      if (field === 'metalid') {
+        const numId = Number(value);
+        const found = formattedMetals.find(m => Number(m.metalid) === numId);
+        updated.metalid = numId || '';
+        updated.metalname = found ? found.metalname : '';
+        updated.metaltype = found ? found.metaltype : '';
+      } else if (field === 'stoneid') {
+        const numId = Number(value);
+        const found = availableStones.find(s => Number(s.stoneid) === numId);
+        updated.stoneid = numId || '';
+        updated.stonename = found ? found.stonename || found.displayLabel : '';
+      } else if (field === 'hasCarat') {
+        updated.hasCarat = Boolean(value);
+      } else if (field === 'price') {
+        updated.price = value;
+      }
+      return updated;
+    }));
+  };
+  const handleAddMetalWithStoneCaratGroup = () => {
+    setMetalWithStoneDiamondCaratPrices(prev => [...prev, {
+      metalid: '',
+      metalname: '',
+      metaltype: '',
+      stoneid: '',
+      stonename: '',
+      hasCarat: true,
+      price: '',
+      caratPrices: [{
+        diamondsizeid: '',
+        diamondsize: '',
+        price: ''
+      }]
+    }]);
+  };
+  const handleRemoveMetalWithStoneCaratGroup = groupIndex => {
+    if (metalWithStoneDiamondCaratPrices.length <= 1) return;
+    setMetalWithStoneDiamondCaratPrices(prev => prev.filter((_, idx) => idx !== groupIndex));
+  };
+  const getCaratOptionsForMetalStoneIndex = (groupIndex, caratIndex) => {
+    const currentCarats = metalWithStoneDiamondCaratPrices[groupIndex]?.caratPrices || [];
+    const currentCaratId = Number(currentCarats[caratIndex]?.diamondsizeid);
+    const otherSelectedIds = currentCarats.filter((_, idx) => idx !== caratIndex).map(c => Number(c.diamondsizeid)).filter(Boolean);
+    return formattedDiamondSizes.filter(d => {
+      const id = Number(d.diamondsizeid);
+      return id === currentCaratId || !otherSelectedIds.includes(id);
+    });
+  };
+  const handleCaratChangeForMetalStone = (groupIndex, caratIndex, field, value) => {
+    setMetalWithStoneDiamondCaratPrices(prev => prev.map((group, gIdx) => {
+      if (gIdx !== groupIndex) return group;
+      const nextCarats = group.caratPrices.map((cRow, cIdx) => {
+        if (cIdx !== caratIndex) return cRow;
+        const updated = {
+          ...cRow
         };
-
-        fetchMeta();
-    }, [adminPanelBackendPath, token, logoutUser, navigate]);
-
-    // Load initial data from itemData when available
-    useEffect(() => {
-        if (!itemData) return;
-
-        const pricing = itemData.pricing;
-        if (pricing) {
-            let currentType = pricing.priceType || 'metal_wise';
-            if (currentType !== 'metal_wise' && currentType !== 'metal_with_stone_diamond_carat') {
-                currentType = 'metal_wise';
-            }
-            setPriceType(currentType);
-
-            // Flow 1
-            if (currentType === 'metal_wise' && Array.isArray(pricing.metalWisePrices) && pricing.metalWisePrices.length > 0) {
-                setMetalWisePrices(
-                    pricing.metalWisePrices.map(m => ({
-                        metalid: m.metalid ? Number(m.metalid) : '',
-                        metalname: m.metalname || '',
-                        metaltype: m.metaltype || '',
-                        price: m.price !== undefined && m.price !== null ? String(m.price) : ''
-                    }))
-                );
-            } else {
-                setMetalWisePrices([{ metalid: '', metalname: '', metaltype: '', price: '' }]);
-            }
-
-            // Flow 2: Metal with Stone & Diamond Carat
-            if (currentType === 'metal_with_stone_diamond_carat' && Array.isArray(pricing.metalWithStoneDiamondCaratPrices) && pricing.metalWithStoneDiamondCaratPrices.length > 0) {
-                setMetalWithStoneDiamondCaratPrices(
-                    pricing.metalWithStoneDiamondCaratPrices.map(msg => ({
-                        metalid: msg.metalid ? Number(msg.metalid) : '',
-                        metalname: msg.metalname || '',
-                        metaltype: msg.metaltype || '',
-                        stoneid: msg.stoneid ? Number(msg.stoneid) : '',
-                        stonename: msg.stonename || '',
-                        hasCarat: msg.hasCarat !== undefined
-                            ? Boolean(msg.hasCarat)
-                            : (msg.stonePricingType === 'fixed' ? false : (Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price))),
-                        price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
-                        caratPrices: Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0
-                            ? msg.caratPrices.map(cp => ({
-                                diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
-                                diamondsize: cp.diamondsize || '',
-                                price: cp.price !== undefined && cp.price !== null ? String(cp.price) : ''
-                            }))
-                            : [{ diamondsizeid: '', diamondsize: '', price: '' }]
-                    }))
-                );
-            } else {
-                setMetalWithStoneDiamondCaratPrices([
-                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
-                ]);
-            }
+        if (field === 'diamondsizeid') {
+          const numId = Number(value);
+          const found = formattedDiamondSizes.find(d => Number(d.diamondsizeid) === numId);
+          updated.diamondsizeid = numId || '';
+          updated.diamondsize = found ? found.diamondsize : '';
+        } else if (field === 'price') {
+          updated.price = value;
         }
-    }, [itemData]);
+        return updated;
+      });
+      return {
+        ...group,
+        caratPrices: nextCarats
+      };
+    }));
+  };
+  const handleAddCaratRowForMetalStone = groupIndex => {
+    const group = metalWithStoneDiamondCaratPrices[groupIndex];
+    const currentCarats = group?.caratPrices || [];
+    if (formattedDiamondSizes.length > 0 && currentCarats.length >= formattedDiamondSizes.length) {
+      return;
+    }
+    const usedIds = new Set(currentCarats.map(c => Number(c.diamondsizeid)).filter(Boolean));
+    const nextAvail = formattedDiamondSizes.find(d => !usedIds.has(Number(d.diamondsizeid)));
+    setMetalWithStoneDiamondCaratPrices(prev => prev.map((g, gIdx) => {
+      if (gIdx !== groupIndex) return g;
+      return {
+        ...g,
+        caratPrices: [...g.caratPrices, {
+          diamondsizeid: nextAvail ? Number(nextAvail.diamondsizeid) : '',
+          diamondsize: nextAvail ? nextAvail.diamondsize : '',
+          price: ''
+        }]
+      };
+    }));
+  };
+  const handleRemoveCaratRowForMetalStone = (groupIndex, caratIndex) => {
+    setMetalWithStoneDiamondCaratPrices(prev => prev.map((group, gIdx) => {
+      if (gIdx !== groupIndex) return group;
+      if (group.caratPrices.length <= 1) return group;
+      return {
+        ...group,
+        caratPrices: group.caratPrices.filter((_, cIdx) => cIdx !== caratIndex)
+      };
+    }));
+  };
 
-    const formattedMetals = useMemo(() => {
-        return metals.map(m => ({
-            ...m,
-            metalid: Number(m.metalid || m._id),
-            displayLabel: m.metaltype ? `${m.metalname} (${m.metaltype})` : m.metalname
-        }));
-    }, [metals]);
+  // ==========================================
+  // Reset to saved state
+  // ==========================================
+  const handleReset = () => {
+    const pricing = itemData?.pricing;
+    if (pricing) {
+      let currentType = pricing.priceType || 'metal_wise';
+      if (currentType !== 'metal_wise' && currentType !== 'metal_with_stone_diamond_carat') {
+        currentType = 'metal_wise';
+      }
+      setPriceType(currentType);
 
-    const formattedDiamondSizes = useMemo(() => {
-        return diamondSizes.map(d => ({
-            ...d,
-            diamondsizeid: Number(d.diamondsizeid || d._id),
-            displayLabel: d.diamondsize
-        }));
-    }, [diamondSizes]);
+      // Flow 1
+      if (currentType === 'metal_wise' && pricing.metalWisePrices?.length) {
+        setMetalWisePrices(pricing.metalWisePrices.map(m => ({
+          metalid: m.metalid ? Number(m.metalid) : '',
+          metalname: m.metalname || '',
+          metaltype: m.metaltype || '',
+          price: m.price !== undefined ? String(m.price) : ''
+        })));
+      } else {
+        setMetalWisePrices([{
+          metalid: '',
+          metalname: '',
+          metaltype: '',
+          price: ''
+        }]);
+      }
 
-    // Available stones: uses itemData.stones if assigned, fallback to all active stones
-    const availableStones = useMemo(() => {
-        if (Array.isArray(itemData?.stones) && itemData.stones.length > 0) {
-            return itemData.stones.map(s => ({
-                ...s,
-                stoneid: Number(s.stoneid || s._id),
-                displayLabel: s.stonename || s.name || ''
-            }));
-        }
-        return stones.map(s => ({
-            ...s,
-            stoneid: Number(s.stoneid || s._id),
-            displayLabel: s.stonename || s.name || ''
-        }));
-    }, [itemData, stones]);
+      // Flow 2: Metal with Stone & Diamond Carat
+      if (currentType === 'metal_with_stone_diamond_carat' && pricing.metalWithStoneDiamondCaratPrices?.length) {
+        setMetalWithStoneDiamondCaratPrices(pricing.metalWithStoneDiamondCaratPrices.map(msg => ({
+          metalid: msg.metalid ? Number(msg.metalid) : '',
+          metalname: msg.metalname || '',
+          metaltype: msg.metaltype || '',
+          stoneid: msg.stoneid ? Number(msg.stoneid) : '',
+          stonename: msg.stonename || '',
+          hasCarat: msg.hasCarat !== undefined ? Boolean(msg.hasCarat) : msg.stonePricingType === 'fixed' ? false : Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price),
+          price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
+          caratPrices: msg.caratPrices?.length ? msg.caratPrices.map(cp => ({
+            diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
+            diamondsize: cp.diamondsize || '',
+            price: cp.price !== undefined ? String(cp.price) : ''
+          })) : [{
+            diamondsizeid: '',
+            diamondsize: '',
+            price: ''
+          }]
+        })));
+      } else {
+        setMetalWithStoneDiamondCaratPrices([{
+          metalid: '',
+          metalname: '',
+          metaltype: '',
+          stoneid: '',
+          stonename: '',
+          hasCarat: true,
+          price: '',
+          caratPrices: [{
+            diamondsizeid: '',
+            diamondsize: '',
+            price: ''
+          }]
+        }]);
+      }
+    } else {
+      setPriceType('metal_wise');
+      setMetalWisePrices([{
+        metalid: '',
+        metalname: '',
+        metaltype: '',
+        price: ''
+      }]);
+      setMetalWithStoneDiamondCaratPrices([{
+        metalid: '',
+        metalname: '',
+        metaltype: '',
+        stoneid: '',
+        stonename: '',
+        hasCarat: true,
+        price: '',
+        caratPrices: [{
+          diamondsizeid: '',
+          diamondsize: '',
+          price: ''
+        }]
+      }]);
+    }
+    setSuccessMessage('');
+  };
 
-    // ==========================================
-    // Flow 1: Metal Wise Handlers
-    // ==========================================
-    const getMetalOptionsForIndex = (currentIndex) => {
-        const currentMetalId = Number(metalWisePrices[currentIndex]?.metalid);
-        const otherSelectedIds = metalWisePrices
-            .filter((_, idx) => idx !== currentIndex)
-            .map(r => Number(r.metalid))
-            .filter(Boolean);
-
-        return formattedMetals.filter(m => {
-            const id = Number(m.metalid);
-            return id === currentMetalId || !otherSelectedIds.includes(id);
-        });
-    };
-
-    const handleMetalWiseChange = (index, field, value) => {
-        setMetalWisePrices(prev => {
-            const updated = [...prev];
-            const row = { ...updated[index] };
-
-            if (field === 'metalid') {
-                const numId = Number(value);
-                const found = formattedMetals.find(m => Number(m.metalid) === numId);
-                row.metalid = numId || '';
-                row.metalname = found ? found.metalname : '';
-                row.metaltype = found ? found.metaltype : '';
-            } else if (field === 'price') {
-                row.price = value;
-            }
-
-            updated[index] = row;
-            return updated;
-        });
-    };
-
-    const handleAddMetalWiseRow = () => {
-        if (formattedMetals.length > 0 && metalWisePrices.length >= formattedMetals.length) {
-            return;
-        }
-
-        const usedIds = new Set(metalWisePrices.map(r => Number(r.metalid)).filter(Boolean));
-        const nextAvail = formattedMetals.find(m => !usedIds.has(Number(m.metalid)));
-
-        setMetalWisePrices(prev => [
-            ...prev,
-            {
-                metalid: nextAvail ? Number(nextAvail.metalid) : '',
-                metalname: nextAvail ? nextAvail.metalname : '',
-                metaltype: nextAvail ? nextAvail.metaltype : '',
-                price: ''
-            }
-        ]);
-    };
-
-    const handleRemoveMetalWiseRow = (index) => {
-        if (metalWisePrices.length <= 1) return;
-        setMetalWisePrices(prev => prev.filter((_, idx) => idx !== index));
-    };
-
-    // ==========================================
-    // Flow 2: Metal with Stone & Diamond Carat Handlers
-    // ==========================================
-    const handleMetalWithStoneCaratGroupChange = (groupIndex, field, value) => {
-        setMetalWithStoneDiamondCaratPrices(prev =>
-            prev.map((group, gIdx) => {
-                if (gIdx !== groupIndex) return group;
-                const updated = { ...group };
-
-                if (field === 'metalid') {
-                    const numId = Number(value);
-                    const found = formattedMetals.find(m => Number(m.metalid) === numId);
-                    updated.metalid = numId || '';
-                    updated.metalname = found ? found.metalname : '';
-                    updated.metaltype = found ? found.metaltype : '';
-                } else if (field === 'stoneid') {
-                    const numId = Number(value);
-                    const found = availableStones.find(s => Number(s.stoneid) === numId);
-                    updated.stoneid = numId || '';
-                    updated.stonename = found ? found.stonename || found.displayLabel : '';
-                } else if (field === 'hasCarat') {
-                    updated.hasCarat = Boolean(value);
-                } else if (field === 'price') {
-                    updated.price = value;
-                }
-
-                return updated;
-            })
-        );
-    };
-
-    const handleAddMetalWithStoneCaratGroup = () => {
-        setMetalWithStoneDiamondCaratPrices(prev => [
-            ...prev,
-            {
-                metalid: '',
-                metalname: '',
-                metaltype: '',
-                stoneid: '',
-                stonename: '',
-                hasCarat: true,
-                price: '',
-                caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }]
-            }
-        ]);
-    };
-
-    const handleRemoveMetalWithStoneCaratGroup = (groupIndex) => {
-        if (metalWithStoneDiamondCaratPrices.length <= 1) return;
-        setMetalWithStoneDiamondCaratPrices(prev => prev.filter((_, idx) => idx !== groupIndex));
-    };
-
-    const getCaratOptionsForMetalStoneIndex = (groupIndex, caratIndex) => {
-        const currentCarats = metalWithStoneDiamondCaratPrices[groupIndex]?.caratPrices || [];
-        const currentCaratId = Number(currentCarats[caratIndex]?.diamondsizeid);
-        const otherSelectedIds = currentCarats
-            .filter((_, idx) => idx !== caratIndex)
-            .map(c => Number(c.diamondsizeid))
-            .filter(Boolean);
-
-        return formattedDiamondSizes.filter(d => {
-            const id = Number(d.diamondsizeid);
-            return id === currentCaratId || !otherSelectedIds.includes(id);
-        });
-    };
-
-    const handleCaratChangeForMetalStone = (groupIndex, caratIndex, field, value) => {
-        setMetalWithStoneDiamondCaratPrices(prev =>
-            prev.map((group, gIdx) => {
-                if (gIdx !== groupIndex) return group;
-
-                const nextCarats = group.caratPrices.map((cRow, cIdx) => {
-                    if (cIdx !== caratIndex) return cRow;
-                    const updated = { ...cRow };
-
-                    if (field === 'diamondsizeid') {
-                        const numId = Number(value);
-                        const found = formattedDiamondSizes.find(d => Number(d.diamondsizeid) === numId);
-                        updated.diamondsizeid = numId || '';
-                        updated.diamondsize = found ? found.diamondsize : '';
-                    } else if (field === 'price') {
-                        updated.price = value;
-                    }
-
-                    return updated;
-                });
-
-                return { ...group, caratPrices: nextCarats };
-            })
-        );
-    };
-
-    const handleAddCaratRowForMetalStone = (groupIndex) => {
-        const group = metalWithStoneDiamondCaratPrices[groupIndex];
-        const currentCarats = group?.caratPrices || [];
-
-        if (formattedDiamondSizes.length > 0 && currentCarats.length >= formattedDiamondSizes.length) {
-            return;
-        }
-
-        const usedIds = new Set(currentCarats.map(c => Number(c.diamondsizeid)).filter(Boolean));
-        const nextAvail = formattedDiamondSizes.find(d => !usedIds.has(Number(d.diamondsizeid)));
-
-        setMetalWithStoneDiamondCaratPrices(prev =>
-            prev.map((g, gIdx) => {
-                if (gIdx !== groupIndex) return g;
-                return {
-                    ...g,
-                    caratPrices: [
-                        ...g.caratPrices,
-                        {
-                            diamondsizeid: nextAvail ? Number(nextAvail.diamondsizeid) : '',
-                            diamondsize: nextAvail ? nextAvail.diamondsize : '',
-                            price: ''
-                        }
-                    ]
-                };
-            })
-        );
-    };
-
-    const handleRemoveCaratRowForMetalStone = (groupIndex, caratIndex) => {
-        setMetalWithStoneDiamondCaratPrices(prev =>
-            prev.map((group, gIdx) => {
-                if (gIdx !== groupIndex) return group;
-                if (group.caratPrices.length <= 1) return group;
-                return {
-                    ...group,
-                    caratPrices: group.caratPrices.filter((_, cIdx) => cIdx !== caratIndex)
-                };
-            })
-        );
-    };
-
-    // ==========================================
-    // Reset to saved state
-    // ==========================================
-    const handleReset = () => {
-        const pricing = itemData?.pricing;
-        if (pricing) {
-            let currentType = pricing.priceType || 'metal_wise';
-            if (currentType !== 'metal_wise' && currentType !== 'metal_with_stone_diamond_carat') {
-                currentType = 'metal_wise';
-            }
-            setPriceType(currentType);
-
-            // Flow 1
-            if (currentType === 'metal_wise' && pricing.metalWisePrices?.length) {
-                setMetalWisePrices(pricing.metalWisePrices.map(m => ({
-                    metalid: m.metalid ? Number(m.metalid) : '',
-                    metalname: m.metalname || '',
-                    metaltype: m.metaltype || '',
-                    price: m.price !== undefined ? String(m.price) : ''
-                })));
-            } else {
-                setMetalWisePrices([{ metalid: '', metalname: '', metaltype: '', price: '' }]);
-            }
-
-            // Flow 2: Metal with Stone & Diamond Carat
-            if (currentType === 'metal_with_stone_diamond_carat' && pricing.metalWithStoneDiamondCaratPrices?.length) {
-                setMetalWithStoneDiamondCaratPrices(pricing.metalWithStoneDiamondCaratPrices.map(msg => ({
-                    metalid: msg.metalid ? Number(msg.metalid) : '',
-                    metalname: msg.metalname || '',
-                    metaltype: msg.metaltype || '',
-                    stoneid: msg.stoneid ? Number(msg.stoneid) : '',
-                    stonename: msg.stonename || '',
-                    hasCarat: msg.hasCarat !== undefined
-                        ? Boolean(msg.hasCarat)
-                        : (msg.stonePricingType === 'fixed' ? false : (Array.isArray(msg.caratPrices) && msg.caratPrices.length > 0 && msg.caratPrices.some(c => c.diamondsizeid || c.price))),
-                    price: msg.price !== undefined && msg.price !== null ? String(msg.price) : '',
-                    caratPrices: msg.caratPrices?.length
-                        ? msg.caratPrices.map(cp => ({
-                            diamondsizeid: cp.diamondsizeid ? Number(cp.diamondsizeid) : '',
-                            diamondsize: cp.diamondsize || '',
-                            price: cp.price !== undefined ? String(cp.price) : ''
-                        }))
-                        : [{ diamondsizeid: '', diamondsize: '', price: '' }]
-                })));
-            } else {
-                setMetalWithStoneDiamondCaratPrices([
-                    { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
-                ]);
-            }
-        } else {
-            setPriceType('metal_wise');
-            setMetalWisePrices([{ metalid: '', metalname: '', metaltype: '', price: '' }]);
-            setMetalWithStoneDiamondCaratPrices([
-                { metalid: '', metalname: '', metaltype: '', stoneid: '', stonename: '', hasCarat: true, price: '', caratPrices: [{ diamondsizeid: '', diamondsize: '', price: '' }] }
-            ]);
-        }
-        setSuccessMessage('');
-    };
-
-    // ==========================================
-    // Submit / Save form
-    // ==========================================
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSuccessMessage('');
-
-        if (!CheckToken(token, logoutUser, navigate)) return;
-
-        const itemId = itemData?.itemid || itemData?._id;
-        if (!itemId) {
-            setWarningMessage(translations.itemnotfound);
-            setShowWarning(true);
-            return;
-        }
-
-        // 1. Validation for metal_wise
-        if (priceType === 'metal_wise') {
-            const hasEmptyFields = metalWisePrices.some(
-                r => !r.metalid || r.price === '' || isNaN(Number(r.price)) || Number(r.price) < 0
-            );
-            if (hasEmptyFields) {
-                setWarningMessage(translations.selectmetalandvalidprice);
-                setShowWarning(true);
-                return;
-            }
-
-            const selectedIds = metalWisePrices.map(r => Number(r.metalid)).filter(Boolean);
-            if (new Set(selectedIds).size !== selectedIds.length) {
-                setWarningMessage(translations.duplicatemetalsnotallowed);
-                setShowWarning(true);
-                return;
-            }
-        }
-
-        // 2. Validation for metal_with_stone_diamond_carat
-        if (priceType === 'metal_with_stone_diamond_carat') {
-            const hasEmptyMetalOrStone = metalWithStoneDiamondCaratPrices.some(g => !g.metalid || !g.stoneid);
-            if (hasEmptyMetalOrStone) {
-                setWarningMessage(translations.selectmetalandstoneforeachcard);
-                setShowWarning(true);
-                return;
-            }
-
-            // Check for duplicate combination of (metalid + stoneid)
-            const comboKeys = metalWithStoneDiamondCaratPrices.map(g => `${g.metalid}_${g.stoneid}`);
-            if (new Set(comboKeys).size !== comboKeys.length) {
-                setWarningMessage(translations.duplicatemetalstonecombinationnotallowed);
-                setShowWarning(true);
-                return;
-            }
-
-            for (const group of metalWithStoneDiamondCaratPrices) {
-                if (group.hasCarat) {
-                    if (!group.caratPrices || group.caratPrices.length === 0) {
-                        setWarningMessage(translations.atleastonecaratrequiredforconfiguration);
-                        setShowWarning(true);
-                        return;
-                    }
-
-                    const hasEmptyCarat = group.caratPrices.some(
-                        c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0
-                    );
-                    if (hasEmptyCarat) {
-                        setWarningMessage(translations.selectdiamondcaratandvalidprice);
-                        setShowWarning(true);
-                        return;
-                    }
-
-                    const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
-                    if (new Set(caratIds).size !== caratIds.length) {
-                        setWarningMessage(translations.duplicatecaratsnotallowedforconfiguration);
-                        setShowWarning(true);
-                        return;
-                    }
-                } else {
-                    if (group.price === '' || isNaN(Number(group.price)) || Number(group.price) < 0) {
-                        setWarningMessage(translations.enterfixedpriceforstone);
-                        setShowWarning(true);
-                        return;
-                    }
-                }
-            }
-        }
-
-        setIsSaving(true);
-
-        const payload = {
-            priceType,
-            metalWisePrices: priceType === 'metal_wise'
-                ? metalWisePrices.map(r => ({
-                    metalid: Number(r.metalid),
-                    metalname: r.metalname,
-                    metaltype: r.metaltype,
-                    price: Number(r.price)
-                }))
-                : [],
-            metalWithStoneDiamondCaratPrices: priceType === 'metal_with_stone_diamond_carat'
-                ? metalWithStoneDiamondCaratPrices.map(g => ({
-                    metalid: Number(g.metalid),
-                    metalname: g.metalname,
-                    metaltype: g.metaltype,
-                    stoneid: Number(g.stoneid),
-                    stonename: g.stonename,
-                    hasCarat: Boolean(g.hasCarat),
-                    stonePricingType: g.hasCarat ? 'carat' : 'fixed',
-                    price: !g.hasCarat && g.price !== '' ? Number(g.price) : null,
-                    caratPrices: g.hasCarat
-                        ? g.caratPrices.map(c => ({
-                            diamondsizeid: Number(c.diamondsizeid),
-                            diamondsize: c.diamondsize,
-                            price: Number(c.price)
-                        }))
-                        : []
-                }))
-                : []
-        };
-
-        try {
-            const response = await fetch(`${adminPanelBackendPath}/Products/UpdateItemPrice/${itemId}`, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-            if (HandleUnauthorized(data, logoutUser, navigate)) return;
-
-            if (response.ok) {
-                setSuccessMessage(translations.priceupdatedsuccessfully);
-                if (onItemUpdated && data.item) {
-                    onItemUpdated(data.item);
-                }
-            } else {
-                setWarningMessage(data.message || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch (err) {
-            console.error('Update item price error:', err);
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    if (isLoadingMeta) {
-        return (
-            <div className="price-tab-loading">
-                <LoadingSpinner />
-            </div>
-        );
+  // ==========================================
+  // Submit / Save form
+  // ==========================================
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setSuccessMessage('');
+    if (!CheckToken(token, logoutUser, navigate)) return;
+    const itemId = itemData?.itemid || itemData?._id;
+    if (!itemId) {
+      setWarningMessage("Item not found");
+      setShowWarning(true);
+      return;
     }
 
-    const getPriceTypeLabel = () => {
-        switch (priceType) {
-            case 'metal_wise':
-                return translations.metalwise;
-            case 'metal_with_stone_diamond_carat':
-                return translations.metalwithstonediamondcarat;
-            default:
-                return translations.metalwise;
-        }
-    };
+    // 1. Validation for metal_wise
+    if (priceType === 'metal_wise') {
+      const hasEmptyFields = metalWisePrices.some(r => !r.metalid || r.price === '' || isNaN(Number(r.price)) || Number(r.price) < 0);
+      if (hasEmptyFields) {
+        setWarningMessage("Please select metal and valid price for all rows");
+        setShowWarning(true);
+        return;
+      }
+      const selectedIds = metalWisePrices.map(r => Number(r.metalid)).filter(Boolean);
+      if (new Set(selectedIds).size !== selectedIds.length) {
+        setWarningMessage("Duplicate metals are not allowed");
+        setShowWarning(true);
+        return;
+      }
+    }
 
-    return (
-        <>
+    // 2. Validation for metal_with_stone_diamond_carat
+    if (priceType === 'metal_with_stone_diamond_carat') {
+      const hasEmptyMetalOrStone = metalWithStoneDiamondCaratPrices.some(g => !g.metalid || !g.stoneid);
+      if (hasEmptyMetalOrStone) {
+        setWarningMessage("Please select both metal and stone for each configuration card");
+        setShowWarning(true);
+        return;
+      }
+
+      // Check for duplicate combination of (metalid + stoneid)
+      const comboKeys = metalWithStoneDiamondCaratPrices.map(g => `${g.metalid}_${g.stoneid}`);
+      if (new Set(comboKeys).size !== comboKeys.length) {
+        setWarningMessage("Duplicate metal and stone configurations are not allowed");
+        setShowWarning(true);
+        return;
+      }
+      for (const group of metalWithStoneDiamondCaratPrices) {
+        if (group.hasCarat) {
+          if (!group.caratPrices || group.caratPrices.length === 0) {
+            setWarningMessage("At least one diamond carat price is required for each configuration");
+            setShowWarning(true);
+            return;
+          }
+          const hasEmptyCarat = group.caratPrices.some(c => !c.diamondsizeid || c.price === '' || isNaN(Number(c.price)) || Number(c.price) < 0);
+          if (hasEmptyCarat) {
+            setWarningMessage("Please select diamond carat and valid price for all rows");
+            setShowWarning(true);
+            return;
+          }
+          const caratIds = group.caratPrices.map(c => Number(c.diamondsizeid)).filter(Boolean);
+          if (new Set(caratIds).size !== caratIds.length) {
+            setWarningMessage("Duplicate diamond carats are not allowed for the same configuration");
+            setShowWarning(true);
+            return;
+          }
+        } else {
+          if (group.price === '' || isNaN(Number(group.price)) || Number(group.price) < 0) {
+            setWarningMessage("Please enter a valid price for the selected stone");
+            setShowWarning(true);
+            return;
+          }
+        }
+      }
+    }
+    setIsSaving(true);
+    const payload = {
+      priceType,
+      metalWisePrices: priceType === 'metal_wise' ? metalWisePrices.map(r => ({
+        metalid: Number(r.metalid),
+        metalname: r.metalname,
+        metaltype: r.metaltype,
+        price: Number(r.price)
+      })) : [],
+      metalWithStoneDiamondCaratPrices: priceType === 'metal_with_stone_diamond_carat' ? metalWithStoneDiamondCaratPrices.map(g => ({
+        metalid: Number(g.metalid),
+        metalname: g.metalname,
+        metaltype: g.metaltype,
+        stoneid: Number(g.stoneid),
+        stonename: g.stonename,
+        hasCarat: Boolean(g.hasCarat),
+        stonePricingType: g.hasCarat ? 'carat' : 'fixed',
+        price: !g.hasCarat && g.price !== '' ? Number(g.price) : null,
+        caratPrices: g.hasCarat ? g.caratPrices.map(c => ({
+          diamondsizeid: Number(c.diamondsizeid),
+          diamondsize: c.diamondsize,
+          price: Number(c.price)
+        })) : []
+      })) : []
+    };
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Products/UpdateItemPrice/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (HandleUnauthorized(data, logoutUser, navigate)) return;
+      if (response.ok) {
+        setSuccessMessage("Price updated successfully");
+        if (onItemUpdated && data.item) {
+          onItemUpdated(data.item);
+        }
+      } else {
+        setWarningMessage(data.message || "Server error");
+        setShowWarning(true);
+      }
+    } catch (err) {
+      console.error('Update item price error:', err);
+      setWarningMessage("Server error");
+      setShowWarning(true);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  if (isLoadingMeta) {
+    return <div className="price-tab-loading">
+                <LoadingSpinner />
+            </div>;
+  }
+  const getPriceTypeLabel = () => {
+    switch (priceType) {
+      case 'metal_wise':
+        return "Metal wise";
+      case 'metal_with_stone_diamond_carat':
+        return "Metal with Stone & Diamond Carat";
+      default:
+        return "Metal wise";
+    }
+  };
+  return <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
 
-            <div className={`item-price-tab-container ${isRtl ? 'rtl-pricetab' : ''}`} dir={isRtl ? 'rtl' : 'ltr'}>
-                {successMessage && (
-                    <div className="price-tab-alert">
+            <div className="item-price-tab-container ">
+                {successMessage && <div className="price-tab-alert">
                         <AlertMessage message={successMessage} type="success" onClose={() => setSuccessMessage('')} />
-                    </div>
-                )}
+                    </div>}
 
                 <div className="price-tab-header-banner">
                     <div className="banner-left">
@@ -621,13 +606,13 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                         </div>
                         <div className="banner-info">
                             <div className="banner-title-row">
-                                <h5 className="banner-title">{translations.priceconfiguration}</h5>
+                                <h5 className="banner-title">{"Price Configuration"}</h5>
                                 <span className="price-type-badge">
                                     {getPriceTypeLabel()}
                                 </span>
                             </div>
                             <p className="banner-subtitle">
-                                {translations.priceconfigurationsubtitle}
+                                {"Configure pricing strategy for this product based on metal, gemstone, or diamond carat combinations"}
                             </p>
                         </div>
                     </div>
@@ -637,58 +622,38 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     {/* Price Type Selector */}
                     <div className="price-type-selector-card">
                         <label className="section-label">
-                            {translations.pricetype} *
+                            {"Price Type"} *
                         </label>
                         <div className="price-type-options-grid">
                             {/* Option 1: Metal wise */}
-                            <div
-                                className={`price-type-option ${priceType === 'metal_wise' ? 'selected' : ''}`}
-                                onClick={() => setPriceType('metal_wise')}
-                            >
+                            <div className={`price-type-option ${priceType === 'metal_wise' ? 'selected' : ''}`} onClick={() => setPriceType('metal_wise')}>
                                 <div className="option-radio-indicator">
-                                    <input
-                                        type="radio"
-                                        id="price_type_metal_wise"
-                                        name="priceType"
-                                        value="metal_wise"
-                                        checked={priceType === 'metal_wise'}
-                                        onChange={() => setPriceType('metal_wise')}
-                                    />
+                                    <input type="radio" id="price_type_metal_wise" name="priceType" value="metal_wise" checked={priceType === 'metal_wise'} onChange={() => setPriceType('metal_wise')} />
                                 </div>
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <PaymentsIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwise}</span>
+                                        <span className="option-title">{"Metal wise"}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwisedesc}
+                                        {"Set individual prices for each metal type"}
                                     </p>
                                 </div>
                             </div>
 
 
                             {/* Option 4: Metal with Stone & Diamond Carat */}
-                            <div
-                                className={`price-type-option ${priceType === 'metal_with_stone_diamond_carat' ? 'selected' : ''}`}
-                                onClick={() => setPriceType('metal_with_stone_diamond_carat')}
-                            >
+                            <div className={`price-type-option ${priceType === 'metal_with_stone_diamond_carat' ? 'selected' : ''}`} onClick={() => setPriceType('metal_with_stone_diamond_carat')}>
                                 <div className="option-radio-indicator">
-                                    <input
-                                        type="radio"
-                                        id="price_type_metal_stone_carat"
-                                        name="priceType"
-                                        value="metal_with_stone_diamond_carat"
-                                        checked={priceType === 'metal_with_stone_diamond_carat'}
-                                        onChange={() => setPriceType('metal_with_stone_diamond_carat')}
-                                    />
+                                    <input type="radio" id="price_type_metal_stone_carat" name="priceType" value="metal_with_stone_diamond_carat" checked={priceType === 'metal_with_stone_diamond_carat'} onChange={() => setPriceType('metal_with_stone_diamond_carat')} />
                                 </div>
                                 <div className="option-info">
                                     <div className="option-title-row">
                                         <LayersIcon className="option-icon" />
-                                        <span className="option-title">{translations.metalwithstonediamondcarat}</span>
+                                        <span className="option-title">{"Metal with Stone & Diamond Carat"}</span>
                                     </div>
                                     <p className="option-description">
-                                        {translations.metalwithstonediamondcaratdesc}
+                                        {"Set prices based on metal, gemstone, and diamond carat combination"}
                                     </p>
                                 </div>
                             </div>
@@ -698,278 +663,159 @@ const ItemPriceTab = ({ itemData, onItemUpdated }) => {
                     {/* ========================================================= */}
                     {/* Mode 1: Metal wise */}
                     {/* ========================================================= */}
-                    {priceType === 'metal_wise' && (
-                        <div className="recipe-items-container">
+                    {priceType === 'metal_wise' && <div className="recipe-items-container">
                             <div className="recipe-items-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwiseprices} *
+                                    {"Metal wise Prices"} *
                                 </label>
                             </div>
 
                             <div className="recipe-items-table">
                                 <div className="table-header">
-                                    <div className="col-material">{translations.metal} *</div>
-                                    <div className="col-quantity">{translations.price} *</div>
+                                    <div className="col-material">{"Metal"} *</div>
+                                    <div className="col-quantity">{"Price"} *</div>
                                     <div className="col-action"></div>
                                 </div>
 
-                                {metalWisePrices.map((row, idx) => (
-                                    <div key={idx} className="table-row">
+                                {metalWisePrices.map((row, idx) => <div key={idx} className="table-row">
                                         <div className="col-material">
-                                            <Dropdown
-                                                options={getMetalOptionsForIndex(idx)}
-                                                selectedValue={row.metalid}
-                                                onValueChange={(val) => handleMetalWiseChange(idx, 'metalid', val)}
-                                                labelKey="displayLabel"
-                                                valueKey="metalid"
-                                                placeholder={translations.selectmetal}
-                                            />
+                                            <Dropdown options={getMetalOptionsForIndex(idx)} selectedValue={row.metalid} onValueChange={val => handleMetalWiseChange(idx, 'metalid', val)} labelKey="displayLabel" valueKey="metalid" placeholder={"Select Metal"} />
                                         </div>
                                         <div className="col-quantity">
-                                            <input
-                                                type="number"
-                                                step="any"
-                                                min="0"
-                                                className="price-input"
-                                                placeholder={translations.priceplaceholder}
-                                                value={row.price}
-                                                onChange={(e) => handleMetalWiseChange(idx, 'price', e.target.value)}
-                                                required
-                                            />
+                                            <input type="number" step="any" min="0" className="price-input" placeholder={"Enter Price"} value={row.price} onChange={e => handleMetalWiseChange(idx, 'price', e.target.value)} required />
                                         </div>
                                         <div className="col-action">
-                                            {metalWisePrices.length > 1 && (
-                                                <button
-                                                    type="button"
-                                                    className="delete-row-btn"
-                                                    onClick={() => handleRemoveMetalWiseRow(idx)}
-                                                    title={translations.delete}
-                                                >
+                                            {metalWisePrices.length > 1 && <button type="button" className="delete-row-btn" onClick={() => handleRemoveMetalWiseRow(idx)} title={"Delete"}>
                                                     <DeleteIcon fontSize="small" />
-                                                </button>
-                                            )}
+                                                </button>}
                                         </div>
-                                    </div>
-                                ))}
+                                    </div>)}
                             </div>
 
                             <div className="table-actions-bar">
-                                <button
-                                    type="button"
-                                    className="add-ingredient-inline-btn"
-                                    onClick={handleAddMetalWiseRow}
-                                    disabled={formattedMetals.length > 0 && metalWisePrices.length >= formattedMetals.length}
-                                >
-                                    <AddIcon fontSize="small" /> {translations.addmetal}
+                                <button type="button" className="add-ingredient-inline-btn" onClick={handleAddMetalWiseRow} disabled={formattedMetals.length > 0 && metalWisePrices.length >= formattedMetals.length}>
+                                    <AddIcon fontSize="small" /> {"Add Metal"}
                                 </button>
                             </div>
-                        </div>
-                    )}
+                        </div>}
 
 
                     {/* ========================================================= */}
                     {/* Mode 4: Metal with Stone & Diamond Carat */}
                     {/* ========================================================= */}
-                    {priceType === 'metal_with_stone_diamond_carat' && (
-                        <div className="addon-recipes-section">
+                    {priceType === 'metal_with_stone_diamond_carat' && <div className="addon-recipes-section">
                             <div className="addon-recipes-header-bar">
                                 <label className="section-label">
-                                    {translations.metalwithstonediamondcaratprices} *
+                                    {"Metal with Stone & Diamond Carat Prices"} *
                                 </label>
                             </div>
 
-                            {metalWithStoneDiamondCaratPrices.map((group, mIdx) => (
-                                <div key={mIdx} className="addon-recipe-card">
+                            {metalWithStoneDiamondCaratPrices.map((group, mIdx) => <div key={mIdx} className="addon-recipe-card">
                                     <div className="addon-card-header">
                                         <div className="addon-selectors-row">
                                             <div className="addon-selector-wrap">
                                                 <label className="addon-field-label">
-                                                    {translations.metal} *
+                                                    {"Metal"} *
                                                 </label>
-                                                <Dropdown
-                                                    options={formattedMetals}
-                                                    selectedValue={group.metalid}
-                                                    onValueChange={(val) => handleMetalWithStoneCaratGroupChange(mIdx, 'metalid', val)}
-                                                    labelKey="displayLabel"
-                                                    valueKey="metalid"
-                                                    placeholder={translations.selectmetal}
-                                                />
+                                                <Dropdown options={formattedMetals} selectedValue={group.metalid} onValueChange={val => handleMetalWithStoneCaratGroupChange(mIdx, 'metalid', val)} labelKey="displayLabel" valueKey="metalid" placeholder={"Select Metal"} />
                                             </div>
                                             <div className="addon-selector-wrap">
                                                 <label className="addon-field-label">
-                                                    {translations.gemstone} *
+                                                    {"Stone"} *
                                                 </label>
-                                                <Dropdown
-                                                    options={availableStones}
-                                                    selectedValue={group.stoneid}
-                                                    onValueChange={(val) => handleMetalWithStoneCaratGroupChange(mIdx, 'stoneid', val)}
-                                                    labelKey="displayLabel"
-                                                    valueKey="stoneid"
-                                                    placeholder={translations.selectstone}
-                                                />
+                                                <Dropdown options={availableStones} selectedValue={group.stoneid} onValueChange={val => handleMetalWithStoneCaratGroupChange(mIdx, 'stoneid', val)} labelKey="displayLabel" valueKey="stoneid" placeholder={"Select Stone"} />
                                             </div>
                                         </div>
-                                        {metalWithStoneDiamondCaratPrices.length > 1 && (
-                                            <button
-                                                type="button"
-                                                className="delete-card-btn"
-                                                onClick={() => handleRemoveMetalWithStoneCaratGroup(mIdx)}
-                                                title={translations.delete}
-                                            >
+                                        {metalWithStoneDiamondCaratPrices.length > 1 && <button type="button" className="delete-card-btn" onClick={() => handleRemoveMetalWithStoneCaratGroup(mIdx)} title={"Delete"}>
                                                 <DeleteIcon fontSize="small" />
-                                            </button>
-                                        )}
+                                            </button>}
                                     </div>
 
                                     {/* Stone Pricing Mode Toggle */}
                                     <div className="stone-pricing-mode-bar">
                                         <span className="mode-bar-label">
-                                            {translations.pricingoption}:
+                                            {"Stone Pricing Type"}:
                                         </span>
                                         <div className="stone-pricing-segmented">
-                                            <button
-                                                type="button"
-                                                className={`segmented-option ${!group.hasCarat ? 'active' : ''}`}
-                                                onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', false)}
-                                            >
+                                            <button type="button" className={`segmented-option ${!group.hasCarat ? 'active' : ''}`} onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', false)}>
                                                 <span className="segmented-radio-circle" />
                                                 <span className="segmented-text">
-                                                    {translations.fixedprice}
+                                                    {"Fixed Price"}
                                                 </span>
                                             </button>
-                                            <button
-                                                type="button"
-                                                className={`segmented-option ${group.hasCarat ? 'active' : ''}`}
-                                                onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', true)}
-                                            >
+                                            <button type="button" className={`segmented-option ${group.hasCarat ? 'active' : ''}`} onClick={() => handleMetalWithStoneCaratGroupChange(mIdx, 'hasCarat', true)}>
                                                 <span className="segmented-radio-circle" />
                                                 <span className="segmented-text">
-                                                    {translations.metalwithstonediamondcarat}
+                                                    {"Metal with Stone & Diamond Carat"}
                                                 </span>
                                             </button>
                                         </div>
                                     </div>
 
-                                    {!group.hasCarat ? (
-                                        <div className="recipe-items-table">
+                                    {!group.hasCarat ? <div className="recipe-items-table">
                                             <div className="table-header">
-                                                <div className="col-quantity" style={{ flex: 1 }}>{translations.price} *</div>
+                                                <div className="col-quantity" style={{
+                  flex: 1
+                }}>{"Price"} *</div>
                                             </div>
                                             <div className="table-row">
-                                                <div className="col-quantity" style={{ flex: 1 }}>
-                                                    <input
-                                                        type="number"
-                                                        step="any"
-                                                        min="0"
-                                                        className="price-input"
-                                                        placeholder={translations.priceplaceholder}
-                                                        value={group.price}
-                                                        onChange={(e) => handleMetalWithStoneCaratGroupChange(mIdx, 'price', e.target.value)}
-                                                        required
-                                                    />
+                                                <div className="col-quantity" style={{
+                  flex: 1
+                }}>
+                                                    <input type="number" step="any" min="0" className="price-input" placeholder={"Enter Price"} value={group.price} onChange={e => handleMetalWithStoneCaratGroupChange(mIdx, 'price', e.target.value)} required />
                                                 </div>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <>
+                                        </div> : <>
                                             <div className="recipe-items-table">
                                                 <div className="table-header">
-                                                    <div className="col-material">{translations.diamondcarat} *</div>
-                                                    <div className="col-quantity">{translations.price} *</div>
+                                                    <div className="col-material">{"Diamond Carat"} *</div>
+                                                    <div className="col-quantity">{"Price"} *</div>
                                                     <div className="col-action"></div>
                                                 </div>
 
-                                                {group.caratPrices.map((cRow, cIdx) => (
-                                                    <div key={cIdx} className="table-row">
+                                                {group.caratPrices.map((cRow, cIdx) => <div key={cIdx} className="table-row">
                                                         <div className="col-material">
-                                                            <Dropdown
-                                                                options={getCaratOptionsForMetalStoneIndex(mIdx, cIdx)}
-                                                                selectedValue={cRow.diamondsizeid}
-                                                                onValueChange={(val) => handleCaratChangeForMetalStone(mIdx, cIdx, 'diamondsizeid', val)}
-                                                                labelKey="displayLabel"
-                                                                valueKey="diamondsizeid"
-                                                                placeholder={translations.selectdiamondcarat}
-                                                            />
+                                                            <Dropdown options={getCaratOptionsForMetalStoneIndex(mIdx, cIdx)} selectedValue={cRow.diamondsizeid} onValueChange={val => handleCaratChangeForMetalStone(mIdx, cIdx, 'diamondsizeid', val)} labelKey="displayLabel" valueKey="diamondsizeid" placeholder={"Select Diamond Carat"} />
                                                         </div>
                                                         <div className="col-quantity">
-                                                            <input
-                                                                type="number"
-                                                                step="any"
-                                                                min="0"
-                                                                className="price-input"
-                                                                placeholder={translations.priceplaceholder}
-                                                                value={cRow.price}
-                                                                onChange={(e) => handleCaratChangeForMetalStone(mIdx, cIdx, 'price', e.target.value)}
-                                                                required
-                                                            />
+                                                            <input type="number" step="any" min="0" className="price-input" placeholder={"Enter Price"} value={cRow.price} onChange={e => handleCaratChangeForMetalStone(mIdx, cIdx, 'price', e.target.value)} required />
                                                         </div>
                                                         <div className="col-action">
-                                                            {group.caratPrices.length > 1 && (
-                                                                <button
-                                                                    type="button"
-                                                                    className="delete-row-btn"
-                                                                    onClick={() => handleRemoveCaratRowForMetalStone(mIdx, cIdx)}
-                                                                    title={translations.delete}
-                                                                >
+                                                            {group.caratPrices.length > 1 && <button type="button" className="delete-row-btn" onClick={() => handleRemoveCaratRowForMetalStone(mIdx, cIdx)} title={"Delete"}>
                                                                     <DeleteIcon fontSize="small" />
-                                                                </button>
-                                                            )}
+                                                                </button>}
                                                         </div>
-                                                    </div>
-                                                ))}
+                                                    </div>)}
                                             </div>
 
                                             <div className="table-actions-bar">
-                                                <button
-                                                    type="button"
-                                                    className="add-ingredient-inline-btn"
-                                                    onClick={() => handleAddCaratRowForMetalStone(mIdx)}
-                                                    disabled={formattedDiamondSizes.length > 0 && group.caratPrices.length >= formattedDiamondSizes.length}
-                                                >
-                                                    <AddIcon fontSize="small" /> {translations.adddiamondcarat}
+                                                <button type="button" className="add-ingredient-inline-btn" onClick={() => handleAddCaratRowForMetalStone(mIdx)} disabled={formattedDiamondSizes.length > 0 && group.caratPrices.length >= formattedDiamondSizes.length}>
+                                                    <AddIcon fontSize="small" /> {"Add Diamond Carat"}
                                                 </button>
                                             </div>
-                                        </>
-                                    )}
-                                </div>
-                            ))}
+                                        </>}
+                                </div>)}
 
                             <div className="addon-recipes-footer-bar">
-                                <button
-                                    type="button"
-                                    className="addon-btn"
-                                    onClick={handleAddMetalWithStoneCaratGroup}
-                                >
-                                    <AddIcon fontSize="small" /> {translations.addmetalwithstone}
+                                <button type="button" className="addon-btn" onClick={handleAddMetalWithStoneCaratGroup}>
+                                    <AddIcon fontSize="small" /> {"Add Metal & Stone"}
                                 </button>
                             </div>
-                        </div>
-                    )}
+                        </div>}
 
                     {/* ========================================================= */}
                     {/* Form Action Buttons */}
                     {/* ========================================================= */}
                     <div className="price-form-actions">
-                        <button
-                            type="button"
-                            className="btn btn-secondary cancelbtn"
-                            onClick={handleReset}
-                            disabled={isSaving}
-                        >
-                            <RestartAltIcon fontSize="small" /> {translations.reset}
+                        <button type="button" className="btn btn-secondary cancelbtn" onClick={handleReset} disabled={isSaving}>
+                            <RestartAltIcon fontSize="small" /> {"Reset"}
                         </button>
-                        <button
-                            type="submit"
-                            className="btn btn-primary submit-btn"
-                            disabled={isSaving}
-                        >
-                            <SaveIcon fontSize="small" /> {isSaving ? translations.saving : translations.saveprice}
+                        <button type="submit" className="btn btn-primary submit-btn" disabled={isSaving}>
+                            <SaveIcon fontSize="small" /> {isSaving ? "Saving..." : "Save Price"}
                         </button>
                     </div>
                 </form>
             </div>
-        </>
-    );
+        </>;
 };
-
 export default ItemPriceTab;

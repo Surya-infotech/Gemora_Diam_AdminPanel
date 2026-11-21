@@ -12,209 +12,190 @@ import LoadingSpinner from "../../Pages/Custom/LoadingSpinner";
 import Pagination from "../../Pages/Custom/Pagination";
 import WarningModal from "../../Pages/Custom/WarningModal";
 import "../../Scss/Products/getitem.scss";
-import { useLanguage } from "../../Context/LanguageContext";
 import { usePermissions } from "../../Hooks/usePermissions";
 import CheckToken from "../../utils/CheckToken";
 import HandleUnauthorized from "../../utils/HandleUnauthorized";
-
-const GetItem = ({ searchValue }) => {
-    const navigate = useNavigate();
-    const { translations } = useLanguage();
-    const { canEdit, canDelete, hasPermission } = usePermissions();
-    const { logoutUser } = useAuth();
-    const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
-    const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
-    const token = localStorage.getItem(tokenname);
-
-    const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [warningMessage, setWarningMessage] = useState("");
-    const [showWarning, setShowWarning] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
-    const [sortColumn, setSortColumn] = useState("updatedAt");
-    const [sortDirection, setSortDirection] = useState("desc");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    useEffect(() => {
-        const fetchItems = async () => {
-            if (!CheckToken(token, logoutUser, navigate)) return;
-            try {
-                setLoading(true);
-                const response = await fetch(`${adminPanelBackendPath}/Products/GetItems`, {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-                });
-                const data = await response.json();
-                if (HandleUnauthorized(data, logoutUser, navigate)) return;
-                if (response.ok) {
-                    setItems(data.items || []);
-                } else {
-                    setWarningMessage(data.message || translations.servererror);
-                    setShowWarning(true);
-                }
-            } catch {
-                setWarningMessage(translations.servererror);
-                setShowWarning(true);
-            } finally {
-                setLoading(false);
-            }
+const GetItem = ({
+  searchValue
+}) => {
+  const navigate = useNavigate();
+  const {
+    canEdit,
+    canDelete,
+    hasPermission
+  } = usePermissions();
+  const {
+    logoutUser
+  } = useAuth();
+  const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
+  const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
+  const token = localStorage.getItem(tokenname);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [warningMessage, setWarningMessage] = useState("");
+  const [showWarning, setShowWarning] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [sortColumn, setSortColumn] = useState("updatedAt");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  useEffect(() => {
+    const fetchItems = async () => {
+      if (!CheckToken(token, logoutUser, navigate)) return;
+      try {
+        setLoading(true);
+        const response = await fetch(`${adminPanelBackendPath}/Products/GetItems`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+        const data = await response.json();
+        if (HandleUnauthorized(data, logoutUser, navigate)) return;
+        if (response.ok) {
+          setItems(data.items || []);
+        } else {
+          setWarningMessage(data.message || "Server error");
+          setShowWarning(true);
+        }
+      } catch {
+        setWarningMessage("Server error");
+        setShowWarning(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    setCurrentPage(1);
+    fetchItems();
+  }, [navigate, logoutUser, token, adminPanelBackendPath]);
+  const sortItems = column => {
+    const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
+    setSortColumn(column);
+    setSortDirection(direction);
+    setItems([...items].sort((a, b) => {
+      let valA = (a[column] ?? "").toString().toLowerCase();
+      let valB = (b[column] ?? "").toString().toLowerCase();
+      if (valA < valB) return direction === "asc" ? -1 : 1;
+      if (valA > valB) return direction === "asc" ? 1 : -1;
+      return 0;
+    }));
+  };
+  const renderSortIcon = column => sortColumn !== column ? <UnfoldMore fontSize="small" /> : sortDirection === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />;
+  const filteredItems = items.filter(item => {
+    const search = (searchValue || "").toLowerCase().trim();
+    if (!search) return true;
+    const skuMatch = (item.sku || "").toLowerCase().includes(search);
+    const nameMatch = (item.itemname || "").toLowerCase().includes(search);
+    const catMatch = (item.categoryname || "").toLowerCase().includes(search);
+    const descMatch = (item.description || "").toLowerCase().includes(search);
+    return skuMatch || nameMatch || catMatch || descMatch;
+  });
+  const totalRecords = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+  const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const handleEditClick = id => navigate(`/Products/EditItem/${id}`);
+  const handleItemNameClick = id => navigate(`/Products/ItemOverview/${id}`);
+  const handleDeleteClick = item => {
+    setIsModalOpen(true);
+    setSelectedItem(item);
+  };
+  const showActionColumn = canEdit('item') || canDelete('item');
+  const canViewOverview = hasPermission('itemOverview', 'view');
+  const DeleteItem = async targetId => {
+    setIsDeleting(true);
+    if (!CheckToken(token, logoutUser, navigate)) {
+      setIsDeleting(false);
+      return;
+    }
+    try {
+      const response = await fetch(`${adminPanelBackendPath}/Products/DeleteItem/${targetId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      const result = await response.json();
+      if (HandleUnauthorized(result, logoutUser, navigate)) return;
+      if (response.ok) {
+        setItems(items.filter(i => i._id !== targetId && i.itemid !== targetId));
+        setIsModalOpen(false);
+        setSuccessMessage("Item Deleted Successfully");
+      } else {
+        const errorMessages = {
+          "Item not found": "Item not found",
+          "Server error": "Server error"
         };
-
-        setCurrentPage(1);
-        fetchItems();
-    }, [navigate, logoutUser, token, adminPanelBackendPath, translations]);
-
-    const sortItems = (column) => {
-        const direction = sortColumn === column && sortDirection === "asc" ? "desc" : "asc";
-        setSortColumn(column);
-        setSortDirection(direction);
-        setItems([...items].sort((a, b) => {
-            let valA = (a[column] ?? "").toString().toLowerCase();
-            let valB = (b[column] ?? "").toString().toLowerCase();
-
-            if (valA < valB) return direction === "asc" ? -1 : 1;
-            if (valA > valB) return direction === "asc" ? 1 : -1;
-            return 0;
-        }));
-    };
-
-    const renderSortIcon = (column) => (
-        sortColumn !== column ? <UnfoldMore fontSize="small" /> : sortDirection === "asc" ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />
-    );
-
-    const filteredItems = items.filter((item) => {
-        const search = (searchValue || "").toLowerCase().trim();
-        if (!search) return true;
-        const skuMatch = (item.sku || "").toLowerCase().includes(search);
-        const nameMatch = (item.itemname || "").toLowerCase().includes(search);
-        const catMatch = (item.categoryname || "").toLowerCase().includes(search);
-        const descMatch = (item.description || "").toLowerCase().includes(search);
-        return skuMatch || nameMatch || catMatch || descMatch;
-    });
-
-    const totalRecords = filteredItems.length;
-    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-    const visibleItems = filteredItems.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-    const handleEditClick = (id) => navigate(`/Products/EditItem/${id}`);
-    const handleItemNameClick = (id) => navigate(`/Products/ItemOverview/${id}`);
-
-    const handleDeleteClick = (item) => {
-        setIsModalOpen(true);
-        setSelectedItem(item);
-    };
-
-    const showActionColumn = canEdit('item') || canDelete('item');
-    const canViewOverview = hasPermission('itemOverview', 'view');
-
-    const DeleteItem = async (targetId) => {
-        setIsDeleting(true);
-        if (!CheckToken(token, logoutUser, navigate)) {
-            setIsDeleting(false);
-            return;
-        }
-        try {
-            const response = await fetch(`${adminPanelBackendPath}/Products/DeleteItem/${targetId}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            });
-            const result = await response.json();
-            if (HandleUnauthorized(result, logoutUser, navigate)) return;
-            if (response.ok) {
-                setItems(items.filter(i => i._id !== targetId && i.itemid !== targetId));
-                setIsModalOpen(false);
-                setSuccessMessage(translations.deleteitemsuccessfull);
-            } else {
-                const errorMessages = {
-                    "Item not found": translations.itemnotfound,
-                    "Server error": translations.servererror
-                };
-                setWarningMessage(errorMessages[result.message] || translations.servererror);
-                setShowWarning(true);
-            }
-        } catch {
-            setWarningMessage(translations.servererror);
-            setShowWarning(true);
-        } finally {
-            setIsDeleting(false);
-            setIsModalOpen(false);
-        }
-    };
-
-    return (
-        <>
+        setWarningMessage(errorMessages[result.message] || "Server error");
+        setShowWarning(true);
+      }
+    } catch {
+      setWarningMessage("Server error");
+      setShowWarning(true);
+    } finally {
+      setIsDeleting(false);
+      setIsModalOpen(false);
+    }
+  };
+  return <>
             {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
             <div className="tablediv">
-                {loading ? <LoadingSpinner /> : (
-                    <table className="itemtable">
+                {loading ? <LoadingSpinner /> : <table className="itemtable">
                         <thead>
                             <tr>
                                 <th className="item-name-col" onClick={() => sortItems("itemname")}>
-                                    {translations.itemname} {renderSortIcon("itemname")}
+                                    {"Item Name"} {renderSortIcon("itemname")}
                                 </th>
                                 <th className="item-sku-col" onClick={() => sortItems("sku")}>
-                                    {translations.sku} {renderSortIcon("sku")}
+                                    {"SKU"} {renderSortIcon("sku")}
                                 </th>
                                 <th className="item-cat-col" onClick={() => sortItems("categoryname")}>
-                                    {translations.Category} {renderSortIcon("categoryname")}
+                                    {"Category"} {renderSortIcon("categoryname")}
                                 </th>
                                 <th className="item-status-col" onClick={() => sortItems("status")}>
-                                    {translations.status} {renderSortIcon("status")}
+                                    {"Status"} {renderSortIcon("status")}
                                 </th>
-                                {showActionColumn && <th className="item-action-col">{translations.action}</th>}
+                                {showActionColumn && <th className="item-action-col">{"Action"}</th>}
                             </tr>
                         </thead>
                         <tbody>
-                            {visibleItems.length > 0 ? (
-                                visibleItems.map((item) => (
-                                    <tr key={item._id || item.itemid}>
+                            {visibleItems.length > 0 ? visibleItems.map(item => <tr key={item._id || item.itemid}>
                                         <td className="item-name-col">
-                                            <div
-                                                className={`item-info-cell ${canViewOverview ? "clickable" : ""}`}
-                                                onClick={canViewOverview ? () => handleItemNameClick(item._id || item.itemid) : undefined}
-                                                role={canViewOverview ? "button" : undefined}
-                                                tabIndex={canViewOverview ? 0 : undefined}
-                                                onKeyDown={canViewOverview ? (e) => {
-                                                    if (e.key === "Enter" || e.key === " ") {
-                                                        e.preventDefault();
-                                                        handleItemNameClick(item._id || item.itemid);
-                                                    }
-                                                } : undefined}
-                                            >
-                                                <img
-                                                    src={item.image || item.imageUrl || Placeholder}
-                                                    alt={item.itemname}
-                                                    className="item-thumbnail"
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                    onError={(e) => {
-                                                        e.target.onerror = null;
-                                                        e.target.src = Placeholder;
-                                                    }}
-                                                />
-                                                <Tooltip
-                                                    title={
-                                                        item.itemname ? (
-                                                            <div style={{ textAlign: "center", padding: "2px 4px", maxWidth: "280px" }}>
-                                                                <div style={{ fontWeight: 600, fontSize: "12.5px", lineHeight: "1.35", wordBreak: "break-word" }}>
+                                            <div className={`item-info-cell ${canViewOverview ? "clickable" : ""}`} onClick={canViewOverview ? () => handleItemNameClick(item._id || item.itemid) : undefined} role={canViewOverview ? "button" : undefined} tabIndex={canViewOverview ? 0 : undefined} onKeyDown={canViewOverview ? e => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleItemNameClick(item._id || item.itemid);
+                }
+              } : undefined}>
+                                                <img src={item.image || item.imageUrl || Placeholder} alt={item.itemname} className="item-thumbnail" loading="lazy" decoding="async" onError={e => {
+                  e.target.onerror = null;
+                  e.target.src = Placeholder;
+                }} />
+                                                <Tooltip title={item.itemname ? <div style={{
+                  textAlign: "center",
+                  padding: "2px 4px",
+                  maxWidth: "280px"
+                }}>
+                                                                <div style={{
+                    fontWeight: 600,
+                    fontSize: "12.5px",
+                    lineHeight: "1.35",
+                    wordBreak: "break-word"
+                  }}>
                                                                     {item.itemname}
                                                                 </div>
-                                                                {canViewOverview && (
-                                                                    <div style={{ fontSize: "11px", opacity: 0.85, marginTop: "4px" }}>
-                                                                        {translations.viewdetails}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        ) : ""
-                                                    }
-                                                    arrow
-                                                    placement="top"
-                                                    disableHoverListener={!item.itemname}
-                                                >
+                                                                {canViewOverview && <div style={{
+                    fontSize: "11px",
+                    opacity: 0.85,
+                    marginTop: "4px"
+                  }}>
+                                                                        {"View Details"}
+                                                                    </div>}
+                                                            </div> : ""} arrow placement="top" disableHoverListener={!item.itemname}>
                                                     <div className="item-text-wrapper">
                                                         <strong className="item-name-text">{item.itemname || "-"}</strong>
                                                     </div>
@@ -233,58 +214,27 @@ const GetItem = ({ searchValue }) => {
                                         </td>
                                         <td className="item-status-col">
                                             <span className={`status-pill ${(item.status || "Draft").toLowerCase()}`}>
-                                                {item.status === "Published"
-                                                    ? (translations.published)
-                                                    : (translations.draft)}
+                                                {item.status === "Published" ? "Published" : "Draft"}
                                             </span>
                                         </td>
-                                        {showActionColumn && (
-                                            <td className="item-action-col">
+                                        {showActionColumn && <td className="item-action-col">
                                                 {canEdit('item') && <EditButton onClick={() => handleEditClick(item._id || item.itemid)} />}
                                                 {canDelete('item') && <DeleteButton onClick={() => handleDeleteClick(item)} />}
-                                            </td>
-                                        )}
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
+                                            </td>}
+                                    </tr>) : <tr>
                                     <td colSpan={showActionColumn ? 5 : 4}>
-                                        {translations.nodatafound}
+                                        {"No data found"}
                                     </td>
-                                </tr>
-                            )}
+                                </tr>}
                         </tbody>
-                    </table>
-                )}
+                    </table>}
             </div>
-            {!loading && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={(page) => setCurrentPage(page)}
-                    pageSizeOptions={[10, 15, 20, 50]}
-                    selectedPageSize={pageSize}
-                    onPageSizeChange={(size) => {
-                        setPageSize(size);
-                        setCurrentPage(1);
-                    }}
-                    totalRecords={totalRecords}
-                />
-            )}
-            {isModalOpen && (
-                <DeleteModal
-                    open={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onDelete={() => DeleteItem(selectedItem._id || selectedItem.itemid)}
-                    name={`${selectedItem?.itemname}`}
-                    message={translations.Item}
-                    headingname={translations.deleteitem}
-                    isLoading={isDeleting}
-                />
-            )}
-            {successMessage && (<AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />)}
-        </>
-    );
+            {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={page => setCurrentPage(page)} pageSizeOptions={[10, 15, 20, 50]} selectedPageSize={pageSize} onPageSizeChange={size => {
+      setPageSize(size);
+      setCurrentPage(1);
+    }} totalRecords={totalRecords} />}
+            {isModalOpen && <DeleteModal open={isModalOpen} onClose={() => setIsModalOpen(false)} onDelete={() => DeleteItem(selectedItem._id || selectedItem.itemid)} name={`${selectedItem?.itemname}`} message={"Item"} headingname={"Delete Item"} isLoading={isDeleting} />}
+            {successMessage && <AlertMessage message={successMessage} onClose={() => setSuccessMessage("")} />}
+        </>;
 };
-
 export default GetItem;

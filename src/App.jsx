@@ -15,7 +15,6 @@ import MainRouter from "./Router/Main.jsx";
 import SupportRouter from "./Router/Support.jsx";
 import ProductsRouter from "./Router/Products.jsx";
 import UserRouter from "./Router/User.jsx";
-import { LanguageProvider } from './Context/LanguageContext.jsx';
 import { FiscalYearProvider } from './Context/FiscalYearContext.jsx';
 import { PermissionProvider } from './Context/PermissionContext.jsx';
 import Logout from "./Pages/General/Logout.jsx";
@@ -94,15 +93,13 @@ const App = () => {
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
-      <LanguageProvider>
-        <FiscalYearProvider>
+      <FiscalYearProvider>
           <PermissionProvider>
             <BrowserRouter>
               <AppContent />
             </BrowserRouter>
           </PermissionProvider>
         </FiscalYearProvider>
-      </LanguageProvider>
     </ThemeProvider>
   );
 };
