@@ -73,10 +73,16 @@ const GetContactUs = ({
   };
   const getSortValue = (item, column) => {
     if (column === 'fullname') {
-      return item.fullname || '';
+      return (item.fullname || '').toLowerCase();
+    }
+    if (column === 'email') {
+      return (item.email || '').toLowerCase();
     }
     if (column === 'countryname') {
-      return item.countryname || '';
+      return (item.countryname || '').toLowerCase();
+    }
+    if (column === 'message') {
+      return (item.message || '').toLowerCase();
     }
     return item[column] ?? '';
   };
@@ -105,116 +111,119 @@ const GetContactUs = ({
   const handleCloseAlert = () => setSuccessMessage('');
   const handleCloseViewModal = () => setViewModalContact(null);
   return <>
-            {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
-            {loading ? <LoadingSpinner /> : <div className="tablediv">
-                    <table className="contactustable">
-                        <thead>
-                            <tr>
-                                <th onClick={() => sortContactList('fullname')}>
-                                    {"Full Name"} {renderSortIcon('fullname')}
-                                </th>
-                                <th onClick={() => sortContactList('email')}>
-                                    {"Email"} {renderSortIcon('email')}
-                                </th>
-                                <th onClick={() => sortContactList('countryname')}>
-                                    {"Country"} {renderSortIcon('countryname')}
-                                </th>
-                                <th onClick={() => sortContactList('message')}>
-                                    {"Message"} {renderSortIcon('message')}
-                                </th>
-                                <th className="contactus-view-th">
-                                    {"View"}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {visibleContacts.length > 0 ? visibleContacts.map(contact => <tr key={contact._id}>
-                                        <td>
-                                            {contact.fullname || '-'}
-                                        </td>
-                                        <td>
-                                            {contact.email || '-'}
-                                        </td>
-                                        <td>
-                                            {contact.countryname || '-'}
-                                        </td>
-                                        <td className="contactus-message-cell" title={contact.message || ''}>
-                                            {truncateMessage(contact.message)}
-                                        </td>
-                                        <td>
-                                            <IconButton onClick={() => setViewModalContact(contact)} aria-label={"View"} className="view-icon" size="small">
-                                                <ViewIcon fontSize="small" />
-                                            </IconButton>
-                                        </td>
-                                    </tr>) : <tr>
-                                    <td colSpan="5" style={{
+    {showWarning && <WarningModal message={warningMessage} onClose={handleWarningClose} />}
+    {loading ? <LoadingSpinner /> : <div className="tablediv">
+      <table className="contactustable">
+        <thead>
+          <tr>
+            <th onClick={() => sortContactList('fullname')}>
+              {"Full Name / Email"} {renderSortIcon('fullname')}
+            </th>
+            <th onClick={() => sortContactList('countryname')}>
+              {"Country"} {renderSortIcon('countryname')}
+            </th>
+            <th onClick={() => sortContactList('message')}>
+              {"Message"} {renderSortIcon('message')}
+            </th>
+            <th className="contactus-view-th">
+              {"View"}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleContacts.length > 0 ? visibleContacts.map(contact => <tr key={contact._id}>
+            <td>
+              <div className="contactus-sender-cell">
+                <span className="contactus-sender-name">
+                  {contact.fullname || contact.email || '-'}
+                </span>
+                {contact.fullname && contact.email && (
+                  <span className="contactus-sender-email">
+                    {contact.email}
+                  </span>
+                )}
+              </div>
+            </td>
+            <td>
+              {contact.countryname || '-'}
+            </td>
+            <td className="contactus-message-cell" title={contact.message || ''}>
+              {truncateMessage(contact.message)}
+            </td>
+            <td>
+              <IconButton onClick={() => setViewModalContact(contact)} aria-label={"View"} className="view-icon" size="small">
+                <ViewIcon fontSize="small" />
+              </IconButton>
+            </td>
+          </tr>) : <tr>
+            <td colSpan="4" style={{
               textAlign: "center",
               padding: "24px 0"
             }}>{"No data found"}</td>
-                                </tr>}
-                        </tbody>
-                    </table>
-                </div>}
-            {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={page => setCurrentPage(page)} pageSizeOptions={[10, 15, 20, 50]} selectedPageSize={pageSize} onPageSizeChange={size => {
+          </tr>}
+        </tbody>
+      </table>
+    </div>}
+    {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={page => setCurrentPage(page)} pageSizeOptions={[10, 15, 20, 50]} selectedPageSize={pageSize} onPageSizeChange={size => {
       setPageSize(size);
       setCurrentPage(1);
     }} totalRecords={totalRecords} />}
-            {successMessage && <AlertMessage message={successMessage} onClose={handleCloseAlert} />}
+    {successMessage && <AlertMessage message={successMessage} onClose={handleCloseAlert} />}
 
-            {viewModalContact && <div className="modal fade show contactus-view-modal" style={{
+    {viewModalContact && <div className="modal fade show contactus-view-modal" style={{
       display: 'block'
     }} tabIndex="-1" role="dialog" aria-modal="true" aria-labelledby="contactus-view-modal-title">
-                    <div className="contactus-view-modal-backdrop" onClick={handleCloseViewModal} />
-                    <div className="contactus-view-modal-dialog-wrapper">
-                        <div className="modal-dialog modal-dialog-centered">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 id="contactus-view-modal-title" className="modal-title">
-                                        {"Contact Details"}
-                                    </h5>
-                                    <button type="button" className="btn-close" onClick={handleCloseViewModal} aria-label={"Close"} />
-                                </div>
-                                <div className="modal-body contactus-view-modal-body">
-                                        <div className="contactus-view-grid">
-                                            <div className="contactus-view-row">
-                                                <span className="contactus-view-label">
-                                                    {"Full Name"}:
-                                                </span>
-                                                <span className="contactus-view-value">
-                                                    {viewModalContact.fullname || '-'}
-                                                </span>
-                                            </div>
-                                            <div className="contactus-view-row">
-                                                <span className="contactus-view-label">{"Country"}:</span>
-                                                <span className="contactus-view-value">
-                                                    {viewModalContact.countryname || '-'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="contactus-view-row">
-                                            <span className="contactus-view-label">{"Email"}:</span>
-                                            <span className="contactus-view-value">
-                                                {viewModalContact.email || '-'}
-                                            </span>
-                                        </div>
-                                        <div className="contactus-view-row contactus-view-row-message">
-                                            <span className="contactus-view-label">
-                                                {"Message"}:
-                                            </span>
-                                            <span className="contactus-view-value contactus-view-message">
-                                                {viewModalContact.message || '-'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-primary" onClick={handleCloseViewModal}>
-                                            {"Close"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>}
-                </>;
+      <div className="contactus-view-modal-backdrop" onClick={handleCloseViewModal} />
+      <div className="contactus-view-modal-dialog-wrapper">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 id="contactus-view-modal-title" className="modal-title">
+                {"Contact Details"}
+              </h5>
+              <button type="button" className="btn-close" onClick={handleCloseViewModal} aria-label={"Close"} />
+            </div>
+            <div className="modal-body contactus-view-modal-body">
+              <div className="contactus-view-grid">
+                <div className="contactus-view-row">
+                  <span className="contactus-view-label">
+                    {"Full Name"}:
+                  </span>
+                  <span className="contactus-view-value">
+                    {viewModalContact.fullname || '-'}
+                  </span>
+                </div>
+                <div className="contactus-view-row">
+                  <span className="contactus-view-label">{"Country"}:</span>
+                  <span className="contactus-view-value">
+                    {viewModalContact.countryname || '-'}
+                  </span>
+                </div>
+              </div>
+              <div className="contactus-view-row">
+                <span className="contactus-view-label">{"Email"}:</span>
+                <span className="contactus-view-value">
+                  {viewModalContact.email || '-'}
+                </span>
+              </div>
+              <div className="contactus-view-row contactus-view-row-message">
+                <span className="contactus-view-label">
+                  {"Message"}:
+                </span>
+                <span className="contactus-view-value contactus-view-message">
+                  {viewModalContact.message || '-'}
+                </span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-primary" onClick={handleCloseViewModal}>
+                {"Close"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>}
+  </>;
 };
 export default GetContactUs;
