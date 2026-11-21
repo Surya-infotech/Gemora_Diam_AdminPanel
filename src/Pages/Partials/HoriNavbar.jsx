@@ -146,7 +146,7 @@ const HoriNavbar = () => {
   }, [adminPanelBackendPath, token, logoutUser, navigate, EmployeeId]);
 
   const fetchUnreadCount = useCallback(async () => {
-    if (!token) return;
+    if (!token || isEmployee) return;
     try {
       const res = await fetch(`${adminPanelBackendPath}/Chat/Admin/UnreadCount`, {
         headers: {
@@ -160,12 +160,12 @@ const HoriNavbar = () => {
     } catch {
       // Ignore network errors
     }
-  }, [adminPanelBackendPath, token]);
+  }, [adminPanelBackendPath, isEmployee, token]);
 
   useEffect(() => {
+    if (!token || isEmployee) return;
     fetchUnreadCount();
 
-    if (!token) return;
     const socket = io(adminPanelBackendPath, {
       withCredentials: true,
       transports: ['websocket', 'polling']
@@ -193,7 +193,7 @@ const HoriNavbar = () => {
       window.removeEventListener('chatUnreadUpdated', handleCustomUpdate);
       clearInterval(interval);
     };
-  }, [adminPanelBackendPath, fetchUnreadCount, token]);
+  }, [adminPanelBackendPath, fetchUnreadCount, isEmployee, token]);
 
   return <>
         <nav className="hori-navbar ">
@@ -210,17 +210,19 @@ const HoriNavbar = () => {
                     </div>}
             </div>
             <div className="right-side">
-                <Tooltip title="Customer Live Chat">
-                    <NavLink
-                        to="/Support/LiveChat"
-                        className={({ isActive }) => `hori-navbar__chat-btn${isActive ? ' active' : ''}`}
-                        aria-label="Customer Live Chat"
-                    >
-                        <Badge badgeContent={unreadChatCount} color="error" max={99} className="chat-unread-badge">
-                            <SupportAgentIcon className="chat-btn-icon" />
-                        </Badge>
-                    </NavLink>
-                </Tooltip>
+                {!isEmployee && (
+                    <Tooltip title="Customer Live Chat">
+                        <NavLink
+                            to="/Support/LiveChat"
+                            className={({ isActive }) => `hori-navbar__chat-btn${isActive ? ' active' : ''}`}
+                            aria-label="Customer Live Chat"
+                        >
+                            <Badge badgeContent={unreadChatCount} color="error" max={99} className="chat-unread-badge">
+                                <SupportAgentIcon className="chat-btn-icon" />
+                            </Badge>
+                        </NavLink>
+                    </Tooltip>
+                )}
 
                 <div className={`quick-menu-section${isQuickMenuVisible ? ' is-open' : ''}`} onClick={toggleQuickMenu}>
                     <button type="button" className="quick-menu-btn" aria-label={"Quick"} aria-expanded={isQuickMenuVisible}>
