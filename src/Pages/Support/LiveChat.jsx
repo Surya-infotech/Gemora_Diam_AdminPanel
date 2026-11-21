@@ -341,9 +341,29 @@ export default function LiveChat() {
   };
 
   return (
-    <div style={{ padding: '24px', maxWidth: '1600px', margin: '0 auto', height: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        padding: '16px 20px',
+        maxWidth: '1600px',
+        margin: '0 auto',
+        height: 'calc(100vh - 125px)',
+        maxHeight: 'calc(100vh - 125px)',
+        display: 'flex',
+        flexDirection: 'column',
+        boxSizing: 'border-box',
+        overflow: 'hidden'
+      }}
+    >
       {/* Page Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '14px',
+          flexShrink: 0
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: 'rgba(212, 175, 55, 0.15)', border: '1px solid #d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d4af37' }}>
             <SupportAgentIcon fontSize="medium" />
@@ -365,6 +385,7 @@ export default function LiveChat() {
       <div
         style={{
           flex: 1,
+          minHeight: 0,
           display: 'grid',
           gridTemplateColumns: '380px 1fr',
           backgroundColor: '#ffffff',
@@ -377,9 +398,9 @@ export default function LiveChat() {
         {/* ========================================= */}
         {/* Left Pane: Conversations List             */}
         {/* ========================================= */}
-        <div style={{ borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', backgroundColor: '#f8fafc' }}>
+        <div style={{ borderRight: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', backgroundColor: '#f8fafc', height: '100%', minHeight: 0, overflow: 'hidden' }}>
           {/* Search Bar */}
-          <div style={{ padding: '16px 14px 10px', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ padding: '16px 14px 10px', borderBottom: '1px solid #e2e8f0', flexShrink: 0 }}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <SearchIcon style={{ position: 'absolute', left: '12px', color: '#94a3b8', fontSize: '20px' }} />
               <input
@@ -426,7 +447,7 @@ export default function LiveChat() {
           </div>
 
           {/* Conversations Scroll Area */}
-          <div style={{ flex: 1, overflowY: 'auto' }}>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
             {loadingConversations ? (
               <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8' }}>
                 <CircularProgress size={24} style={{ color: '#d4af37' }} />
@@ -544,7 +565,7 @@ export default function LiveChat() {
         {/* Right Pane: Active Chat Window            */}
         {/* ========================================= */}
         {selectedConv ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#ffffff' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, backgroundColor: '#ffffff', overflow: 'hidden' }}>
             {/* Chat Header */}
             <div
               style={{
@@ -553,7 +574,8 @@ export default function LiveChat() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                flexShrink: 0
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -631,6 +653,7 @@ export default function LiveChat() {
             <div
               style={{
                 flex: 1,
+                minHeight: 0,
                 overflowY: 'auto',
                 padding: '20px',
                 backgroundColor: '#f8fafc',
@@ -745,7 +768,8 @@ export default function LiveChat() {
                 borderTop: '1px solid #e2e8f0',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px'
+                gap: '10px',
+                flexShrink: 0
               }}
             >
               <input
@@ -819,6 +843,7 @@ export default function LiveChat() {
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
+              minHeight: 0,
               backgroundColor: '#f8fafc',
               color: '#94a3b8'
             }}
