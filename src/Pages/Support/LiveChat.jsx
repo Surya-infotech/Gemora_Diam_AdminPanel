@@ -77,6 +77,7 @@ export default function LiveChat() {
 
     // Alert on new customer message across all conversations
     socket.on('notify_admin_inbox', ({ conversationId, lastMessage, senderName }) => {
+      window.dispatchEvent(new CustomEvent('chatUnreadUpdated'));
       setConversations((prev) => {
         const index = prev.findIndex((c) => c.conversationId === conversationId);
         if (index !== -1) {
@@ -111,6 +112,7 @@ export default function LiveChat() {
           conversationId,
           readerType: 'admin'
         });
+        window.dispatchEvent(new CustomEvent('chatUnreadUpdated'));
       }
     });
 
@@ -186,6 +188,7 @@ export default function LiveChat() {
         conversationId: conv.conversationId,
         readerType: 'admin'
       });
+      window.dispatchEvent(new CustomEvent('chatUnreadUpdated'));
     }
 
     // Reset local unread badge for this conversation

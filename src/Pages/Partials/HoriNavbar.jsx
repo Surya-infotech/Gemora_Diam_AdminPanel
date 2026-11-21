@@ -8,7 +8,11 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useEffect, useMemo, useState } from 'react';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import Badge from '@mui/material/Badge';
+import Tooltip from '@mui/material/Tooltip';
+import { io } from 'socket.io-client';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Middleware/Auth';
 import CheckToken from '../../utils/CheckToken';
@@ -41,6 +45,7 @@ const HoriNavbar = () => {
   const token = localStorage.getItem(tokenname);
   const EmployeeId = localStorage.getItem("EmployeeID");
   const [adminProfileImage, setAdminProfileImage] = useState(profilePlaceholder);
+  const [unreadChatCount, setUnreadChatCount] = useState(0);
   const getFullscreenElement = () => document.fullscreenElement ?? document.webkitFullscreenElement ?? null;
   const [isFullscreen, setIsFullscreen] = useState(() => !getFullscreenElement());
   const quickLinks = useMemo(() => {
@@ -139,6 +144,57 @@ const HoriNavbar = () => {
     window.addEventListener("adminProfileUpdated", fetchAdminProfileImage);
     return () => window.removeEventListener("adminProfileUpdated", fetchAdminProfileImage);
   }, [adminPanelBackendPath, token, logoutUser, navigate, EmployeeId]);
+
+  const fetchUnreadCount = useCallback(async () => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${adminPanelBackendPath}/Chat/Admin/UnreadCount`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = await res.json();
+      if (data.success && typeof data.totalUnread === 'number') {
+        setUnreadChatCount(data.totalUnread);
+      }
+    } catch {
+      // Ignore network errors
+    }
+  }, [adminPanelBackendPath, token]);
+
+  useEffect(() => {
+    fetchUnreadCount();
+
+    if (!token) return;
+    const socket = io(adminPanelBackendPath, {
+      withCredentials: true,
+      transports: ['websocket', 'polling']
+    });
+
+    socket.on('connect', () => {
+      socket.emit('join_admin_support');
+    });
+
+    socket.on('notify_admin_inbox', () => {
+      fetchUnreadCount();
+    });
+
+    socket.on('admin_inbox_updated', () => {
+      fetchUnreadCount();
+    });
+
+    const handleCustomUpdate = () => fetchUnreadCount();
+    window.addEventListener('chatUnreadUpdated', handleCustomUpdate);
+
+    const interval = setInterval(fetchUnreadCount, 30000);
+
+    return () => {
+      socket.disconnect();
+      window.removeEventListener('chatUnreadUpdated', handleCustomUpdate);
+      clearInterval(interval);
+    };
+  }, [adminPanelBackendPath, fetchUnreadCount, token]);
+
   return <>
         <nav className="hori-navbar ">
             <div className="hori-navbar-start">
@@ -154,6 +210,18 @@ const HoriNavbar = () => {
                     </div>}
             </div>
             <div className="right-side">
+                <Tooltip title="Customer Live Chat">
+                    <NavLink
+                        to="/Support/LiveChat"
+                        className={({ isActive }) => `hori-navbar__chat-btn${isActive ? ' active' : ''}`}
+                        aria-label="Customer Live Chat"
+                    >
+                        <Badge badgeContent={unreadChatCount} color="error" max={99} className="chat-unread-badge">
+                            <SupportAgentIcon className="chat-btn-icon" />
+                        </Badge>
+                    </NavLink>
+                </Tooltip>
+
                 <div className={`quick-menu-section${isQuickMenuVisible ? ' is-open' : ''}`} onClick={toggleQuickMenu}>
                     <button type="button" className="quick-menu-btn" aria-label={"Quick"} aria-expanded={isQuickMenuVisible}>
                         <BoltIcon className="quick-menu-icon" />
