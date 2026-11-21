@@ -253,14 +253,16 @@ const AdminNavbar = () => {
                                 {translations.Dashboard}
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to="/Home/Order" className={navLinkClass('/Home/Order')}>
-                                <NavTooltip title={translations.Order}>
-                                    <ShoppingBagIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
-                                </NavTooltip>
-                                {translations.Order}
-                            </NavLink>
-                        </li>
+                        {!isEmployee && (
+                            <li>
+                                <NavLink to="/Home/Order" className={navLinkClass('/Home/Order')}>
+                                    <NavTooltip title={translations.Order}>
+                                        <ShoppingBagIcon style={{ color: 'var(--primary-color)', marginRight: isRtl ? 0 : '10px', marginLeft: isRtl ? '10px' : 0 }} />
+                                    </NavTooltip>
+                                    {translations.Order}
+                                </NavLink>
+                            </li>
+                        )}
                     </div>
                 </div>
 

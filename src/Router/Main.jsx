@@ -8,6 +8,7 @@ import LoginActivity from "../Pages/General/LoginActivity";
 import ChangePassword from "../Pages/General/ChangePassword";
 import PageNotFound from "../Pages/Partials/PageNotFound";
 import { usePermissions } from "../Hooks/usePermissions";
+import { AdminOnlyGuard } from "../Components/PermissionGuard";
 
 const DashboardRoute = () => {
     const { isEmployee } = usePermissions();
@@ -18,9 +19,8 @@ const MainRouter = () => (
     <Routes>
         <Route path="/Dashboard" element={<DashboardRoute />} />
         <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
-        <Route path="/Order" element={<Order />} />
-        <Route path="/OrderDetails/:id" element={<OrderDetails />} />
-        <Route path="/OrderOverview/:id" element={<OrderDetails />} />
+        <Route path="/Order" element={<AdminOnlyGuard><Order /></AdminOnlyGuard>} />
+        <Route path="/OrderDetails/:id" element={<AdminOnlyGuard><OrderDetails /></AdminOnlyGuard>} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/LoginActivity" element={<LoginActivity />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
