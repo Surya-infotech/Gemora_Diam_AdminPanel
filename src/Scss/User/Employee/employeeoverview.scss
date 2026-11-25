@@ -1,6 +1,5 @@
 @use "../../Customize/Mixin/page_mixin.scss" as mixin;
 @use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
-@use "../../Customize/var.scss" as var;
 
 .EmployeeOverview-container {
     @include mixin.main_page;

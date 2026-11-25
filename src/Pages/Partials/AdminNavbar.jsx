@@ -19,7 +19,6 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import HomeIcon from '@mui/icons-material/Home';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CategoryIcon from '@mui/icons-material/Category';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';

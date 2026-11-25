@@ -9,17 +9,14 @@ import {
   Check as CheckIcon,
   DoneAll as DoneAllIcon,
   Refresh as RefreshIcon,
-  Person as PersonIcon,
   Phone as PhoneIcon,
   Email as EmailIcon,
   SupportAgent as SupportAgentIcon,
-  Circle as CircleIcon
 } from '@mui/icons-material';
 import {
   IconButton,
   Tooltip,
   CircularProgress,
-  Badge
 } from '@mui/material';
 import { useAuth } from '../../Middleware/Auth';
 import CheckToken from '../../utils/CheckToken';
@@ -84,7 +81,7 @@ export default function LiveChat() {
     });
 
     // Alert on new customer message across all conversations
-    socket.on('notify_admin_inbox', ({ conversationId, lastMessage, senderName }) => {
+    socket.on('notify_admin_inbox', ({ conversationId, lastMessage }) => {
       window.dispatchEvent(new CustomEvent('chatUnreadUpdated'));
       setConversations((prev) => {
         const index = prev.findIndex((c) => c.conversationId === conversationId);

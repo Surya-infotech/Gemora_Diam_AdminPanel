@@ -1,6 +1,5 @@
 @use "../../Customize/Mixin/form_mixin.scss" as form_mixin;
 @use "../../Customize/Mixin/page_mixin.scss" as mixin;
-@use "../../Customize/var.scss" as var;
 
 .AddStone-container {
     @include mixin.main_page;

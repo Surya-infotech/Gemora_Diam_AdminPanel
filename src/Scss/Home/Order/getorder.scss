@@ -1,5 +1,4 @@
 @use "../../Customize/Mixin/table_mixin.scss" as table_mixin;
-@use "../../Customize/var.scss" as var;
 
 .tablediv {
     @include table_mixin.main_table;
