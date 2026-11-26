@@ -41,6 +41,8 @@ const AddItem = () => {
   const [selectedDiamondColors, setSelectedDiamondColors] = useState([]);
   const [bandColors, setBandColors] = useState([]);
   const [selectedBandColors, setSelectedBandColors] = useState([]);
+  const [ringSizes, setRingSizes] = useState([]);
+  const [selectedRingSizes, setSelectedRingSizes] = useState([]);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -233,6 +235,35 @@ const AddItem = () => {
   }, [adminPanelBackendPath]);
   const diamondColorOptions = mapColorOptions(diamondColors);
   const bandColorOptions = mapColorOptions(bandColors);
+
+  // Fetch active ring sizes for dropdown
+  useEffect(() => {
+    const fetchRingSizes = async () => {
+      try {
+        const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveRingSizes`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        const data = await response.json();
+        if (response.ok && Array.isArray(data)) {
+          setRingSizes(data);
+        }
+      } catch (err) {
+        console.error("Error loading ring sizes:", err);
+      }
+    };
+    fetchRingSizes();
+  }, [adminPanelBackendPath]);
+  const ringSizeOptions = ringSizes.map(r => ({
+    ringsizeid: r.ringsizeid,
+    ringsize: r.ringsize,
+    label: r.ringsize,
+    value: r.ringsizeid
+  }));
+  const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
+  const isRingCategory = /\brings?\b/i.test((selectedCategoryObj?.categoryname || "").trim());
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -322,6 +353,11 @@ const AddItem = () => {
       setShowWarning(true);
       return;
     }
+    if (isRingCategory && (!selectedRingSizes || selectedRingSizes.length === 0)) {
+      setWarningMessage("Please select at least one Ring Size");
+      setShowWarning(true);
+      return;
+    }
     if (!imageFile) {
       setWarningMessage("Image is required");
       setShowWarning(true);
@@ -346,6 +382,9 @@ const AddItem = () => {
       formData.append("bandcolors", JSON.stringify(selectedBandColors));
       formData.append("stones", JSON.stringify(selectedStones));
       formData.append("styles", JSON.stringify(selectedStyles));
+      if (isRingCategory) {
+        formData.append("ringsizes", JSON.stringify(selectedRingSizes));
+      }
       formData.append("description", description.trim());
       if (imageFile) {
         formData.append("image", imageFile);
@@ -391,6 +430,7 @@ const AddItem = () => {
           "Style is required": "Please select at least one Style",
           "Diamond Color is required": "Please select at least one Diamond Color",
           "Band Color is required": "Please select at least one Band Color",
+          "Ring Size is required": "Please select at least one Ring Size",
           "Image is required": "Image is required",
           "Item Already Exists": "Item Already Exists",
           "Server error": "Server error"
@@ -492,6 +532,10 @@ const AddItem = () => {
                 <Dropdown options={categories} labelKey="categoryname" valueKey="categoryid" selectedValue={selectedCategory} onValueChange={val => {
                   setSelectedCategory(val);
                   setSelectedSubCategory(null);
+                  const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
+                  if (!/\brings?\b/i.test((nextCat?.categoryname || "").trim())) {
+                    setSelectedRingSizes([]);
+                  }
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">
@@ -560,6 +604,17 @@ const AddItem = () => {
                 <MultiDropdown options={bandColorOptions} labelKey="label" valueKey="value" selectedValue={selectedBandColors} onValueChange={val => setSelectedBandColors(val)} placeholder={"Select Band Color"} />
               </div>
             </div>
+
+            {isRingCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Ring Size"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={ringSizeOptions} labelKey="label" valueKey="value" selectedValue={selectedRingSizes} onValueChange={val => setSelectedRingSizes(val)} placeholder={"Select Ring Size"} />
+              </div>
+            </div>}
 
             <div className="button-group">
               <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel} disabled={isLoading}>
