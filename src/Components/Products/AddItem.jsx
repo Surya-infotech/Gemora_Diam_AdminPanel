@@ -236,6 +236,20 @@ const AddItem = () => {
   const diamondColorOptions = mapColorOptions(diamondColors);
   const bandColorOptions = mapColorOptions(bandColors);
 
+  const isRingCategoryName = name => /\brings?\b/i.test(String(name || "").trim());
+  const mapRingSizeOptions = sizes => sizes.map(r => ({
+    ringsizeid: r.ringsizeid,
+    ringsize: r.ringsize,
+    label: r.ringsize,
+    value: r.ringsizeid
+  }));
+  const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
+  const isRingCategory = isRingCategoryName(selectedCategoryObj?.categoryname);
+  const isRingCategoryRef = useRef(isRingCategory);
+  useEffect(() => {
+    isRingCategoryRef.current = isRingCategory;
+  }, [isRingCategory]);
+
   // Fetch active ring sizes for dropdown
   useEffect(() => {
     const fetchRingSizes = async () => {
@@ -249,6 +263,9 @@ const AddItem = () => {
         const data = await response.json();
         if (response.ok && Array.isArray(data)) {
           setRingSizes(data);
+          if (isRingCategoryRef.current) {
+            setSelectedRingSizes(mapRingSizeOptions(data));
+          }
         }
       } catch (err) {
         console.error("Error loading ring sizes:", err);
@@ -256,14 +273,7 @@ const AddItem = () => {
     };
     fetchRingSizes();
   }, [adminPanelBackendPath]);
-  const ringSizeOptions = ringSizes.map(r => ({
-    ringsizeid: r.ringsizeid,
-    ringsize: r.ringsize,
-    label: r.ringsize,
-    value: r.ringsizeid
-  }));
-  const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
-  const isRingCategory = /\brings?\b/i.test((selectedCategoryObj?.categoryname || "").trim());
+  const ringSizeOptions = mapRingSizeOptions(ringSizes);
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -533,9 +543,7 @@ const AddItem = () => {
                   setSelectedCategory(val);
                   setSelectedSubCategory(null);
                   const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
-                  if (!/\brings?\b/i.test((nextCat?.categoryname || "").trim())) {
-                    setSelectedRingSizes([]);
-                  }
+                  setSelectedRingSizes(isRingCategoryName(nextCat?.categoryname) ? ringSizeOptions : []);
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">
