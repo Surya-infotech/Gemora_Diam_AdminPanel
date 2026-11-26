@@ -245,7 +245,7 @@ const OrderDetails = () => {
       const shippingAddressParts = shippingAddr ? [shippingAddr.title ? `<strong>${escapeHtml(shippingAddr.title)}</strong>` : '', shippingAddr.address, shippingAddr.cityname, shippingAddr.statename, shippingAddr.countryname, shippingAddr.pincode ? `PIN: ${shippingAddr.pincode}` : ''].filter(Boolean).join('<br>') : '';
       const items = order.items || [];
       const itemRows = items.map((item, idx) => {
-        const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, item.size && `Size: ${item.size}`, item.diamondcolor && `Color: ${item.diamondcolor}`, item.bandcolor && `Band: ${item.bandcolor}`].filter(Boolean).join(' • ');
+        const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`, item.diamondcolor && `Color: ${item.diamondcolor}`, item.bandcolor && `Band: ${item.bandcolor}`].filter(Boolean).join(' • ');
         const unitPriceStr = formatPriceWithCurrency(item.price, order.currencydetails);
         const totalPriceStr = formatPriceWithCurrency(item.totalprice || item.price * (item.qty || 1), order.currencydetails);
         const qty = item.qty || 1;
@@ -657,7 +657,7 @@ const OrderDetails = () => {
                                 </thead>
                                 <tbody>
                                     {(order.items || []).map((item, index) => {
-                  const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, item.size && `Size: ${item.size}`].filter(Boolean).join(' • ');
+                  const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`].filter(Boolean).join(' • ');
                   return <tr key={index}>
                                                 <td>
                                                     <div className="item-media">
