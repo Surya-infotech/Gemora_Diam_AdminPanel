@@ -25,7 +25,7 @@ const EditItem = () => {
   const [showWarning, setShowWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const MAX_ITEM_NAME_LENGTH = 120;
-  const MAX_DESCRIPTION_LENGTH = 3500;
+  const MAX_DESCRIPTION_LENGTH = 6000;
   const [sku, setSku] = useState("");
   const [itemName, setItemName] = useState("");
   const [categories, setCategories] = useState([]);
