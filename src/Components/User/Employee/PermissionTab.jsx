@@ -11,6 +11,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PreviewIcon from '@mui/icons-material/Preview';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import StraightenIcon from '@mui/icons-material/Straighten';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
@@ -49,87 +50,94 @@ const PermissionTab = ({
   const [warningMessage, setWarningMessage] = useState('');
   const [showWarning, setShowWarning] = useState(false);
   const permissionPages = useMemo(() => [
-  // 1. Products Module
-  {
-    id: 'item',
-    name: "Item",
-    category: "Products",
-    categoryKey: 'products',
-    icon: LocalOfferIcon,
-    hiddenActions: []
-  }, {
-    id: 'itemOverview',
-    name: "Item Overview",
-    category: "Products",
-    categoryKey: 'products',
-    icon: PreviewIcon,
-    hiddenActions: ['add', 'edit', 'delete']
-  },
-  // 3. Attributes Module
-  {
-    id: 'metal',
-    name: "Metal",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: DiamondIcon,
-    hiddenActions: []
-  }, {
-    id: 'diamondSize',
-    name: "Diamond Size",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: AutoAwesomeIcon,
-    hiddenActions: []
-  }, {
-    id: 'shape',
-    name: "Shape",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: InterestsIcon,
-    hiddenActions: []
-  }, {
-    id: 'clarity',
-    name: "Clarity",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: VisibilityIcon,
-    hiddenActions: []
-  }, {
-    id: 'color',
-    name: "Color",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: ColorLensIcon,
-    hiddenActions: []
-  }, {
-    id: 'stone',
-    name: "Stone",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: TokenIcon,
-    hiddenActions: []
-  }, {
-    id: 'style',
-    name: "Style",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: StyleIcon,
-    hiddenActions: []
-  }, {
-    id: 'category',
-    name: "Category",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: GridViewIcon,
-    hiddenActions: []
-  }, {
-    id: 'subCategory',
-    name: "Sub Category",
-    category: "Attributes",
-    categoryKey: 'attributes',
-    icon: AccountTreeIcon,
-    hiddenActions: []
-  }], []);
+    // 1. Products Module
+    {
+      id: 'item',
+      name: "Item",
+      category: "Products",
+      categoryKey: 'products',
+      icon: LocalOfferIcon,
+      hiddenActions: []
+    }, {
+      id: 'itemOverview',
+      name: "Item Overview",
+      category: "Products",
+      categoryKey: 'products',
+      icon: PreviewIcon,
+      hiddenActions: ['add', 'edit', 'delete']
+    },
+    // 3. Attributes Module
+    {
+      id: 'metal',
+      name: "Metal",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: DiamondIcon,
+      hiddenActions: []
+    }, {
+      id: 'diamondSize',
+      name: "Diamond Size",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: AutoAwesomeIcon,
+      hiddenActions: []
+    }, {
+      id: 'ringSize',
+      name: "Ring Size",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: StraightenIcon,
+      hiddenActions: []
+    }, {
+      id: 'shape',
+      name: "Shape",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: InterestsIcon,
+      hiddenActions: []
+    }, {
+      id: 'clarity',
+      name: "Clarity",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: VisibilityIcon,
+      hiddenActions: []
+    }, {
+      id: 'color',
+      name: "Color",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: ColorLensIcon,
+      hiddenActions: []
+    }, {
+      id: 'stone',
+      name: "Stone",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: TokenIcon,
+      hiddenActions: []
+    }, {
+      id: 'style',
+      name: "Style",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: StyleIcon,
+      hiddenActions: []
+    }, {
+      id: 'category',
+      name: "Category",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: GridViewIcon,
+      hiddenActions: []
+    }, {
+      id: 'subCategory',
+      name: "Sub Category",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: AccountTreeIcon,
+      hiddenActions: []
+    }], []);
   const categories = useMemo(() => [{
     id: 'all',
     label: "All Pages"
@@ -350,85 +358,85 @@ const PermissionTab = ({
   };
   if (fetching) {
     return <div className="permissions-loading-wrapper">
-                <LoadingSpinner />
-            </div>;
+      <LoadingSpinner />
+    </div>;
   }
   return <>
-            {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage('')} />}
-            {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
+    {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage('')} />}
+    {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
 
-            <div className="permission-tab-content">
-                {/* Header Banner */}
-                <div className="permission-header-banner">
-                    <div className="banner-left">
-                        <div className="shield-icon-wrapper">
-                            <SecurityIcon className="shield-icon" />
-                        </div>
-                        <div className="banner-info">
-                            <div className="banner-title-row">
-                                <h5 className="banner-title">{"Pages Permission"}</h5>
-                                <span className="role-chip">
-                                    <BadgeIcon className="role-chip-icon" />
-                                    {"Employee"}
-                                </span>
-                            </div>
-                            <p className="banner-subtitle">
-                                {"Set customized page access and operational permissions for this employee."}
-                            </p>
-                        </div>
-                    </div>
+    <div className="permission-tab-content">
+      {/* Header Banner */}
+      <div className="permission-header-banner">
+        <div className="banner-left">
+          <div className="shield-icon-wrapper">
+            <SecurityIcon className="shield-icon" />
+          </div>
+          <div className="banner-info">
+            <div className="banner-title-row">
+              <h5 className="banner-title">{"Pages Permission"}</h5>
+              <span className="role-chip">
+                <BadgeIcon className="role-chip-icon" />
+                {"Employee"}
+              </span>
+            </div>
+            <p className="banner-subtitle">
+              {"Set customized page access and operational permissions for this employee."}
+            </p>
+          </div>
+        </div>
 
-                    {/* Save Button Header Action */}
-                    <div className="banner-right-actions">
-                        {isDirty && <button type="button" className="permission-btn reset-btn" onClick={handleReset} disabled={saving}>
-                                <RestartAltIcon className="btn-icon" />
-                                {"Reset"}
-                            </button>}
-                        <button type="button" className={`permission-btn save-btn ${isDirty ? 'is-dirty' : ''}`} onClick={handleSavePermissions} disabled={saving || !isDirty}>
-                            {saving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon className="btn-icon" />}
-                            <span>{"Save Permissions"}</span>
-                        </button>
-                    </div>
-                </div>
+        {/* Save Button Header Action */}
+        <div className="banner-right-actions">
+          {isDirty && <button type="button" className="permission-btn reset-btn" onClick={handleReset} disabled={saving}>
+            <RestartAltIcon className="btn-icon" />
+            {"Reset"}
+          </button>}
+          <button type="button" className={`permission-btn save-btn ${isDirty ? 'is-dirty' : ''}`} onClick={handleSavePermissions} disabled={saving || !isDirty}>
+            {saving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon className="btn-icon" />}
+            <span>{"Save Permissions"}</span>
+          </button>
+        </div>
+      </div>
 
-                {/* Filter, Search & Bulk Actions Bar */}
-                <div className="permission-toolbar">
-                    <div className="category-pills">
-                        {categories.map(cat => <button key={cat.id} type="button" className={`pill-button ${selectedCategory === cat.id ? 'active' : ''}`} onClick={() => setSelectedCategory(cat.id)}>
-                                {cat.label}
-                            </button>)}
-                    </div>
+      {/* Filter, Search & Bulk Actions Bar */}
+      <div className="permission-toolbar">
+        <div className="category-pills">
+          {categories.map(cat => <button key={cat.id} type="button" className={`pill-button ${selectedCategory === cat.id ? 'active' : ''}`} onClick={() => setSelectedCategory(cat.id)}>
+            {cat.label}
+          </button>)}
+        </div>
 
-                    <div className="toolbar-right-group">
-                        <div className="bulk-actions-group">
-                            <button type="button" className="bulk-action-btn grant-btn" onClick={handleGrantAll} title={"Grant All"}>
-                                <DoneAllIcon className="btn-icon" />
-                                <span>{"Grant All"}</span>
-                            </button>
-                            <button type="button" className="bulk-action-btn revoke-btn" onClick={handleRevokeAll} title={"Revoke All"}>
-                                <RemoveDoneIcon className="btn-icon" />
-                                <span>{"Revoke All"}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div className="toolbar-right-group">
+          <div className="bulk-actions-group">
+            <button type="button" className="bulk-action-btn grant-btn" onClick={handleGrantAll} title={"Grant All"}>
+              <DoneAllIcon className="btn-icon" />
+              <span>{"Grant All"}</span>
+            </button>
+            <button type="button" className="bulk-action-btn revoke-btn" onClick={handleRevokeAll} title={"Revoke All"}>
+              <RemoveDoneIcon className="btn-icon" />
+              <span>{"Revoke All"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
-                {/* Permissions Matrix Table */}
-                <div className="permission-table-wrapper">
-                    {filteredPages.length > 0 ? <div className="tablediv">
-                            <table className="permission-table">
-                                <thead>
-                                    <tr>
-                                        <th className="th-page">{"Pages"}</th>
-                                        <th className="th-category">{"Category"}</th>
-                                        <th className="th-action text-center">{"View"}</th>
-                                        <th className="th-action text-center">{"Add"}</th>
-                                        <th className="th-action text-center">{"Edit"}</th>
-                                        <th className="th-action text-center">{"Delete"}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredPages.map(page => {
+      {/* Permissions Matrix Table */}
+      <div className="permission-table-wrapper">
+        {filteredPages.length > 0 ? <div className="tablediv">
+          <table className="permission-table">
+            <thead>
+              <tr>
+                <th className="th-page">{"Pages"}</th>
+                <th className="th-category">{"Category"}</th>
+                <th className="th-action text-center">{"View"}</th>
+                <th className="th-action text-center">{"Add"}</th>
+                <th className="th-action text-center">{"Edit"}</th>
+                <th className="th-action text-center">{"Delete"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPages.map(page => {
                 const IconComponent = page.icon;
                 const rowPerms = permissionsState[page.id] || {};
                 const hasView = Boolean(rowPerms.view);
@@ -436,43 +444,43 @@ const PermissionTab = ({
                 const hasEdit = Boolean(rowPerms.edit);
                 const hasDelete = Boolean(rowPerms.delete);
                 return <tr key={page.id} className="permission-row">
-                                                <td className="td-page">
-                                                    <div className="page-cell">
-                                                        <div className="page-icon-wrapper">
-                                                            <IconComponent className="page-icon" />
-                                                        </div>
-                                                        <span className="page-title">{page.name}</span>
-                                                        <button type="button" className={`row-toggle-pill ${isRowAllChecked(page) ? 'all-on' : 'some-off'}`} onClick={() => handleRowToggle(page)} title={"Toggle all permissions for this page"}>
-                                                            {isRowAllChecked(page) ? <CheckCircleIcon className="pill-check-icon" /> : <span className="pill-dot-icon">●</span>}
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className="td-category">
-                                                    <span className="category-badge">{page.category}</span>
-                                                </td>
+                  <td className="td-page">
+                    <div className="page-cell">
+                      <div className="page-icon-wrapper">
+                        <IconComponent className="page-icon" />
+                      </div>
+                      <span className="page-title">{page.name}</span>
+                      <button type="button" className={`row-toggle-pill ${isRowAllChecked(page) ? 'all-on' : 'some-off'}`} onClick={() => handleRowToggle(page)} title={"Toggle all permissions for this page"}>
+                        {isRowAllChecked(page) ? <CheckCircleIcon className="pill-check-icon" /> : <span className="pill-dot-icon">●</span>}
+                      </button>
+                    </div>
+                  </td>
+                  <td className="td-category">
+                    <span className="category-badge">{page.category}</span>
+                  </td>
 
-                                                {/* Interactive Checkbox Cells */}
-                                                <td className="td-action text-center">
-                                                    {!page.hiddenActions?.includes('view') ? <Checkbox size="medium" checked={hasView} onChange={e => handlePermissionChange(page.id, 'view', e.target.checked)} className={`perm-cell-checkbox ${hasView ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                                                </td>
-                                                <td className="td-action text-center">
-                                                    {!page.hiddenActions?.includes('add') ? <Checkbox size="medium" checked={hasAdd} onChange={e => handlePermissionChange(page.id, 'add', e.target.checked)} className={`perm-cell-checkbox ${hasAdd ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                                                </td>
-                                                <td className="td-action text-center">
-                                                    {!page.hiddenActions?.includes('edit') ? <Checkbox size="medium" checked={hasEdit} onChange={e => handlePermissionChange(page.id, 'edit', e.target.checked)} className={`perm-cell-checkbox ${hasEdit ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                                                </td>
-                                                <td className="td-action text-center">
-                                                    {!page.hiddenActions?.includes('delete') ? <Checkbox size="medium" checked={hasDelete} onChange={e => handlePermissionChange(page.id, 'delete', e.target.checked)} className={`perm-cell-checkbox ${hasDelete ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                                                </td>
-                                            </tr>;
+                  {/* Interactive Checkbox Cells */}
+                  <td className="td-action text-center">
+                    {!page.hiddenActions?.includes('view') ? <Checkbox size="medium" checked={hasView} onChange={e => handlePermissionChange(page.id, 'view', e.target.checked)} className={`perm-cell-checkbox ${hasView ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
+                  </td>
+                  <td className="td-action text-center">
+                    {!page.hiddenActions?.includes('add') ? <Checkbox size="medium" checked={hasAdd} onChange={e => handlePermissionChange(page.id, 'add', e.target.checked)} className={`perm-cell-checkbox ${hasAdd ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
+                  </td>
+                  <td className="td-action text-center">
+                    {!page.hiddenActions?.includes('edit') ? <Checkbox size="medium" checked={hasEdit} onChange={e => handlePermissionChange(page.id, 'edit', e.target.checked)} className={`perm-cell-checkbox ${hasEdit ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
+                  </td>
+                  <td className="td-action text-center">
+                    {!page.hiddenActions?.includes('delete') ? <Checkbox size="medium" checked={hasDelete} onChange={e => handlePermissionChange(page.id, 'delete', e.target.checked)} className={`perm-cell-checkbox ${hasDelete ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
+                  </td>
+                </tr>;
               })}
-                                </tbody>
-                            </table>
-                        </div> : <div className="no-data-message">
-                            <p>{"No record found"}</p>
-                        </div>}
-                </div>
-            </div>
-        </>;
+            </tbody>
+          </table>
+        </div> : <div className="no-data-message">
+          <p>{"No record found"}</p>
+        </div>}
+      </div>
+    </div>
+  </>;
 };
 export default PermissionTab;
