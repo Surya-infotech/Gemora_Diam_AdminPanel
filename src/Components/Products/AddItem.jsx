@@ -199,6 +199,13 @@ const AddItem = () => {
     value: st.styleid
   }));
 
+  const mapColorOptions = colors => colors.map(c => ({
+    colorid: c.colorid,
+    colorname: c.colorname,
+    label: c.colorname,
+    value: c.colorid
+  }));
+
   // Fetch active colors for dropdowns (Diamond Color and Band Color)
   useEffect(() => {
     const fetchColors = async () => {
@@ -211,8 +218,12 @@ const AddItem = () => {
         });
         const data = await response.json();
         if (response.ok && Array.isArray(data)) {
-          setDiamondColors(data.filter(c => c.colortype === "Diamond"));
-          setBandColors(data.filter(c => c.colortype === "Band"));
+          const diamond = data.filter(c => c.colortype === "Diamond");
+          const band = data.filter(c => c.colortype === "Band");
+          setDiamondColors(diamond);
+          setBandColors(band);
+          setSelectedDiamondColors(mapColorOptions(diamond));
+          setSelectedBandColors(mapColorOptions(band));
         }
       } catch (err) {
         console.error("Error loading colors:", err);
@@ -220,18 +231,8 @@ const AddItem = () => {
     };
     fetchColors();
   }, [adminPanelBackendPath]);
-  const diamondColorOptions = diamondColors.map(c => ({
-    colorid: c.colorid,
-    colorname: c.colorname,
-    label: c.colorname,
-    value: c.colorid
-  }));
-  const bandColorOptions = bandColors.map(c => ({
-    colorid: c.colorid,
-    colorname: c.colorname,
-    label: c.colorname,
-    value: c.colorid
-  }));
+  const diamondColorOptions = mapColorOptions(diamondColors);
+  const bandColorOptions = mapColorOptions(bandColors);
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -406,172 +407,172 @@ const AddItem = () => {
   };
   const handleCancel = () => navigate(`/Products/Item`);
   return <>
-            {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
-            <div className="AddItem-container ">
-                <div className="Additem-container">
-                    <h6 className="Additem-headingname">{"Add Item"}</h6>
-                    <div className="Additem-form-container">
-                        {isLoading ? <LoadingSpinner /> : <form onSubmit={handleSubmit}>
-                                <div className="imageflex">
-                                    <div className="formdiv">
-                                        <div className="form-group">
-                                            <label htmlFor="sku">
-                                                {"SKU"} <span style={{
+    {showWarning && <WarningModal message={warningMessage} onClose={() => setShowWarning(false)} />}
+    <div className="AddItem-container ">
+      <div className="Additem-container">
+        <h6 className="Additem-headingname">{"Add Item"}</h6>
+        <div className="Additem-form-container">
+          {isLoading ? <LoadingSpinner /> : <form onSubmit={handleSubmit}>
+            <div className="imageflex">
+              <div className="formdiv">
+                <div className="form-group">
+                  <label htmlFor="sku">
+                    {"SKU"} <span style={{
                       color: "red"
                     }}>*</span>
-                                            </label>
-                                            <input type="text" id="sku" name="sku" autoComplete="off" placeholder={"Enter SKU"} autoFocus required value={sku} onChange={e => {
+                  </label>
+                  <input type="text" id="sku" name="sku" autoComplete="off" placeholder={"Enter SKU"} autoFocus required value={sku} onChange={e => {
                     const value = e.target.value;
                     if (value.length === 1 && value === " ") return;
                     setSku(value);
                   }} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="itemname">
-                                                {"Item Name"} <span style={{
+                </div>
+                <div className="form-group">
+                  <label htmlFor="itemname">
+                    {"Item Name"} <span style={{
                       color: "red"
                     }}>*</span>
-                                            </label>
-                                            <input type="text" id="itemname" name="itemname" className="has-counter" autoComplete="off" placeholder={"Enter Item Name"} required maxLength={MAX_ITEM_NAME_LENGTH} value={itemName} onChange={e => {
+                  </label>
+                  <input type="text" id="itemname" name="itemname" className="has-counter" autoComplete="off" placeholder={"Enter Item Name"} required maxLength={MAX_ITEM_NAME_LENGTH} value={itemName} onChange={e => {
                     const value = e.target.value;
                     if (value.length === 1 && value === " ") return;
                     if (value.length <= MAX_ITEM_NAME_LENGTH) {
                       setItemName(value);
                     }
                   }} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
-                                            <div className={`character-counter ${(itemName || "").length >= MAX_ITEM_NAME_LENGTH ? 'max-reached' : ''}`}>
-                                                {(itemName || "").length}/{MAX_ITEM_NAME_LENGTH}
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="description">
-                                                {"Description"} <span style={{
+                  <div className={`character-counter ${(itemName || "").length >= MAX_ITEM_NAME_LENGTH ? 'max-reached' : ''}`}>
+                    {(itemName || "").length}/{MAX_ITEM_NAME_LENGTH}
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="description">
+                    {"Description"} <span style={{
                       color: "red"
                     }}>*</span>
-                                            </label>
-                                            <textarea id="description" name="description" rows="1" placeholder={"Enter Description"} value={description} maxLength={MAX_DESCRIPTION_LENGTH} onChange={e => {
+                  </label>
+                  <textarea id="description" name="description" rows="1" placeholder={"Enter Description"} value={description} maxLength={MAX_DESCRIPTION_LENGTH} onChange={e => {
                     const value = e.target.value;
                     if (value.length === 1 && value === " ") return;
                     if (value.length <= MAX_DESCRIPTION_LENGTH) {
                       setDescription(value);
                     }
                   }} />
-                                            <div className={`description-counter ${(description || "").length >= MAX_DESCRIPTION_LENGTH ? 'max-reached' : ''}`}>
-                                                {(description || "").length}/{MAX_DESCRIPTION_LENGTH}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="imagediv">
-                                        <div className="form-group">
-                                            <div className="imgpreview">
-                                                {imagePreview && <div className="image-preview-container">
-                                                        <img src={imagePreview} alt={"Item Preview"} className="image-preview" onError={e => {
+                  <div className={`description-counter ${(description || "").length >= MAX_DESCRIPTION_LENGTH ? 'max-reached' : ''}`}>
+                    {(description || "").length}/{MAX_DESCRIPTION_LENGTH}
+                  </div>
+                </div>
+              </div>
+              <div className="imagediv">
+                <div className="form-group">
+                  <div className="imgpreview">
+                    {imagePreview && <div className="image-preview-container">
+                      <img src={imagePreview} alt={"Item Preview"} className="image-preview" onError={e => {
                         e.target.onerror = null;
                         e.target.src = Placeholder;
                       }} />
-                                                    </div>}
-                                                <button type="button" className="btn btn-primary upload-btn" onClick={handleUploadClick}>
-                                                    {"Upload"}
-                                                </button>
-                                                <input type="file" id="itemimage" name="image" accept="image/*" ref={fileInputRef} onChange={handleImageChange} style={{
+                    </div>}
+                    <button type="button" className="btn btn-primary upload-btn" onClick={handleUploadClick}>
+                      {"Upload"}
+                    </button>
+                    <input type="file" id="itemimage" name="image" accept="image/*" ref={fileInputRef} onChange={handleImageChange} style={{
                       display: "none"
                     }} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>
-                                            {"Category"} <span style={{
+            <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Category"} <span style={{
                     color: "red"
                   }}>*</span>
-                                        </label>
-                                        <Dropdown options={categories} labelKey="categoryname" valueKey="categoryid" selectedValue={selectedCategory} onValueChange={val => {
+                </label>
+                <Dropdown options={categories} labelKey="categoryname" valueKey="categoryid" selectedValue={selectedCategory} onValueChange={val => {
                   setSelectedCategory(val);
                   setSelectedSubCategory(null);
                 }} placeholder={"Select Category"} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {"Sub Category"} <span style={{
+              </div>
+              <div className="form-group">
+                <label>
+                  {"Sub Category"} <span style={{
                     color: "red"
                   }}>*</span>
-                                        </label>
-                                        <Dropdown options={filteredSubCategories} labelKey="subcategoryname" valueKey="subcategoryid" selectedValue={selectedSubCategory} onValueChange={val => setSelectedSubCategory(val)} placeholder={"Select Sub Category"} disabled={!selectedCategory || filteredSubCategories.length === 0} />
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>
-                                            {"Shape"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={shapeOptions} labelKey="label" valueKey="value" selectedValue={selectedShapes} onValueChange={val => setSelectedShapes(val)} placeholder={"Select Shape"} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {"Clarity"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={clarityOptions} labelKey="label" valueKey="value" selectedValue={selectedClarities} onValueChange={val => setSelectedClarities(val)} placeholder={"Select Clarity"} />
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>
-                                            {"Stone"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={stoneOptions} labelKey="label" valueKey="value" selectedValue={selectedStones} onValueChange={val => setSelectedStones(val)} placeholder={"Select Stone"} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {"Style"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={styleOptions} labelKey="label" valueKey="value" selectedValue={selectedStyles} onValueChange={val => setSelectedStyles(val)} placeholder={"Select Style"} />
-                                    </div>
-                                </div>
-
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label>
-                                            {"Diamond Color"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={diamondColorOptions} labelKey="label" valueKey="value" selectedValue={selectedDiamondColors} onValueChange={val => setSelectedDiamondColors(val)} placeholder={"Select Diamond Color"} />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>
-                                            {"Band Color"} <span style={{
-                    color: "red"
-                  }}>*</span>
-                                        </label>
-                                        <MultiDropdown options={bandColorOptions} labelKey="label" valueKey="value" selectedValue={selectedBandColors} onValueChange={val => setSelectedBandColors(val)} placeholder={"Select Band Color"} />
-                                    </div>
-                                </div>
-
-                                <div className="button-group">
-                                    <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel} disabled={isLoading}>
-                                        {"Cancel"}
-                                    </button>
-                                    <button type="submit" className="btn btn-primary submit-btn" disabled={isLoading}>
-                                        {"Save"}
-                                    </button>
-                                </div>
-                            </form>}
-                    </div>
-                </div>
+                </label>
+                <Dropdown options={filteredSubCategories} labelKey="subcategoryname" valueKey="subcategoryid" selectedValue={selectedSubCategory} onValueChange={val => setSelectedSubCategory(val)} placeholder={"Select Sub Category"} disabled={!selectedCategory || filteredSubCategories.length === 0} />
+              </div>
             </div>
-        </>;
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Shape"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={shapeOptions} labelKey="label" valueKey="value" selectedValue={selectedShapes} onValueChange={val => setSelectedShapes(val)} placeholder={"Select Shape"} />
+              </div>
+              <div className="form-group">
+                <label>
+                  {"Clarity"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={clarityOptions} labelKey="label" valueKey="value" selectedValue={selectedClarities} onValueChange={val => setSelectedClarities(val)} placeholder={"Select Clarity"} />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Stone"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={stoneOptions} labelKey="label" valueKey="value" selectedValue={selectedStones} onValueChange={val => setSelectedStones(val)} placeholder={"Select Stone"} />
+              </div>
+              <div className="form-group">
+                <label>
+                  {"Style"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={styleOptions} labelKey="label" valueKey="value" selectedValue={selectedStyles} onValueChange={val => setSelectedStyles(val)} placeholder={"Select Style"} />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Diamond Color"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={diamondColorOptions} labelKey="label" valueKey="value" selectedValue={selectedDiamondColors} onValueChange={val => setSelectedDiamondColors(val)} placeholder={"Select Diamond Color"} />
+              </div>
+              <div className="form-group">
+                <label>
+                  {"Band Color"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <MultiDropdown options={bandColorOptions} labelKey="label" valueKey="value" selectedValue={selectedBandColors} onValueChange={val => setSelectedBandColors(val)} placeholder={"Select Band Color"} />
+              </div>
+            </div>
+
+            <div className="button-group">
+              <button type="button" className="btn btn-secondary cancelbtn" onClick={handleCancel} disabled={isLoading}>
+                {"Cancel"}
+              </button>
+              <button type="submit" className="btn btn-primary submit-btn" disabled={isLoading}>
+                {"Save"}
+              </button>
+            </div>
+          </form>}
+        </div>
+      </div>
+    </div>
+  </>;
 };
 export default AddItem;
