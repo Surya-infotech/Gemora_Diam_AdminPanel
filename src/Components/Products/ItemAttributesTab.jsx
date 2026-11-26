@@ -31,7 +31,7 @@ const ItemAttributesTab = ({
     items: (itemData.diamondcolors || []).map(c => c.colorname).filter(Boolean)
   }, {
     key: 'bandcolors',
-    label: "Band Color",
+    label: "Metal Color",
     icon: <PaletteIcon className="section-icon" />,
     items: (itemData.bandcolors || []).map(c => c.colorname).filter(Boolean)
   }, {
