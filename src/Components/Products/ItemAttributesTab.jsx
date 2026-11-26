@@ -4,6 +4,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StyleIcon from '@mui/icons-material/Style';
 import TollIcon from '@mui/icons-material/Toll';
+import StraightenIcon from '@mui/icons-material/Straighten';
 const ItemAttributesTab = ({
   itemData
 }) => {
@@ -12,6 +13,7 @@ const ItemAttributesTab = ({
                 <p>{"No data found"}</p>
             </div>;
   }
+  const isRingCategory = /\brings?\b/i.test(String(itemData.categoryname || '').trim());
   const attributeSections = [{
     key: 'shapes',
     label: "Shape",
@@ -42,7 +44,12 @@ const ItemAttributesTab = ({
     label: "Style",
     icon: <StyleIcon className="section-icon" />,
     items: (itemData.styles || []).map(st => st.stylename).filter(Boolean)
-  }];
+  }, ...(isRingCategory ? [{
+    key: 'ringsizes',
+    label: "Ring Size",
+    icon: <StraightenIcon className="section-icon" />,
+    items: (itemData.ringsizes || []).map(r => r.ringsize).filter(Boolean)
+  }] : [])];
   return <div className="item-attributes-tab-content">
             <div className="attributes-header-banner">
                 <div className="banner-left">
