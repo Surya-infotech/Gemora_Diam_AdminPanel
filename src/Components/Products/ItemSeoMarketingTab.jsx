@@ -110,7 +110,7 @@ const ItemSeoMarketingTab = ({
     slug: 100,
     slugOptimalMin: 10,
     slugOptimalMax: 70,
-    metaKeywords: 255,
+    metaKeywords: 260,
     canonicalUrl: 255
   };
 
