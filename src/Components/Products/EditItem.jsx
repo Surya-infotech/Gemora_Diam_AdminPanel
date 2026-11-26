@@ -467,7 +467,7 @@ const EditItem = () => {
       return;
     }
     if (!selectedBandColors || selectedBandColors.length === 0) {
-      setWarningMessage("Please select at least one Band Color");
+      setWarningMessage("Please select at least one Metal Color");
       setShowWarning(true);
       return;
     }
@@ -547,7 +547,7 @@ const EditItem = () => {
           "Stone is required": "Please select at least one Stone",
           "Style is required": "Please select at least one Style",
           "Diamond Color is required": "Please select at least one Diamond Color",
-          "Band Color is required": "Please select at least one Band Color",
+          "Band Color is required": "Please select at least one Metal Color",
           "Ring Size is required": "Please select at least one Ring Size",
           "Image is required": "Image is required",
           "Item Already Exists": "Item Already Exists",
@@ -716,11 +716,11 @@ const EditItem = () => {
               </div>
               <div className="form-group">
                 <label>
-                  {"Band Color"} <span style={{
+                  {"Metal Color"} <span style={{
                     color: "red"
                   }}>*</span>
                 </label>
-                <MultiDropdown options={bandColorOptions} labelKey="label" valueKey="value" selectedValue={selectedBandColors} onValueChange={val => setSelectedBandColors(val)} placeholder={"Select Band Color"} />
+                <MultiDropdown options={bandColorOptions} labelKey="label" valueKey="value" selectedValue={selectedBandColors} onValueChange={val => setSelectedBandColors(val)} placeholder={"Select Metal Color"} />
               </div>
             </div>
 
