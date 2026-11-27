@@ -16,10 +16,11 @@ import DeleteButton from "../../../Pages/Custom/DeleteButton";
 import ViewButton from "../../../Pages/Custom/ViewButton";
 import DeleteModal from "../../../Pages/Custom/DeleteModal";
 import ViewAllOrderModal from "./ViewAllOrderModal";
+import { ALL_ORDER_KPI_DEFS } from "../../../utils/allOrderHelpers";
 import "../../../Scss/Home/Order/getorder.scss";
 import "../../../Scss/Home/Order/allorder.scss";
 
-const GetAllOrder = ({ searchValue = "", statusFilter = "", onOrdersChange }) => {
+const GetAllOrder = ({ searchValue = "", statusFilter = "", kpiFilter = "", onOrdersChange }) => {
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
   const { selectedFiscalYear } = useFiscalYear();
@@ -141,7 +142,11 @@ const GetAllOrder = ({ searchValue = "", statusFilter = "", onOrdersChange }) =>
   const filteredAndSortedOrders = useMemo(() => {
     const search = (searchValue || "").toLowerCase().trim();
     const statusTarget = (statusFilter || "").toLowerCase().trim();
+    const activeKpiDef = kpiFilter ? ALL_ORDER_KPI_DEFS.find(k => k.key === kpiFilter) : null;
     let filtered = orders;
+    if (activeKpiDef && activeKpiDef.key !== "all") {
+      filtered = filtered.filter(activeKpiDef.matches);
+    }
     if (statusTarget) {
       filtered = filtered.filter(order => (
         String(order.status || "Order Received").toLowerCase().trim() === statusTarget
@@ -178,15 +183,15 @@ const GetAllOrder = ({ searchValue = "", statusFilter = "", onOrdersChange }) =>
       if (valA > valB) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [orders, searchValue, statusFilter, sortColumn, sortDirection]);
+  }, [orders, searchValue, statusFilter, kpiFilter, sortColumn, sortDirection]);
 
   const totalRecords = filteredAndSortedOrders.length;
 
   useEffect(() => {
     if (onOrdersChange) {
-      onOrdersChange(filteredAndSortedOrders);
+      onOrdersChange(filteredAndSortedOrders, orders);
     }
-  }, [filteredAndSortedOrders, onOrdersChange]);
+  }, [filteredAndSortedOrders, orders, onOrdersChange]);
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
   const safePage = Math.min(currentPage, totalPages);
   const visibleOrders = filteredAndSortedOrders.slice((safePage - 1) * pageSize, safePage * pageSize);

@@ -108,3 +108,65 @@ export const ALL_ORDER_EXPORT_COLUMNS = [
   { key: 'tracking', label: 'Tracking Number' },
   { key: 'trackingLink', label: 'Tracking Link' }
 ];
+
+export const PRODUCTION_STATUSES = [
+  'CAD Pending',
+  'CAD Approved',
+  'Casting',
+  'Polishing',
+  'Diamond Setting',
+  'Quality Check'
+];
+
+export const DISPATCHED_STATUSES = ['Dispatched', 'Delivered'];
+
+export const ALL_ORDER_KPI_DEFS = [
+  {
+    key: 'all',
+    title: 'Total Orders',
+    singleStatus: '',
+    matches: () => true
+  },
+  {
+    key: 'order_received',
+    title: 'Order Received',
+    singleStatus: 'Order Received',
+    matches: order => (order.status || 'Order Received') === 'Order Received'
+  },
+  {
+    key: 'in_production',
+    title: 'In Production',
+    singleStatus: '',
+    matches: order => PRODUCTION_STATUSES.includes(order.status)
+  },
+  {
+    key: 'ready_to_dispatch',
+    title: 'Ready to Dispatch',
+    singleStatus: 'Ready to Dispatch',
+    matches: order => order.status === 'Ready to Dispatch'
+  },
+  {
+    key: 'dispatched_delivered',
+    title: 'Dispatched / Delivered',
+    singleStatus: '',
+    matches: order => DISPATCHED_STATUSES.includes(order.status)
+  },
+  {
+    key: 'tracking_pending',
+    title: 'Tracking Pending',
+    singleStatus: '',
+    matches: order => !String(order.dispatchDate || '').trim() && !String(order.tracking || '').trim()
+  },
+  {
+    key: 'on_hold',
+    title: 'On Hold',
+    singleStatus: 'On Hold',
+    matches: order => order.status === 'On Hold'
+  },
+  {
+    key: 'unassigned',
+    title: 'Unassigned Orders',
+    singleStatus: '',
+    matches: order => !String(order.employee || '').trim()
+  }
+];
