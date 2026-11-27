@@ -1,235 +1,163 @@
-import { Country, State } from 'country-state-city';
-import HandleUnauthorized from './HandleUnauthorized';
-
-export const ORDER_STATUS_OPTIONS = [
-  { label: 'Pending', value: 'Pending' },
-  { label: 'Confirmed', value: 'Confirmed' },
-  { label: 'Processing', value: 'Processing' },
-  { label: 'Shipped', value: 'Shipped' },
-  { label: 'Delivered', value: 'Delivered' },
-  { label: 'Cancelled', value: 'Cancelled' }
+export const SHOP_OPTIONS = [
+  { label: 'Select shop', value: '' },
+  { label: 'Aura', value: 'Aura' },
+  { label: 'Gemora', value: 'Gemora' },
+  { label: 'Domixa', value: 'Domixa' },
+  { label: 'SmilingstonebyUk', value: 'SmilingstonebyUk' },
+  { label: 'SmilingstoneJewels', value: 'SmilingstoneJewels' },
+  { label: 'Valora', value: 'Valora' },
+  { label: 'Nexa', value: 'Nexa' }
 ];
 
-export const PAYMENT_STATUS_OPTIONS = [
-  { label: 'Paid', value: 'Paid' },
-  { label: 'Pending', value: 'Pending' },
-  { label: 'Failed', value: 'Failed' },
-  { label: 'Refunded', value: 'Refunded' }
-];
-
-export const PAYMENT_METHOD_OPTIONS = [
-  { label: 'Cash', value: 'Cash' },
-  { label: 'Credit/Debit Card', value: 'Credit/Debit Card' },
-  { label: 'UPI', value: 'UPI' },
-  { label: 'Bank Transfer', value: 'Bank Transfer' },
-  { label: 'PayPal', value: 'PayPal' },
+export const COUNTRY_OPTIONS = [
+  { label: 'Select country', value: '' },
+  { label: 'USA', value: 'USA' },
+  { label: 'Australia', value: 'Australia' },
+  { label: 'UK', value: 'UK' },
+  { label: 'Canada', value: 'Canada' },
   { label: 'Other', value: 'Other' }
 ];
 
-export const createEmptyItemRow = () => ({
-  itemid: null,
-  itemname: '',
-  sku: '',
-  image: '',
-  metalname: '',
-  shapename: '',
-  clarityname: '',
-  stonename: '',
-  ringsize: '',
-  closuretype: '',
-  specialinstruction: '',
-  qty: 1,
-  price: ''
-});
+export const JEWELRY_TYPE_OPTIONS = [
+  { label: 'Select type', value: '' },
+  { label: 'Ring', value: 'Ring' },
+  { label: 'Band', value: 'Band' },
+  { label: 'Bracelet', value: 'Bracelet' },
+  { label: 'Earring', value: 'Earring' },
+  { label: 'Pendant', value: 'Pendant' }
+];
 
-export const getItemDefaultPrice = item => {
-  const pricing = item?.pricing;
-  if (!pricing) return '';
-  if (pricing.priceType === 'metal_wise' && Array.isArray(pricing.metalWisePrices) && pricing.metalWisePrices.length > 0) {
-    return pricing.metalWisePrices[0].price ?? '';
-  }
-  if (Array.isArray(pricing.metalWithStoneDiamondCaratPrices) && pricing.metalWithStoneDiamondCaratPrices.length > 0) {
-    const first = pricing.metalWithStoneDiamondCaratPrices[0];
-    if (first.hasCarat && Array.isArray(first.caratPrices) && first.caratPrices.length > 0) {
-      return first.caratPrices[0].price ?? '';
-    }
-    return first.price ?? '';
-  }
-  return '';
+export const METAL_OPTIONS = [
+  { label: 'Select metal', value: '' },
+  { label: '925 Silver', value: '925 Silver' },
+  { label: '925 Silver Rose', value: '925 Silver Rose' },
+  { label: '925 Silver Yellow', value: '925 Silver Yellow' },
+  { label: '10K White Gold', value: '10K White Gold' },
+  { label: '10K Yellow Gold', value: '10K Yellow Gold' },
+  { label: '10K Rose Gold', value: '10K Rose Gold' },
+  { label: '14K White Gold', value: '14K White Gold' },
+  { label: '14K Yellow Gold', value: '14K Yellow Gold' },
+  { label: '14K Rose Gold', value: '14K Rose Gold' },
+  { label: '18K White Gold', value: '18K White Gold' },
+  { label: '18K Yellow Gold', value: '18K Yellow Gold' },
+  { label: '18K Rose Gold', value: '18K Rose Gold' },
+  { label: '950 Platinum', value: '950 Platinum' }
+];
+
+export const STONE_TYPE_OPTIONS = [
+  { label: 'Select stone type', value: '' },
+  { label: 'Moissanite', value: 'Moissanite' },
+  { label: 'Lab-Grown Diamond', value: 'Lab-Grown Diamond' }
+];
+
+export const STONE_SHAPE_OPTIONS = [
+  { label: 'Select shape', value: '' },
+  { label: 'Round', value: 'Round' },
+  { label: 'Marquise', value: 'Marquise' },
+  { label: 'Oval', value: 'Oval' },
+  { label: 'Emerald', value: 'Emerald' },
+  { label: 'Cushion', value: 'Cushion' },
+  { label: 'Heart', value: 'Heart' },
+  { label: 'Pear', value: 'Pear' }
+];
+
+export const CENTER_CARAT_OPTIONS = [
+  { label: 'Select carat', value: '' },
+  { label: '1.00 Ct', value: '1.00 Ct' },
+  { label: '1.50 Ct', value: '1.50 Ct' },
+  { label: '2.00 Ct', value: '2.00 Ct' },
+  { label: '2.50 Ct', value: '2.50 Ct' },
+  { label: '3.00 Ct', value: '3.00 Ct' }
+];
+
+export const SIDE_STONE_OPTIONS = [
+  { label: 'Select side stone', value: '' },
+  { label: 'Moissanite', value: 'Moissanite' },
+  { label: 'Lab-Grown Diamond', value: 'Lab-Grown Diamond' }
+];
+
+export const ALL_ORDER_STATUS_OPTIONS = [
+  { label: 'Order Received', value: 'Order Received' },
+  { label: 'CAD Pending', value: 'CAD Pending' },
+  { label: 'CAD Approved', value: 'CAD Approved' },
+  { label: 'Casting', value: 'Casting' },
+  { label: 'Polishing', value: 'Polishing' },
+  { label: 'Diamond Setting', value: 'Diamond Setting' },
+  { label: 'Quality Check', value: 'Quality Check' },
+  { label: 'Ready to Dispatch', value: 'Ready to Dispatch' },
+  { label: 'Dispatched', value: 'Dispatched' },
+  { label: 'Delivered', value: 'Delivered' },
+  { label: 'On Hold', value: 'On Hold' }
+];
+
+export const PRIORITY_OPTIONS = [
+  { label: 'Normal', value: 'Normal' },
+  { label: 'Urgent', value: 'Urgent' },
+  { label: 'Rush', value: 'Rush' }
+];
+
+export const COURIER_OPTIONS = [
+  { label: 'Select', value: '' },
+  { label: 'FedEx', value: 'FedEx' },
+  { label: 'UPS', value: 'UPS' },
+  { label: 'DHL', value: 'DHL' },
+  { label: 'USPS', value: 'USPS' },
+  { label: 'Other', value: 'Other' }
+];
+
+export const INITIAL_ALL_ORDER_FORM = {
+  orderId: '',
+  customer: '',
+  orderDate: '',
+  orderLink: '',
+  shopName: '',
+  country: '',
+  jewelryType: '',
+  product: '',
+  metal: '',
+  ringSize: '',
+  stoneType: '',
+  stoneShape: '',
+  centerCarat: '',
+  sideStoneType: '',
+  measurements: '',
+  employee: '',
+  stone: '',
+  status: 'Order Received',
+  targetDate: '',
+  priority: 'Normal',
+  productionNotes: '',
+  conversation: '',
+  totalAmount: '',
+  paidAmount: '',
+  dispatchDate: '',
+  courier: '',
+  tracking: '',
+  trackingLink: '',
+  deliveryDate: '',
+  dispatchNotes: ''
 };
 
-export const toDateInputValue = dateStr => {
-  if (!dateStr) return new Date().toISOString().split('T')[0];
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? new Date().toISOString().split('T')[0] : d.toISOString().split('T')[0];
+export const validateAllOrderForm = form => {
+  if (!String(form.orderId || '').trim()) {
+    return { valid: false, message: 'Etsy Order ID is required' };
+  }
+  if (!String(form.customer || '').trim()) {
+    return { valid: false, message: 'Customer name is required' };
+  }
+  return { valid: true };
 };
 
-export const computeSubtotal = items => (
-  items.reduce((sum, row) => {
-    const qty = Math.max(1, parseInt(row.qty, 10) || 1);
-    const price = Math.max(0, Number(row.price) || 0);
-    return sum + qty * price;
-  }, 0)
-);
-
-export const applyCustomerSelection = (val, customers) => {
-  if (!val) return null;
-  const cust = customers.find(c => String(c.customerid) === String(val));
-  if (!cust) return null;
-  const result = {
-    customerName: cust.fullname || '',
-    customerEmail: cust.email || '',
-    customerPhone: cust.phone || ''
-  };
-  if (cust.defaultAddress) {
-    result.address = cust.defaultAddress.address || '';
-    result.cityName = cust.defaultAddress.city || '';
-    result.stateName = cust.defaultAddress.state || '';
-    result.countryName = cust.defaultAddress.country || '';
-    const matchedCountry = Country.getAllCountries().find(
-      c => c.name.toLowerCase() === String(cust.defaultAddress.country || '').toLowerCase()
-    );
-    if (matchedCountry) {
-      result.countryCode = matchedCountry.isoCode;
-      const matchedState = State.getStatesOfCountry(matchedCountry.isoCode).find(
-        s => s.name.toLowerCase() === String(cust.defaultAddress.state || '').toLowerCase()
-      );
-      result.stateCode = matchedState ? matchedState.isoCode : '';
-    }
+export const buildAllOrderFormData = ({ form, files, selectedFiscalYear }) => {
+  const formData = new FormData();
+  Object.entries(form).forEach(([key, value]) => {
+    formData.append(key, value ?? '');
+  });
+  if (selectedFiscalYear && selectedFiscalYear !== 'all') {
+    formData.append('fiscalyearid', String(selectedFiscalYear));
   }
-  return result;
-};
-
-export const applyProductSelectionToRow = (row, itemIdStr, catalogItems) => {
-  if (!itemIdStr) {
-    return { ...row, itemid: null, sku: '', image: '' };
-  }
-  const product = catalogItems.find(it => String(it.itemid) === String(itemIdStr));
-  if (!product) return row;
-  const defaultPrice = getItemDefaultPrice(product);
-  return {
-    ...row,
-    itemid: product.itemid,
-    itemname: product.itemname || row.itemname,
-    sku: product.sku || '',
-    image: product.image || '',
-    price: row.price === '' || Number(row.price) === 0 ? defaultPrice : row.price,
-    shapename: product.shapes?.[0]?.shapename || row.shapename,
-    clarityname: product.clarities?.[0]?.clarityname || row.clarityname,
-    stonename: product.stones?.[0]?.stonename || row.stonename,
-    ringsize: product.ringsizes?.[0]?.ringsize || row.ringsize,
-    closuretype: Array.isArray(product.closuretypes) && product.closuretypes.length > 0
-      ? (typeof product.closuretypes[0] === 'string' ? product.closuretypes[0] : product.closuretypes[0]?.label || '')
-      : row.closuretype
-  };
-};
-
-export const validateAllOrderFields = ({ customerName, orderItems }) => {
-  if (!customerName.trim()) {
-    return { valid: false, message: 'Customer Name is required' };
-  }
-  const validItems = orderItems.filter(it => it.itemname.trim());
-  if (validItems.length === 0) {
-    return { valid: false, message: 'Please enter at least one item' };
-  }
-  for (let i = 0; i < validItems.length; i += 1) {
-    const row = validItems[i];
-    if (!row.qty || Number(row.qty) < 1) {
-      return { valid: false, message: `Item #${i + 1}: Quantity must be at least 1` };
-    }
-    if (row.price === '' || Number(row.price) < 0 || isNaN(Number(row.price))) {
-      return { valid: false, message: `Item #${i + 1}: Please enter a valid unit price` };
-    }
-  }
-  return { valid: true, validItems };
-};
-
-export const buildAllOrderPayload = ({
-  selectedCustomerId,
-  customerName,
-  customerEmail,
-  customerPhone,
-  validItems,
-  displayedTotal,
-  orderStatus,
-  paymentStatus,
-  paymentMethod,
-  orderDate,
-  notes,
-  address,
-  pincode,
-  countryName,
-  countryCode,
-  stateName,
-  stateCode,
-  cityName,
-  selectedFiscalYear
-}) => ({
-  customerid: selectedCustomerId ? Number(selectedCustomerId) : null,
-  customername: customerName.trim(),
-  customeremail: customerEmail.trim(),
-  customerphone: customerPhone.trim(),
-  items: validItems.map(it => ({
-    itemid: it.itemid,
-    itemname: it.itemname.trim(),
-    sku: it.sku.trim(),
-    image: it.image,
-    metalname: it.metalname.trim(),
-    shapename: it.shapename.trim(),
-    clarityname: it.clarityname.trim(),
-    stonename: it.stonename.trim(),
-    ringsize: it.ringsize.trim(),
-    closuretype: it.closuretype.trim(),
-    specialinstruction: it.specialinstruction.trim(),
-    qty: Math.max(1, parseInt(it.qty, 10) || 1),
-    price: Math.max(0, Number(it.price) || 0)
-  })),
-  total: Number(displayedTotal) || 0,
-  orderstatus: orderStatus,
-  paymentstatus: paymentStatus,
-  paymentmethod: paymentMethod,
-  orderdate: orderDate ? new Date(orderDate).toISOString() : new Date().toISOString(),
-  notes: notes.trim(),
-  shippingaddress: {
-    address: address.trim(),
-    pincode: pincode.trim(),
-    countryname: countryName,
-    countrycode: countryCode,
-    statename: stateName,
-    statecode: stateCode,
-    cityname: cityName
-  },
-  fiscalyearid: selectedFiscalYear && selectedFiscalYear !== 'all' ? Number(selectedFiscalYear) : undefined
-});
-
-export const fetchAllOrderLookups = async ({ adminPanelBackendPath, token, logoutUser, navigate }) => {
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  };
-  const [custRes, itemRes, miscRes, currRes] = await Promise.all([
-    fetch(`${adminPanelBackendPath}/User/GetCustomers`, { headers }),
-    fetch(`${adminPanelBackendPath}/Products/GetItems`, { headers }),
-    fetch(`${adminPanelBackendPath}/System/GetMiscSetting`, { headers }),
-    fetch(`${adminPanelBackendPath}/System/GetCurrencies`, { headers })
-  ]);
-  const [custData, itemData, miscData, currData] = await Promise.all([
-    custRes.json(),
-    itemRes.json(),
-    miscRes.json(),
-    currRes.json()
-  ]);
-
-  if (HandleUnauthorized(custData, logoutUser, navigate)) return null;
-
-  const currList = Array.isArray(currData) ? currData : currData?.currencies || [];
-  const matchedCurrency = miscRes.ok && currRes.ok
-    ? currList.find(c => Number(c.currencyid) === Number(miscData?.currencyid)) || null
-    : null;
-
-  return {
-    customers: custRes.ok && Array.isArray(custData?.customers) ? custData.customers : [],
-    catalogItems: itemRes.ok && Array.isArray(itemData?.items) ? itemData.items : [],
-    activeCurrency: matchedCurrency
-  };
+  if (files.photoFile) formData.append('photoFile', files.photoFile);
+  if (files.cadFile) formData.append('cadFile', files.cadFile);
+  if (files.otherFile) formData.append('otherFile', files.otherFile);
+  return formData;
 };

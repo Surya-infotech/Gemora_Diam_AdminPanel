@@ -13,8 +13,6 @@ import AlertMessage from "../../../Pages/Custom/AlertMessage";
 import EditButton from "../../../Pages/Custom/EditButton";
 import DeleteButton from "../../../Pages/Custom/DeleteButton";
 import DeleteModal from "../../../Pages/Custom/DeleteModal";
-import { formatPriceWithCurrency } from "../../../utils/CurrencyFormatter";
-import { formatDateTime } from "../../../utils/dateTimeFormatter";
 import "../../../Scss/Home/Order/getorder.scss";
 
 const getInitials = name => {
@@ -34,7 +32,6 @@ const GetAllOrder = ({ searchValue = "" }) => {
 
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
-  const [miscSettings, setMiscSettings] = useState(null);
   const [warningMessage, setWarningMessage] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -65,9 +62,6 @@ const GetAllOrder = ({ searchValue = "" }) => {
         if (!isMounted) return;
         if (response.ok) {
           setOrders(data.orders || []);
-          if (data.miscSettings) {
-            setMiscSettings(data.miscSettings);
-          }
         } else {
           setWarningMessage(data.message || "Server error");
           setShowWarning(true);
@@ -145,45 +139,36 @@ const GetAllOrder = ({ searchValue = "" }) => {
     const search = (searchValue || "").toLowerCase().trim();
     let filtered = orders;
     if (search) {
-      filtered = orders.filter(order => {
-        const orderNum = String(order.ordernumber || order.allorderid || "").toLowerCase();
-        const name = (order.customername || "").toLowerCase();
-        const email = (order.customeremail || "").toLowerCase();
-        const phone = (order.customerphone || "").toLowerCase();
-        const status = (order.orderstatus || "").toLowerCase();
-        const payStatus = (order.paymentstatus || "").toLowerCase();
-        const payMethod = (order.paymentmethod || "").toLowerCase();
-        const itemNames = (order.items || []).map(i => (i.itemname || "").toLowerCase()).join(" ");
-        const formattedDate = formatDateTime(order.orderdate || order.createdAt, miscSettings).toLowerCase();
-        return (
-          orderNum.includes(search) ||
-          name.includes(search) ||
-          email.includes(search) ||
-          phone.includes(search) ||
-          status.includes(search) ||
-          payStatus.includes(search) ||
-          payMethod.includes(search) ||
-          itemNames.includes(search) ||
-          formattedDate.includes(search)
-        );
-      });
+      filtered = orders.filter(order => (
+        [
+          order.orderId,
+          order.ordernumber,
+          order.customer,
+          order.shopName,
+          order.country,
+          order.jewelryType,
+          order.product,
+          order.metal,
+          order.stone,
+          order.employee,
+          order.status,
+          order.priority,
+          order.tracking,
+          order.courier
+        ].join(" ").toLowerCase().includes(search)
+      ));
     }
     if (!sortColumn) return filtered;
     return [...filtered].sort((a, b) => {
-      if (sortColumn === "ordernumber") {
-        const valA = Number(a.ordernumber || a.allorderid) || 0;
-        const valB = Number(b.ordernumber || b.allorderid) || 0;
+      if (sortColumn === "totalAmount") {
+        const valA = Number(a.totalAmount) || 0;
+        const valB = Number(b.totalAmount) || 0;
         return sortDirection === "asc" ? valA - valB : valB - valA;
       }
-      if (sortColumn === "total") {
-        const valA = Number(a.total) || 0;
-        const valB = Number(b.total) || 0;
-        return sortDirection === "asc" ? valA - valB : valB - valA;
-      }
-      if (sortColumn === "orderdate") {
-        const timeA = new Date(a.orderdate || a.createdAt || 0).getTime();
-        const timeB = new Date(b.orderdate || b.createdAt || 0).getTime();
-        return sortDirection === "asc" ? timeA - timeB : timeB - timeA;
+      if (sortColumn === "orderDate") {
+        const valA = String(a.orderDate || a.createdAt || "");
+        const valB = String(b.orderDate || b.createdAt || "");
+        return sortDirection === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
       }
       const valA = String(a[sortColumn] ?? "").toLowerCase();
       const valB = String(b[sortColumn] ?? "").toLowerCase();
@@ -191,7 +176,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
       if (valA > valB) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [orders, searchValue, sortColumn, sortDirection, miscSettings]);
+  }, [orders, searchValue, sortColumn, sortDirection]);
 
   const totalRecords = filteredAndSortedOrders.length;
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
@@ -206,7 +191,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
         open={Boolean(deleteTarget)}
         onClose={() => setDeleteTarget(null)}
         onDelete={handleConfirmDelete}
-        name={deleteTarget ? `Order #${deleteTarget.ordernumber ?? deleteTarget.allorderid}` : ""}
+        name={deleteTarget ? `Order ${deleteTarget.orderId || `#${deleteTarget.ordernumber}`}` : ""}
         message=""
         isLoading={isDeleting}
       />
@@ -216,24 +201,23 @@ const GetAllOrder = ({ searchValue = "" }) => {
           <table className="ordertable">
             <thead>
               <tr>
-                <th onClick={() => handleSort("ordernumber")} style={{ cursor: "pointer", width: "95px" }}>
-                  {"Order No."} {renderSortIcon("ordernumber")}
+                <th onClick={() => handleSort("orderId")} style={{ cursor: "pointer" }}>
+                  {"Order / Customer"} {renderSortIcon("orderId")}
                 </th>
-                <th onClick={() => handleSort("customername")} style={{ cursor: "pointer" }}>
-                  {"Customer"} {renderSortIcon("customername")}
+                <th onClick={() => handleSort("product")} style={{ cursor: "pointer" }}>
+                  {"Product / Specs"} {renderSortIcon("product")}
                 </th>
-                <th>{"Items"}</th>
-                <th onClick={() => handleSort("total")} style={{ cursor: "pointer" }}>
-                  {"Total Amount"} {renderSortIcon("total")}
+                <th onClick={() => handleSort("employee")} style={{ cursor: "pointer" }}>
+                  {"Employee"} {renderSortIcon("employee")}
                 </th>
-                <th onClick={() => handleSort("paymentstatus")} style={{ cursor: "pointer" }}>
-                  {"Payment Status"} {renderSortIcon("paymentstatus")}
+                <th onClick={() => handleSort("status")} style={{ cursor: "pointer" }}>
+                  {"Status / Priority"} {renderSortIcon("status")}
                 </th>
-                <th onClick={() => handleSort("orderstatus")} style={{ cursor: "pointer", width: "130px" }}>
-                  {"Order Status"} {renderSortIcon("orderstatus")}
+                <th onClick={() => handleSort("totalAmount")} style={{ cursor: "pointer" }}>
+                  {"Payment"} {renderSortIcon("totalAmount")}
                 </th>
-                <th onClick={() => handleSort("orderdate")} style={{ cursor: "pointer" }}>
-                  {"Order Date"} {renderSortIcon("orderdate")}
+                <th onClick={() => handleSort("orderDate")} style={{ cursor: "pointer" }}>
+                  {"Dispatch"} {renderSortIcon("orderDate")}
                 </th>
                 <th style={{ textAlign: "center", width: "120px" }}>
                   {"Action"}
@@ -243,93 +227,83 @@ const GetAllOrder = ({ searchValue = "" }) => {
             <tbody>
               {visibleOrders.length > 0 ? visibleOrders.map(order => {
                 const orderKey = order._id || order.allorderid;
-                const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
-                const totalItemsCount = order.totalitems || (order.items || []).reduce((acc, i) => acc + (i.qty || 1), 0);
-                const currentStatusClass = (order.orderstatus || "Confirmed").toLowerCase();
-                const paymentStatusClass = (order.paymentstatus || "Paid").toLowerCase();
-                const contactSubtext = order.customeremail || order.customerphone || "";
+                const total = Number(order.totalAmount || 0);
+                const paid = Number(order.paidAmount || 0);
+                const due = Math.max(0, total - paid);
+                const specs = [order.jewelryType, order.metal, order.ringSize ? `Size ${order.ringSize}` : "", order.stoneType, order.stoneShape, order.centerCarat, order.measurements].filter(Boolean).join(" · ");
+                const shopCountry = [order.shopName, order.country].filter(Boolean).join(" · ");
 
                 return (
                   <tr key={orderKey}>
                     <td>
-                      <Tooltip title={"Edit Order"} arrow>
-                        <span
-                          className="order-number-badge"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleEdit(order)}
-                        >
-                          #{order.ordernumber != null ? order.ordernumber : order.allorderid}
-                        </span>
-                      </Tooltip>
-                    </td>
-
-                    <td>
                       <div className="customer-info-cell">
                         <div className="customer-avatar">
-                          {getInitials(order.customername)}
+                          {getInitials(order.customer)}
                         </div>
                         <div className="customer-text">
-                          <strong>{order.customername || "Walk-in Customer"}</strong>
-                          {contactSubtext && <span className="customer-subtext">{contactSubtext}</span>}
+                          <Tooltip title={"Edit Order"} arrow>
+                            <span
+                              className="order-number-badge"
+                              style={{ cursor: "pointer", width: "fit-content", marginBottom: "2px" }}
+                              onClick={() => handleEdit(order)}
+                            >
+                              {order.orderId || `#${order.ordernumber ?? order.allorderid}`}
+                            </span>
+                          </Tooltip>
+                          <strong>{order.customer || "—"}</strong>
+                          {shopCountry && <span className="customer-subtext">{shopCountry}</span>}
+                          {order.orderLink && (
+                            <a href={order.orderLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "var(--primary-color)" }}>
+                              {"Etsy order"}
+                            </a>
+                          )}
                         </div>
                       </div>
                     </td>
 
                     <td>
-                      <div className="order-items-preview">
-                        {firstItem?.image ? (
-                          <img
-                            src={firstItem.image}
-                            alt={firstItem.itemname || "Item"}
-                            className="item-thumb"
-                            onError={e => {
-                              e.target.style.display = "none";
-                            }}
-                          />
-                        ) : (
-                          <div className="item-thumb-placeholder">💎</div>
-                        )}
-                        <div className="item-details-brief">
-                          <span className="item-title">
-                            {firstItem?.itemname || "Jewelry Item"}
-                          </span>
-                          <span className="item-badge-more">
-                            {totalItemsCount} {totalItemsCount === 1 ? "Item" : "Items"}
-                            {order.items && order.items.length > 1 && ` (${order.items.length} types)`}
-                          </span>
-                        </div>
+                      <div className="customer-text" style={{ textAlign: "left" }}>
+                        <strong>{order.product || "—"}</strong>
+                        {specs && <span className="customer-subtext">{specs}</span>}
+                        {order.stone && <span className="customer-subtext">{order.stone}</span>}
                       </div>
                     </td>
 
-                    <td>
-                      <span className="order-price-cell">
-                        {formatPriceWithCurrency(order.total, order.currencydetails)}
-                      </span>
-                    </td>
+                    <td>{order.employee || "—"}</td>
 
                     <td>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "3px" }}>
-                        <span className={`payment-badge ${paymentStatusClass}`}>
-                          {order.paymentstatus || "Paid"}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+                        <span className="order-status-badge confirmed">
+                          {order.status || "Order Received"}
                         </span>
-                        {order.paymentmethod && (
-                          <span style={{ fontSize: "11px", color: "var(--text-secondary, #64748b)" }}>
-                            {order.paymentmethod}
-                          </span>
-                        )}
+                        <span style={{ fontSize: "11px", color: "var(--text-secondary, #64748b)" }}>
+                          {order.priority || "Normal"}
+                        </span>
                       </div>
                     </td>
 
                     <td>
-                      <span className={`order-status-badge ${currentStatusClass}`}>
-                        {order.orderstatus || "Confirmed"}
-                      </span>
+                      <div style={{ fontSize: "12px", lineHeight: 1.45, whiteSpace: "nowrap" }}>
+                        <div>Total: {total.toFixed(2)}</div>
+                        <div>Paid: {paid.toFixed(2)}</div>
+                        <strong style={{ color: due > 0 ? "#dc2626" : "#15803d" }}>
+                          Due: {due.toFixed(2)}
+                        </strong>
+                      </div>
                     </td>
 
                     <td>
-                      <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)", whiteSpace: "nowrap" }}>
-                        {formatDateTime(order.orderdate || order.createdAt, miscSettings)}
-                      </span>
+                      <div style={{ fontSize: "12px", lineHeight: 1.45 }}>
+                        <div>{order.dispatchDate || "—"}</div>
+                        {order.courier && <div style={{ color: "var(--text-secondary, #64748b)" }}>{order.courier}</div>}
+                        {order.trackingLink ? (
+                          <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary-color)" }}>
+                            {order.tracking || "Track"}
+                          </a>
+                        ) : (
+                          order.tracking && <span>{order.tracking}</span>
+                        )}
+                      </div>
                     </td>
 
                     <td>
@@ -342,7 +316,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 );
               }) : (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+                  <td colSpan="7" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
                     {"No orders found"}
                   </td>
                 </tr>
