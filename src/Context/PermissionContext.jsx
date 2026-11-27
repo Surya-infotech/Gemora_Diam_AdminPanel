@@ -80,6 +80,7 @@ export const PermissionProvider = ({ children }) => {
     const canAdd = useCallback((pageId) => hasPermission(pageId, "add"), [hasPermission]);
     const canEdit = useCallback((pageId) => hasPermission(pageId, "edit"), [hasPermission]);
     const canDelete = useCallback((pageId) => hasPermission(pageId, "delete"), [hasPermission]);
+    const canExport = useCallback((pageId) => hasPermission(pageId, "export"), [hasPermission]);
 
     return (
         <PermissionContext.Provider
@@ -92,6 +93,7 @@ export const PermissionProvider = ({ children }) => {
                 canAdd,
                 canEdit,
                 canDelete,
+                canExport,
                 refetchPermissions: fetchPermissions
             }}
         >

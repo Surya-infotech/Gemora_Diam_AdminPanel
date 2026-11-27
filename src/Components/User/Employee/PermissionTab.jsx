@@ -27,7 +27,14 @@ import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 import AlertMessage from '../../../Pages/Custom/AlertMessage';
 import WarningModal from '../../../Pages/Custom/WarningModal';
 import LoadingSpinner from '../../../Pages/Custom/LoadingSpinner';
-const ACTIONS = ['view', 'add', 'edit', 'delete'];
+const ACTIONS = ['view', 'add', 'edit', 'delete', 'export'];
+const ACTION_LABELS = {
+  view: 'View',
+  add: 'Add',
+  edit: 'Edit',
+  delete: 'Delete',
+  export: 'Export'
+};
 const getPageActions = page => {
   if (!page.hiddenActions) return ACTIONS;
   return ACTIONS.filter(act => !page.hiddenActions.includes(act));
@@ -67,14 +74,14 @@ const PermissionTab = ({
       category: "Products",
       categoryKey: 'products',
       icon: LocalOfferIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'itemOverview',
       name: "Item Overview",
       category: "Products",
       categoryKey: 'products',
       icon: PreviewIcon,
-      hiddenActions: ['add', 'edit', 'delete']
+      hiddenActions: ['add', 'edit', 'delete', 'export']
     },
     // 3. Attributes Module
     {
@@ -83,70 +90,70 @@ const PermissionTab = ({
       category: "Attributes",
       categoryKey: 'attributes',
       icon: DiamondIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'diamondSize',
       name: "Diamond Size",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: AutoAwesomeIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'ringSize',
       name: "Ring Size",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: StraightenIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'shape',
       name: "Shape",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: InterestsIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'clarity',
       name: "Clarity",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: VisibilityIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'color',
       name: "Color",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: ColorLensIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'stone',
       name: "Stone",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: TokenIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'style',
       name: "Style",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: StyleIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'category',
       name: "Category",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: GridViewIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }, {
       id: 'subCategory',
       name: "Sub Category",
       category: "Attributes",
       categoryKey: 'attributes',
       icon: AccountTreeIcon,
-      hiddenActions: []
+      hiddenActions: ['export']
     }], []);
   const categories = useMemo(() => [{
     id: 'all',
@@ -171,7 +178,8 @@ const PermissionTab = ({
         view: applicable.includes('view'),
         add: applicable.includes('add'),
         edit: applicable.includes('edit'),
-        delete: applicable.includes('delete')
+        delete: applicable.includes('delete'),
+        export: applicable.includes('export')
       };
     });
     return matrix;
@@ -208,14 +216,16 @@ const PermissionTab = ({
                 view: applicable.includes('view') ? Boolean(sourcePerm?.view) : false,
                 add: applicable.includes('add') ? Boolean(sourcePerm?.add) : false,
                 edit: applicable.includes('edit') ? Boolean(sourcePerm?.edit) : false,
-                delete: applicable.includes('delete') ? Boolean(sourcePerm?.delete) : false
+                delete: applicable.includes('delete') ? Boolean(sourcePerm?.delete) : false,
+                export: applicable.includes('export') ? Boolean(sourcePerm?.export) : false
               };
             } else {
               merged[p.id] = {
                 view: applicable.includes('view'),
                 add: applicable.includes('add'),
                 edit: applicable.includes('edit'),
-                delete: applicable.includes('delete')
+                delete: applicable.includes('delete'),
+                export: applicable.includes('export')
               };
             }
           });
@@ -253,7 +263,8 @@ const PermissionTab = ({
           view: false,
           add: false,
           edit: false,
-          delete: false
+          delete: false,
+          export: false
         }),
         [actionKey]: checked
       }
@@ -276,7 +287,8 @@ const PermissionTab = ({
         view: applicableActions.includes('view') ? nextVal : false,
         add: applicableActions.includes('add') ? nextVal : false,
         edit: applicableActions.includes('edit') ? nextVal : false,
-        delete: applicableActions.includes('delete') ? nextVal : false
+        delete: applicableActions.includes('delete') ? nextVal : false,
+        export: applicableActions.includes('export') ? nextVal : false
       }
     }));
   };
@@ -293,7 +305,8 @@ const PermissionTab = ({
           view: applicable.includes('view'),
           add: applicable.includes('add'),
           edit: applicable.includes('edit'),
-          delete: applicable.includes('delete')
+          delete: applicable.includes('delete'),
+          export: applicable.includes('export')
         };
       });
       return next;
@@ -311,7 +324,8 @@ const PermissionTab = ({
           view: false,
           add: false,
           edit: false,
-          delete: false
+          delete: false,
+          export: false
         };
       });
       return next;
@@ -339,7 +353,8 @@ const PermissionTab = ({
           view: applicable.includes('view') ? Boolean(row.view) : false,
           add: applicable.includes('add') ? Boolean(row.add) : false,
           edit: applicable.includes('edit') ? Boolean(row.edit) : false,
-          delete: applicable.includes('delete') ? Boolean(row.delete) : false
+          delete: applicable.includes('delete') ? Boolean(row.delete) : false,
+          export: applicable.includes('export') ? Boolean(row.export) : false
         };
       });
       const response = await fetch(`${adminPanelBackendPath}/User/UpdateEmployeePermissions/${employeeId}`, {
@@ -442,20 +457,15 @@ const PermissionTab = ({
               <tr>
                 <th className="th-page">{"Pages"}</th>
                 <th className="th-category">{"Category"}</th>
-                <th className="th-action text-center">{"View"}</th>
-                <th className="th-action text-center">{"Add"}</th>
-                <th className="th-action text-center">{"Edit"}</th>
-                <th className="th-action text-center">{"Delete"}</th>
+                {ACTIONS.map(actionKey => (
+                  <th key={actionKey} className="th-action text-center">{ACTION_LABELS[actionKey]}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {filteredPages.map(page => {
                 const IconComponent = page.icon;
                 const rowPerms = permissionsState[page.id] || {};
-                const hasView = Boolean(rowPerms.view);
-                const hasAdd = Boolean(rowPerms.add);
-                const hasEdit = Boolean(rowPerms.edit);
-                const hasDelete = Boolean(rowPerms.delete);
                 return <tr key={page.id} className="permission-row">
                   <td className="td-page">
                     <div className="page-cell">
@@ -473,18 +483,23 @@ const PermissionTab = ({
                   </td>
 
                   {/* Interactive Checkbox Cells */}
-                  <td className="td-action text-center">
-                    {!page.hiddenActions?.includes('view') ? <Checkbox size="medium" checked={hasView} onChange={e => handlePermissionChange(page.id, 'view', e.target.checked)} className={`perm-cell-checkbox ${hasView ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                  </td>
-                  <td className="td-action text-center">
-                    {!page.hiddenActions?.includes('add') ? <Checkbox size="medium" checked={hasAdd} onChange={e => handlePermissionChange(page.id, 'add', e.target.checked)} className={`perm-cell-checkbox ${hasAdd ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                  </td>
-                  <td className="td-action text-center">
-                    {!page.hiddenActions?.includes('edit') ? <Checkbox size="medium" checked={hasEdit} onChange={e => handlePermissionChange(page.id, 'edit', e.target.checked)} className={`perm-cell-checkbox ${hasEdit ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                  </td>
-                  <td className="td-action text-center">
-                    {!page.hiddenActions?.includes('delete') ? <Checkbox size="medium" checked={hasDelete} onChange={e => handlePermissionChange(page.id, 'delete', e.target.checked)} className={`perm-cell-checkbox ${hasDelete ? 'perm-checked' : 'perm-unchecked'}`} /> : <span className="perm-disabled-dash">—</span>}
-                  </td>
+                  {ACTIONS.map(actionKey => {
+                    const isChecked = Boolean(rowPerms[actionKey]);
+                    return (
+                      <td key={actionKey} className="td-action text-center">
+                        {!page.hiddenActions?.includes(actionKey) ? (
+                          <Checkbox
+                            size="medium"
+                            checked={isChecked}
+                            onChange={e => handlePermissionChange(page.id, actionKey, e.target.checked)}
+                            className={`perm-cell-checkbox ${isChecked ? 'perm-checked' : 'perm-unchecked'}`}
+                          />
+                        ) : (
+                          <span className="perm-disabled-dash">—</span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>;
               })}
             </tbody>

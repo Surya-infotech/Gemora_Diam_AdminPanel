@@ -13,7 +13,7 @@ import { exportToCsv, exportToExcel } from '../../utils/exportUtils';
 const AllOrder = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { canAdd } = usePermissions();
+  const { canAdd, canExport } = usePermissions();
   const [alertMessage, setAlertMessage] = useState(location.state?.message || "");
   const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
   const [searchValue, setSearchValue] = useState("");
@@ -79,10 +79,12 @@ const AllOrder = () => {
                   {"Add New"}
                 </button>
               )}
-              <ExportDropdown
-                onExportCsv={() => handleExport("csv")}
-                onExportExcel={() => handleExport("excel")}
-              />
+              {canExport('allOrder') && (
+                <ExportDropdown
+                  onExportCsv={() => handleExport("csv")}
+                  onExportExcel={() => handleExport("excel")}
+                />
+              )}
             </div>
           </div>
           <GetAllOrder searchValue={searchValue} onOrdersChange={handleOrdersChange} />
