@@ -9,7 +9,7 @@ import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
-import { CLOSURE_TYPE_OPTIONS, isEarringsCategoryName, isRingCategoryName } from '../../utils/itemCategoryHelpers';
+import { CLOSURE_TYPE_OPTIONS, isEarringsCategoryName, isRingCategoryName, normalizeClosureTypes } from '../../utils/itemCategoryHelpers';
 const EditItem = () => {
   const {
     id
@@ -47,7 +47,7 @@ const EditItem = () => {
   const [selectedBandColors, setSelectedBandColors] = useState([]);
   const [ringSizes, setRingSizes] = useState([]);
   const [selectedRingSizes, setSelectedRingSizes] = useState([]);
-  const [selectedClosureType, setSelectedClosureType] = useState("");
+  const [selectedClosureTypes, setSelectedClosureTypes] = useState([]);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -362,7 +362,7 @@ const EditItem = () => {
           } else {
             setSelectedRingSizes([]);
           }
-          setSelectedClosureType(result.closuretype || result.closureType || "");
+          setSelectedClosureTypes(normalizeClosureTypes(result.closuretypes ?? result.closureTypes ?? result.closuretype ?? result.closureType));
           setDescription(result.description || "");
           if (result.image) {
             setImagePreview(result.image);
@@ -480,8 +480,8 @@ const EditItem = () => {
       setShowWarning(true);
       return;
     }
-    if (isEarringsCategory && !selectedClosureType) {
-      setWarningMessage("Please select a Closure Type");
+    if (isEarringsCategory && (!selectedClosureTypes || selectedClosureTypes.length === 0)) {
+      setWarningMessage("Please select at least one Closure Type");
       setShowWarning(true);
       return;
     }
@@ -512,7 +512,7 @@ const EditItem = () => {
       formData.append("stones", JSON.stringify(selectedStones));
       formData.append("styles", JSON.stringify(selectedStyles));
       formData.append("ringsizes", JSON.stringify(isRingCategory ? selectedRingSizes : []));
-      formData.append("closuretype", isEarringsCategory ? selectedClosureType : "");
+      formData.append("closuretypes", JSON.stringify(isEarringsCategory ? selectedClosureTypes : []));
       formData.append("description", description.trim());
       if (imageFile) {
         formData.append("image", imageFile);
@@ -559,7 +559,7 @@ const EditItem = () => {
           "Diamond Color is required": "Please select at least one Diamond Color",
           "Band Color is required": "Please select at least one Metal Color",
           "Ring Size is required": "Please select at least one Ring Size",
-          "Closure Type is required": "Please select a Closure Type",
+          "Closure Type is required": "Please select at least one Closure Type",
           "Image is required": "Image is required",
           "Item Already Exists": "Item Already Exists",
           "Item not found": "Item not found",
@@ -667,7 +667,7 @@ const EditItem = () => {
                     setSelectedRingSizes([]);
                   }
                   if (!isEarringsCategoryName(nextCat?.categoryname)) {
-                    setSelectedClosureType("");
+                    setSelectedClosureTypes([]);
                   }
                 }} placeholder={"Select Category"} />
               </div>
@@ -756,7 +756,7 @@ const EditItem = () => {
                     color: "red"
                   }}>*</span>
                 </label>
-                <Dropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureType} onValueChange={val => setSelectedClosureType(val)} placeholder={"Select closure type"} showSearch={false} />
+                <MultiDropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureTypes} onValueChange={val => setSelectedClosureTypes(val)} placeholder={"Select closure type"} />
               </div>
             </div>}
 

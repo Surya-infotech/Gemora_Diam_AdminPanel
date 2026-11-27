@@ -44,7 +44,7 @@ const AddItem = () => {
   const [selectedBandColors, setSelectedBandColors] = useState([]);
   const [ringSizes, setRingSizes] = useState([]);
   const [selectedRingSizes, setSelectedRingSizes] = useState([]);
-  const [selectedClosureType, setSelectedClosureType] = useState("");
+  const [selectedClosureTypes, setSelectedClosureTypes] = useState([]);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -370,8 +370,8 @@ const AddItem = () => {
       setShowWarning(true);
       return;
     }
-    if (isEarringsCategory && !selectedClosureType) {
-      setWarningMessage("Please select a Closure Type");
+    if (isEarringsCategory && (!selectedClosureTypes || selectedClosureTypes.length === 0)) {
+      setWarningMessage("Please select at least one Closure Type");
       setShowWarning(true);
       return;
     }
@@ -402,8 +402,8 @@ const AddItem = () => {
       if (isRingCategory) {
         formData.append("ringsizes", JSON.stringify(selectedRingSizes));
       }
-      if (isEarringsCategory && selectedClosureType) {
-        formData.append("closuretype", selectedClosureType);
+      if (isEarringsCategory) {
+        formData.append("closuretypes", JSON.stringify(selectedClosureTypes));
       }
       formData.append("description", description.trim());
       if (imageFile) {
@@ -451,7 +451,7 @@ const AddItem = () => {
           "Diamond Color is required": "Please select at least one Diamond Color",
           "Band Color is required": "Please select at least one Metal Color",
           "Ring Size is required": "Please select at least one Ring Size",
-          "Closure Type is required": "Please select a Closure Type",
+          "Closure Type is required": "Please select at least one Closure Type",
           "Image is required": "Image is required",
           "Item Already Exists": "Item Already Exists",
           "Server error": "Server error"
@@ -556,7 +556,7 @@ const AddItem = () => {
                   const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
                   setSelectedRingSizes(isRingCategoryName(nextCat?.categoryname) ? ringSizeOptions : []);
                   if (!isEarringsCategoryName(nextCat?.categoryname)) {
-                    setSelectedClosureType("");
+                    setSelectedClosureTypes([]);
                   }
                 }} placeholder={"Select Category"} />
               </div>
@@ -645,7 +645,7 @@ const AddItem = () => {
                     color: "red"
                   }}>*</span>
                 </label>
-                <Dropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureType} onValueChange={val => setSelectedClosureType(val)} placeholder={"Select closure type"} showSearch={false} />
+                <MultiDropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureTypes} onValueChange={val => setSelectedClosureTypes(val)} placeholder={"Select closure type"} />
               </div>
             </div>}
 
