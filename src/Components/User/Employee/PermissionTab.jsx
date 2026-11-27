@@ -13,6 +13,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StraightenIcon from '@mui/icons-material/Straighten';
+import HeightIcon from '@mui/icons-material/Height';
 import InterestsIcon from '@mui/icons-material/Interests';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
@@ -104,6 +105,13 @@ const PermissionTab = ({
       category: "Attributes",
       categoryKey: 'attributes',
       icon: StraightenIcon,
+      hiddenActions: ['export']
+    }, {
+      id: 'length',
+      name: "Length",
+      category: "Attributes",
+      categoryKey: 'attributes',
+      icon: HeightIcon,
       hiddenActions: ['export']
     }, {
       id: 'shape',

@@ -13,6 +13,7 @@ import { isAdminNavLinkActive } from '../../utils/navActiveMatchers';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import StraightenIcon from '@mui/icons-material/Straighten';
+import HeightIcon from '@mui/icons-material/Height';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
@@ -82,6 +83,11 @@ const AdminNavbar = () => {
     label: "Ring Size",
     to: '/Attributes/RingSize',
     Icon: StraightenIcon
+  }, {
+    id: 'length',
+    label: "Length",
+    to: '/Attributes/Length',
+    Icon: HeightIcon
   }, {
     id: 'shape',
     label: "Shape",

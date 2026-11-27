@@ -13,6 +13,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Attributes/Metal': ['/Attributes/Metal', '/Attributes/AddMetal', '/Attributes/EditMetal'],
     '/Attributes/DiamondSize': ['/Attributes/DiamondSize', '/Attributes/AddDiamondSize', '/Attributes/EditDiamondSize'],
     '/Attributes/RingSize': ['/Attributes/RingSize', '/Attributes/AddRingSize', '/Attributes/EditRingSize'],
+    '/Attributes/Length': ['/Attributes/Length', '/Attributes/AddLength', '/Attributes/EditLength'],
     '/Attributes/Shape': ['/Attributes/Shape', '/Attributes/AddShape', '/Attributes/EditShape'],
     '/Attributes/Clarity': ['/Attributes/Clarity', '/Attributes/AddClarity', '/Attributes/EditClarity'],
     '/Attributes/Color': ['/Attributes/Color', '/Attributes/AddColor', '/Attributes/EditColor'],
