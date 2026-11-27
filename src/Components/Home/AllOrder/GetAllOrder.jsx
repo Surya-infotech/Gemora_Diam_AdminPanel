@@ -12,8 +12,11 @@ import WarningModal from "../../../Pages/Custom/WarningModal";
 import AlertMessage from "../../../Pages/Custom/AlertMessage";
 import EditButton from "../../../Pages/Custom/EditButton";
 import DeleteButton from "../../../Pages/Custom/DeleteButton";
+import ViewButton from "../../../Pages/Custom/ViewButton";
 import DeleteModal from "../../../Pages/Custom/DeleteModal";
+import ViewAllOrderModal from "./ViewAllOrderModal";
 import "../../../Scss/Home/Order/getorder.scss";
+import "../../../Scss/Home/Order/allorder.scss";
 
 const GetAllOrder = ({ searchValue = "" }) => {
   const { logoutUser } = useAuth();
@@ -34,6 +37,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
   const [sortDirection, setSortDirection] = useState("desc");
 
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [viewTarget, setViewTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -181,6 +185,11 @@ const GetAllOrder = ({ searchValue = "" }) => {
         message=""
         isLoading={isDeleting}
       />
+      <ViewAllOrderModal
+        order={viewTarget}
+        onClose={() => setViewTarget(null)}
+        onEdit={handleEdit}
+      />
 
       <div className="tablediv">
         {loading ? <LoadingSpinner /> : (
@@ -255,21 +264,14 @@ const GetAllOrder = ({ searchValue = "" }) => {
                     </td>
 
                     <td>
-                      <div style={{ fontSize: "12px", lineHeight: 1.45 }}>
-                        <div>{order.dispatchDate || "—"}</div>
-                        {order.courier && <div style={{ color: "var(--text-secondary, #64748b)" }}>{order.courier}</div>}
-                        {order.trackingLink ? (
-                          <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary-color)" }}>
-                            {order.tracking || "Track"}
-                          </a>
-                        ) : (
-                          order.tracking && <span>{order.tracking}</span>
-                        )}
-                      </div>
+                      <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)", whiteSpace: "nowrap" }}>
+                        {order.dispatchDate || "—"}
+                      </span>
                     </td>
 
                     <td>
                       <div className="action-cell">
+                        <ViewButton onClick={() => setViewTarget(order)} />
                         <EditButton onClick={() => handleEdit(order)} />
                         <DeleteButton onClick={() => setDeleteTarget(order)} />
                       </div>
