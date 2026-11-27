@@ -79,3 +79,11 @@ export const buildAllOrderPayload = ({ form, selectedFiscalYear }) => ({
   ...form,
   fiscalyearid: selectedFiscalYear && selectedFiscalYear !== 'all' ? Number(selectedFiscalYear) : undefined
 });
+
+export const openDatePicker = e => {
+  try {
+    e.currentTarget.showPicker?.();
+  } catch {
+    // Ignore browsers where showPicker is unsupported or restricted
+  }
+};

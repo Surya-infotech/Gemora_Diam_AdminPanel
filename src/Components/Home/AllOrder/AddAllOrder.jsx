@@ -14,6 +14,7 @@ import {
   METAL_OPTIONS,
   SHOP_OPTIONS,
   buildAllOrderPayload,
+  openDatePicker,
   validateAllOrderForm
 } from '../../../utils/allOrderHelpers';
 import "../../../Scss/Home/Order/addallorder.scss";
@@ -109,7 +110,7 @@ const AddAllOrder = () => {
               </div>
               <div className="form-group">
                 <label htmlFor="orderDate">{"Order date"}</label>
-                <input type="date" id="orderDate" name="orderDate" value={form.orderDate} onChange={e => handleFieldChange('orderDate', e.target.value)} />
+                <input type="date" id="orderDate" name="orderDate" value={form.orderDate} onClick={openDatePicker} onChange={e => handleFieldChange('orderDate', e.target.value)} />
               </div>
             </div>
 
@@ -154,7 +155,7 @@ const AddAllOrder = () => {
             <div className="form-row form-row-three">
               <div className="form-group">
                 <label htmlFor="dispatchDate">{"Dispatch date"}</label>
-                <input type="date" id="dispatchDate" name="dispatchDate" value={form.dispatchDate} onChange={e => handleFieldChange('dispatchDate', e.target.value)} />
+                <input type="date" id="dispatchDate" name="dispatchDate" value={form.dispatchDate} onClick={openDatePicker} onChange={e => handleFieldChange('dispatchDate', e.target.value)} />
               </div>
               <div className="form-group">
                 <label>{"Courier"}</label>

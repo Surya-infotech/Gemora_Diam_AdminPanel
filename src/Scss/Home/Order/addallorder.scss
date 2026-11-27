@@ -54,6 +54,10 @@
                     width: 100%;
                 }
 
+                input[type="date"] {
+                    cursor: pointer;
+                }
+
                 textarea {
                     min-height: 90px;
                     resize: vertical;
