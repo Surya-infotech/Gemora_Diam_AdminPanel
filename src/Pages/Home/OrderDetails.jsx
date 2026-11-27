@@ -245,7 +245,7 @@ const OrderDetails = () => {
       const shippingAddressParts = shippingAddr ? [shippingAddr.title ? `<strong>${escapeHtml(shippingAddr.title)}</strong>` : '', shippingAddr.address, shippingAddr.cityname, shippingAddr.statename, shippingAddr.countryname, shippingAddr.pincode ? `PIN: ${shippingAddr.pincode}` : ''].filter(Boolean).join('<br>') : '';
       const items = order.items || [];
       const itemRows = items.map((item, idx) => {
-        const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`, item.closuretype && `Closure: ${item.closuretype}`, item.diamondcolor && `Color: ${item.diamondcolor}`, item.bandcolor && `Band: ${item.bandcolor}`].filter(Boolean).join(' • ');
+        const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`, item.closuretype && `Closure: ${item.closuretype}`, item.braceletlength && `Bracelet Length: ${item.braceletlength}`, item.pendantlength && `Pendant Length: ${item.pendantlength}`, item.diamondcolor && `Color: ${item.diamondcolor}`, item.bandcolor && `Band: ${item.bandcolor}`].filter(Boolean).join(' • ');
         const unitPriceStr = formatPriceWithCurrency(item.price, order.currencydetails);
         const totalPriceStr = formatPriceWithCurrency(item.totalprice || item.price * (item.qty || 1), order.currencydetails);
         const qty = item.qty || 1;
@@ -657,7 +657,7 @@ const OrderDetails = () => {
                                 </thead>
                                 <tbody>
                                     {(order.items || []).map((item, index) => {
-                  const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`, item.closuretype && `Closure: ${item.closuretype}`].filter(Boolean).join(' • ');
+                  const specs = [item.metalname && `Metal: ${item.metalname}`, item.diamondsize && `Diamond: ${item.diamondsize}`, item.shapename && `Shape: ${item.shapename}`, item.clarityname && `Clarity: ${item.clarityname}`, item.stonename && `Stone: ${item.stonename}`, (item.ringsize || item.size) && `Size: ${item.ringsize || item.size}`, item.closuretype && `Closure: ${item.closuretype}`, item.braceletlength && `Bracelet Length: ${item.braceletlength}`, item.pendantlength && `Pendant Length: ${item.pendantlength}`].filter(Boolean).join(' • ');
                   return <tr key={index}>
                                                 <td>
                                                     <div className="item-media">
