@@ -47,7 +47,7 @@ const ViewAllOrderModal = ({ order, onClose, onEdit }) => {
               <h6 className="view-section-title">{"Production & customer communication"}</h6>
               <div className="allorder-details-grid">
                 <DetailItem label={"Current status"} value={order.status || "Order Received"} />
-                <DetailItem label={"Customer conversation / message history"} value={order.conversation} fullSpan multiline />
+                <DetailItem label={"Customer conversation"} value={order.conversation} fullSpan multiline />
               </div>
 
               <h6 className="view-section-title">{"Dispatch details"}</h6>

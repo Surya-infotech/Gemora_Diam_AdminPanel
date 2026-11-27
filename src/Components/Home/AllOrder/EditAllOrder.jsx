@@ -200,7 +200,7 @@ const EditAllOrder = () => {
 
             <div className="form-row">
               <div className="form-group full-width">
-                <label htmlFor="conversation">{"Customer conversation / message history"}</label>
+                <label htmlFor="conversation">{"Customer conversation"}</label>
                 <textarea id="conversation" name="conversation" placeholder={"Add customer messages, promises, approvals and follow-up notes. Add newest notes at the top or bottom with dates."} value={form.conversation} onChange={e => handleFieldChange('conversation', e.target.value)} />
               </div>
             </div>
