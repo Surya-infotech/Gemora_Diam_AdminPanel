@@ -267,7 +267,7 @@ const AdminNavbar = () => {
                 {"Order"}
               </NavLink>
             </li>}
-            {!isEmployee && <li>
+            {canView('allOrder') && <li>
               <NavLink to="/Home/AllOrder" className={navLinkClass('/Home/AllOrder')}>
                 <NavTooltip title={"All Order"}>
                   <ReceiptLongIcon style={{

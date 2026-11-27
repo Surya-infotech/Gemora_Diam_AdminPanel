@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../Middleware/Auth";
 import { useFiscalYear } from "../../../Context/FiscalYearContext";
+import { usePermissions } from "../../../Hooks/usePermissions";
 import CheckToken from "../../../utils/CheckToken";
 import HandleUnauthorized from "../../../utils/HandleUnauthorized";
 import LoadingSpinner from "../../../Pages/Custom/LoadingSpinner";
@@ -22,6 +23,11 @@ const GetAllOrder = ({ searchValue = "" }) => {
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
   const { selectedFiscalYear } = useFiscalYear();
+  const { canView, canEdit, canDelete } = usePermissions();
+  const canViewOrder = canView("allOrder");
+  const canEditOrder = canEdit("allOrder");
+  const canDeleteOrder = canDelete("allOrder");
+  const showActionColumn = canViewOrder || canEditOrder || canDeleteOrder;
   const adminPanelBackendPath = import.meta.env.VITE_BACKEND_URL;
   const tokenname = import.meta.env.VITE_AdminTOKEN_NAME;
   const token = localStorage.getItem(tokenname);
@@ -188,7 +194,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
       <ViewAllOrderModal
         order={viewTarget}
         onClose={() => setViewTarget(null)}
-        onEdit={handleEdit}
+        onEdit={canEditOrder ? handleEdit : null}
       />
 
       <div className="tablediv">
@@ -220,9 +226,11 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 <th onClick={() => handleSort("dispatchDate")} style={{ cursor: "pointer" }}>
                   {"Dispatch"} {renderSortIcon("dispatchDate")}
                 </th>
-                <th style={{ textAlign: "center", width: "120px" }}>
-                  {"Action"}
-                </th>
+                {showActionColumn && (
+                  <th style={{ textAlign: "center", width: "120px" }}>
+                    {"Action"}
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -232,11 +240,14 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 return (
                   <tr key={orderKey}>
                     <td>
-                      <Tooltip title={"Edit Order"} arrow>
+                      <Tooltip title={canEditOrder ? "Edit Order" : canViewOrder ? "View Details" : ""} arrow>
                         <span
                           className="order-number-badge"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleEdit(order)}
+                          style={{ cursor: canEditOrder || canViewOrder ? "pointer" : "default" }}
+                          onClick={() => {
+                            if (canEditOrder) handleEdit(order);
+                            else if (canViewOrder) setViewTarget(order);
+                          }}
                         >
                           {order.orderId || `#${order.ordernumber ?? order.allorderid}`}
                         </span>
@@ -269,18 +280,20 @@ const GetAllOrder = ({ searchValue = "" }) => {
                       </span>
                     </td>
 
-                    <td>
-                      <div className="action-cell">
-                        <ViewButton onClick={() => setViewTarget(order)} />
-                        <EditButton onClick={() => handleEdit(order)} />
-                        <DeleteButton onClick={() => setDeleteTarget(order)} />
-                      </div>
-                    </td>
+                    {showActionColumn && (
+                      <td>
+                        <div className="action-cell">
+                          {canViewOrder && <ViewButton onClick={() => setViewTarget(order)} />}
+                          {canEditOrder && <EditButton onClick={() => handleEdit(order)} />}
+                          {canDeleteOrder && <DeleteButton onClick={() => setDeleteTarget(order)} />}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 );
               }) : (
                 <tr>
-                  <td colSpan="9" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+                  <td colSpan={showActionColumn ? 9 : 8} style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
                     {"No orders found"}
                   </td>
                 </tr>

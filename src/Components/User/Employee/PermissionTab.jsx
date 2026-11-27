@@ -8,6 +8,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import PreviewIcon from '@mui/icons-material/Preview';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
@@ -50,6 +51,15 @@ const PermissionTab = ({
   const [warningMessage, setWarningMessage] = useState('');
   const [showWarning, setShowWarning] = useState(false);
   const permissionPages = useMemo(() => [
+    // 0. Main Module
+    {
+      id: 'allOrder',
+      name: "All Order",
+      category: "Main",
+      categoryKey: 'main',
+      icon: ReceiptLongIcon,
+      hiddenActions: []
+    },
     // 1. Products Module
     {
       id: 'item',
@@ -141,6 +151,9 @@ const PermissionTab = ({
   const categories = useMemo(() => [{
     id: 'all',
     label: "All Pages"
+  }, {
+    id: 'main',
+    label: "Main"
   }, {
     id: 'products',
     label: "Products"

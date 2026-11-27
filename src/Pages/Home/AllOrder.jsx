@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Home/Order/allorder.scss";
+import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import SearchInput from '../Custom/SearchInput';
@@ -9,6 +10,7 @@ import GetAllOrder from '../../Components/Home/AllOrder/GetAllOrder';
 const AllOrder = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { canAdd } = usePermissions();
   const [alertMessage, setAlertMessage] = useState(location.state?.message || "");
   const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
   const [searchValue, setSearchValue] = useState("");
@@ -41,9 +43,11 @@ const AllOrder = () => {
               value={searchValue}
               onChange={e => setSearchValue(e.target.value)}
             />
-            <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
-              {"Add New"}
-            </button>
+            {canAdd('allOrder') && (
+              <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
+                {"Add New"}
+              </button>
+            )}
           </div>
           <GetAllOrder searchValue={searchValue} />
         </div>
