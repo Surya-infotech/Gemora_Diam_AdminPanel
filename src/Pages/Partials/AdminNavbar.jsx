@@ -37,6 +37,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import InfoIcon from '@mui/icons-material/Info';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import CloseIcon from '@mui/icons-material/Close';
@@ -264,6 +265,18 @@ const AdminNavbar = () => {
                   }} />
                 </NavTooltip>
                 {"Order"}
+              </NavLink>
+            </li>}
+            {!isEmployee && <li>
+              <NavLink to="/Home/AllOrder" className={navLinkClass('/Home/AllOrder')}>
+                <NavTooltip title={"All Order"}>
+                  <ReceiptLongIcon style={{
+                    color: 'var(--primary-color)',
+                    marginRight: '10px',
+                    marginLeft: 0
+                  }} />
+                </NavTooltip>
+                {"All Order"}
               </NavLink>
             </li>}
           </div>

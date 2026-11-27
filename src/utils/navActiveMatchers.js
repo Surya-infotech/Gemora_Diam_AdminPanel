@@ -6,6 +6,7 @@ const NAV_ACTIVE_PREFIXES = {
     '/Home/Dashboard': ['/Home/Dashboard', '/Home/EmployeeDashboard'],
     '/Home/EmployeeDashboard': ['/Home/EmployeeDashboard', '/Home/Dashboard'],
     '/Home/Order': ['/Home/Order', '/Home/OrderDetails'],
+    '/Home/AllOrder': ['/Home/AllOrder', '/Home/AddAllOrder', '/Home/EditAllOrder'],
     '/Products/Item': ['/Products/Item', '/Products/AddItem', '/Products/EditItem', '/Products/ItemOverview'],
     '/System/Currency': ['/System/Currency', '/System/AddCurrency', '/System/EditCurrency'],
     '/System/Taxes': ['/System/Taxes', '/System/AddTax', '/System/EditTax'],

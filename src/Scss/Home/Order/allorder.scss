@@ -1,0 +1,33 @@
+@use "../../Customize/Mixin/page_mixin.scss" as mixin;
+
+.AllOrder-container {
+    @include mixin.main_page;
+
+    .allorder-container {
+        @include mixin.page;
+
+        .allorder-headingname {
+            @include mixin.heading_name_text;
+
+            &::before {
+                @include mixin.heading_name;
+            }
+        }
+
+        .allorder-form-container {
+            @include mixin.page_size;
+
+            .allorder-header {
+                @include mixin.page_header;
+
+                .add-new-btn {
+                    @include mixin.add_new_btn;
+                }
+            }
+        }
+    }
+}
+
+.alert {
+    @include mixin.alert;
+}

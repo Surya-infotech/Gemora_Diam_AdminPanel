@@ -3,6 +3,9 @@ import Dashboard from "../Pages/Home/Dashboard";
 import EmployeeDashboard from "../Pages/Home/EmployeeDashboard";
 import Order from "../Pages/Home/Order";
 import OrderDetails from "../Pages/Home/OrderDetails";
+import AllOrder from "../Pages/Home/AllOrder";
+import AddAllOrder from "../Components/Home/AllOrder/AddAllOrder";
+import EditAllOrder from "../Components/Home/AllOrder/EditAllOrder";
 import Profile from "../Pages/General/Profile";
 import LoginActivity from "../Pages/General/LoginActivity";
 import ChangePassword from "../Pages/General/ChangePassword";
@@ -21,6 +24,9 @@ const MainRouter = () => (
         <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
         <Route path="/Order" element={<AdminOnlyGuard><Order /></AdminOnlyGuard>} />
         <Route path="/OrderDetails/:id" element={<AdminOnlyGuard><OrderDetails /></AdminOnlyGuard>} />
+        <Route path="/AllOrder" element={<AdminOnlyGuard><AllOrder /></AdminOnlyGuard>} />
+        <Route path="/AddAllOrder" element={<AdminOnlyGuard><AddAllOrder /></AdminOnlyGuard>} />
+        <Route path="/EditAllOrder/:id" element={<AdminOnlyGuard><EditAllOrder /></AdminOnlyGuard>} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/LoginActivity" element={<LoginActivity />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
