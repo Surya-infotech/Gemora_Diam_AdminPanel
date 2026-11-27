@@ -5,6 +5,18 @@ export const isRingCategoryName = name => /\brings?\b/i.test(String(name || "").
 
 export const isEarringsCategoryName = name => /\bearr?ings?\b/i.test(String(name || "").trim());
 
+export const isPendantCategoryName = name => /\bpend[ae]nts?\b/i.test(String(name || "").trim());
+
+export const isBraceletCategoryName = name => /\bb(?:ra|ar)celets?\b/i.test(String(name || "").trim());
+
+export const mapLengthOptions = items => (items || []).map(l => ({
+  lengthid: l.lengthid,
+  lengthname: l.lengthname,
+  lengthtype: l.lengthtype,
+  label: l.lengthname,
+  value: l.lengthid
+}));
+
 export const CLOSURE_TYPE_OPTIONS = [{
   label: "Screw Back",
   value: "Screw Back"

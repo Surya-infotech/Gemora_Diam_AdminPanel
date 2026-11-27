@@ -6,7 +6,7 @@ import StyleIcon from '@mui/icons-material/Style';
 import TollIcon from '@mui/icons-material/Toll';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import TuneIcon from '@mui/icons-material/Tune';
-import { isEarringsCategoryName, isRingCategoryName, normalizeClosureTypes } from '../../utils/itemCategoryHelpers';
+import { isBraceletCategoryName, isEarringsCategoryName, isPendantCategoryName, isRingCategoryName, normalizeClosureTypes } from '../../utils/itemCategoryHelpers';
 const ItemAttributesTab = ({
   itemData
 }) => {
@@ -17,6 +17,8 @@ const ItemAttributesTab = ({
   }
   const isRingCategory = isRingCategoryName(itemData.categoryname);
   const isEarringsCategory = isEarringsCategoryName(itemData.categoryname);
+  const isPendantCategory = isPendantCategoryName(itemData.categoryname);
+  const isBraceletCategory = isBraceletCategoryName(itemData.categoryname);
   const closureTypes = normalizeClosureTypes(itemData.closuretypes ?? itemData.closureTypes ?? itemData.closuretype ?? itemData.closureType).map(c => c.label);
   const attributeSections = [{
     key: 'shapes',
@@ -58,6 +60,11 @@ const ItemAttributesTab = ({
     label: "Closure Type",
     icon: <TuneIcon className="section-icon" />,
     items: closureTypes
+  }] : []), ...(isPendantCategory || isBraceletCategory ? [{
+    key: 'lengths',
+    label: isPendantCategory ? "Pendant Length" : "Bracelet Length",
+    icon: <StraightenIcon className="section-icon" />,
+    items: (itemData.lengths || []).map(l => l.lengthname).filter(Boolean)
   }] : [])];
   return <div className="item-attributes-tab-content">
     <div className="attributes-header-banner">

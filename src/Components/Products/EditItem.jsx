@@ -9,7 +9,7 @@ import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
-import { CLOSURE_TYPE_OPTIONS, isEarringsCategoryName, isRingCategoryName, normalizeClosureTypes } from '../../utils/itemCategoryHelpers';
+import { CLOSURE_TYPE_OPTIONS, isBraceletCategoryName, isEarringsCategoryName, isPendantCategoryName, isRingCategoryName, mapLengthOptions, normalizeClosureTypes } from '../../utils/itemCategoryHelpers';
 const EditItem = () => {
   const {
     id
@@ -48,6 +48,10 @@ const EditItem = () => {
   const [ringSizes, setRingSizes] = useState([]);
   const [selectedRingSizes, setSelectedRingSizes] = useState([]);
   const [selectedClosureTypes, setSelectedClosureTypes] = useState([]);
+  const [pendantLengths, setPendantLengths] = useState([]);
+  const [selectedPendantLengths, setSelectedPendantLengths] = useState([]);
+  const [braceletLengths, setBraceletLengths] = useState([]);
+  const [selectedBraceletLengths, setSelectedBraceletLengths] = useState([]);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -266,9 +270,35 @@ const EditItem = () => {
     label: r.ringsize,
     value: r.ringsizeid
   }));
+  // Fetch active lengths for Pendant & Bracelet dropdowns
+  useEffect(() => {
+    const fetchLengths = async () => {
+      try {
+        const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveLengths`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        const data = await response.json();
+        const list = Array.isArray(data?.lengths) ? data.lengths : Array.isArray(data) ? data : [];
+        if (response.ok) {
+          setPendantLengths(list.filter(l => String(l.lengthtype || "").trim().toLowerCase() === "pendant"));
+          setBraceletLengths(list.filter(l => String(l.lengthtype || "").trim().toLowerCase() === "bracelet"));
+        }
+      } catch (err) {
+        console.error("Error loading lengths:", err);
+      }
+    };
+    fetchLengths();
+  }, [adminPanelBackendPath]);
+  const pendantLengthOptions = mapLengthOptions(pendantLengths);
+  const braceletLengthOptions = mapLengthOptions(braceletLengths);
   const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
   const isRingCategory = isRingCategoryName(selectedCategoryObj?.categoryname);
   const isEarringsCategory = isEarringsCategoryName(selectedCategoryObj?.categoryname);
+  const isPendantCategory = isPendantCategoryName(selectedCategoryObj?.categoryname);
+  const isBraceletCategory = isBraceletCategoryName(selectedCategoryObj?.categoryname);
 
   // Fetch item details
   useEffect(() => {
@@ -363,6 +393,17 @@ const EditItem = () => {
             setSelectedRingSizes([]);
           }
           setSelectedClosureTypes(normalizeClosureTypes(result.closuretypes ?? result.closureTypes ?? result.closuretype ?? result.closureType));
+          const mappedLengths = mapLengthOptions(Array.isArray(result.lengths) ? result.lengths : []);
+          if (isPendantCategoryName(result.categoryname)) {
+            setSelectedPendantLengths(mappedLengths);
+            setSelectedBraceletLengths([]);
+          } else if (isBraceletCategoryName(result.categoryname)) {
+            setSelectedBraceletLengths(mappedLengths);
+            setSelectedPendantLengths([]);
+          } else {
+            setSelectedPendantLengths([]);
+            setSelectedBraceletLengths([]);
+          }
           setDescription(result.description || "");
           if (result.image) {
             setImagePreview(result.image);
@@ -480,6 +521,16 @@ const EditItem = () => {
       setShowWarning(true);
       return;
     }
+    if (isPendantCategory && pendantLengthOptions.length > 0 && (!selectedPendantLengths || selectedPendantLengths.length === 0)) {
+      setWarningMessage("Please select at least one Pendant Length");
+      setShowWarning(true);
+      return;
+    }
+    if (isBraceletCategory && braceletLengthOptions.length > 0 && (!selectedBraceletLengths || selectedBraceletLengths.length === 0)) {
+      setWarningMessage("Please select at least one Bracelet Length");
+      setShowWarning(true);
+      return;
+    }
     if (!imageFile && (!imagePreview || imagePreview === Placeholder)) {
       setWarningMessage("Image is required");
       setShowWarning(true);
@@ -508,6 +559,7 @@ const EditItem = () => {
       formData.append("styles", JSON.stringify(selectedStyles));
       formData.append("ringsizes", JSON.stringify(isRingCategory ? selectedRingSizes : []));
       formData.append("closuretypes", JSON.stringify(isEarringsCategory ? selectedClosureTypes : []));
+      formData.append("lengths", JSON.stringify(isPendantCategory ? selectedPendantLengths : isBraceletCategory ? selectedBraceletLengths : []));
       formData.append("description", description.trim());
       if (imageFile) {
         formData.append("image", imageFile);
@@ -666,6 +718,16 @@ const EditItem = () => {
                   } else if (selectedClosureTypes.length === 0) {
                     setSelectedClosureTypes(CLOSURE_TYPE_OPTIONS);
                   }
+                  if (!isPendantCategoryName(nextCat?.categoryname)) {
+                    setSelectedPendantLengths([]);
+                  } else if (selectedPendantLengths.length === 0) {
+                    setSelectedPendantLengths(pendantLengthOptions);
+                  }
+                  if (!isBraceletCategoryName(nextCat?.categoryname)) {
+                    setSelectedBraceletLengths([]);
+                  } else if (selectedBraceletLengths.length === 0) {
+                    setSelectedBraceletLengths(braceletLengthOptions);
+                  }
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">
@@ -752,6 +814,28 @@ const EditItem = () => {
                   {"Closure Type"}
                 </label>
                 <MultiDropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureTypes} onValueChange={val => setSelectedClosureTypes(val)} placeholder={"Select closure type"} />
+              </div>
+            </div>}
+
+            {isPendantCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Pendant Length"} {pendantLengthOptions.length > 0 && <span style={{
+                    color: "red"
+                  }}>*</span>}
+                </label>
+                <MultiDropdown options={pendantLengthOptions} labelKey="label" valueKey="value" selectedValue={selectedPendantLengths} onValueChange={val => setSelectedPendantLengths(val)} placeholder={"Select Pendant Length"} />
+              </div>
+            </div>}
+
+            {isBraceletCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Bracelet Length"} {braceletLengthOptions.length > 0 && <span style={{
+                    color: "red"
+                  }}>*</span>}
+                </label>
+                <MultiDropdown options={braceletLengthOptions} labelKey="label" valueKey="value" selectedValue={selectedBraceletLengths} onValueChange={val => setSelectedBraceletLengths(val)} placeholder={"Select Bracelet Length"} />
               </div>
             </div>}
 

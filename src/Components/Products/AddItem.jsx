@@ -9,7 +9,7 @@ import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
-import { CLOSURE_TYPE_OPTIONS, isEarringsCategoryName, isRingCategoryName } from '../../utils/itemCategoryHelpers';
+import { CLOSURE_TYPE_OPTIONS, isBraceletCategoryName, isEarringsCategoryName, isPendantCategoryName, isRingCategoryName, mapLengthOptions } from '../../utils/itemCategoryHelpers';
 const AddItem = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -45,6 +45,10 @@ const AddItem = () => {
   const [ringSizes, setRingSizes] = useState([]);
   const [selectedRingSizes, setSelectedRingSizes] = useState([]);
   const [selectedClosureTypes, setSelectedClosureTypes] = useState([]);
+  const [pendantLengths, setPendantLengths] = useState([]);
+  const [selectedPendantLengths, setSelectedPendantLengths] = useState([]);
+  const [braceletLengths, setBraceletLengths] = useState([]);
+  const [selectedBraceletLengths, setSelectedBraceletLengths] = useState([]);
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -247,10 +251,16 @@ const AddItem = () => {
   const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
   const isRingCategory = isRingCategoryName(selectedCategoryObj?.categoryname);
   const isEarringsCategory = isEarringsCategoryName(selectedCategoryObj?.categoryname);
+  const isPendantCategory = isPendantCategoryName(selectedCategoryObj?.categoryname);
+  const isBraceletCategory = isBraceletCategoryName(selectedCategoryObj?.categoryname);
   const isRingCategoryRef = useRef(isRingCategory);
+  const isPendantCategoryRef = useRef(isPendantCategory);
+  const isBraceletCategoryRef = useRef(isBraceletCategory);
   useEffect(() => {
     isRingCategoryRef.current = isRingCategory;
-  }, [isRingCategory]);
+    isPendantCategoryRef.current = isPendantCategory;
+    isBraceletCategoryRef.current = isBraceletCategory;
+  }, [isRingCategory, isPendantCategory, isBraceletCategory]);
 
   // Fetch active ring sizes for dropdown
   useEffect(() => {
@@ -276,6 +286,39 @@ const AddItem = () => {
     fetchRingSizes();
   }, [adminPanelBackendPath]);
   const ringSizeOptions = mapRingSizeOptions(ringSizes);
+
+  // Fetch active lengths for Pendant & Bracelet dropdowns
+  useEffect(() => {
+    const fetchLengths = async () => {
+      try {
+        const response = await fetch(`${adminPanelBackendPath}/Attributes/GetActiveLengths`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+        const data = await response.json();
+        const list = Array.isArray(data?.lengths) ? data.lengths : Array.isArray(data) ? data : [];
+        if (response.ok) {
+          const pendant = list.filter(l => String(l.lengthtype || "").trim().toLowerCase() === "pendant");
+          const bracelet = list.filter(l => String(l.lengthtype || "").trim().toLowerCase() === "bracelet");
+          setPendantLengths(pendant);
+          setBraceletLengths(bracelet);
+          if (isPendantCategoryRef.current) {
+            setSelectedPendantLengths(mapLengthOptions(pendant));
+          }
+          if (isBraceletCategoryRef.current) {
+            setSelectedBraceletLengths(mapLengthOptions(bracelet));
+          }
+        }
+      } catch (err) {
+        console.error("Error loading lengths:", err);
+      }
+    };
+    fetchLengths();
+  }, [adminPanelBackendPath]);
+  const pendantLengthOptions = mapLengthOptions(pendantLengths);
+  const braceletLengthOptions = mapLengthOptions(braceletLengths);
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -370,6 +413,16 @@ const AddItem = () => {
       setShowWarning(true);
       return;
     }
+    if (isPendantCategory && pendantLengthOptions.length > 0 && (!selectedPendantLengths || selectedPendantLengths.length === 0)) {
+      setWarningMessage("Please select at least one Pendant Length");
+      setShowWarning(true);
+      return;
+    }
+    if (isBraceletCategory && braceletLengthOptions.length > 0 && (!selectedBraceletLengths || selectedBraceletLengths.length === 0)) {
+      setWarningMessage("Please select at least one Bracelet Length");
+      setShowWarning(true);
+      return;
+    }
     if (!imageFile) {
       setWarningMessage("Image is required");
       setShowWarning(true);
@@ -399,6 +452,11 @@ const AddItem = () => {
       }
       if (isEarringsCategory) {
         formData.append("closuretypes", JSON.stringify(selectedClosureTypes));
+      }
+      if (isPendantCategory) {
+        formData.append("lengths", JSON.stringify(selectedPendantLengths));
+      } else if (isBraceletCategory) {
+        formData.append("lengths", JSON.stringify(selectedBraceletLengths));
       }
       formData.append("description", description.trim());
       if (imageFile) {
@@ -551,6 +609,8 @@ const AddItem = () => {
                   const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
                   setSelectedRingSizes(isRingCategoryName(nextCat?.categoryname) ? ringSizeOptions : []);
                   setSelectedClosureTypes(isEarringsCategoryName(nextCat?.categoryname) ? CLOSURE_TYPE_OPTIONS : []);
+                  setSelectedPendantLengths(isPendantCategoryName(nextCat?.categoryname) ? pendantLengthOptions : []);
+                  setSelectedBraceletLengths(isBraceletCategoryName(nextCat?.categoryname) ? braceletLengthOptions : []);
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">
@@ -637,6 +697,28 @@ const AddItem = () => {
                   {"Closure Type"}
                 </label>
                 <MultiDropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureTypes} onValueChange={val => setSelectedClosureTypes(val)} placeholder={"Select closure type"} />
+              </div>
+            </div>}
+
+            {isPendantCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Pendant Length"} {pendantLengthOptions.length > 0 && <span style={{
+                    color: "red"
+                  }}>*</span>}
+                </label>
+                <MultiDropdown options={pendantLengthOptions} labelKey="label" valueKey="value" selectedValue={selectedPendantLengths} onValueChange={val => setSelectedPendantLengths(val)} placeholder={"Select Pendant Length"} />
+              </div>
+            </div>}
+
+            {isBraceletCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Bracelet Length"} {braceletLengthOptions.length > 0 && <span style={{
+                    color: "red"
+                  }}>*</span>}
+                </label>
+                <MultiDropdown options={braceletLengthOptions} labelKey="label" valueKey="value" selectedValue={selectedBraceletLengths} onValueChange={val => setSelectedBraceletLengths(val)} placeholder={"Select Bracelet Length"} />
               </div>
             </div>}
 
