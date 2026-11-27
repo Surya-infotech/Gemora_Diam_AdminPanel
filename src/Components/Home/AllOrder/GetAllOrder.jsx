@@ -19,7 +19,7 @@ import ViewAllOrderModal from "./ViewAllOrderModal";
 import "../../../Scss/Home/Order/getorder.scss";
 import "../../../Scss/Home/Order/allorder.scss";
 
-const GetAllOrder = ({ searchValue = "", onOrdersChange }) => {
+const GetAllOrder = ({ searchValue = "", statusFilter = "", onOrdersChange }) => {
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
   const { selectedFiscalYear } = useFiscalYear();
@@ -140,9 +140,15 @@ const GetAllOrder = ({ searchValue = "", onOrdersChange }) => {
 
   const filteredAndSortedOrders = useMemo(() => {
     const search = (searchValue || "").toLowerCase().trim();
+    const statusTarget = (statusFilter || "").toLowerCase().trim();
     let filtered = orders;
+    if (statusTarget) {
+      filtered = filtered.filter(order => (
+        String(order.status || "Order Received").toLowerCase().trim() === statusTarget
+      ));
+    }
     if (search) {
-      filtered = orders.filter(order => (
+      filtered = filtered.filter(order => (
         [
           order.orderId,
           order.ordernumber,
@@ -172,7 +178,7 @@ const GetAllOrder = ({ searchValue = "", onOrdersChange }) => {
       if (valA > valB) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [orders, searchValue, sortColumn, sortDirection]);
+  }, [orders, searchValue, statusFilter, sortColumn, sortDirection]);
 
   const totalRecords = filteredAndSortedOrders.length;
 

@@ -20,6 +20,23 @@
             .allorder-header {
                 @include mixin.page_header;
 
+                .allorder-status-filter {
+                    min-width: 210px;
+
+                    .dropdownbtn {
+                        margin-bottom: 0 !important;
+                        height: 42px;
+                    }
+
+                    .dropdownul {
+                        margin-top: 4px !important;
+                    }
+
+                    @media (max-width: 768px) {
+                        width: 100%;
+                    }
+                }
+
                 .allorder-header-actions {
                     display: flex;
                     align-items: center;

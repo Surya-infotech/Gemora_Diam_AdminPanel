@@ -5,9 +5,10 @@ import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import SearchInput from '../Custom/SearchInput';
+import Dropdown from '../../Components/Dropdown/Dropdown';
 import ExportDropdown from '../../Components/Custom/ExportDropdown';
 import GetAllOrder from '../../Components/Home/AllOrder/GetAllOrder';
-import { ALL_ORDER_EXPORT_COLUMNS } from '../../utils/allOrderHelpers';
+import { ALL_ORDER_EXPORT_COLUMNS, ALL_ORDER_STATUS_FILTER_OPTIONS } from '../../utils/allOrderHelpers';
 import { exportToCsv, exportToExcel } from '../../utils/exportUtils';
 
 const AllOrder = () => {
@@ -17,6 +18,7 @@ const AllOrder = () => {
   const [alertMessage, setAlertMessage] = useState(location.state?.message || "");
   const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
   const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [exportOrders, setExportOrders] = useState([]);
 
   useEffect(() => {
@@ -68,11 +70,24 @@ const AllOrder = () => {
           {alertMessage && <AlertMessage message={alertMessage} onClose={() => setAlertMessage("")} />}
           {warningMessage && <WarningModal message={warningMessage} onClose={() => setWarningMessage("")} />}
           <div className="allorder-header">
-            <SearchInput
-              placeholder={"Search..."}
-              value={searchValue}
-              onChange={e => setSearchValue(e.target.value)}
-            />
+            <div className="search-filter-wrapper">
+              <SearchInput
+                placeholder={"Search..."}
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+              />
+              <div className="allorder-status-filter">
+                <Dropdown
+                  options={ALL_ORDER_STATUS_FILTER_OPTIONS}
+                  labelKey="label"
+                  valueKey="value"
+                  selectedValue={statusFilter}
+                  onValueChange={val => setStatusFilter(val)}
+                  placeholder={"All Delivery Status"}
+                  showSearch={false}
+                />
+              </div>
+            </div>
             <div className="allorder-header-actions">
               {canAdd('allOrder') && (
                 <button type="button" className="add-new-btn" onClick={handleAddNewClick}>
@@ -87,7 +102,7 @@ const AllOrder = () => {
               )}
             </div>
           </div>
-          <GetAllOrder searchValue={searchValue} onOrdersChange={handleOrdersChange} />
+          <GetAllOrder searchValue={searchValue} statusFilter={statusFilter} onOrdersChange={handleOrdersChange} />
         </div>
       </div>
     </div>

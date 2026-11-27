@@ -40,6 +40,11 @@ export const ALL_ORDER_STATUS_OPTIONS = [
   { label: 'On Hold', value: 'On Hold' }
 ];
 
+export const ALL_ORDER_STATUS_FILTER_OPTIONS = [
+  { label: 'All Delivery Status', value: '' },
+  ...ALL_ORDER_STATUS_OPTIONS
+];
+
 export const COURIER_OPTIONS = [
   { label: 'Select', value: '' },
   { label: 'FedEx', value: 'FedEx' },
