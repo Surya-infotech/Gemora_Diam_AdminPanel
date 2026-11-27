@@ -370,11 +370,6 @@ const AddItem = () => {
       setShowWarning(true);
       return;
     }
-    if (isEarringsCategory && (!selectedClosureTypes || selectedClosureTypes.length === 0)) {
-      setWarningMessage("Please select at least one Closure Type");
-      setShowWarning(true);
-      return;
-    }
     if (!imageFile) {
       setWarningMessage("Image is required");
       setShowWarning(true);
@@ -639,9 +634,7 @@ const AddItem = () => {
             {isEarringsCategory && <div className="form-row">
               <div className="form-group">
                 <label>
-                  {"Closure Type"} <span style={{
-                    color: "red"
-                  }}>*</span>
+                  {"Closure Type"}
                 </label>
                 <MultiDropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureTypes} onValueChange={val => setSelectedClosureTypes(val)} placeholder={"Select closure type"} />
               </div>
