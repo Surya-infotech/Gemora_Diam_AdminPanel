@@ -9,6 +9,7 @@ import MultiDropdown from '../Dropdown/MultiDropdown';
 import "../../Scss/Products/additem.scss";
 import CheckToken from '../../utils/CheckToken';
 import HandleUnauthorized from '../../utils/HandleUnauthorized';
+import { CLOSURE_TYPE_OPTIONS, isEarringsCategoryName, isRingCategoryName } from '../../utils/itemCategoryHelpers';
 const AddItem = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -43,6 +44,7 @@ const AddItem = () => {
   const [selectedBandColors, setSelectedBandColors] = useState([]);
   const [ringSizes, setRingSizes] = useState([]);
   const [selectedRingSizes, setSelectedRingSizes] = useState([]);
+  const [selectedClosureType, setSelectedClosureType] = useState("");
   const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(Placeholder);
@@ -236,7 +238,6 @@ const AddItem = () => {
   const diamondColorOptions = mapColorOptions(diamondColors);
   const bandColorOptions = mapColorOptions(bandColors);
 
-  const isRingCategoryName = name => /\brings?\b/i.test(String(name || "").trim());
   const mapRingSizeOptions = sizes => sizes.map(r => ({
     ringsizeid: r.ringsizeid,
     ringsize: r.ringsize,
@@ -245,6 +246,7 @@ const AddItem = () => {
   }));
   const selectedCategoryObj = categories.find(c => Number(c.categoryid) === Number(selectedCategory));
   const isRingCategory = isRingCategoryName(selectedCategoryObj?.categoryname);
+  const isEarringsCategory = isEarringsCategoryName(selectedCategoryObj?.categoryname);
   const isRingCategoryRef = useRef(isRingCategory);
   useEffect(() => {
     isRingCategoryRef.current = isRingCategory;
@@ -368,6 +370,11 @@ const AddItem = () => {
       setShowWarning(true);
       return;
     }
+    if (isEarringsCategory && !selectedClosureType) {
+      setWarningMessage("Please select a Closure Type");
+      setShowWarning(true);
+      return;
+    }
     if (!imageFile) {
       setWarningMessage("Image is required");
       setShowWarning(true);
@@ -394,6 +401,9 @@ const AddItem = () => {
       formData.append("styles", JSON.stringify(selectedStyles));
       if (isRingCategory) {
         formData.append("ringsizes", JSON.stringify(selectedRingSizes));
+      }
+      if (isEarringsCategory && selectedClosureType) {
+        formData.append("closuretype", selectedClosureType);
       }
       formData.append("description", description.trim());
       if (imageFile) {
@@ -441,6 +451,7 @@ const AddItem = () => {
           "Diamond Color is required": "Please select at least one Diamond Color",
           "Band Color is required": "Please select at least one Metal Color",
           "Ring Size is required": "Please select at least one Ring Size",
+          "Closure Type is required": "Please select a Closure Type",
           "Image is required": "Image is required",
           "Item Already Exists": "Item Already Exists",
           "Server error": "Server error"
@@ -544,6 +555,9 @@ const AddItem = () => {
                   setSelectedSubCategory(null);
                   const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
                   setSelectedRingSizes(isRingCategoryName(nextCat?.categoryname) ? ringSizeOptions : []);
+                  if (!isEarringsCategoryName(nextCat?.categoryname)) {
+                    setSelectedClosureType("");
+                  }
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">
@@ -621,6 +635,17 @@ const AddItem = () => {
                   }}>*</span>
                 </label>
                 <MultiDropdown options={ringSizeOptions} labelKey="label" valueKey="value" selectedValue={selectedRingSizes} onValueChange={val => setSelectedRingSizes(val)} placeholder={"Select Ring Size"} />
+              </div>
+            </div>}
+
+            {isEarringsCategory && <div className="form-row">
+              <div className="form-group">
+                <label>
+                  {"Closure Type"} <span style={{
+                    color: "red"
+                  }}>*</span>
+                </label>
+                <Dropdown options={CLOSURE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={selectedClosureType} onValueChange={val => setSelectedClosureType(val)} placeholder={"Select closure type"} showSearch={false} />
               </div>
             </div>}
 
