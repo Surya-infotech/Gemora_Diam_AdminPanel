@@ -9,18 +9,11 @@ import CheckToken from '../../../utils/CheckToken';
 import HandleUnauthorized from '../../../utils/HandleUnauthorized';
 import {
   ALL_ORDER_STATUS_OPTIONS,
-  CENTER_CARAT_OPTIONS,
-  COUNTRY_OPTIONS,
   COURIER_OPTIONS,
   INITIAL_ALL_ORDER_FORM,
-  JEWELRY_TYPE_OPTIONS,
   METAL_OPTIONS,
-  PRIORITY_OPTIONS,
   SHOP_OPTIONS,
-  SIDE_STONE_OPTIONS,
-  STONE_SHAPE_OPTIONS,
-  STONE_TYPE_OPTIONS,
-  buildAllOrderFormData,
+  buildAllOrderPayload,
   validateAllOrderForm
 } from '../../../utils/allOrderHelpers';
 import "../../../Scss/Home/Order/addallorder.scss";
@@ -34,7 +27,6 @@ const AddAllOrder = () => {
   const token = localStorage.getItem(tokenname);
 
   const [form, setForm] = useState(INITIAL_ALL_ORDER_FORM);
-  const [files, setFiles] = useState({ photoFile: null, cadFile: null, otherFile: null });
   const [warningMessage, setWarningMessage] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,12 +38,6 @@ const AddAllOrder = () => {
   const handleFieldChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
-
-  const handleFileChange = (field, file) => {
-    setFiles(prev => ({ ...prev, [field]: file || null }));
-  };
-
-  const balanceDue = Math.max(0, (Number(form.totalAmount) || 0) - (Number(form.paidAmount) || 0)).toFixed(2);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -69,13 +55,14 @@ const AddAllOrder = () => {
     }
 
     try {
-      const formData = buildAllOrderFormData({ form, files, selectedFiscalYear });
+      const payload = buildAllOrderPayload({ form, selectedFiscalYear });
       const response = await fetch(`${adminPanelBackendPath}/Main/AddAllOrder`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: formData
+        body: JSON.stringify(payload)
       });
       const result = await response.json();
       if (HandleUnauthorized(result, logoutUser, navigate)) return;
@@ -106,7 +93,6 @@ const AddAllOrder = () => {
         <h6 className="Addallorder-headingname">{"Add Order"}</h6>
         <div className="Addallorder-form-container">
           {isLoading ? <LoadingSpinner /> : <form onSubmit={handleSubmit}>
-            {/* Section 1: Order details */}
             <h6 className="form-section-title">{"Order details"}</h6>
             <div className="form-row form-row-three">
               <div className="form-group">
@@ -140,53 +126,8 @@ const AddAllOrder = () => {
                 <Dropdown options={SHOP_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.shopName} onValueChange={val => handleFieldChange('shopName', val)} placeholder={"Select shop"} showSearch={false} />
               </div>
               <div className="form-group">
-                <label>{"Country"}</label>
-                <Dropdown options={COUNTRY_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.country} onValueChange={val => handleFieldChange('country', val)} placeholder={"Select country"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label>{"Jewelry type"}</label>
-                <Dropdown options={JEWELRY_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.jewelryType} onValueChange={val => handleFieldChange('jewelryType', val)} placeholder={"Select type"} showSearch={false} />
-              </div>
-            </div>
-
-            <div className="form-row form-row-three">
-              <div className="form-group">
-                <label htmlFor="product">{"Product / design name"}</label>
-                <input type="text" id="product" name="product" autoComplete="off" value={form.product} onChange={e => handleFieldChange('product', e.target.value)} />
-              </div>
-              <div className="form-group">
                 <label>{"Metal"}</label>
                 <Dropdown options={METAL_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.metal} onValueChange={val => handleFieldChange('metal', val)} placeholder={"Select metal"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="ringSize">{"Ring size"}</label>
-                <input type="text" id="ringSize" name="ringSize" autoComplete="off" value={form.ringSize} onChange={e => handleFieldChange('ringSize', e.target.value)} />
-              </div>
-            </div>
-
-            <div className="form-row form-row-three">
-              <div className="form-group">
-                <label>{"Center stone type"}</label>
-                <Dropdown options={STONE_TYPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.stoneType} onValueChange={val => handleFieldChange('stoneType', val)} placeholder={"Select stone type"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label>{"Center stone shape"}</label>
-                <Dropdown options={STONE_SHAPE_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.stoneShape} onValueChange={val => handleFieldChange('stoneShape', val)} placeholder={"Select shape"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label>{"Center carat"}</label>
-                <Dropdown options={CENTER_CARAT_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.centerCarat} onValueChange={val => handleFieldChange('centerCarat', val)} placeholder={"Select carat"} showSearch={false} />
-              </div>
-            </div>
-
-            <div className="form-row form-row-three">
-              <div className="form-group">
-                <label>{"Side stone type"}</label>
-                <Dropdown options={SIDE_STONE_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.sideStoneType} onValueChange={val => handleFieldChange('sideStoneType', val)} placeholder={"Select side stone"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="measurements">{"Stone measurements (mm)"}</label>
-                <input type="text" id="measurements" name="measurements" autoComplete="off" placeholder={"10 × 7 × 4.5"} value={form.measurements} onChange={e => handleFieldChange('measurements', e.target.value)} />
               </div>
               <div className="form-group">
                 <label htmlFor="employee">{"Employee assigned"}</label>
@@ -194,34 +135,11 @@ const AddAllOrder = () => {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label htmlFor="stone">{"Other stone details / notes (legacy field)"}</label>
-                <input type="text" id="stone" name="stone" autoComplete="off" placeholder={"Color, clarity, certificate, extra stone details"} value={form.stone} onChange={e => handleFieldChange('stone', e.target.value)} />
-              </div>
-            </div>
-
-            {/* Section 2: Production & customer communication */}
             <h6 className="form-section-title">{"Production & customer communication"}</h6>
-            <div className="form-row form-row-three">
+            <div className="form-row">
               <div className="form-group">
                 <label>{"Current status"}</label>
                 <Dropdown options={ALL_ORDER_STATUS_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.status} onValueChange={val => handleFieldChange('status', val)} placeholder={"Order Received"} showSearch={false} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="targetDate">{"Target completion date"}</label>
-                <input type="date" id="targetDate" name="targetDate" value={form.targetDate} onChange={e => handleFieldChange('targetDate', e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label>{"Work priority"}</label>
-                <Dropdown options={PRIORITY_OPTIONS} labelKey="label" valueKey="value" selectedValue={form.priority} onValueChange={val => handleFieldChange('priority', val)} placeholder={"Normal"} showSearch={false} />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label htmlFor="productionNotes">{"Production notes"}</label>
-                <textarea id="productionNotes" name="productionNotes" placeholder={"CAD approval, casting, setting instructions…"} value={form.productionNotes} onChange={e => handleFieldChange('productionNotes', e.target.value)} />
               </div>
             </div>
 
@@ -232,44 +150,6 @@ const AddAllOrder = () => {
               </div>
             </div>
 
-            {/* Section 3: Payment tracking */}
-            <h6 className="form-section-title">{"Payment tracking"}</h6>
-            <div className="form-row form-row-three">
-              <div className="form-group">
-                <label htmlFor="totalAmount">{"Total order amount"}</label>
-                <input type="number" id="totalAmount" name="totalAmount" min="0" step="0.01" value={form.totalAmount} onChange={e => handleFieldChange('totalAmount', e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="paidAmount">{"Amount paid"}</label>
-                <input type="number" id="paidAmount" name="paidAmount" min="0" step="0.01" value={form.paidAmount} onChange={e => handleFieldChange('paidAmount', e.target.value)} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="balanceDisplay">{"Balance due (auto-calculated)"}</label>
-                <input type="text" id="balanceDisplay" className="readonly-total-input" readOnly placeholder={"0.00"} value={balanceDue} />
-              </div>
-            </div>
-
-            {/* Section 4: Photos & CAD files */}
-            <h6 className="form-section-title">{"Photos & CAD files"}</h6>
-            <div className="form-row form-row-three">
-              <div className="form-group">
-                <label htmlFor="photoFile">{"Product / reference photo"}</label>
-                <input type="file" id="photoFile" name="photoFile" accept="image/*" onChange={e => handleFileChange('photoFile', e.target.files?.[0])} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="cadFile">{"CAD / design file"}</label>
-                <input type="file" id="cadFile" name="cadFile" accept=".stl,.obj,.3dm,.step,.stp,.pdf,.jpg,.jpeg,.png,.zip,.rar,.3mf" onChange={e => handleFileChange('cadFile', e.target.files?.[0])} />
-              </div>
-              <div className="form-group">
-                <label htmlFor="otherFile">{"Other order document"}</label>
-                <input type="file" id="otherFile" name="otherFile" onChange={e => handleFileChange('otherFile', e.target.files?.[0])} />
-              </div>
-            </div>
-            <div className="attachments-info-row">
-              {"Choose files to attach them to this order. Existing attachments stay saved unless you delete the order."}
-            </div>
-
-            {/* Section 5: Dispatch details */}
             <h6 className="form-section-title">{"Dispatch details"}</h6>
             <div className="form-row form-row-three">
               <div className="form-group">
@@ -290,20 +170,6 @@ const AddAllOrder = () => {
               <div className="form-group full-width">
                 <label htmlFor="trackingLink">{"Tracking link"}</label>
                 <input type="url" id="trackingLink" name="trackingLink" placeholder={"https://..."} value={form.trackingLink} onChange={e => handleFieldChange('trackingLink', e.target.value)} />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="deliveryDate">{"Expected delivery date"}</label>
-                <input type="date" id="deliveryDate" name="deliveryDate" value={form.deliveryDate} onChange={e => handleFieldChange('deliveryDate', e.target.value)} />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group full-width">
-                <label htmlFor="dispatchNotes">{"Dispatch / customer notes"}</label>
-                <textarea id="dispatchNotes" name="dispatchNotes" value={form.dispatchNotes} onChange={e => handleFieldChange('dispatchNotes', e.target.value)} />
               </div>
             </div>
 

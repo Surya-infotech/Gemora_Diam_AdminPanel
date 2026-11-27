@@ -54,40 +54,10 @@
                     width: 100%;
                 }
 
-                input[type="file"] {
-                    padding: 7px 10px;
-                    cursor: pointer;
-                }
-
                 textarea {
                     min-height: 90px;
                     resize: vertical;
                     font-family: inherit;
-                }
-
-                .readonly-total-input {
-                    background-color: color-mix(in srgb, var(--primary-color) 6%, var(--form-input-color));
-                    font-weight: 700;
-                    color: var(--primary-color) !important;
-                }
-            }
-
-            .attachments-info-row {
-                margin-bottom: 15px;
-                font-size: 13px;
-                color: var(--muted-text, #64748b);
-
-                .existing-files-links {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 12px;
-                    margin-bottom: 6px;
-
-                    a {
-                        color: var(--primary-color);
-                        font-weight: 600;
-                        text-decoration: underline;
-                    }
                 }
             }
 

@@ -145,29 +145,22 @@ const GetAllOrder = ({ searchValue = "" }) => {
           order.ordernumber,
           order.customer,
           order.shopName,
-          order.country,
-          order.jewelryType,
-          order.product,
           order.metal,
-          order.stone,
           order.employee,
           order.status,
-          order.priority,
+          order.conversation,
           order.tracking,
-          order.courier
+          order.courier,
+          order.orderDate,
+          order.dispatchDate
         ].join(" ").toLowerCase().includes(search)
       ));
     }
     if (!sortColumn) return filtered;
     return [...filtered].sort((a, b) => {
-      if (sortColumn === "totalAmount") {
-        const valA = Number(a.totalAmount) || 0;
-        const valB = Number(b.totalAmount) || 0;
-        return sortDirection === "asc" ? valA - valB : valB - valA;
-      }
-      if (sortColumn === "orderDate") {
-        const valA = String(a.orderDate || a.createdAt || "");
-        const valB = String(b.orderDate || b.createdAt || "");
+      if (sortColumn === "orderDate" || sortColumn === "dispatchDate") {
+        const valA = String(a[sortColumn] || a.createdAt || "");
+        const valB = String(b[sortColumn] || b.createdAt || "");
         return sortDirection === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
       }
       const valA = String(a[sortColumn] ?? "").toLowerCase();
@@ -204,20 +197,20 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 <th onClick={() => handleSort("orderId")} style={{ cursor: "pointer" }}>
                   {"Order / Customer"} {renderSortIcon("orderId")}
                 </th>
-                <th onClick={() => handleSort("product")} style={{ cursor: "pointer" }}>
-                  {"Product / Specs"} {renderSortIcon("product")}
+                <th onClick={() => handleSort("shopName")} style={{ cursor: "pointer" }}>
+                  {"Shop / Metal"} {renderSortIcon("shopName")}
                 </th>
                 <th onClick={() => handleSort("employee")} style={{ cursor: "pointer" }}>
                   {"Employee"} {renderSortIcon("employee")}
                 </th>
                 <th onClick={() => handleSort("status")} style={{ cursor: "pointer" }}>
-                  {"Status / Priority"} {renderSortIcon("status")}
-                </th>
-                <th onClick={() => handleSort("totalAmount")} style={{ cursor: "pointer" }}>
-                  {"Payment"} {renderSortIcon("totalAmount")}
+                  {"Current Status"} {renderSortIcon("status")}
                 </th>
                 <th onClick={() => handleSort("orderDate")} style={{ cursor: "pointer" }}>
-                  {"Dispatch"} {renderSortIcon("orderDate")}
+                  {"Order Date"} {renderSortIcon("orderDate")}
+                </th>
+                <th onClick={() => handleSort("dispatchDate")} style={{ cursor: "pointer" }}>
+                  {"Dispatch"} {renderSortIcon("dispatchDate")}
                 </th>
                 <th style={{ textAlign: "center", width: "120px" }}>
                   {"Action"}
@@ -227,11 +220,6 @@ const GetAllOrder = ({ searchValue = "" }) => {
             <tbody>
               {visibleOrders.length > 0 ? visibleOrders.map(order => {
                 const orderKey = order._id || order.allorderid;
-                const total = Number(order.totalAmount || 0);
-                const paid = Number(order.paidAmount || 0);
-                const due = Math.max(0, total - paid);
-                const specs = [order.jewelryType, order.metal, order.ringSize ? `Size ${order.ringSize}` : "", order.stoneType, order.stoneShape, order.centerCarat, order.measurements].filter(Boolean).join(" · ");
-                const shopCountry = [order.shopName, order.country].filter(Boolean).join(" · ");
 
                 return (
                   <tr key={orderKey}>
@@ -251,7 +239,6 @@ const GetAllOrder = ({ searchValue = "" }) => {
                             </span>
                           </Tooltip>
                           <strong>{order.customer || "—"}</strong>
-                          {shopCountry && <span className="customer-subtext">{shopCountry}</span>}
                           {order.orderLink && (
                             <a href={order.orderLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "var(--primary-color)" }}>
                               {"Etsy order"}
@@ -263,33 +250,23 @@ const GetAllOrder = ({ searchValue = "" }) => {
 
                     <td>
                       <div className="customer-text" style={{ textAlign: "left" }}>
-                        <strong>{order.product || "—"}</strong>
-                        {specs && <span className="customer-subtext">{specs}</span>}
-                        {order.stone && <span className="customer-subtext">{order.stone}</span>}
+                        <strong>{order.shopName || "—"}</strong>
+                        {order.metal && <span className="customer-subtext">{order.metal}</span>}
                       </div>
                     </td>
 
                     <td>{order.employee || "—"}</td>
 
                     <td>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-                        <span className="order-status-badge confirmed">
-                          {order.status || "Order Received"}
-                        </span>
-                        <span style={{ fontSize: "11px", color: "var(--text-secondary, #64748b)" }}>
-                          {order.priority || "Normal"}
-                        </span>
-                      </div>
+                      <span className="order-status-badge confirmed">
+                        {order.status || "Order Received"}
+                      </span>
                     </td>
 
                     <td>
-                      <div style={{ fontSize: "12px", lineHeight: 1.45, whiteSpace: "nowrap" }}>
-                        <div>Total: {total.toFixed(2)}</div>
-                        <div>Paid: {paid.toFixed(2)}</div>
-                        <strong style={{ color: due > 0 ? "#dc2626" : "#15803d" }}>
-                          Due: {due.toFixed(2)}
-                        </strong>
-                      </div>
+                      <span style={{ fontSize: "13px", color: "var(--text-secondary, #64748b)", whiteSpace: "nowrap" }}>
+                        {order.orderDate || "—"}
+                      </span>
                     </td>
 
                     <td>
