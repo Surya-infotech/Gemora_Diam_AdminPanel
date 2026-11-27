@@ -15,13 +15,6 @@ import DeleteButton from "../../../Pages/Custom/DeleteButton";
 import DeleteModal from "../../../Pages/Custom/DeleteModal";
 import "../../../Scss/Home/Order/getorder.scss";
 
-const getInitials = name => {
-  if (!name) return "C";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-};
-
 const GetAllOrder = ({ searchValue = "" }) => {
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
@@ -198,7 +191,10 @@ const GetAllOrder = ({ searchValue = "" }) => {
                   {"Order / Customer"} {renderSortIcon("orderId")}
                 </th>
                 <th onClick={() => handleSort("shopName")} style={{ cursor: "pointer" }}>
-                  {"Shop / Metal"} {renderSortIcon("shopName")}
+                  {"Shop"} {renderSortIcon("shopName")}
+                </th>
+                <th onClick={() => handleSort("metal")} style={{ cursor: "pointer" }}>
+                  {"Metal"} {renderSortIcon("metal")}
                 </th>
                 <th onClick={() => handleSort("employee")} style={{ cursor: "pointer" }}>
                   {"Employee"} {renderSortIcon("employee")}
@@ -225,9 +221,6 @@ const GetAllOrder = ({ searchValue = "" }) => {
                   <tr key={orderKey}>
                     <td>
                       <div className="customer-info-cell">
-                        <div className="customer-avatar">
-                          {getInitials(order.customer)}
-                        </div>
                         <div className="customer-text">
                           <Tooltip title={"Edit Order"} arrow>
                             <span
@@ -239,21 +232,13 @@ const GetAllOrder = ({ searchValue = "" }) => {
                             </span>
                           </Tooltip>
                           <strong>{order.customer || "—"}</strong>
-                          {order.orderLink && (
-                            <a href={order.orderLink} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "var(--primary-color)" }}>
-                              {"Etsy order"}
-                            </a>
-                          )}
                         </div>
                       </div>
                     </td>
 
-                    <td>
-                      <div className="customer-text" style={{ textAlign: "left" }}>
-                        <strong>{order.shopName || "—"}</strong>
-                        {order.metal && <span className="customer-subtext">{order.metal}</span>}
-                      </div>
-                    </td>
+                    <td><strong>{order.shopName || "—"}</strong></td>
+
+                    <td>{order.metal || "—"}</td>
 
                     <td>{order.employee || "—"}</td>
 
@@ -293,7 +278,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 );
               }) : (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+                  <td colSpan="8" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
                     {"No orders found"}
                   </td>
                 </tr>
