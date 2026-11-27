@@ -20,8 +20,90 @@
             .allorder-header {
                 @include mixin.page_header;
 
+                .allorder-header-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-left: auto;
+
+                    [dir="rtl"] &,
+                    body.rtl-mode & {
+                        margin-left: 0;
+                        margin-right: auto;
+                    }
+                }
+
                 .add-new-btn {
                     @include mixin.add_new_btn;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                }
+
+                .export-dropdown-wrapper {
+                    position: relative;
+
+                    .export-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        padding: 8px 16px;
+                        border-radius: var(--radius-sm);
+                        font-size: 14px;
+                        font-weight: 600;
+                        background-color: var(--primary-color);
+                        color: #ffffff;
+                        border: none;
+                        cursor: pointer;
+                        transition: opacity 0.2s ease, transform 0.15s ease;
+
+                        &:hover {
+                            opacity: 0.92;
+                        }
+                    }
+
+                    .export-dropdown-menu {
+                        position: absolute;
+                        top: calc(100% + 6px);
+                        right: 0;
+                        min-width: 185px;
+                        background-color: var(--page-color, #ffffff);
+                        border: 1px solid var(--border-color, #e2e8f0);
+                        border-radius: var(--radius-md, 8px);
+                        box-shadow: var(--shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.12));
+                        padding: 6px;
+                        z-index: 100;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        [dir="rtl"] &,
+                        body.rtl-mode & {
+                            right: auto;
+                            left: 0;
+                        }
+
+                        .export-menu-item {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            width: 100%;
+                            padding: 8px 12px;
+                            border: none;
+                            background: transparent;
+                            color: var(--text-color, #1e293b);
+                            font-size: 13px;
+                            font-weight: 500;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            text-align: left;
+                            transition: background-color 0.15s ease, color 0.15s ease;
+
+                            &:hover {
+                                background-color: color-mix(in srgb, var(--primary-color) 12%, transparent);
+                                color: var(--primary-color);
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -19,7 +19,7 @@ import ViewAllOrderModal from "./ViewAllOrderModal";
 import "../../../Scss/Home/Order/getorder.scss";
 import "../../../Scss/Home/Order/allorder.scss";
 
-const GetAllOrder = ({ searchValue = "" }) => {
+const GetAllOrder = ({ searchValue = "", onOrdersChange }) => {
   const { logoutUser } = useAuth();
   const navigate = useNavigate();
   const { selectedFiscalYear } = useFiscalYear();
@@ -175,6 +175,12 @@ const GetAllOrder = ({ searchValue = "" }) => {
   }, [orders, searchValue, sortColumn, sortDirection]);
 
   const totalRecords = filteredAndSortedOrders.length;
+
+  useEffect(() => {
+    if (onOrdersChange) {
+      onOrdersChange(filteredAndSortedOrders);
+    }
+  }, [filteredAndSortedOrders, onOrdersChange]);
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
   const safePage = Math.min(currentPage, totalPages);
   const visibleOrders = filteredAndSortedOrders.slice((safePage - 1) * pageSize, safePage * pageSize);

@@ -87,3 +87,19 @@ export const openDatePicker = e => {
     // Ignore browsers where showPicker is unsupported or restricted
   }
 };
+
+export const ALL_ORDER_EXPORT_COLUMNS = [
+  { key: 'orderId', label: 'Etsy Order ID' },
+  { key: 'customer', label: 'Customer Name' },
+  { key: 'orderDate', label: 'Order Date' },
+  { key: 'orderLink', label: 'Etsy Order Link' },
+  { key: 'shopName', label: 'Shop Name' },
+  { key: 'metal', label: 'Metal' },
+  { key: 'employee', label: 'Employee Assigned' },
+  { key: 'status', label: 'Current Status' },
+  { key: 'conversation', label: 'Customer Conversation' },
+  { key: 'dispatchDate', label: 'Dispatch Date' },
+  { key: 'courier', label: 'Courier' },
+  { key: 'tracking', label: 'Tracking Number' },
+  { key: 'trackingLink', label: 'Tracking Link' }
+];
