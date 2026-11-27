@@ -154,13 +154,13 @@ const EditAllOrder = () => {
                 <label htmlFor="orderId">
                   {"Etsy Order ID"} <span style={{ color: "red" }}>*</span>
                 </label>
-                <input type="text" id="orderId" name="orderId" autoComplete="off" required value={form.orderId} onChange={e => handleFieldChange('orderId', e.target.value)} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
+                <input type="text" id="orderId" name="orderId" autoComplete="off" placeholder={"Enter Etsy Order ID"} required value={form.orderId} onChange={e => handleFieldChange('orderId', e.target.value)} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
               </div>
               <div className="form-group">
                 <label htmlFor="customer">
                   {"Customer name"} <span style={{ color: "red" }}>*</span>
                 </label>
-                <input type="text" id="customer" name="customer" autoComplete="off" required value={form.customer} onChange={e => handleFieldChange('customer', e.target.value)} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
+                <input type="text" id="customer" name="customer" autoComplete="off" placeholder={"Enter Customer Name"} required value={form.customer} onChange={e => handleFieldChange('customer', e.target.value)} onInput={e => e.target.value = e.target.value.replace(/^\s+/, "")} />
               </div>
               <div className="form-group">
                 <label htmlFor="orderDate">{"Order date"}</label>
