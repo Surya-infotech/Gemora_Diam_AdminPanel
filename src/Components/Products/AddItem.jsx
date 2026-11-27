@@ -555,9 +555,7 @@ const AddItem = () => {
                   setSelectedSubCategory(null);
                   const nextCat = categories.find(c => Number(c.categoryid) === Number(val));
                   setSelectedRingSizes(isRingCategoryName(nextCat?.categoryname) ? ringSizeOptions : []);
-                  if (!isEarringsCategoryName(nextCat?.categoryname)) {
-                    setSelectedClosureTypes([]);
-                  }
+                  setSelectedClosureTypes(isEarringsCategoryName(nextCat?.categoryname) ? CLOSURE_TYPE_OPTIONS : []);
                 }} placeholder={"Select Category"} />
               </div>
               <div className="form-group">

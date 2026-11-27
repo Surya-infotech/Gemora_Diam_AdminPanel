@@ -668,6 +668,8 @@ const EditItem = () => {
                   }
                   if (!isEarringsCategoryName(nextCat?.categoryname)) {
                     setSelectedClosureTypes([]);
+                  } else if (selectedClosureTypes.length === 0) {
+                    setSelectedClosureTypes(CLOSURE_TYPE_OPTIONS);
                   }
                 }} placeholder={"Select Category"} />
               </div>
