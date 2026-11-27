@@ -1,14 +1,11 @@
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import DescriptionIcon from '@mui/icons-material/Description';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import "../../Scss/Home/Order/allorder.scss";
 import { usePermissions } from '../../Hooks/usePermissions';
 import AlertMessage from '../Custom/AlertMessage';
 import WarningModal from '../Custom/WarningModal';
 import SearchInput from '../Custom/SearchInput';
+import ExportDropdown from '../../Components/Custom/ExportDropdown';
 import GetAllOrder from '../../Components/Home/AllOrder/GetAllOrder';
 import { ALL_ORDER_EXPORT_COLUMNS } from '../../utils/allOrderHelpers';
 import { exportToCsv, exportToExcel } from '../../utils/exportUtils';
@@ -21,8 +18,6 @@ const AllOrder = () => {
   const [warningMessage, setWarningMessage] = useState(location.state?.warning || "");
   const [searchValue, setSearchValue] = useState("");
   const [exportOrders, setExportOrders] = useState([]);
-  const [isExportOpen, setIsExportOpen] = useState(false);
-  const exportDropdownRef = useRef(null);
 
   useEffect(() => {
     document.title = "All Order";
@@ -37,16 +32,6 @@ const AllOrder = () => {
     }
   }, [location, navigate]);
 
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (exportDropdownRef.current && !exportDropdownRef.current.contains(event.target)) {
-        setIsExportOpen(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
-
   const handleOrdersChange = useCallback(list => {
     setExportOrders(list);
   }, []);
@@ -54,7 +39,6 @@ const AllOrder = () => {
   const handleAddNewClick = () => navigate('/Home/AddAllOrder');
 
   const handleExport = type => {
-    setIsExportOpen(false);
     if (!exportOrders || exportOrders.length === 0) {
       setWarningMessage("No orders available to export");
       return;
@@ -95,30 +79,10 @@ const AllOrder = () => {
                   {"Add New"}
                 </button>
               )}
-              <div className="export-dropdown-wrapper" ref={exportDropdownRef}>
-                <button
-                  type="button"
-                  className="export-btn"
-                  onClick={() => setIsExportOpen(prev => !prev)}
-                  aria-expanded={isExportOpen}
-                >
-                  <FileDownloadIcon fontSize="small" />
-                  <span>{"Export"}</span>
-                  <KeyboardArrowDownIcon fontSize="small" />
-                </button>
-                {isExportOpen && (
-                  <div className="export-dropdown-menu">
-                    <button type="button" className="export-menu-item" onClick={() => handleExport("csv")}>
-                      <DescriptionIcon fontSize="small" />
-                      <span>{"Export as CSV"}</span>
-                    </button>
-                    <button type="button" className="export-menu-item" onClick={() => handleExport("excel")}>
-                      <TableChartIcon fontSize="small" />
-                      <span>{"Export as Excel"}</span>
-                    </button>
-                  </div>
-                )}
-              </div>
+              <ExportDropdown
+                onExportCsv={() => handleExport("csv")}
+                onExportExcel={() => handleExport("excel")}
+              />
             </div>
           </div>
           <GetAllOrder searchValue={searchValue} onOrdersChange={handleOrdersChange} />

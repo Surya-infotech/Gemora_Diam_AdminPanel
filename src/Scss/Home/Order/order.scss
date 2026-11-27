@@ -19,6 +19,19 @@
 
             .order-header {
                 @include mixin.page_header;
+
+                .order-header-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-left: auto;
+
+                    [dir="rtl"] &,
+                    body.rtl-mode & {
+                        margin-left: 0;
+                        margin-right: auto;
+                    }
+                }
             }
         }
     }

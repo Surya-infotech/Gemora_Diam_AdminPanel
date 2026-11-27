@@ -21,7 +21,8 @@ const getInitials = name => {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 const GetOrder = ({
-  searchValue = ""
+  searchValue = "",
+  onDataChange
 }) => {
   const {
     logoutUser
@@ -171,6 +172,11 @@ const GetOrder = ({
     });
   }, [orders, searchValue, sortColumn, sortDirection]);
   const totalRecords = filteredAndSortedOrders.length;
+  useEffect(() => {
+    if (onDataChange) {
+      onDataChange(filteredAndSortedOrders, miscSettings);
+    }
+  }, [filteredAndSortedOrders, miscSettings, onDataChange]);
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
   const visibleOrders = filteredAndSortedOrders.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   return <>
