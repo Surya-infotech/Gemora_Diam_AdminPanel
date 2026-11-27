@@ -188,7 +188,10 @@ const GetAllOrder = ({ searchValue = "" }) => {
             <thead>
               <tr>
                 <th onClick={() => handleSort("orderId")} style={{ cursor: "pointer" }}>
-                  {"Order / Customer"} {renderSortIcon("orderId")}
+                  {"Order ID"} {renderSortIcon("orderId")}
+                </th>
+                <th onClick={() => handleSort("customer")} style={{ cursor: "pointer" }}>
+                  {"Customer"} {renderSortIcon("customer")}
                 </th>
                 <th onClick={() => handleSort("shopName")} style={{ cursor: "pointer" }}>
                   {"Shop"} {renderSortIcon("shopName")}
@@ -220,21 +223,18 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 return (
                   <tr key={orderKey}>
                     <td>
-                      <div className="customer-info-cell">
-                        <div className="customer-text">
-                          <Tooltip title={"Edit Order"} arrow>
-                            <span
-                              className="order-number-badge"
-                              style={{ cursor: "pointer", width: "fit-content", marginBottom: "2px" }}
-                              onClick={() => handleEdit(order)}
-                            >
-                              {order.orderId || `#${order.ordernumber ?? order.allorderid}`}
-                            </span>
-                          </Tooltip>
-                          <strong>{order.customer || "—"}</strong>
-                        </div>
-                      </div>
+                      <Tooltip title={"Edit Order"} arrow>
+                        <span
+                          className="order-number-badge"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleEdit(order)}
+                        >
+                          {order.orderId || `#${order.ordernumber ?? order.allorderid}`}
+                        </span>
+                      </Tooltip>
                     </td>
+
+                    <td><strong>{order.customer || "—"}</strong></td>
 
                     <td><strong>{order.shopName || "—"}</strong></td>
 
@@ -278,7 +278,7 @@ const GetAllOrder = ({ searchValue = "" }) => {
                 );
               }) : (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
+                  <td colSpan="9" style={{ textAlign: "center", padding: "32px 0", color: "#64748b" }}>
                     {"No orders found"}
                   </td>
                 </tr>
