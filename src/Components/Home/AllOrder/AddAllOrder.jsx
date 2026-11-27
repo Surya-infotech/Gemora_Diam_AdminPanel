@@ -162,7 +162,7 @@ const AddAllOrder = () => {
               </div>
               <div className="form-group">
                 <label htmlFor="tracking">{"Tracking number"}</label>
-                <input type="text" id="tracking" name="tracking" autoComplete="off" value={form.tracking} onChange={e => handleFieldChange('tracking', e.target.value)} />
+                <input type="text" id="tracking" name="tracking" autoComplete="off" placeholder={"Enter Tracking Number"} value={form.tracking} onChange={e => handleFieldChange('tracking', e.target.value)} />
               </div>
             </div>
 
